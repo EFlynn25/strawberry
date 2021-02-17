@@ -45,11 +45,13 @@
   background: -webkit-linear-gradient(270deg, #0078D4 0%, #1540C2 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+
+  user-select: none;
 }
 
 .dmSelected {
   display: none;
-  
+
   position: absolute;
   width: 50px;
   height: 4px;
@@ -104,6 +106,8 @@
   background: -webkit-linear-gradient(270deg, #6AE292 0%, #1D9545 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+
+  user-select: none;
 }
 
 .groupsSelected {
