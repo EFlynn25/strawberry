@@ -1,0 +1,10 @@
+.MainPanel {
+  position: absolute;
+  left: 20%;
+  left: 300px;
+  top: 50px;
+  width: 60%;
+  width: calc(100% - 600px);
+  height: calc(100% - 50px);
+  background: #18191B;
+}

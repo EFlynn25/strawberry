@@ -1,0 +1,40 @@
+.LPHome {
+  height: 75px;
+  cursor: pointer;
+}
+
+.LPHome:hover {
+  background: linear-gradient(90deg, rgba(40, 42, 45, .5) 0%, transparent 50%, transparent 100%);
+}
+
+.LPHome:active {
+  background: linear-gradient(90deg, #282A2D 0%, transparent 100%);
+}
+
+.homeIcon {
+  position: absolute;
+  width: 35px;
+  height: 35px;
+  left: 20px;
+  top: 20px;
+
+  fill: #fff;
+}
+
+.homeText {
+  position: absolute;
+  height: 35px;
+  left: 75px;
+  top: 20px;
+  margin: 0;
+
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 35px;
+
+  user-select: none;
+
+  color: #FFFFFF;
+}

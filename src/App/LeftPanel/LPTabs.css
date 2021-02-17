@@ -1,0 +1,117 @@
+.LPTabs {
+  position: relative;
+  height: 75px;
+}
+
+
+
+/* DM Tab */
+
+.dmTab {
+  position: absolute;
+  width: 50%;
+  width: 150px;
+  height: 100%;
+  left: 0;
+}
+
+.dmTabInner {
+  position: absolute;
+  width: 90px;
+  height: 35px;
+  left: 18px;
+  top: 20px;
+}
+
+.dmIcon {
+  float: left;
+  width: 35px;
+  height: 35px;
+  fill: url(#dmIconGradient);
+}
+
+.dmText {
+  float: right;
+  height: 35px;
+  width: 45px;
+  margin: 0;
+
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 35px;
+
+  background: -webkit-linear-gradient(270deg, #0078D4 0%, #1540C2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.dmSelected {
+  display: none;
+  
+  position: absolute;
+  width: 50px;
+  height: 4px;
+  left: 50px;
+  bottom: 0;
+
+  background: #1540C2;
+}
+
+
+
+/* Groups Tab */
+
+.groupsTab {
+  position: absolute;
+  width: 50%;
+  width: 150px;
+  height: 100%;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.groupsTabInner {
+  position: absolute;
+  width: 115px;
+  height: 35px;
+  left: 18px;
+  top: 20px;
+}
+
+.groupsIcon {
+  float: left;
+  width: 35px;
+  height: 35px;
+  fill: url(#groupsIconGradient);
+}
+
+.groupsText {
+  float: right;
+  height: 35px;
+  width: 70px;
+  margin: 0;
+
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 35px;
+
+  background: -webkit-linear-gradient(270deg, #6AE292 0%, #1D9545 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.groupsSelected {
+  position: absolute;
+  width: 50px;
+  height: 4px;
+  left: 50px;
+  bottom: 0;
+
+  background: #1D9545;
+}
