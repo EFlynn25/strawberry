@@ -1,4 +1,4 @@
-.TopBar {
+.OTopBar {
   position: absolute;
   left: 0px;
   top: 0px;
@@ -11,13 +11,25 @@
 
 
 
-/* Left Side */
+/* Left Side
+
+.mainPFP {
+  position: absolute;
+  width: 35px;
+  height: 35px;
+  left: 8px;
+  top: 8px;
+  border-radius: 35px;
+  cursor: pointer;
+
+  user-select: none;
+}
 
 .welcomeText {
   position: absolute;
-  /*width: 190px;*/
+  width: 190px;
   height: 35px;
-  left: 51px;
+  left: 43px;
   top: 8px;
   margin: 0;
 
@@ -26,7 +38,7 @@
   font-weight: 700;
   font-size: 18.72px;
   line-height: 35px;
-  /*text-align: center;*/
+  text-align: center;
 
   user-select: none;
 

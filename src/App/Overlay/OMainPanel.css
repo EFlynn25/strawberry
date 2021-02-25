@@ -1,4 +1,4 @@
-.MainPanel {
+.OMainPanel {
   position: absolute;
   left: 20%;
   left: 300px;
@@ -7,20 +7,4 @@
   width: calc(100% - 600px);
   height: calc(100% - 50px);
   background: #18191B;
-}
-
-.messages {
-  
-}
-
-
-
-/* Recieve Message */
-
-.recieveMessageGroup {
-
-}
-
-.recieveMessagePFP {
-
 }

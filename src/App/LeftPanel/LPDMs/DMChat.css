@@ -1,0 +1,106 @@
+.DMChat {
+  position: relative;
+  height: 75px;
+  cursor: pointer;
+}
+
+.DMChat:hover {
+  background: linear-gradient(90deg, rgba(40, 42, 45, .5) 0%, transparent 50%, transparent 100%);
+}
+
+.DMChat:active {
+  background: linear-gradient(90deg, rgba(40, 42, 45, .3) 0%, transparent 50%, transparent 100%);
+}
+
+
+
+/* Profile Picture */
+
+.dmChatPFP {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  left: 20px;
+  top: 17.5px;
+
+  border-radius: 25px;
+
+  user-select: none;
+}
+
+
+
+/* Text */
+
+.dmChatTitle {
+  position: absolute;
+  height: 20px;
+  left: 75px;
+  top: 20px;
+  margin: 0;
+
+  font-family: inherit;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 20px;
+
+  user-select: none;
+
+  color: #FFFFFF;
+}
+
+.dmChatMessage {
+  position: absolute;
+  height: 20px;
+  left: 75px;
+  right: 20px;
+  top: 40px;
+  margin: 0;
+
+  font-family: inherit;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 20px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  user-select: none;
+
+  color: #FFFFFF;
+}
+
+.dmChatTime {
+  position: absolute;
+  height: 20px;
+  right: 20px;
+  top: 20px;
+  margin: 0;
+
+  font-family: inherit;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 20px;
+  text-align: right;
+
+  user-select: none;
+
+  color: #FFFFFF;
+}
+
+
+
+/* Extras */
+
+.dmChatSelected {
+  position: absolute;
+  width: 4px;
+  height: 40px;
+  left: 0px;
+  top: 17px;
+
+  background: #FFFFFF;
+}

@@ -1,0 +1,41 @@
+.TBProfilePicture {
+
+}
+
+
+
+/* Content */
+
+.mainPFP {
+  position: absolute;
+  width: 35px;
+  height: 35px;
+  left: 8px;
+  top: 8px;
+  border-radius: 35px;
+  cursor: pointer;
+
+  user-select: none;
+}
+
+.tbDropdown {
+  position: absolute;
+  width: 200px;
+  height: 300px;
+  left: 8px;
+  top: 60px;
+
+  background: #2A2B2D;
+  border-radius: 10px;
+
+  z-index: 2;
+
+  transition: opacity .1s;
+  opacity: 1;
+}
+
+.tbDropdownHide {
+  transition: opacity .1s, top 0s .1s;
+  top: -300px;
+  opacity: 0 !important;
+}

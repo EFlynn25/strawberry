@@ -1,0 +1,130 @@
+.MPDMs {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.dmsMessages {
+  position: relative;
+  width: calc(100% - 80px);
+  height: calc(100% - 250px);
+  padding: 200px 40px 50px 40px;
+  overflow-y: auto;
+}
+
+.dmsMessagesInput {
+  position: absolute;
+  width: calc(100% - 78px);
+  min-height: 20px;
+  left: 20px;
+  bottom: 20px;
+  padding: 8px 12px;
+
+  color: #DDD;
+  background: #2A2B2DBB;
+  backdrop-filter: blur(6px);
+  border-radius: 20px;
+  border: 1px solid;
+  border-color: #37383A;
+  font-size: 14px;
+  font-family: inherit;
+  font-family: "IBM Plex Sans";
+
+  outline: none;
+
+  resize: none;
+}
+
+/*
+.dmsMessagesInput:empty::before {
+  content: "Type message here";
+  color: #555;
+  cursor: text;
+}
+
+.dmsMessagesInput:empty:focus::before {
+  content: "";
+}
+*/
+
+
+/* Recieve Message */
+
+.recieveMessage {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.recieveMessagePFP {
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+}
+
+.recieveMessageName {
+  position: absolute;
+  height: 20px;
+  left: 50px;
+  top: 0;
+  margin: 0;
+
+  font-family: inherit;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 20px;
+
+  color: #FFFFFF;
+}
+
+.recieveMessageGroup {
+  position: relative;
+  width: calc(100% - 100px);
+  left: 50px;
+  right: 0;
+  top: -22px;
+  font-family: "IBM Plex Sans";
+}
+
+.recieveMessageText {
+  margin: 0;
+  margin-bottom: 3px;
+
+  /*font-family: inherit;*/
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+
+  overflow-wrap: break-word;
+  hyphens: auto;
+
+  color: #FFFFFF;
+  color: #DDD;
+}
+
+.recieveMessageTimestamp {
+  position: absolute;
+  height: 20px;
+  /*
+  left: 75px;
+  right: 20px;
+  top: 40px;
+  */
+  bottom: 0;
+  left: 50px;
+  margin: 0;
+
+  font-family: inherit;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 20px;
+
+  color: #646464;
+}
+
+
+/*
+ Consider pros and cons of creating different components
+ for message input and message panel
+*/

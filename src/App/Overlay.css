@@ -1,0 +1,126 @@
+.OverlayView {
+
+}
+
+
+
+/* Overlay */
+
+.overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+
+  backdrop-filter: blur(8px);
+
+  z-index: 9;
+
+  background: linear-gradient(135deg, rgba(255, 255, 255, .05), transparent);
+}
+
+.overlayPanel {
+  position: absolute;
+  width: 800px;
+  height: 500px;
+  left: calc(50% - 400px);
+  top: calc(50% - 250px);
+
+  background-color: #1D1E20;
+  background-color: #2A2B2D;
+  border-radius: 10px;
+
+  z-index: 10;
+}
+
+
+
+/* Welcome */
+
+.oWelcomeLogo {
+  position: absolute;
+  width: 75px;
+  height: 75px;
+  left: calc(50% - 37.5px);
+  top: 30px;
+  margin-bottom: 30px;
+}
+
+.oWelcomeText {
+  position: absolute;
+  width: 800px;
+  height: 135px;
+  margin: 0;
+
+  font-family: inherit;
+  font-style: normal;
+  /*font-weight: 700;*/
+  font-size: 28px;
+  line-height: 135px;
+  text-align: center;
+
+  user-select: none;
+
+  color: #FFF;
+
+  top: 125px;
+}
+
+.oWelcomeFirebaseDiv {
+  position: absolute;
+  width: 800px;
+  height: 200px;
+  top: 250px;
+}
+
+
+
+/* Loading */
+
+.oLoadingText {
+  position: absolute;
+  width: 800px;
+  height: 500px;
+  margin: 0;
+
+  font-family: inherit;
+  font-style: normal;
+  /*font-weight: 700;*/
+  font-size: 28px;
+  line-height: 500px;
+  text-align: center;
+
+  user-select: none;
+
+  color: #FFF;
+}
+
+
+
+/* Firebase Styling */
+
+.firebaseui-container {
+  background: #2A2B2D !important;
+}
+
+.mdl-shadow--2dp {
+    box-shadow: none !important;
+}
+
+.firebaseui-info-bar {
+    margin-top: 20px;
+}
+
+div.mdl-progress::after {
+    display: block;
+    color: black;
+    content: "Authenticating...";
+    font-family: inherit;
+    font-style: italic;
+    color: white;
+    margin: 20px auto;
+    text-align: center;
+}
+
+.mdl-progress {
+    height: 5px;
+}

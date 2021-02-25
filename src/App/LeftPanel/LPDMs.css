@@ -1,0 +1,6 @@
+.LPDMs {
+  position: absolute;
+  width: 100%;
+  height: calc(100% - 165px);
+  background: #1B1C1E;
+}

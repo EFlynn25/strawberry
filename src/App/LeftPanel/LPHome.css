@@ -11,12 +11,16 @@
   background: linear-gradient(90deg, #282A2D 0%, transparent 100%);
 }
 
+
+
+/* Content */
+
 .homeIcon {
   position: absolute;
-  width: 35px;
-  height: 35px;
+  width: 30px;
+  height: 30px;
   left: 20px;
-  top: 20px;
+  top: 22.5px;
 
   fill: #fff;
 }
@@ -24,11 +28,11 @@
 .homeText {
   position: absolute;
   height: 35px;
-  left: 75px;
+  left: 62.5px;
   top: 20px;
   margin: 0;
 
-  font-family: Inter;
+  font-family: inherit;
   font-style: normal;
   font-weight: 600;
   font-size: 18px;

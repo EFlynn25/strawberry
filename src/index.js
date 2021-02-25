@@ -1,35 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
-import firebase from 'firebase';
+import store from './redux/mainStore';
 
-// Configure Firebase.
-const config = {
-  apiKey: 'AIzaSyB3EjwyMucgeEMyfxOmSR_feJmghVwrgiw',
-  authDomain: 'strawberry-5dd4a.firebaseapp.com',
-  // ...
-};
-firebase.initializeApp(config);
-
-// Configure FirebaseUI.
-const uiConfig = {
-  signInFlow: 'redirect',
-  signInSuccessUrl: '/',
-  signInOptions: [
-    firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-    firebase.auth.EmailAuthProvider.PROVIDER_ID
-  ],
-};
+import { BrowserRouter as Router/*, Switch, Route, useHistory */ } from "react-router-dom";
+import { Provider } from 'react-redux';
+//import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
+//import firebase from 'firebase';
 
 ReactDOM.render(
   <React.StrictMode>
     <Router>
-      <App />
-      {/*<StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />*/}
+      <Provider store={store}>
+        <App />
+      </Provider>
     </Router>
   </React.StrictMode>,
   document.getElementById('root')
