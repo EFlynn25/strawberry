@@ -6,8 +6,14 @@ import TextareaAutosize from 'react-autosize-textarea';
 import './MPDMs.css';
 import {
   getdmsOpenedChat,
-  getChats
+  getChats,
+  addMessage
 } from '../../redux/dmsReducer';
+import {
+  getUserName,
+  getUserEmail,
+  getUserPicture
+} from '../../redux/userReducer';
 import ethan from "../../assets/images/ethan.webp"
 
 class MPDMs extends React.Component {
@@ -29,68 +35,76 @@ class MPDMs extends React.Component {
   componentDidMount() {
     console.log("[MPDMs]: componentDidMount with thread ID " + this.props.dmsOpenedChat);
     //this.messagesRef.current.scrollTop = this.messagesRef.current.scrollHeight;
+    if (this.props.dmsOpenedChat != "") {
+      this.reloadMessages();
+    }
   }
 
   componentDidUpdate(prevProps, prevState) {
     console.log("[MPDMs]: componentDidUpdate with thread ID " + this.props.dmsOpenedChat);
-    if (prevProps.dmsOpenedChat != this.props.dmsOpenedChat || prevProps.chats != this.props.chats) {
-      const thisChat = this.props.chats[this.props.dmsOpenedChat];
-      //const startID = thisChat["messages"][0]["id"];
-      //let nextID = startID;
-      let nextID = thisChat["messages"][0]["id"];
-      let tempMessages = [];
-      thisChat["messages"].map((message, i) => {
-        console.debug(message);
-
-        if (message["id"] >= nextID) {
-          let messageIDs = [message["id"]];
-          const messageFrom = message["from"];
-          console.debug("before while");
-          while (true) {
-            //if (thisChat["messages"] message["id"])
-            const localNextID = messageIDs[messageIDs.length - 1] + 1;
-            const findNextID = thisChat["messages"].find( ({ id }) => id === localNextID );
-
-            console.debug("findNextID: " + findNextID);
-
-            if (findNextID == null) {
-              break;
-            }
-
-            if (findNextID["from"] == messageFrom) {
-              messageIDs.push(localNextID);
-              nextID = localNextID + 1;
-            } else {
-              break;
-            }
-          }
-          console.debug("after while... " + messageIDs);
-
-          const newMessage = (
-            <div className="recieveMessage" key={"group" + i}>
-              <img src={ethan} className="recieveMessagePFP" alt="Ethan Flynn" />
-              <h1 className="recieveMessageName">{this.props.dmsOpenedChat}</h1>
-              <div className="recieveMessageGroup">
-                {
-                  messageIDs.map(item => {
-                    const message = thisChat["messages"].find( ({ id }) => id === item )["message"];
-                    const messageKey = "id" + item;
-                    console.debug("messageKey: " + messageKey);
-                    const messageElement = <h1 key={messageKey} className="recieveMessageText">{message}</h1>;
-                    return messageElement;
-                  })
-                }
-              </div>
-              <h1 className="recieveMessageTimestamp">4:21 PM</h1>
-            </div>
-          );
-          console.debug(newMessage);
-          tempMessages.push(newMessage);
-        }
-      });
-
-      this.setState({messages: tempMessages});
+    const propsOpenedChat = this.props.dmsOpenedChat;
+    if (prevProps.dmsOpenedChat != propsOpenedChat || prevProps.chats[propsOpenedChat] != this.props.chats[propsOpenedChat]) {
+      this.reloadMessages();
     }
+  }
+
+  reloadMessages() {
+    const thisChat = this.props.chats[this.props.dmsOpenedChat];
+    //const startID = thisChat["messages"][0]["id"];
+    //let nextID = startID;
+    let nextID = thisChat["messages"][0]["id"];
+    let tempMessages = [];
+    thisChat["messages"].map((message, i) => {
+      console.debug(message);
+
+      if (message["id"] >= nextID) {
+        let messageIDs = [message["id"]];
+        const messageFrom = message["from"];
+        console.debug("before while");
+        while (true) {
+          //if (thisChat["messages"] message["id"])
+          const localNextID = messageIDs[messageIDs.length - 1] + 1;
+          const findNextID = thisChat["messages"].find( ({ id }) => id === localNextID );
+
+          console.debug("findNextID: " + findNextID);
+
+          if (findNextID == null) {
+            break;
+          }
+
+          if (findNextID["from"] == messageFrom) {
+            messageIDs.push(localNextID);
+            nextID = localNextID + 1;
+          } else {
+            break;
+          }
+        }
+        console.debug("after while... " + messageIDs);
+
+        const newMessage = (
+          <div className="recieveMessage" key={"group" + i}>
+          <img src={messageFrom == "me" ? this.props.myPicture : ethan} className="recieveMessagePFP" alt={this.props.myName} />
+            <h1 className="recieveMessageName">{messageFrom == "me" ? this.props.myName : "Unknown"}</h1>
+            <div className="recieveMessageGroup">
+              {
+                messageIDs.map(item => {
+                  const message = thisChat["messages"].find( ({ id }) => id === item )["message"];
+                  const messageKey = "id" + item;
+                  console.debug("messageKey: " + messageKey);
+                  const messageElement = <h1 key={messageKey} className="recieveMessageText">{message}</h1>;
+                  return messageElement;
+                })
+              }
+            </div>
+            <h1 className="recieveMessageTimestamp">4:21 PM</h1>
+          </div>
+        );
+        console.debug(newMessage);
+        tempMessages.push(newMessage);
+      }
+    });
+
+    this.setState({messages: tempMessages});
   }
 
   handleInputChange(event) {
@@ -106,6 +120,7 @@ class MPDMs extends React.Component {
       event.stopPropagation();
 
       console.log("send: " + this.state.inputValue)
+      this.props.addMessage({message: this.state.inputValue});
       this.setState({inputValue: ""});
     }
   }
@@ -161,7 +176,14 @@ class MPDMs extends React.Component {
 
 const mapStateToProps = (state) => ({
   dmsOpenedChat: state.dms.dmsOpenedChat,
-  chats: state.dms.chats
+  chats: state.dms.chats,
+  myName: state.user.name,
+  myEmail: state.user.email,
+  myPicture: state.user.picture,
 });
 
-export default connect(mapStateToProps, null)(MPDMs);
+const mapDispatchToProps = {
+  addMessage
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(MPDMs);
