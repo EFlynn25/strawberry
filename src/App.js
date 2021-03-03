@@ -17,9 +17,6 @@ import LeftPanel from './App/LeftPanel';
 import MainPanel from './App/MainPanel';
 import RightPanel from './App/RightPanel';
 
-//import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
-//firebase.initializeApp(config);
-
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -27,15 +24,8 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    //const dispatch = useDispatch();
-
-    //const history = useHistory();
-    //const welcomePage = () => history.push('/welcome');
-    //const dmsPage = () => history.push('/dms');
-
     firebase.auth().onAuthStateChanged(user => {
       if (!(!!user)) {
-        //welcomePage();
         this.props.history.push("/welcome");
         this.setState({
           pageLoaded: true
@@ -44,7 +34,6 @@ class App extends React.Component {
         if (this.props.history.location.pathname == "/") {
           this.props.history.push("/dms");
         }
-        //dmsPage();
         this.props.setUserName(user.displayName);
         this.props.setUserEmail(user.email);
         this.props.setUserPicture(user.photoURL);

@@ -6,10 +6,8 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import store from './redux/mainStore';
 
-import { BrowserRouter as Router/*, Switch, Route, useHistory */ } from "react-router-dom";
+import { BrowserRouter as Router } from "react-router-dom";
 import { Provider } from 'react-redux';
-//import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
-//import firebase from 'firebase';
 
 ReactDOM.render(
   <React.StrictMode>

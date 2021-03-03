@@ -131,45 +131,8 @@ class MPDMs extends React.Component {
   render() {
     return (
       <div className="MPDMs">
-        {/*<h1 style={{color: "white", margin: "10px", fontSize: "20px"}}>Thread ID: {this.props.dmsOpenedChat}</h1>*/}
         <div className="dmsMessages" ref={this.messagesRef}>
           {this.state.messages}
-        {/*
-          <div className="recieveMessage">
-            <img src={ethan} className="recieveMessagePFP" alt="Ethan Flynn" />
-            <h1 className="recieveMessageName">Ethan Flynn</h1>
-            <div className="recieveMessageGroup">
-              <h1 className="recieveMessageText">tset</h1>
-              <h1 className="recieveMessageText">hey im ethan, a total NERD lolololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololol</h1>
-              <h1 className="recieveMessageText">I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry...</h1>
-              <h1 className="recieveMessageText">noo it's past 420</h1>
-              <h1 className="recieveMessageText">lol, you're in thread ID: {this.props.dmsOpenedChat}</h1>
-            </div>
-            <h1 className="recieveMessageTimestamp">4:21 PM</h1>
-          </div>
-          <div className="recieveMessage">
-            <img src={ethan} className="recieveMessagePFP" alt="Ethan Flynn" />
-            <h1 className="recieveMessageName">Ethan Flynn</h1>
-            <div className="recieveMessageGroup">
-              <h1 className="recieveMessageText">tset</h1>
-              <h1 className="recieveMessageText">hey im ethan, a total NERD lolololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololol</h1>
-              <h1 className="recieveMessageText">I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry...</h1>
-              <h1 className="recieveMessageText">noo it's past 420</h1>
-            </div>
-            <h1 className="recieveMessageTimestamp">5:20 PM</h1>
-          </div>
-          <div className="recieveMessage">
-            <img src={ethan} className="recieveMessagePFP" alt="Ethan Flynn" />
-            <h1 className="recieveMessageName">Ethan Flynn</h1>
-            <div className="recieveMessageGroup">
-              <h1 className="recieveMessageText">tset</h1>
-              <h1 className="recieveMessageText">hey im ethan, a total NERD lolololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololololol</h1>
-              <h1 className="recieveMessageText">I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry... I gotta test this for Strawberry...</h1>
-              <h1 className="recieveMessageText">noo it's past 420</h1>
-            </div>
-            <h1 className="recieveMessageTimestamp">6:20 PM</h1>
-          </div>
-          */}
         </div>
         <TextareaAutosize value={this.state.inputValue} onChange={this.handleInputChange} onKeyPress={this.inputEnterPressed} placeholder="Type message here" className="dmsMessagesInput" maxLength="2000" />
       </div>

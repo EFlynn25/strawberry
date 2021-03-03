@@ -13,8 +13,6 @@ class DMChat extends React.Component {
     super(props);
 
     this.handleClick = this.handleClick.bind(this);
-
-    //this.state = {opened: false};
   }
 
   handleClick(e) {
@@ -23,7 +21,6 @@ class DMChat extends React.Component {
     this.props.setdmsOpenedChat(this.props.chatEmail);
 
     this.props.history.push("/dms/" + this.props.chatEmail);
-    //this.setState({opened: true});
   }
 
   render() {
