@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Switch, Route, useHistory, withRouter } from "react-router-dom";
+import { Switch, Route, withRouter } from "react-router-dom";
 import firebase from 'firebase';
 import { /*useSelector, useDispatch,*/ connect } from 'react-redux';
 
@@ -41,7 +41,9 @@ class App extends React.Component {
           pageLoaded: true
         })
       } else {
-        this.props.history.push("/dms");
+        if (this.props.history.location.pathname == "/") {
+          this.props.history.push("/dms");
+        }
         //dmsPage();
         this.props.setUserName(user.displayName);
         this.props.setUserEmail(user.email);

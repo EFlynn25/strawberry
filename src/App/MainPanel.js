@@ -20,9 +20,11 @@ class MainPanel extends React.Component {
     return (
       <div className="MainPanel">
         <Switch>
+          <Route path="/dms/:chatEmail" component={MPDMs} />
           <Route path="/dms">
             {/*<h1 style={{color: "white", margin: "10px", fontSize: "20px"}}>Thread ID: {this.props.dmsOpenedChat}</h1>*/}
-            <MPDMs />
+
+
           </Route>
           <Route path="/groups">
             <h1 style={{color: "white", margin: "10px", fontSize: "20px"}}>Groups lol</h1>

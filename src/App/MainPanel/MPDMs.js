@@ -7,6 +7,7 @@ import './MPDMs.css';
 import {
   getdmsOpenedChat,
   getChats,
+  setdmsOpenedChat,
   addMessage
 } from '../../redux/dmsReducer';
 import {
@@ -33,6 +34,8 @@ class MPDMs extends React.Component {
   }
 
   componentDidMount() {
+    this.props.setdmsOpenedChat(this.props.match.params.chatEmail);
+
     console.log("[MPDMs]: componentDidMount with thread ID " + this.props.dmsOpenedChat);
     //this.messagesRef.current.scrollTop = this.messagesRef.current.scrollHeight;
     if (this.props.dmsOpenedChat != "") {
@@ -183,6 +186,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
+  setdmsOpenedChat,
   addMessage
 }
 

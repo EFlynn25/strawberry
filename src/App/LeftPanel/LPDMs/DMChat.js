@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from "react-router-dom";
 
 import './DMChat.css';
 import ethan from "../../../assets/images/ethan.webp"
@@ -20,6 +21,8 @@ class DMChat extends React.Component {
     e.preventDefault();
     console.log("[from " + this.props.chatEmail + "] clicked");
     this.props.setdmsOpenedChat(this.props.chatEmail);
+
+    this.props.history.push("/dms/" + this.props.chatEmail);
     //this.setState({opened: true});
   }
 
@@ -52,4 +55,4 @@ const mapDispatchToProps = {
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(DMChat);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(DMChat));
