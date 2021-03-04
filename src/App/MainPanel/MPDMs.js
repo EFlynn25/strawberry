@@ -84,10 +84,12 @@ class MPDMs extends React.Component {
         }
         console.debug("after while... " + messageIDs);
 
+        const newMessageName = messageFrom == "me" ? this.props.myName : this.props.getknownPeople[this.props.dmsOpenedChat].name;
+        const newMessagePicture = messageFrom == "me" ? this.props.myPicture : this.props.getknownPeople[this.props.dmsOpenedChat].picture;
         const newMessage = (
           <div className="recieveMessage" key={"group" + i}>
-          <img src={messageFrom == "me" ? this.props.myPicture : ethan} className="recieveMessagePFP" alt={this.props.myName} />
-            <h1 className="recieveMessageName">{messageFrom == "me" ? this.props.myName : "Unknown"}</h1>
+          <img src={newMessagePicture} className="recieveMessagePFP" alt={newMessageName} />
+            <h1 className="recieveMessageName">{newMessageName}</h1>
             <div className="recieveMessageGroup">
               {
                 messageIDs.map(item => {
@@ -146,6 +148,7 @@ const mapStateToProps = (state) => ({
   myName: state.user.name,
   myEmail: state.user.email,
   myPicture: state.user.picture,
+  getknownPeople: state.people.knownPeople
 });
 
 const mapDispatchToProps = {

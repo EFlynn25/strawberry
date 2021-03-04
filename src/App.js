@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Switch, Route, withRouter } from "react-router-dom";
 import firebase from 'firebase';
-import { /*useSelector, useDispatch,*/ connect } from 'react-redux';
+import { connect } from 'react-redux';
 
-//import { signedIn } from './StartFirebase'
 import './App.css';
 import {
   setUserName,
@@ -71,9 +70,9 @@ class App extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  name: state.name,
-  email: state.email,
-  picture: state.picture
+  name: state.user.name,
+  email: state.user.email,
+  picture: state.user.picture
 });
 
 const mapDispatchToProps = {

@@ -13,6 +13,19 @@ class DMChat extends React.Component {
     super(props);
 
     this.handleClick = this.handleClick.bind(this);
+
+    this.state = {
+      name: "",
+      picture: ""
+    }
+  }
+
+  componentDidMount() {
+    const cEmail = this.props.chatEmail;
+    this.setState({
+      name: this.props.getknownPeople[cEmail].name,
+      picture: this.props.getknownPeople[cEmail].picture
+    })
   }
 
   handleClick(e) {
@@ -33,8 +46,8 @@ class DMChat extends React.Component {
 
     return (
       <div className="DMChat" onClick={this.handleClick} style={{background: opened ? "linear-gradient(90deg, #282A2D 0%, transparent 100%)" : ""}}>
-        <img src={ethan} className="dmChatPFP" alt="Ethan Flynn" />
-        <h1 className="dmChatTitle">Ethan Flynn</h1>
+        <img src={this.state.picture} className="dmChatPFP" alt={this.state.name} />
+        <h1 className="dmChatTitle">{this.state.name}</h1>
         <h1 className="dmChatMessage">You: lol you're a nerd lolololololololol hahaha</h1>
         <h1 className="dmChatTime">4:20 PM</h1>
         {opened ? <div className="dmChatSelected" /> : null}
@@ -44,7 +57,8 @@ class DMChat extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  dmsOpenedChat: state.dms.dmsOpenedChat
+  dmsOpenedChat: state.dms.dmsOpenedChat,
+  getknownPeople: state.people.knownPeople
 });
 
 const mapDispatchToProps = {
