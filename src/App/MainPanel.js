@@ -16,10 +16,14 @@ class MainPanel extends React.Component {
         <Switch>
           <Route path="/dms/:chatEmail" component={MPDMs} />
           <Route path="/dms">
-            {/* Placeholder for no chat open */}
+            <div style={{display: "table", width: "100%", height: "100%"}}>
+              <h1 style={{position: "relative", display: "table-cell", margin: "0", textAlign: "center", verticalAlign: "middle", color: "#fff5", fontSize: "20px"}}>Welcome to Strawberry DMs</h1>
+            </div>
           </Route>
           <Route path="/groups">
-            <h1 style={{color: "white", margin: "10px", fontSize: "20px"}}>Groups lol</h1>
+          <div style={{display: "table", width: "100%", height: "100%"}}>
+            <h1 style={{position: "relative", display: "table-cell", margin: "0", textAlign: "center", verticalAlign: "middle", color: "#fff5", fontSize: "20px"}}>Welcome to Strawberry Groups</h1>
+          </div>
           </Route>
         </Switch>
       </div>

@@ -8,7 +8,7 @@
 }
 
 .LPHome:active {
-  background: linear-gradient(90deg, #282A2D 0%, transparent 100%);
+  background: linear-gradient(90deg, rgba(40, 42, 45, .3) 0%, transparent 50%, transparent 100%);
 }
 
 

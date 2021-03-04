@@ -16,8 +16,6 @@ function TopBar() {
   const email = useSelector(getUserEmail);
   const picture = useSelector(getUserPicture);
 
-  console.log("name: " + name);
-
   return (
     <div className="TopBar">
       {/* Left side */}

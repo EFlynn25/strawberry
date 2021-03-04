@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Switch, Route, withRouter } from "react-router-dom";
-import firebase from 'firebase';
+import firebase from 'firebase/app';
+import 'firebase/auth';
 import { connect } from 'react-redux';
 
 import './App.css';

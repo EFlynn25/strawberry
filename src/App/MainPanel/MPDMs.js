@@ -5,16 +5,10 @@ import TextareaAutosize from 'react-autosize-textarea';
 
 import './MPDMs.css';
 import {
-  getdmsOpenedChat,
-  getChats,
   setdmsOpenedChat,
-  addMessage
+  addMessage,
+  setTempMessageInput
 } from '../../redux/dmsReducer';
-import {
-  getUserName,
-  getUserEmail,
-  getUserPicture
-} from '../../redux/userReducer';
 import ethan from "../../assets/images/ethan.webp"
 
 class MPDMs extends React.Component {
@@ -22,12 +16,12 @@ class MPDMs extends React.Component {
     super(props);
     this.state = {
       inputValue: '',
-      inputHeight: 20,
-      currentThreadID: 0,
       messages: []
     };
+    //this.baseState = this.state;
 
     this.messagesRef = React.createRef();
+    this.inputRef = React.createRef();
 
     this.handleInputChange = this.handleInputChange.bind(this);
     this.inputEnterPressed = this.inputEnterPressed.bind(this);
@@ -40,14 +34,51 @@ class MPDMs extends React.Component {
     //this.messagesRef.current.scrollTop = this.messagesRef.current.scrollHeight;
     if (this.props.dmsOpenedChat != "") {
       this.reloadMessages();
+
+      const tmi = this.props.chats[this.props.dmsOpenedChat].tempMessageInput;
+      if (tmi != "") {
+        this.setState({
+          inputValue: tmi
+        });
+      }
     }
+
+    this.inputRef.current.focus();
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps) {
     console.log("[MPDMs]: componentDidUpdate with thread ID " + this.props.dmsOpenedChat);
     const propsOpenedChat = this.props.dmsOpenedChat;
     if (prevProps.dmsOpenedChat != propsOpenedChat || prevProps.chats[propsOpenedChat] != this.props.chats[propsOpenedChat]) {
       this.reloadMessages();
+      this.setState({inputValue: ""});
+      this.inputRef.current.focus();
+    }
+
+    const iv = this.state.inputValue
+    const tmi = this.props.chats[this.props.dmsOpenedChat].tempMessageInput
+    if (this.props.dmsOpenedChat != "" && prevProps.dmsOpenedChat != propsOpenedChat) {
+      if (prevProps.dmsOpenedChat != "") {
+        this.props.setTempMessageInput({
+          chat: prevProps.dmsOpenedChat,
+          input: iv
+        });
+      }
+
+      this.setState({
+        inputValue: tmi
+      });
+    }
+    this.inputRef.current.focus();
+  }
+
+  componentWillUnmount() {
+    const iv = this.state.inputValue
+    if (this.props.dmsOpenedChat != "") {
+      this.props.setTempMessageInput({
+        chat: this.props.dmsOpenedChat,
+        input: iv
+      });
     }
   }
 
@@ -136,7 +167,7 @@ class MPDMs extends React.Component {
         <div className="dmsMessages" ref={this.messagesRef}>
           {this.state.messages}
         </div>
-        <TextareaAutosize value={this.state.inputValue} onChange={this.handleInputChange} onKeyPress={this.inputEnterPressed} placeholder="Type message here" className="dmsMessagesInput" maxLength="2000" />
+        <TextareaAutosize value={this.state.inputValue} onChange={this.handleInputChange} onKeyPress={this.inputEnterPressed} placeholder="Type message here" className="dmsMessagesInput" maxLength="2000" ref={this.inputRef} />
       </div>
     );
   }
@@ -153,7 +184,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
   setdmsOpenedChat,
-  addMessage
+  addMessage,
+  setTempMessageInput
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(MPDMs);

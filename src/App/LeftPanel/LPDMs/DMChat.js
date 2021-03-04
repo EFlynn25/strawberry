@@ -37,7 +37,7 @@ class DMChat extends React.Component {
   }
 
   render() {
-    console.log("[from " + this.props.chatEmail + "] selected: " + this.props.dmsOpenedChat)
+    //console.log("[DMChat] [from " + this.props.chatEmail + "] selected: " + this.props.dmsOpenedChat)
 
     let opened = false;
     if (this.props.chatEmail == this.props.dmsOpenedChat) {
