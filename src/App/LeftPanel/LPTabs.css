@@ -42,7 +42,7 @@
   width: 45px;
   margin: 0;
 
-  font-family: inherit;
+  /* font-family: inherit; */
   font-style: normal;
   font-weight: 500;
   font-size: 18px;
@@ -118,7 +118,7 @@
   width: 70px;
   margin: 0;
 
-  font-family: inherit;
+  /* font-family: inherit; */
   font-style: normal;
   font-weight: 500;
   font-size: 18px;

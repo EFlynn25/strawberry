@@ -21,9 +21,9 @@ class MainPanel extends React.Component {
             </div>
           </Route>
           <Route path="/groups">
-          <div style={{display: "table", width: "100%", height: "100%"}}>
-            <h1 style={{position: "relative", display: "table-cell", margin: "0", textAlign: "center", verticalAlign: "middle", color: "#fff5", fontSize: "20px"}}>Welcome to Strawberry Groups</h1>
-          </div>
+            <div style={{display: "table", width: "100%", height: "100%"}}>
+              <h1 style={{position: "relative", display: "table-cell", margin: "0", textAlign: "center", verticalAlign: "middle", color: "#fff5", fontSize: "20px"}}>Welcome to Strawberry Groups</h1>
+            </div>
           </Route>
         </Switch>
       </div>

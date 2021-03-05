@@ -55,19 +55,22 @@ class MPDMs extends React.Component {
       this.inputRef.current.focus();
     }
 
-    const iv = this.state.inputValue
-    const tmi = this.props.chats[this.props.dmsOpenedChat].tempMessageInput
-    if (this.props.dmsOpenedChat != "" && prevProps.dmsOpenedChat != propsOpenedChat) {
-      if (prevProps.dmsOpenedChat != "") {
-        this.props.setTempMessageInput({
-          chat: prevProps.dmsOpenedChat,
-          input: iv
+    const thisChat = this.props.chats[this.props.dmsOpenedChat];
+    if (thisChat != null) {
+      const iv = this.state.inputValue
+      const tmi = thisChat.tempMessageInput
+      if (this.props.dmsOpenedChat != "" && prevProps.dmsOpenedChat != propsOpenedChat) {
+        if (prevProps.dmsOpenedChat != "") {
+          this.props.setTempMessageInput({
+            chat: prevProps.dmsOpenedChat,
+            input: iv
+          });
+        }
+
+        this.setState({
+          inputValue: tmi
         });
       }
-
-      this.setState({
-        inputValue: tmi
-      });
     }
     this.inputRef.current.focus();
   }
@@ -86,6 +89,11 @@ class MPDMs extends React.Component {
     const thisChat = this.props.chats[this.props.dmsOpenedChat];
     //const startID = thisChat["messages"][0]["id"];
     //let nextID = startID;
+
+    if (thisChat == null) {
+      return false;
+    }
+
     let nextID = thisChat["messages"][0]["id"];
     let tempMessages = [];
     thisChat["messages"].map((message, i) => {
@@ -127,7 +135,7 @@ class MPDMs extends React.Component {
                   const message = thisChat["messages"].find( ({ id }) => id === item )["message"];
                   const messageKey = "id" + item;
                   console.debug("messageKey: " + messageKey);
-                  const messageElement = <h1 key={messageKey} className="recieveMessageText">{message}</h1>;
+                  const messageElement = <p key={messageKey} className="recieveMessageText">{message}</p>;
                   return messageElement;
                 })
               }

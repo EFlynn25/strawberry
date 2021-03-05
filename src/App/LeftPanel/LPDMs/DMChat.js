@@ -44,11 +44,23 @@ class DMChat extends React.Component {
       opened = true;
     }
 
+    let chatMessage = "";
+    const myChatMessages = this.props.chats[this.props.chatEmail].messages;
+    if (Array.isArray(myChatMessages) && myChatMessages.length) {
+      const lastMessage = myChatMessages[myChatMessages.length - 1];
+      let you = "";
+
+      if (lastMessage["from"] == "me") {
+        you = "You: "
+      }
+      chatMessage = you + lastMessage["message"];
+    }
+
     return (
       <div className="DMChat" onClick={this.handleClick} style={{background: opened ? "linear-gradient(90deg, #282A2D 0%, transparent 100%)" : ""}}>
         <img src={this.state.picture} className="dmChatPFP" alt={this.state.name} />
         <h1 className="dmChatTitle">{this.state.name}</h1>
-        <h1 className="dmChatMessage">You: lol you're a nerd lolololololololol hahaha</h1>
+        <p className="dmChatMessage">{chatMessage}</p>
         <h1 className="dmChatTime">4:20 PM</h1>
         {opened ? <div className="dmChatSelected" /> : null}
       </div>
@@ -58,7 +70,8 @@ class DMChat extends React.Component {
 
 const mapStateToProps = (state) => ({
   dmsOpenedChat: state.dms.dmsOpenedChat,
-  getknownPeople: state.people.knownPeople
+  chats: state.dms.chats,
+  getknownPeople: state.people.knownPeople,
 });
 
 const mapDispatchToProps = {

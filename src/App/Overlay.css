@@ -51,7 +51,7 @@
   height: 135px;
   margin: 0;
 
-  font-family: inherit;
+  /* font-family: inherit; */
   font-style: normal;
   /*font-weight: 700;*/
   font-size: 28px;
@@ -82,7 +82,7 @@
   height: 500px;
   margin: 0;
 
-  font-family: inherit;
+  /* font-family: inherit; */
   font-style: normal;
   /*font-weight: 700;*/
   font-size: 28px;
@@ -103,24 +103,24 @@
 }
 
 .mdl-shadow--2dp {
-    box-shadow: none !important;
+  box-shadow: none !important;
 }
 
 .firebaseui-info-bar {
-    margin-top: 20px;
+  margin-top: 20px;
 }
 
 div.mdl-progress::after {
-    display: block;
-    color: black;
-    content: "Authenticating...";
-    font-family: inherit;
-    font-style: italic;
-    color: white;
-    margin: 20px auto;
-    text-align: center;
+  display: block;
+  color: black;
+  content: "Authenticating...";
+  /* font-family: inherit; */
+  font-style: italic;
+  color: white;
+  margin: 20px auto;
+  text-align: center;
 }
 
 .mdl-progress {
-    height: 5px;
+  height: 5px;
 }

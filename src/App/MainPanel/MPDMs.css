@@ -27,8 +27,8 @@
   border: 1px solid;
   border-color: #37383A;
   font-size: 14px;
-  font-family: inherit;
-  font-family: "IBM Plex Sans";
+  /* font-family: inherit; */
+  /* font-family: "IBM Plex Sans"; */
 
   outline: none;
 
@@ -68,7 +68,7 @@
   top: 0;
   margin: 0;
 
-  font-family: inherit;
+  /* font-family: inherit; */
   font-style: normal;
   font-weight: 500;
   font-size: 16px;
@@ -83,14 +83,14 @@
   left: 50px;
   right: 0;
   top: -22px;
-  font-family: "IBM Plex Sans";
+  /* font-family: "IBM Plex Sans"; */
 }
 
 .recieveMessageText {
   margin: 0;
   margin-bottom: 3px;
 
-  /*font-family: inherit;*/
+  /* font-family: inherit; */
   font-style: normal;
   font-weight: 400;
   font-size: 14px;
@@ -114,7 +114,7 @@
   left: 50px;
   margin: 0;
 
-  font-family: inherit;
+  /* font-family: inherit; */
   font-style: normal;
   font-weight: 400;
   font-size: 12px;
