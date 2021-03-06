@@ -28,6 +28,11 @@ export const dmsSlice = createSlice({
           {message: "fine", from: "them", id: 112}
         ],
         tempMessageInput: ""
+      },
+      "katrinaflynn79@gmail.com": {
+        messages: [
+          {message: "test", from: "them", id: 0}
+        ]
       }
     },
 

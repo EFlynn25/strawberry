@@ -16,6 +16,7 @@ import TopBar from './App/TopBar';
 import LeftPanel from './App/LeftPanel';
 import MainPanel from './App/MainPanel';
 import RightPanel from './App/RightPanel';
+import { startSocket, add_user } from './socket.js';
 
 class App extends React.Component {
   constructor(props) {
@@ -34,6 +35,7 @@ class App extends React.Component {
         if (this.props.history.location.pathname == "/") {
           this.props.history.push("/dms");
         }
+        startSocket();
         this.props.setUserName(user.displayName);
         this.props.setUserEmail(user.email);
         this.props.setUserPicture(user.photoURL);

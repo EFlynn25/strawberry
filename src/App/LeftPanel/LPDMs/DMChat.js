@@ -22,10 +22,13 @@ class DMChat extends React.Component {
 
   componentDidMount() {
     const cEmail = this.props.chatEmail;
-    this.setState({
-      name: this.props.getknownPeople[cEmail].name,
-      picture: this.props.getknownPeople[cEmail].picture
-    })
+    const myPerson = this.props.getknownPeople[cEmail];
+    if (myPerson != null) {
+      this.setState({
+        name: myPerson.name,
+        picture: myPerson.picture
+      });
+    }
   }
 
   handleClick(e) {

@@ -11,6 +11,10 @@ export const peopleSlice = createSlice({
       "toastmaster9804@gmail.com": {
         name: "Charles",
         picture: "https://lh6.googleusercontent.com/-q2l4F6quECI/AAAAAAAAAAI/AAAAAAAAJ_k/L_v4YEhwc38KCy9bVEO6X8fydgyoUGHSACLcDEAE/s70-c-k-no-mo/photo.jpg"
+      },
+      "katrinaflynn79@gmail.com": {
+        name: "Katrina Flynn",
+        picture: "https://lh3.googleusercontent.com/a-/AOh14GilXiTyQnMeMPB83WVuLR6568QYDX2qwkOzUKKS=s70-p-k-rw-no"
       }
     }
   },

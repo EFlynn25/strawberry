@@ -60,7 +60,7 @@ class MPDMs extends React.Component {
       const iv = this.state.inputValue
       const tmi = thisChat.tempMessageInput
       if (this.props.dmsOpenedChat != "" && prevProps.dmsOpenedChat != propsOpenedChat) {
-        if (prevProps.dmsOpenedChat != "") {
+        if (prevProps.dmsOpenedChat != "" && prevProps.dmsOpenedChat != "home") {
           this.props.setTempMessageInput({
             chat: prevProps.dmsOpenedChat,
             input: iv
@@ -123,8 +123,13 @@ class MPDMs extends React.Component {
         }
         console.debug("after while... " + messageIDs);
 
-        const newMessageName = messageFrom == "me" ? this.props.myName : this.props.getknownPeople[this.props.dmsOpenedChat].name;
-        const newMessagePicture = messageFrom == "me" ? this.props.myPicture : this.props.getknownPeople[this.props.dmsOpenedChat].picture;
+        const myPerson = this.props.getknownPeople[this.props.dmsOpenedChat];
+        let newMessageName = "";
+        let newMessagePicture = "";
+        if (myPerson != null) {
+          newMessageName = messageFrom == "me" ? this.props.myName : myPerson.name;
+          newMessagePicture = messageFrom == "me" ? this.props.myPicture : myPerson.picture;
+        }
         const newMessage = (
           <div className="recieveMessage" key={"group" + i}>
           <img src={newMessagePicture} className="recieveMessagePFP" alt={newMessageName} />
