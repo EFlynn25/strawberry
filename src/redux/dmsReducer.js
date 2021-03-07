@@ -19,7 +19,8 @@ export const dmsSlice = createSlice({
           {message: "werido", from: "them", id: 21},
           {message: "bruh", from: "me", id: 22},
         ],
-        tempMessageInput: ""
+        tempMessageInput: "",
+        lastRead: 22
       },
       "toastmaster9804@gmail.com": {
         messages: [
@@ -27,11 +28,15 @@ export const dmsSlice = createSlice({
           {message: "go workout", from: "me", id: 111},
           {message: "fine", from: "them", id: 112}
         ],
-        tempMessageInput: ""
+        tempMessageInput: "",
+        lastRead: 111
       },
       "katrinaflynn79@gmail.com": {
         messages: [
-          {message: "test", from: "them", id: 0}
+          {message: "test", from: "them", id: 0},
+          {message: "more test", from: "them", id: 1},
+          {message: "super test", from: "them", id: 2},
+          {message: "ultra test", from: "them", id: 3}
         ]
       }
     },
@@ -60,11 +65,14 @@ export const dmsSlice = createSlice({
     },
     setTempMessageInput: (state, action) => {
       state.chats[action.payload["chat"]].tempMessageInput = action.payload["input"];
+    },
+    setLastRead: (state, action) => {
+      state.chats[action.payload["chat"]].lastRead = action.payload["lastRead"];
     }
   },
 });
 
-export const { setdmsOpenedChat, addMessage, setTempMessageInput } = dmsSlice.actions;
+export const { setdmsOpenedChat, addMessage, setTempMessageInput, setLastRead } = dmsSlice.actions;
 
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of

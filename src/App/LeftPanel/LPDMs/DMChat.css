@@ -41,7 +41,7 @@
 
   /* font-family: inherit; */
   font-style: normal;
-  font-weight: 500;
+  font-weight: 400;
   font-size: 16px;
   line-height: 20px;
 
@@ -60,7 +60,7 @@
 
   /* font-family: inherit; */
   font-style: normal;
-  font-weight: 400;
+  font-weight: 300;
   font-size: 14px;
   line-height: 20px;
   white-space: nowrap;
@@ -81,7 +81,7 @@
 
   /* font-family: inherit; */
   font-style: normal;
-  font-weight: 400;
+  font-weight: 300;
   font-size: 12px;
   line-height: 20px;
   text-align: right;
@@ -89,6 +89,29 @@
   user-select: none;
 
   color: #FFFFFF;
+}
+
+
+
+/* Unread */
+
+.dmChatTitleUnread {
+  font-weight: 600;
+}
+
+.dmChatUnread {
+  font-weight: 500;
+}
+
+.dmChatUnreadNotify {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  left: 6px;
+  top: 33.5px;
+
+  border-radius: 10px;
+  background: white;
 }
 
 
