@@ -1,4 +1,5 @@
 .LPHome {
+  position: relative;
   height: 75px;
   cursor: pointer;
 }
@@ -41,4 +42,18 @@
   user-select: none;
 
   color: #FFFFFF;
+}
+
+
+
+/* Extras */
+
+.homeSelected {
+  position: absolute;
+  width: 4px;
+  height: 40px;
+  left: 0px;
+  top: 17px;
+
+  background: #FFFFFF;
 }

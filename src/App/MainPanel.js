@@ -13,7 +13,7 @@ class MainPanel extends React.Component {
 
   render() {
     return (
-      <div className="MainPanel">
+      <div className="MainPanel" style={{width: this.props.hideRightPanel ? "calc(100% - 300px)" : "calc(100% - 600px)"}}>
         <Switch>
           <Route path="/dms/:chatEmail" component={MPDMs} />
           <Route path="/dms">
@@ -35,4 +35,8 @@ class MainPanel extends React.Component {
   }
 }
 
-export default MainPanel;
+const mapStateToProps = (state) => ({
+  hideRightPanel: state.user.hideRightPanel
+});
+
+export default connect(mapStateToProps, null)(MainPanel);

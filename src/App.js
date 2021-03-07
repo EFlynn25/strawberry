@@ -58,7 +58,7 @@ class App extends React.Component {
               <TopBar />
               <LeftPanel />
               <MainPanel />
-              <RightPanel />
+              {this.props.hideRightPanel ? null : <RightPanel />}
             </Route>
           </Switch>
 
@@ -75,7 +75,8 @@ class App extends React.Component {
 const mapStateToProps = (state) => ({
   name: state.user.name,
   email: state.user.email,
-  picture: state.user.picture
+  picture: state.user.picture,
+  hideRightPanel: state.user.hideRightPanel
 });
 
 const mapDispatchToProps = {
