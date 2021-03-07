@@ -77,7 +77,7 @@ class MPDMs extends React.Component {
 
   componentWillUnmount() {
     const iv = this.state.inputValue
-    if (this.props.dmsOpenedChat != "") {
+    if (this.props.dmsOpenedChat != "" && this.props.dmsOpenedChat != "home") {
       this.props.setTempMessageInput({
         chat: this.props.dmsOpenedChat,
         input: iv

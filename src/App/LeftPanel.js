@@ -1,3 +1,7 @@
+import React from 'react';
+import { withRouter } from "react-router-dom";
+import { connect } from 'react-redux';
+
 import './LeftPanel.css';
 
 import LPHome from './LeftPanel/LPHome'
@@ -5,26 +9,48 @@ import LPSeparator from './LeftPanel/LPSeparator'
 import LPTabs from './LeftPanel/LPTabs'
 import LPGroups from './LeftPanel/LPGroups'
 import LPDMs from './LeftPanel/LPDMs'
-/* import LPChat from './LeftPanel/LPChat' */
+import {
+  setdmsOrGroups
+} from "../redux/userReducer"
 
-import { Switch, Route } from "react-router-dom";
+// import { Switch, Route } from "react-router-dom";
 
-function LeftPanel() {
-  return (
-    <div className="LeftPanel">
-      <LPHome />
-      <LPSeparator />
-      <LPTabs />
-      <Switch>
-        <Route path="/groups">
-          <LPGroups />
-        </Route>
-        <Route path="/dms">
-          <LPDMs />
-        </Route>
-      </Switch>
-    </div>
-  );
+class LeftPanel extends React.Component {
+  componentDidMount() {
+    this.props.setdmsOrGroups("dms");
+    if (this.props.history.location.pathname.startsWith("/groups")) {
+      this.props.setdmsOrGroups("groups");
+    }
+  }
+
+  render() {
+    return (
+      <div className="LeftPanel">
+        <LPHome />
+        <LPSeparator />
+        <LPTabs />
+        {this.props.dmsOrGroups == "dms" ? <LPDMs /> : <LPGroups />}
+        {/*
+        <Switch>
+          <Route path="/groups">
+            <LPGroups />
+          </Route>
+          <Route path="/dms">
+            <LPDMs />
+          </Route>
+        </Switch>
+      */}
+      </div>
+    );
+  }
 }
 
-export default LeftPanel;
+const mapStateToProps = (state) => ({
+  dmsOrGroups: state.user.dmsOrGroups
+});
+
+const mapDispatchToProps = {
+    setdmsOrGroups
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(LeftPanel));

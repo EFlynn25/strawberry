@@ -1,17 +1,37 @@
-import { Switch, Route, Link } from "react-router-dom";
+import React from 'react';
+import { connect } from 'react-redux';
+import { withRouter } from "react-router-dom";
+// import { Switch, Route, Link } from "react-router-dom";
 
 import './LPTabs.css';
+import {
+  setdmsOrGroups
+} from "../../redux/userReducer"
 
-function LPTabs() {
-  function handleClick(e) {
-    e.preventDefault();
-    console.log("tabs");
+class LPTabs extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.dmsHandleClick = this.dmsHandleClick.bind(this);
+    this.groupsHandleClick = this.groupsHandleClick.bind(this);
   }
 
-  return (
-    <div className="LPTabs" onClick={handleClick}>
-      <Link to="/dms">
-        <div className="dmTab">
+  dmsHandleClick(e) {
+    e.preventDefault();
+    this.props.setdmsOrGroups("dms");
+    console.log("dms tab");
+  }
+
+  groupsHandleClick(e) {
+    e.preventDefault();
+    this.props.setdmsOrGroups("groups");
+    console.log("groups tab");
+  }
+
+  render() {
+    return (
+      <div className="LPTabs">
+        <div className="dmTab" onClick={this.dmsHandleClick}>
           <div className="dmTabInner">
             <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" className="dmIcon">
               <defs>
@@ -29,29 +49,11 @@ function LPTabs() {
               <path d="M0 0h24v24H0z" fill="none"/>
               <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" />
             </svg>
-            <Switch>
-              <Route path="/dms">
-                <h1 className="dmText" style={{fontWeight:"600"}}>DMs</h1>
-              </Route>
-              <Route path="/">
-                <h1 className="dmText">DMs</h1>
-              </Route>
-            </Switch>
+            <h1 className="dmText" style={{fontWeight: this.props.dmsOrGroups == "dms" ? "600" : "500"}}>DMs</h1>
           </div>
-          <Switch>
-            <Route path="/dms">
-              <div className="dmSelected">
-              </div>
-            </Route>
-            <Route path="/">
-              <div className="dmHovering">
-              </div>
-            </Route>
-          </Switch>
+          <div className={this.props.dmsOrGroups == "dms" ? "dmSelected" : "dmHovering"} />
         </div>
-      </Link>
-      <Link to="/groups">
-        <div className="groupsTab">
+        <div className="groupsTab" onClick={this.groupsHandleClick}>
           <div className="groupsTabInner">
             <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" className="groupsIcon">
               <defs>
@@ -69,29 +71,21 @@ function LPTabs() {
               <path d="M0 0h24v24H0z" fill="none"/>
               <path d="M21 6h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1zm-4 6V3c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1v14l4-4h10c.55 0 1-.45 1-1z"/>
             </svg>
-            <Switch>
-              <Route path="/groups">
-                <h1 className="groupsText" style={{fontWeight:"600"}}>Groups</h1>
-              </Route>
-              <Route path="/">
-                <h1 className="groupsText">Groups</h1>
-              </Route>
-            </Switch>
+            <h1 className="groupsText" style={{fontWeight: this.props.dmsOrGroups == "groups" ? "600" : "500"}}>Groups</h1>
           </div>
-          <Switch>
-            <Route path="/groups">
-              <div className="groupsSelected">
-              </div>
-            </Route>
-            <Route path="/">
-              <div className="groupsHovering">
-              </div>
-            </Route>
-          </Switch>
+          <div className={this.props.dmsOrGroups == "groups" ? "groupsSelected" : "groupsHovering"} />
         </div>
-      </Link>
-    </div>
-  );
+      </div>
+    );
+  }
 }
 
-export default LPTabs;
+const mapStateToProps = (state) => ({
+  dmsOrGroups: state.user.dmsOrGroups
+});
+
+const mapDispatchToProps = {
+    setdmsOrGroups
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(LPTabs));
