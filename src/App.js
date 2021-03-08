@@ -33,7 +33,7 @@ class App extends React.Component {
         })
       } else {
         if (this.props.history.location.pathname == "/") {
-          this.props.history.push("/dms");
+          this.props.history.push("/home");
         }
         startSocket();
         this.props.setUserName(user.displayName);
