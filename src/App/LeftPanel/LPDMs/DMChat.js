@@ -5,7 +5,7 @@ import { withRouter } from "react-router-dom";
 import './DMChat.css';
 import ethan from "../../../assets/images/ethan.webp"
 import {
-  setdmsOpenedChat,
+  setopenedChat,
   setLastRead
 } from "../../../redux/dmsReducer"
 
@@ -32,23 +32,30 @@ class DMChat extends React.Component {
     }
   }
 
+  componentDidUpdate() {
+    const myChat =  this.props.chats[this.props.chatEmail];
+    const myChatMessages = myChat.messages;
+    if (this.props.chatEmail == this.props.openedChat) {
+      this.props.setLastRead({"chat": this.props.chatEmail, "lastRead": myChatMessages[myChatMessages.length - 1].id});
+    }
+  }
+
   handleClick(e) {
     e.preventDefault();
     console.log("[from " + this.props.chatEmail + "] clicked");
-    this.props.setdmsOpenedChat(this.props.chatEmail);
+    this.props.setopenedChat(this.props.chatEmail);
 
     this.props.history.push("/dms/" + this.props.chatEmail);
   }
 
   render() {
-    //console.log("[DMChat] [from " + this.props.chatEmail + "] selected: " + this.props.dmsOpenedChat)
+    //console.log("[DMChat] [from " + this.props.chatEmail + "] selected: " + this.props.openedChat)
     const myChat =  this.props.chats[this.props.chatEmail];
     const myChatMessages = myChat.messages;
 
     let opened = false;
-    if (this.props.chatEmail == this.props.dmsOpenedChat) {
+    if (this.props.chatEmail == this.props.openedChat) {
       opened = true;
-      this.props.setLastRead({"chat": this.props.chatEmail, "lastRead": myChatMessages[myChatMessages.length - 1].id});
     }
 
     let read = true;
@@ -81,13 +88,13 @@ class DMChat extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  dmsOpenedChat: state.dms.dmsOpenedChat,
+  openedChat: state.dms.openedChat,
   chats: state.dms.chats,
   getknownPeople: state.people.knownPeople,
 });
 
 const mapDispatchToProps = {
-    setdmsOpenedChat,
+    setopenedChat,
     setLastRead
 }
 

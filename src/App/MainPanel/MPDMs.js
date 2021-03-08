@@ -5,7 +5,7 @@ import TextareaAutosize from 'react-autosize-textarea';
 
 import './MPDMs.css';
 import {
-  setdmsOpenedChat,
+  setopenedChat,
   addMessage,
   setTempMessageInput
 } from '../../redux/dmsReducer';
@@ -28,14 +28,14 @@ class MPDMs extends React.Component {
   }
 
   componentDidMount() {
-    this.props.setdmsOpenedChat(this.props.match.params.chatEmail);
+    this.props.setopenedChat(this.props.match.params.chatEmail);
 
-    console.log("[MPDMs]: componentDidMount with thread ID " + this.props.dmsOpenedChat);
+    console.log("[MPDMs]: componentDidMount with thread ID " + this.props.openedChat);
     //this.messagesRef.current.scrollTop = this.messagesRef.current.scrollHeight;
-    if (this.props.dmsOpenedChat != "") {
+    if (this.props.openedChat != "") {
       this.reloadMessages();
 
-      const tmi = this.props.chats[this.props.dmsOpenedChat].tempMessageInput;
+      const tmi = this.props.chats[this.props.openedChat].tempMessageInput;
       if (tmi != "") {
         this.setState({
           inputValue: tmi
@@ -47,22 +47,22 @@ class MPDMs extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log("[MPDMs]: componentDidUpdate with thread ID " + this.props.dmsOpenedChat);
-    const propsOpenedChat = this.props.dmsOpenedChat;
-    if (prevProps.dmsOpenedChat != propsOpenedChat || prevProps.chats[propsOpenedChat] != this.props.chats[propsOpenedChat]) {
+    console.log("[MPDMs]: componentDidUpdate with thread ID " + this.props.openedChat);
+    const propsOpenedChat = this.props.openedChat;
+    if (prevProps.openedChat != propsOpenedChat || prevProps.chats[propsOpenedChat] != this.props.chats[propsOpenedChat]) {
       this.reloadMessages();
       this.setState({inputValue: ""});
       this.inputRef.current.focus();
     }
 
-    const thisChat = this.props.chats[this.props.dmsOpenedChat];
+    const thisChat = this.props.chats[this.props.openedChat];
     if (thisChat != null) {
       const iv = this.state.inputValue
       const tmi = thisChat.tempMessageInput
-      if (this.props.dmsOpenedChat != "" && prevProps.dmsOpenedChat != propsOpenedChat) {
-        if (prevProps.dmsOpenedChat != "" && prevProps.dmsOpenedChat != "home") {
+      if (this.props.openedChat != "" && prevProps.openedChat != propsOpenedChat) {
+        if (prevProps.openedChat != "" && prevProps.openedChat != "home") {
           this.props.setTempMessageInput({
-            chat: prevProps.dmsOpenedChat,
+            chat: prevProps.openedChat,
             input: iv
           });
         }
@@ -77,16 +77,16 @@ class MPDMs extends React.Component {
 
   componentWillUnmount() {
     const iv = this.state.inputValue
-    if (this.props.dmsOpenedChat != "" && this.props.dmsOpenedChat != "home") {
+    if (this.props.openedChat != "" && this.props.openedChat != "home") {
       this.props.setTempMessageInput({
-        chat: this.props.dmsOpenedChat,
+        chat: this.props.openedChat,
         input: iv
       });
     }
   }
 
   reloadMessages() {
-    const thisChat = this.props.chats[this.props.dmsOpenedChat];
+    const thisChat = this.props.chats[this.props.openedChat];
     //const startID = thisChat["messages"][0]["id"];
     //let nextID = startID;
 
@@ -123,7 +123,7 @@ class MPDMs extends React.Component {
         }
         console.debug("after while... " + messageIDs);
 
-        const myPerson = this.props.getknownPeople[this.props.dmsOpenedChat];
+        const myPerson = this.props.getknownPeople[this.props.openedChat];
         let newMessageName = "";
         let newMessagePicture = "";
         if (myPerson != null) {
@@ -187,7 +187,7 @@ class MPDMs extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  dmsOpenedChat: state.dms.dmsOpenedChat,
+  openedChat: state.dms.openedChat,
   chats: state.dms.chats,
   myName: state.user.name,
   myEmail: state.user.email,
@@ -196,7 +196,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
-  setdmsOpenedChat,
+  setopenedChat,
   addMessage,
   setTempMessageInput
 }

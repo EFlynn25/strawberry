@@ -7,8 +7,8 @@ import DMChat from './LPDMs/DMChat'
 
 class LPDMs extends React.Component {
   componentDidMount() {
-    if (this.props.dmsOpenedChat != "") {
-      this.props.history.push("/dms/" + this.props.dmsOpenedChat);
+    if (this.props.openedChat != "") {
+      this.props.history.push("/dms/" + this.props.openedChat);
     }
   }
 
@@ -18,7 +18,6 @@ class LPDMs extends React.Component {
     const chatKeys = Object.keys(this.props.chats);
     if (Array.isArray(chatKeys) && chatKeys.length) {
       chatKeys.map(item => {
-        console.log("item: " + item);
         const chatElement = <DMChat key={"id" + item} chatEmail={item} />;
         children.push(chatElement);
       })
@@ -39,7 +38,7 @@ class LPDMs extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  dmsOpenedChat: state.dms.dmsOpenedChat,
+  openedChat: state.dms.openedChat,
   chats: state.dms.chats
 });
 

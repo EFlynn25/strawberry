@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import './LPHome.css';
 import {
-  setdmsOpenedChat
+  setopenedChat
 } from '../../redux/dmsReducer';
 
 class LPHome extends React.Component {
@@ -31,6 +31,7 @@ class LPHome extends React.Component {
       this.setState({
         opened: true
       });
+      this.props.setopenedChat("");
     } else if (this.props.history.location.pathname != "/home" && this.state.opened) {
       this.setState({
         opened: false
@@ -40,10 +41,8 @@ class LPHome extends React.Component {
 
   handleClick(e) {
     e.preventDefault();
-    console.log("home");
 
     this.props.history.push("/home");
-    this.props.setdmsOpenedChat("");
   }
 
   render () {
@@ -66,7 +65,7 @@ class LPHome extends React.Component {
 }
 
 const mapDispatchToProps = {
-    setdmsOpenedChat
+    setopenedChat
 }
 
 export default connect(null, mapDispatchToProps)(withRouter(LPHome));

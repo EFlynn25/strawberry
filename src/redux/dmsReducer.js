@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 export const dmsSlice = createSlice({
   name: 'dms',
   initialState: {
-    dmsOpenedChat: "",
+    openedChat: "",
 
 
     chats: {
@@ -44,11 +44,11 @@ export const dmsSlice = createSlice({
 
   },
   reducers: {
-    setdmsOpenedChat: (state, action) => {
-      state.dmsOpenedChat = action.payload;
+    setopenedChat: (state, action) => {
+      state.openedChat = action.payload;
     },
     addMessage: (state, action) => {
-      let myChatEmail = state.dmsOpenedChat;
+      let myChatEmail = state.openedChat;
       if ("chat" in action.payload) {
         myChatEmail = action.payload["chat"];
       }
@@ -72,12 +72,12 @@ export const dmsSlice = createSlice({
   },
 });
 
-export const { setdmsOpenedChat, addMessage, setTempMessageInput, setLastRead } = dmsSlice.actions;
+export const { setopenedChat, addMessage, setTempMessageInput, setLastRead } = dmsSlice.actions;
 
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of
 // in the slice file. For example: `useSelector((state) => state.user.name)`
-export const getdmsOpenedChat = state => state.dms.dmsOpenedChat;
+export const getopenedChat = state => state.dms.openedChat;
 export const getChats = state => state.dms.chats;
 
 export default dmsSlice.reducer;
