@@ -1,9 +1,10 @@
 .OverlayView {
-  transition: opacity .4s;
+  transition: opacity .4s, visibility 0s .4s;
 }
 
 .OverlayViewHide {
   opacity: 0;
+  visibility: hidden;
 }
 
 
