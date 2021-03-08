@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { Switch, Route, withRouter } from "react-router-dom";
 import firebase from 'firebase/app';
 import 'firebase/auth';
@@ -21,16 +21,15 @@ import { startSocket, add_user } from './socket.js';
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {pageLoaded: false};
+    this.state = {
+      pageLoaded: false
+    };
   }
 
   componentDidMount() {
     firebase.auth().onAuthStateChanged(user => {
-      if (!(!!user)) {
+      if (!user) {
         this.props.history.push("/welcome");
-        this.setState({
-          pageLoaded: true
-        })
       } else {
         if (this.props.history.location.pathname == "/") {
           this.props.history.push("/home");
@@ -41,7 +40,7 @@ class App extends React.Component {
         this.props.setUserPicture(user.photoURL);
         this.setState({
           pageLoaded: true
-        })
+        });
       }
     });
   }
@@ -49,23 +48,30 @@ class App extends React.Component {
   render() {
     return (
       <div className="App">
-        { this.state.pageLoaded ?
           <Switch>
             <Route path="/welcome">
               <Overlay type="welcome" />
             </Route>
             <Route path="/">
+              {/* this.state.pageLoaded ?
+                <Fragment>
+                  <TopBar />
+                  <LeftPanel />
+                  <MainPanel />
+                  {this.props.hideRightPanel ? null : <RightPanel />}
+                </Fragment>
+
+                :
+
+                <Overlay type="loading" />
+              */}
               <TopBar />
               <LeftPanel />
               <MainPanel />
               {this.props.hideRightPanel ? null : <RightPanel />}
+              <Overlay type="loading" hide={this.state.pageLoaded} />
             </Route>
           </Switch>
-
-          :
-
-          <Overlay type="loading" />
-        }
 
       </div>
     );

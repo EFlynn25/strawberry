@@ -1,9 +1,10 @@
+import { Fragment } from 'react';
 import { useHistory } from "react-router-dom";
 import firebase from 'firebase/app';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 
-import './Overlay.css';
 import wlogo from '../assets/icons/swhite.svg';
+import './Overlay.css';
 import { uiConfig, signedIn } from '../StartFirebase'
 
 import OTopBar from './Overlay/OTopBar';
@@ -14,13 +15,16 @@ import ORightPanel from './Overlay/ORightPanel';
 function Overlay(props) {
   const history = useHistory();
 
+  let ovClass = "OverlayView";
   let overlayContent;
+  let showBg = true;
   if (props.type == "welcome") {
-    const mainPage = () => history.push('/');
+    //const mainPage = () =>
 
     firebase.auth().onAuthStateChanged(user => {
       if (!!user) {
-        mainPage();
+        //mainPage();
+        history.push('/');
       }
     });
     overlayContent =
@@ -32,18 +36,41 @@ function Overlay(props) {
         </div>
       </div>;
   } else if (props.type == "loading") {
-  overlayContent =
-    <div className="overlayPanel">
-      <h1 className="oLoadingText">Loading...</h1>
-    </div>;
+    /*overlayContent =
+      <div className="overlayPanel">
+        <h1 className="oLoadingText">Loading...</h1>
+      </div>;*/
+      if (props.hide != null && props.hide) {
+        ovClass = "OverlayView OverlayViewHide";
+      }
+      overlayContent =
+        <div className="overlayLoading">
+          <img src={wlogo} className="oLoadingIcon" alt="Strawberry logo" />
+        </div>;
+  } else if (props.type == "blur") {
+    if (props.hide != null && props.hide) {
+      ovClass = "OverlayView OverlayViewHide";
+    }
+    showBg = false;
+    overlayContent = null;
   }
 
   return (
-    <div className="OverlayView">
-      <OTopBar />
-      <OLeftPanel />
-      <OMainPanel />
-      <ORightPanel />
+    <div className={ovClass}>
+      {
+        showBg ?
+
+        <Fragment>
+          <OTopBar />
+          <OLeftPanel />
+          <OMainPanel />
+          <ORightPanel />
+        </Fragment>
+
+        :
+
+        null
+      }
       <div className="overlay">
         {overlayContent}
       </div>
