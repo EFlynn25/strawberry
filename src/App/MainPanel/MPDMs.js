@@ -32,7 +32,7 @@ class MPDMs extends React.Component {
 
     console.log("[MPDMs]: componentDidMount with thread ID " + this.props.openedChat);
     //this.messagesRef.current.scrollTop = this.messagesRef.current.scrollHeight;
-    if (this.props.openedChat != "") {
+    if (this.props.openedChat in this.props.chats) {
       this.reloadMessages();
 
       const tmi = this.props.chats[this.props.openedChat].tempMessageInput;
@@ -60,7 +60,7 @@ class MPDMs extends React.Component {
       const iv = this.state.inputValue
       const tmi = thisChat.tempMessageInput
       if (this.props.openedChat != "" && prevProps.openedChat != propsOpenedChat) {
-        if (prevProps.openedChat != "" && prevProps.openedChat != "home") {
+        if (prevProps.openedChat in this.props.chats) {
           this.props.setTempMessageInput({
             chat: prevProps.openedChat,
             input: iv
@@ -77,7 +77,7 @@ class MPDMs extends React.Component {
 
   componentWillUnmount() {
     const iv = this.state.inputValue
-    if (this.props.openedChat != "" && this.props.openedChat != "home") {
+    if (this.props.openedChat in this.props.chats) {
       this.props.setTempMessageInput({
         chat: this.props.openedChat,
         input: iv

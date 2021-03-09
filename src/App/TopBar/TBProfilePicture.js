@@ -23,7 +23,7 @@ class TBProfilePicture extends React.Component {
 
   setWrapperRef(node) {
     if (node != null) {
-      if (node.className == "tbDropdown") {
+      if (node.className.startsWith("tbDropdown")) {
         this.ddWrapperRef = node;
       } else if (node.className == "mainPFP") {
         this.pfpWrapperRef = node;

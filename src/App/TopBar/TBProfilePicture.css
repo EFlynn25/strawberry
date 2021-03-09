@@ -30,12 +30,21 @@
 
   z-index: 2;
 
-  transition: opacity .1s;
+  /* transition: opacity .1s;
+  opacity: 1; */
+
+  transition: opacity .1s, top .1s;
   opacity: 1;
+  top: 60px;
 }
 
 .tbDropdownHide {
-  transition: opacity .1s, top 0s .1s;
+  /* transition: opacity .1s, top 0s .1s;
   top: -300px;
+  opacity: 0 !important; */
+
+  transition: opacity .1s, top .1s, visibility 0s .1s;
+  visibility: hidden;
+  top: 50px;
   opacity: 0 !important;
 }

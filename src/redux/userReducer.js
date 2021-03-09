@@ -7,7 +7,8 @@ export const userSlice = createSlice({
     email: "",
     picture: "",
     dmsOrGroups: "",
-    hideRightPanel: false
+    hideRightPanel: false,
+    dmsLoaded: false
   },
   reducers: {
     setUserName: (state, action) => {
