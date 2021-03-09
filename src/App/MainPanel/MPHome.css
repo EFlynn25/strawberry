@@ -2,6 +2,52 @@
   position: absolute;
   width: 100%;
   height: 100%;
+  opacity: 0;
+  top: -20px;
+
+  transition: opacity .3s cubic-bezier(0.65, 0, 0.35, 1),
+              top .3s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.MPHomeTransition {
+  opacity: 1;
+  top: 0;
+}
+
+
+
+/* mpHomeWelcome */
+
+.mpHomeWelcome {
+  width: 100%;
+}
+
+.mphwPFP {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  left: calc(50% - 50px);
+  top: 80px;
+  border-radius: 100px;
+}
+
+.mphwName {
+  position: absolute;
+  width: 100%;
+  height: 40px;
+  top: 180px;
+  margin: 0;
+
+  /* font-family: inherit; */
+  font-style: normal;
+  font-weight: 700;
+  font-size: 28px;
+  line-height: 40px;
+  text-align: center;
+
+  user-select: none;
+
+  color: #FFF;
 }
 
 

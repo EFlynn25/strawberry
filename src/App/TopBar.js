@@ -1,32 +1,76 @@
-import { useSelector, useDispatch } from 'react-redux';
+import React from 'react';
+import { connect } from 'react-redux';
+import { withRouter } from "react-router-dom";
 
 import wlogo from '../assets/icons/swhite.svg';
 import everett from '../assets/images/everett.jpeg';
 import './TopBar.css';
-import {
-  getUserName,
-  getUserEmail,
-  getUserPicture
-} from '../redux/userReducer';
 
 import TBProfilePicture from './TopBar/TBProfilePicture';
 
-function TopBar() {
-  const name = useSelector(getUserName);
-  const email = useSelector(getUserEmail);
-  const picture = useSelector(getUserPicture);
+class TopBar extends React.Component {
+  constructor(props) {
+    super(props);
 
-  return (
-    <div className="TopBar">
-      {/* Left side */}
-      {/*<img src={picture} className="mainPFP" alt="Profile picture" />*/}
-      <TBProfilePicture src={picture} />
-      <h1 className="welcomeText">Hey, {name}!</h1>
+    this.state = {
+      tbLogoDivClass: "tbLogoDiv",
+      tbWelcomeDivClass: "tbWelcomeDiv",
+      tbLeftLogoClass: "tbLeftLogo"
+    };
+  }
 
-      {/* Right side */}
-      <img src={wlogo} className="logo" alt="Strawberry logo" />
-    </div>
-  );
+  componentDidMount() {
+    this.reloadClasses();
+  }
+
+  componentDidUpdate() {
+    this.reloadClasses();
+  }
+
+  reloadClasses() {
+    if (this.props.history.location.pathname.startsWith("/home")) {
+      if (this.state.tbLogoDivClass != "tbLogoDiv tbLogoDivHide") {
+        this.setState({
+          tbLogoDivClass: "tbLogoDiv tbLogoDivHide",
+          tbWelcomeDivClass: "tbWelcomeDiv tbWelcomeDivHide",
+          tbLeftLogoClass: "tbLeftLogo tbLeftLogoShow"
+        });
+      }
+    } else {
+      if (this.state.tbLogoDivClass != "tbLogoDiv") {
+        this.setState({
+          tbLogoDivClass: "tbLogoDiv",
+          tbWelcomeDivClass: "tbWelcomeDiv",
+          tbLeftLogoClass: "tbLeftLogo"
+        });
+      }
+    }
+  }
+
+  render() {
+    return (
+      <div className="TopBar">
+        {/* Left side */}
+        {/*<img src={picture} className="mainPFP" alt="Profile picture" />*/}
+        <div className={this.state.tbWelcomeDivClass}>
+          <TBProfilePicture src={this.props.picture} />
+          <h1 className="tbWelcomeText">Hey, {this.props.name}!</h1>
+        </div>
+        <img src={wlogo} className={this.state.tbLeftLogoClass} alt="Strawberry logo" />
+
+        {/* Right side */}
+        <div className={this.state.tbLogoDivClass}>
+          <img src={wlogo} className="tbLogo" alt="Strawberry logo" />
+        </div>
+      </div>
+    );
+  }
 }
 
-export default TopBar;
+const mapStateToProps = (state) => ({
+  name: state.user.name,
+  email: state.user.email,
+  picture: state.user.picture
+});
+
+export default connect(mapStateToProps, null)(withRouter(TopBar));
