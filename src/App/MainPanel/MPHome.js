@@ -4,6 +4,7 @@ import { withRouter } from "react-router-dom";
 import VisibilitySensor from 'react-visibility-sensor';
 
 import wlogo from '../../assets/icons/swhite.svg';
+import notify from '../../assets/icons/notify.svg';
 import './MPHome.css';
 import {
   sethideRightPanel
