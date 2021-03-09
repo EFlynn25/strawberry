@@ -4,11 +4,12 @@ import { withRouter } from "react-router-dom";
 import VisibilitySensor from 'react-visibility-sensor';
 
 import wlogo from '../../assets/icons/swhite.svg';
-import notify from '../../assets/icons/notify.svg';
 import './MPHome.css';
 import {
   sethideRightPanel
 } from '../../redux/userReducer';
+
+import HomeContent from './MPHome/HomeContent';
 
 class MPHome extends React.Component {
   constructor(props) {
@@ -45,6 +46,8 @@ class MPHome extends React.Component {
             <img src={this.props.picture} className="mphwPFP" alt={this.props.name} />
             <h1 className="mphwName">Hey, {this.props.name}!</h1>
           </div>
+
+          <HomeContent />
 
           {
             /*

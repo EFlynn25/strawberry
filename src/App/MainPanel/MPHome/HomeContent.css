@@ -1,0 +1,68 @@
+.HomeContent {
+  position: absolute;
+  width: 100%;
+  height: 10px;
+  top: 300px;
+}
+
+
+
+/* Tabs */
+
+.hcTabs {
+  display: flex;
+  justify-content: center;
+}
+
+.hcTab {
+  height: 25px;
+  margin: 0 25px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #b2b2b2;
+}
+
+.hcTab:hover {
+  cursor: pointer;
+  user-select: none;
+  border-bottom: 1px solid white;
+}
+
+.hcTab:hover .hcTitle, .hcTab:hover .hcTabIcon {
+  filter: unset;
+}
+
+.hcTabIcon {
+  width: 25px;
+  float: left;
+  filter: invert(0.3);
+}
+
+.hcTitle {
+  height: 25px;
+  margin: 0;
+  margin-left: 4px;
+  margin-right: -10px;
+  float: right;
+
+  font-size: 16px;
+  line-height: 25px;
+
+  color: white;
+  filter: invert(0.3);
+}
+
+
+
+/* Specific Tab Icons */
+
+.hctiNotify {
+  margin-left: -14px;
+}
+
+.hctiPeople {
+  margin-left: -11px;
+}
+
+.hctiProfile {
+  margin-left: -12px;
+}
