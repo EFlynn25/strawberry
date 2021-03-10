@@ -15,6 +15,8 @@ class DMNewChat extends React.Component {
     this.handleInputChange = this.handleInputChange.bind(this);
     this.inputEnterPressed = this.inputEnterPressed.bind(this);
 
+    this.inputRef = React.createRef();
+
     this.handleClick = this.handleClick.bind(this);
     this.state = {
       dropdown: false,
@@ -77,6 +79,10 @@ class DMNewChat extends React.Component {
       });
     } else {
       this.setState({dropdown: true});
+      var root = this;
+      setTimeout(function() {
+        root.inputRef.current.focus();
+      }, 10);
     }
   }
 
@@ -118,7 +124,7 @@ class DMNewChat extends React.Component {
           {/*<p style={{color: "white", fontFamily: "Comic Sans MS", margin: "10px"}}>new chat lol</p>*/}
           <h1 className="ncddTitle">New Chat</h1>
           <h1 className="ncddText">Email:</h1>
-          <input value={this.state.inputValue} onChange={this.handleInputChange} onKeyPress={this.inputEnterPressed} className="ncddInput" placeholder="Type email here" />
+          <input value={this.state.inputValue} onChange={this.handleInputChange} onKeyPress={this.inputEnterPressed} className="ncddInput" placeholder="Type email here" ref={this.inputRef} />
           <h1 className="ncddStatus">{this.state.status}</h1>
         </div>
       </Fragment>
