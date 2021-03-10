@@ -15,10 +15,17 @@ export const peopleSlice = createSlice({
       "katrinaflynn79@gmail.com": {
         name: "Katrina Flynn",
         picture: "https://lh3.googleusercontent.com/a-/AOh14GilXiTyQnMeMPB83WVuLR6568QYDX2qwkOzUKKS=s70-p-k-rw-no"
+      },
+      "everettflynn25@gmail.com": {
+        name: "Everett Flynn",
+        picture: "https://lh3.googleusercontent.com/a-/AOh14GiunFHTaV5EdC9DKpm1utK0Y7K-cP1lD-nh9vISog=s96-c"
       }
     }
   },
   reducers: {
+    addPerson: (state, action) => {
+      state.knownPeople[action.payload["email"]] = {name: action.payload["name"], picture: action.payload["picture"]}
+    },
     setpersonName: (state, action) => {
       state.knownPeople[action.payload["email"]].name = action.payload["name"];
     },
@@ -28,7 +35,7 @@ export const peopleSlice = createSlice({
   },
 });
 
-export const { setpersonName, setpersonEmail, setpersonPicture } = peopleSlice.actions;
+export const { addPerson, setpersonName, setpersonPicture } = peopleSlice.actions;
 
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of

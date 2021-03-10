@@ -22,21 +22,30 @@ class DMChat extends React.Component {
   }
 
   componentDidMount() {
-    const cEmail = this.props.chatEmail;
-    const myPerson = this.props.getknownPeople[cEmail];
-    if (myPerson != null) {
-      this.setState({
-        name: myPerson.name,
-        picture: myPerson.picture
-      });
-    }
+    this.updateData();
   }
 
   componentDidUpdate() {
+    this.updateData();
+  }
+
+  updateData() {
     const myChat =  this.props.chats[this.props.chatEmail];
     const myChatMessages = myChat.messages;
-    if (this.props.chatEmail == this.props.openedChat) {
+
+    if (this.props.chatEmail == this.props.openedChat && myChatMessages.length > 0) {
       this.props.setLastRead({"chat": this.props.chatEmail, "lastRead": myChatMessages[myChatMessages.length - 1].id});
+    }
+
+    const cEmail = this.props.chatEmail;
+    const myPerson = this.props.getknownPeople[cEmail];
+    if (myPerson != null) {
+      if (this.state.name != myPerson.name || this.state.picture != myPerson.picture) {
+        this.setState({
+          name: myPerson.name,
+          picture: myPerson.picture
+        });
+      }
     }
   }
 
@@ -58,11 +67,6 @@ class DMChat extends React.Component {
       opened = true;
     }
 
-    let read = true;
-    if (myChat.lastRead < myChatMessages[myChatMessages.length - 1].id || myChat.lastRead == null) {
-      read = false;
-    }
-
     let chatMessage = "";
     if (Array.isArray(myChatMessages) && myChatMessages.length) {
       const lastMessage = myChatMessages[myChatMessages.length - 1];
@@ -74,12 +78,24 @@ class DMChat extends React.Component {
       chatMessage = you + lastMessage["message"];
     }
 
+    let chatTime = "4:20 PM";
+
+    let read = true;
+    if (myChatMessages.length > 0) {
+      if (myChat.lastRead < myChatMessages[myChatMessages.length - 1].id || myChat.lastRead == null) {
+        read = false;
+      }
+    } else {
+      chatMessage = <i>No messages</i>
+      chatTime = null;
+    }
+
     return (
       <div className="DMChat" onClick={this.handleClick} style={{background: opened ? "linear-gradient(90deg, #282A2D 0%, transparent 100%)" : ""}}>
         <img src={this.state.picture} className="dmChatPFP" alt={this.state.name} />
         <h1 className={read ? "dmChatTitle" : "dmChatTitle dmChatTitleUnread"}>{this.state.name}</h1>
         <p className={read ? "dmChatMessage" : "dmChatMessage dmChatUnread"}>{chatMessage}</p>
-        <h1 className={read ? "dmChatTime" : "dmChatTime dmChatUnread"}>4:20 PM</h1>
+        <h1 className={read ? "dmChatTime" : "dmChatTime dmChatUnread"}>{chatTime}</h1>
         {opened ? <div className="dmChatSelected" /> : null}
         {read ? null : <div className="dmChatUnreadNotify" />}
       </div>

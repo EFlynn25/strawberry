@@ -1,6 +1,8 @@
 import firebase from 'firebase/app';
 import { useDispatch } from 'react-redux'
-import { addRequested, addAlreadyRequested } from './redux/dmsReducer.js'
+import { setdmsLoaded, setpeopleLoaded } from './redux/userReducer.js'
+import { addChat, addRequested, addAlreadyRequested } from './redux/dmsReducer.js'
+import { addPerson } from './redux/peopleReducer.js'
 import mainStore from './redux/mainStore.js';
 
 
@@ -16,23 +18,41 @@ export function startSocket() {
     var jsonData = JSON.parse(event.data);
     var product = jsonData["product"];
     var com = jsonData["command"];
-    if (product == "dms") {
+    if (product == "app") {
+      if (com == "get_user_info") {
+
+        // if ("chats" in jsonData) {
+        //   const chatsList = jsonData["chats"];
+        //   console.log(chatsList);
+        //   if (Array.isArray(chatsList) && chatsList.length) {
+        //     chatsList.map(item => {
+        //       get_user_info(item);
+        //       mainStore.dispatch(addChat(item));
+        //     });
+        //   }
+        // }
+        mainStore.dispatch(addPerson({"email": jsonData["email"], "name": jsonData["name"], "picture": jsonData["picture"]}));
+
+      }
+    } else if (product == "dms") {
       /* Get Functions */
       if (com == "get_chats") {
-        const chatsList = jsonData["chats"];
-        if (Array.isArray(chatsList) && chatsList.length) {
-          chatsList.map(item => {
-            console.log(item);
-          });
+        if ("chats" in jsonData) {
+          const chatsList = jsonData["chats"];
+          if (Array.isArray(chatsList) && chatsList.length) {
+            chatsList.map(item => {
+              get_user_info(item);
+              mainStore.dispatch(addChat(item));
+            });
+          }
         }
+        mainStore.dispatch(setdmsLoaded(true));
       }
 
       /* Set Functions */
       else if (com == "add_user") {
         dms_get_chats();
       } else if (com == "request_to_chat") {
-        console.log("already_requested: ");
-        console.log(jsonData["already_requested"]);
         if (!jsonData["already_requested"]) {
           mainStore.dispatch(addRequested(jsonData["requested"]));
         } else {
@@ -78,6 +98,13 @@ export function startSocket() {
 
 export function add_user(idToken) {
   var jsonObj = {"product": "app", "command": "add_user", "idToken": idToken}
+  var jsonString = JSON.stringify(jsonObj);
+  console.log("WebSocket message sending: " + jsonString);
+  socket.send(jsonString);
+}
+
+export function get_user_info(requested) {
+  var jsonObj = {"product": "app", "command": "get_user_info", "requested": requested}
   var jsonString = JSON.stringify(jsonObj);
   console.log("WebSocket message sending: " + jsonString);
   socket.send(jsonString);

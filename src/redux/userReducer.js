@@ -8,7 +8,8 @@ export const userSlice = createSlice({
     picture: "",
     dmsOrGroups: "",
     hideRightPanel: false,
-    dmsLoaded: false
+    dmsLoaded: false,
+    peopleLoaded: false
   },
   reducers: {
     setUserName: (state, action) => {
@@ -28,11 +29,14 @@ export const userSlice = createSlice({
     },
     setdmsLoaded: (state, action) => {
       state.dmsLoaded = action.payload;
+    },
+    setpeopleLoaded: (state, action) => {
+      state.dmsLoaded = action.payload;
     }
   },
 });
 
-export const { setUserName, setUserEmail, setUserPicture, setdmsOrGroups, sethideRightPanel, setdmsLoaded } = userSlice.actions;
+export const { setUserName, setUserEmail, setUserPicture, setdmsOrGroups, sethideRightPanel, setdmsLoaded, setpeopleLoaded } = userSlice.actions;
 
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of
@@ -43,5 +47,6 @@ export const getUserPicture = state => state.user.picture;
 export const getdmsOrGroups = state => state.user.dmsOrGroups;
 export const gethideRightPanel = state => state.user.hideRightPanel;
 export const getdmsLoaded = state => state.user.dmsLoaded;
+export const getpeopleLoaded = state => state.user.peopleLoaded;
 
 export default userSlice.reducer;

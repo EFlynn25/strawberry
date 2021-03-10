@@ -48,6 +48,9 @@ export const dmsSlice = createSlice({
     setopenedChat: (state, action) => {
       state.openedChat = action.payload;
     },
+    addChat: (state, action) => {
+      state.chats[action.payload] = {messages: []};
+    },
     addMessage: (state, action) => {
       let myChatEmail = state.openedChat;
       if ("chat" in action.payload) {
@@ -55,7 +58,10 @@ export const dmsSlice = createSlice({
       }
 
       let myMessages = state.chats[myChatEmail]["messages"];
-      let myId = myMessages[myMessages.length - 1]["id"] + 1;
+      let myId = 0;
+      if (myMessages.length > 0) {
+        myId = myMessages[myMessages.length - 1]["id"] + 1;
+      }
       let myFrom = "me";
       if ("from" in action.payload) {
         myFrom = action.payload["from"];
@@ -95,7 +101,7 @@ export const dmsSlice = createSlice({
   },
 });
 
-export const { setopenedChat, addMessage, setTempMessageInput, setLastRead, addRequested, removeRequested, addAlreadyRequested, removeAlreadyRequested } = dmsSlice.actions;
+export const { setopenedChat, addChat, addMessage, setTempMessageInput, setLastRead, addRequested, removeRequested, addAlreadyRequested, removeAlreadyRequested } = dmsSlice.actions;
 
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of

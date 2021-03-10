@@ -38,9 +38,6 @@ class App extends React.Component {
         this.props.setUserName(user.displayName);
         this.props.setUserEmail(user.email);
         this.props.setUserPicture(user.photoURL);
-        this.setState({
-          pageLoaded: true
-        });
       }
     });
   }
@@ -48,6 +45,12 @@ class App extends React.Component {
   componentDidUpdate() {
     if (this.props.history.location.pathname == "/") {
       this.props.history.push("/home");
+    }
+
+    if (!this.state.pageLoaded && this.props.dmsLoaded) {
+      this.setState({
+        pageLoaded: true
+      });
     }
   }
 
@@ -59,7 +62,7 @@ class App extends React.Component {
               <Overlay type="welcome" />
             </Route>
             <Route path="/">
-              {/* this.state.pageLoaded ?
+              {  this.state.pageLoaded ?
                 <Fragment>
                   <TopBar />
                   <LeftPanel />
@@ -69,13 +72,17 @@ class App extends React.Component {
 
                 :
 
-                <Overlay type="loading" />
-              */}
+                null
+              }
+
+              <Overlay type="loading" hide={this.state.pageLoaded} />
+              {/*
               <TopBar />
               <LeftPanel />
               <MainPanel />
               {this.props.hideRightPanel ? null : <RightPanel />}
               <Overlay type="loading" hide={this.state.pageLoaded} />
+              */}
             </Route>
           </Switch>
 
@@ -88,7 +95,8 @@ const mapStateToProps = (state) => ({
   name: state.user.name,
   email: state.user.email,
   picture: state.user.picture,
-  hideRightPanel: state.user.hideRightPanel
+  hideRightPanel: state.user.hideRightPanel,
+  dmsLoaded: state.user.dmsLoaded
 });
 
 const mapDispatchToProps = {

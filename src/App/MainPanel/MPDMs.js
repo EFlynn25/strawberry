@@ -90,7 +90,10 @@ class MPDMs extends React.Component {
     //const startID = thisChat["messages"][0]["id"];
     //let nextID = startID;
 
-    if (thisChat == null) {
+    if (thisChat == null || thisChat["messages"].length <= 0) {
+      this.setState({
+        messages: []
+      });
       return false;
     }
 
@@ -175,11 +178,20 @@ class MPDMs extends React.Component {
   }
 
   render() {
+    let otherName = "";
+    if (this.props.getknownPeople[this.props.openedChat] != null) {
+      otherName = this.props.getknownPeople[this.props.openedChat].name;
+    }
+
     return (
       <div className="MPDMs">
+        <div className="dmsStartConversationDiv">
+          <h1 className="dmsStartConversationText">This is the start of your conversation with {otherName}</h1>
+        </div>
         <div className="dmsMessages" ref={this.messagesRef}>
           {this.state.messages}
         </div>
+        {this.state.messages.length > 0 ? null : <h1 className="dmsNoMessageText">No messages.<br/>Try sending one!</h1>}
         <TextareaAutosize value={this.state.inputValue} onChange={this.handleInputChange} onKeyPress={this.inputEnterPressed} placeholder="Type message here" className="dmsMessagesInput" maxLength="2000" ref={this.inputRef} />
       </div>
     );
