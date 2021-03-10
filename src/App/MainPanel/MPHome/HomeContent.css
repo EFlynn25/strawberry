@@ -19,6 +19,7 @@
   margin: 0 25px;
   padding-bottom: 4px;
   border-bottom: 1px solid #b2b2b2;
+  user-select: none;
 }
 
 .hcTabIcon {
@@ -49,8 +50,22 @@
 
 .hcTab:hover {
   cursor: pointer;
-  user-select: none;
   border-bottom: 1px solid white;
+}
+
+/* ...selected */
+
+.hctSelected {
+  border-bottom: 1px solid #D54D5E !important;
+}
+
+.hcttSelected {
+  filter: unset;
+  color: #D54D5E;
+}
+
+.hctiSelected {
+  filter: invert(48%) sepia(56%) saturate(6388%) hue-rotate(327deg) brightness(93%) contrast(79%) !important;
 }
 
 

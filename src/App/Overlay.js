@@ -43,10 +43,13 @@ function Overlay(props) {
       if (props.hide != null && props.hide) {
         ovClass = "OverlayView OverlayViewHide";
       }
-      overlayContent =
+      showBg = false;
+      overlayContent = (
         <div className="overlayLoading">
           <img src={wlogo} className="oLoadingIcon" alt="Strawberry logo" />
-        </div>;
+          { props.socket == false ? <h1 className="oLoadingText">An error occurred<br/>(server did not respond)</h1> : null }
+        </div>
+      );
   } else if (props.type == "blur") {
     if (props.hide != null && props.hide) {
       ovClass = "OverlayView OverlayViewHide";

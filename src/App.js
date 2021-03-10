@@ -52,6 +52,12 @@ class App extends React.Component {
         pageLoaded: true
       });
     }
+
+    if (!this.state.pageLoaded && this.props.socket != null) {
+      // this.setState({
+      //   pageLoaded: true
+      // });
+    }
   }
 
   render() {
@@ -63,6 +69,7 @@ class App extends React.Component {
             </Route>
             <Route path="/">
               {  this.state.pageLoaded ?
+
                 <Fragment>
                   <TopBar />
                   <LeftPanel />
@@ -75,7 +82,7 @@ class App extends React.Component {
                 null
               }
 
-              <Overlay type="loading" hide={this.state.pageLoaded} />
+              <Overlay type="loading" hide={this.state.pageLoaded} socket={this.props.socket} />
               {/*
               <TopBar />
               <LeftPanel />
@@ -96,7 +103,8 @@ const mapStateToProps = (state) => ({
   email: state.user.email,
   picture: state.user.picture,
   hideRightPanel: state.user.hideRightPanel,
-  dmsLoaded: state.user.dmsLoaded
+  dmsLoaded: state.user.dmsLoaded,
+  socket: state.user.socket
 });
 
 const mapDispatchToProps = {

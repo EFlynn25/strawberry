@@ -1,6 +1,6 @@
 import firebase from 'firebase/app';
 import { useDispatch } from 'react-redux'
-import { setdmsLoaded, setpeopleLoaded } from './redux/userReducer.js'
+import { setdmsLoaded, setpeopleLoaded, setSocket } from './redux/userReducer.js'
 import { addChat, addRequested, addAlreadyRequested } from './redux/dmsReducer.js'
 import { addPerson } from './redux/peopleReducer.js'
 import mainStore from './redux/mainStore.js';
@@ -12,6 +12,12 @@ let socket = null;
 
 export function startSocket() {
   socket = new WebSocket('wss://sberrychat.ddns.net:5000');
+
+  setTimeout(function() {
+    if (socket.readyState == 0) {
+      socket.close();
+    }
+  }, 5000);
 
   socket.onmessage = function(event) {
     console.log("WebSocket message received: ", event);
@@ -72,6 +78,7 @@ export function startSocket() {
     }).catch(function(error) {
       // Handle error
     });
+    mainStore.dispatch(setSocket(true));
   }
 
   socket.onclose = function(event) {
@@ -80,6 +87,7 @@ export function startSocket() {
     } else {
       console.warn("WebSocket closed uncleanly, code=" + event.code);
     }
+    mainStore.dispatch(setSocket(false));
     //mainError("Oops! Server connection closed.", true);
   };
 
