@@ -1,5 +1,7 @@
 import firebase from 'firebase/app';
-
+import { useDispatch } from 'react-redux'
+import { addRequested, addAlreadyRequested } from './redux/dmsReducer.js'
+import mainStore from './redux/mainStore.js';
 
 
 // Socket start
@@ -11,6 +13,33 @@ export function startSocket() {
 
   socket.onmessage = function(event) {
     console.log("WebSocket message received: ", event);
+    var jsonData = JSON.parse(event.data);
+    var product = jsonData["product"];
+    var com = jsonData["command"];
+    if (product == "dms") {
+      /* Get Functions */
+      if (com == "get_chats") {
+        const chatsList = jsonData["chats"];
+        if (Array.isArray(chatsList) && chatsList.length) {
+          chatsList.map(item => {
+            console.log(item);
+          });
+        }
+      }
+
+      /* Set Functions */
+      else if (com == "add_user") {
+        dms_get_chats();
+      } else if (com == "request_to_chat") {
+        console.log("already_requested: ");
+        console.log(jsonData["already_requested"]);
+        if (!jsonData["already_requested"]) {
+          mainStore.dispatch(addRequested(jsonData["requested"]));
+        } else {
+          mainStore.dispatch(addAlreadyRequested(jsonData["requested"]));
+        }
+      }
+    }
   }
 
   socket.onopen = function(event) {
@@ -60,6 +89,20 @@ export function add_user(idToken) {
 
 export function dms_add_user(idToken) {
   var jsonObj = {"product": "dms", "command": "add_user", "idToken": idToken}
+  var jsonString = JSON.stringify(jsonObj);
+  console.log("WebSocket message sending: " + jsonString);
+  socket.send(jsonString);
+}
+
+export function dms_get_chats() {
+  var jsonObj = {"product": "dms", "command": "get_chats"}
+  var jsonString = JSON.stringify(jsonObj);
+  console.log("WebSocket message sending: " + jsonString);
+  socket.send(jsonString);
+}
+
+export function dms_request_to_chat(email) {
+  var jsonObj = {"product": "dms", "command": "request_to_chat", "requested": email}
   var jsonString = JSON.stringify(jsonObj);
   console.log("WebSocket message sending: " + jsonString);
   socket.send(jsonString);

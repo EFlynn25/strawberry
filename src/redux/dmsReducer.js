@@ -41,7 +41,8 @@ export const dmsSlice = createSlice({
       }
     },
 
-
+    requested: [],
+    alreadyRequested: []
   },
   reducers: {
     setopenedChat: (state, action) => {
@@ -68,16 +69,40 @@ export const dmsSlice = createSlice({
     },
     setLastRead: (state, action) => {
       state.chats[action.payload["chat"]].lastRead = action.payload["lastRead"];
+    },
+    addRequested: (state, action) => {
+      if (!state.requested.includes(action.payload)) {
+        state.requested.push(action.payload);
+      }
+    },
+    removeRequested: (state, action) => {
+      var index = state.requested.indexOf(action.payload);
+      if (index > -1) {
+        state.requested.splice(index, 1);
+      }
+    },
+    addAlreadyRequested: (state, action) => {
+      if (!state.alreadyRequested.includes(action.payload)) {
+        state.alreadyRequested.push(action.payload);
+      }
+    },
+    removeAlreadyRequested: (state, action) => {
+      var index = state.alreadyRequested.indexOf(action.payload);
+      if (index > -1) {
+        state.alreadyRequested.splice(index, 1);
+      }
     }
   },
 });
 
-export const { setopenedChat, addMessage, setTempMessageInput, setLastRead } = dmsSlice.actions;
+export const { setopenedChat, addMessage, setTempMessageInput, setLastRead, addRequested, removeRequested, addAlreadyRequested, removeAlreadyRequested } = dmsSlice.actions;
 
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of
 // in the slice file. For example: `useSelector((state) => state.user.name)`
 export const getopenedChat = state => state.dms.openedChat;
 export const getChats = state => state.dms.chats;
+export const getRequested = state => state.dms.requested;
+export const getAlreadyRequested = state => state.dms.alreadyRequested;
 
 export default dmsSlice.reducer;

@@ -21,16 +21,6 @@
   border-bottom: 1px solid #b2b2b2;
 }
 
-.hcTab:hover {
-  cursor: pointer;
-  user-select: none;
-  border-bottom: 1px solid white;
-}
-
-.hcTab:hover .hcTitle, .hcTab:hover .hcTabIcon {
-  filter: unset;
-}
-
 .hcTabIcon {
   width: 25px;
   float: left;
@@ -49,6 +39,18 @@
 
   color: white;
   filter: invert(0.3);
+}
+
+/* ...hover */
+
+.hcTab:hover .hcTitle, .hcTab:hover .hcTabIcon {
+  filter: unset;
+}
+
+.hcTab:hover {
+  cursor: pointer;
+  user-select: none;
+  border-bottom: 1px solid white;
 }
 
 

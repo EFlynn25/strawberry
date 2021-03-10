@@ -45,6 +45,12 @@ class App extends React.Component {
     });
   }
 
+  componentDidUpdate() {
+    if (this.props.history.location.pathname == "/") {
+      this.props.history.push("/home");
+    }
+  }
+
   render() {
     return (
       <div className="App">

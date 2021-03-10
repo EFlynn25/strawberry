@@ -4,8 +4,17 @@ import { connect } from 'react-redux';
 
 import './LPDMs.css';
 import DMChat from './LPDMs/DMChat'
+import DMNewChat from './LPDMs/DMNewChat'
 
 class LPDMs extends React.Component {
+  // constructor(props) {
+  //   super(props);
+  //
+  //   this.state = {
+  //     children: []
+  //   };
+  // }
+
   componentDidMount() {
     if (this.props.openedChat != "") {
       this.props.history.push("/dms/" + this.props.openedChat);
@@ -31,7 +40,10 @@ class LPDMs extends React.Component {
 
     return (
       <div className="LPDMs">
-        { children }
+        <div className="lpdmChats">
+          { children }
+        </div>
+        <DMNewChat />
       </div>
     );
   }

@@ -1,0 +1,149 @@
+.DMNewChat {
+  position: absolute;
+  width: 100%;
+  height: 75px;
+  bottom: 0;
+
+  border-top: 1px solid #fff1;
+}
+
+.DMNewChat:hover {
+  cursor: pointer;
+  background: #fff1;
+}
+
+.DMNewChat:active {
+  background: #ffffff07;
+}
+
+
+
+/* Content */
+
+.ncAddIcon {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  top: calc(50% - 20px);
+  left: 20px;
+  user-select: none;
+}
+
+.ncText {
+  position: absolute;
+  height: 40px;
+  left: 75px;
+  top: 17.5px;
+  margin: 0;
+
+  /* font-family: inherit; */
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 40px;
+
+  user-select: none;
+
+  color: #FFFFFF;
+}
+
+
+
+/* Dropdown */
+
+.ncDropdown {
+  position: absolute;
+  width: 300px;
+  height: 140px;
+  left: 8px;
+  bottom: 83px;
+
+  background: #2A2B2D;
+  border-radius: 10px;
+
+  z-index: 2;
+
+  transition: opacity .1s, left .1s;
+  opacity: 1;
+}
+
+.ncDropdownHide {
+  transition: opacity .1s, left .1s, visibility 0s .1s;
+  visibility: hidden;
+  left: -2px;
+  opacity: 0 !important;
+}
+
+.ncddTitle {
+  position: absolute;
+  left: 20px;
+  top: 20px;
+  margin: 0;
+
+  /* font-family: inherit; */
+  font-style: normal;
+  font-weight: 500;
+  font-size: 22px;
+
+  user-select: none;
+
+  color: #FFFFFF;
+}
+
+.ncddText {
+  position: absolute;
+  height: 25px;
+  left: 20px;
+  top: 55px;
+  margin: 0;
+
+  /* font-family: inherit; */
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 25px;
+
+  user-select: none;
+
+  color: #DDD;
+}
+
+.ncddInput {
+  position: absolute;
+  height: 25px;
+  left: 65px;
+  top: 55px;
+
+  padding: 0 10px;
+  border: 0;
+
+  color: #DDD;
+  background: #2A2B2DBB;
+  background: #0002;
+  border-radius: 20px;
+  border: 1px solid;
+  border-color: #37383A;
+  font-size: 14px;
+  font-family: "IBM Plex Sans";
+
+  outline: none;
+
+  resize: none;
+}
+
+.ncddStatus {
+  position: absolute;
+  height: 50px;
+  left: 30px;
+  top: 90px;
+  margin: 0;
+
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  white-space: pre-wrap;
+
+  user-select: none;
+
+  color: #BBB;
+}

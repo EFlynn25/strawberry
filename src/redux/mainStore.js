@@ -4,7 +4,7 @@ import dmsReducer from './dmsReducer';
 import groupsReducer from './groupsReducer';
 import peopleReducer from './peopleReducer';
 
-export default configureStore({
+const mainStore = configureStore({
   reducer: {
     user: userReducer,
     dms: dmsReducer,
@@ -12,3 +12,5 @@ export default configureStore({
     people: peopleReducer
   },
 });
+
+export default mainStore;
