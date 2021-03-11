@@ -51,10 +51,15 @@ export function startSocket() {
             chatsList.map(item => {
               get_user_info(item);
               mainStore.dispatch(addChat(item));
+              dms_get_messages(item, "latest", 20);
             });
           }
         }
         mainStore.dispatch(setdmsLoaded(true));
+      } else if (com == "get_messages") {
+        if (jsonData["response"] == true) {
+          console.log("GOT MESSAGES!");
+        }
       }
 
       /* Set Functions */
@@ -137,6 +142,13 @@ export function dms_get_chats() {
 
 export function dms_request_to_chat(email) {
   var jsonObj = {"product": "dms", "command": "request_to_chat", "requested": email}
+  var jsonString = JSON.stringify(jsonObj);
+  console.log("WebSocket message sending: " + jsonString);
+  socket.send(jsonString);
+}
+
+export function dms_get_messages(email, id, amount) {
+  var jsonObj = {"product": "dms", "command": "get_messages", "chat": email, "id": id, "amount": amount}
   var jsonString = JSON.stringify(jsonObj);
   console.log("WebSocket message sending: " + jsonString);
   socket.send(jsonString);

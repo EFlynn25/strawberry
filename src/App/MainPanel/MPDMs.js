@@ -186,9 +186,18 @@ class MPDMs extends React.Component {
     return (
       <div className="MPDMs">
         <div className="dmsMessages" ref={this.messagesRef}>
-          <div className="dmsStartConversationDiv">
-            <h1 className="dmsStartConversationText">This is the start of your conversation with {otherName}</h1>
-          </div>
+          {
+            (this.props.openedChat != "" && this.props.chats[this.props.openedChat].messages.length > 0 && this.props.chats[this.props.openedChat].messages[0].id == 0)
+            || (this.props.openedChat != "" && this.props.chats[this.props.openedChat].messages.length <= 0) ?
+            
+            <div className="dmsStartConversationDiv">
+              <h1 className="dmsStartConversationText">This is the start of your conversation with {otherName}</h1>
+            </div>
+
+            :
+
+            null
+          }
           {this.state.messages}
         </div>
         {this.state.messages.length > 0 ? null : <h1 className="dmsNoMessageText">No messages.<br/>Try sending one!</h1>}
