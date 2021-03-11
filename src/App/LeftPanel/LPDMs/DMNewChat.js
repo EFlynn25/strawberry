@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import add from '../../../assets/icons/add.svg';
 import './DMNewChat.css';
 import { dms_request_to_chat } from '../../../socket.js';
+import { addRequest } from '../../../redux/dmsReducer.js'
 
 class DMNewChat extends React.Component {
   constructor(props) {
@@ -35,15 +36,25 @@ class DMNewChat extends React.Component {
   }
 
   componentDidUpdate() {
-    if (!this.state.status.startsWith("Success")) {
+    if (this.state.emailRequested != "" && !this.props.requesting.includes(this.state.emailRequested)) {
       if (this.props.requested.includes(this.state.emailRequested)) {
         this.setState({
           status: "Successfully requested:\n" + this.state.emailRequested,
           emailRequested: ""
         });
-      } else if (this.props.alreadyRequested.includes(this.state.emailRequested)) {
+      } else if (this.props.requested_me.includes(this.state.emailRequested)) {
         this.setState({
-          status: "That person already requested you!\nWe created a chat for you.",
+          status: "That person already requested you! We created a chat for you.",
+          emailRequested: ""
+        });
+      } else if (this.props.already_requested.includes(this.state.emailRequested)) {
+        this.setState({
+          status: "You already requested that person!",
+          emailRequested: ""
+        });
+      } else if (this.props.chat_exists.includes(this.state.emailRequested)) {
+        this.setState({
+          status: "You already have a chat with that person!",
           emailRequested: ""
         });
       }
@@ -62,20 +73,28 @@ class DMNewChat extends React.Component {
 
   handleClickOutside(event) {
     if (this.ddWrapperRef && this.ncWrapperRef && !this.ddWrapperRef.contains(event.target) && !this.ncWrapperRef.contains(event.target) && this.state.dropdown) {
+      let s = this.state.status;
+      if (this.state.emailRequested == "") {
+        s = "";
+      }
       this.setState({
         dropdown: false,
         inputValue: "",
-        status: "",
+        status: s
       });
     }
   }
 
   handleClick() {
     if (this.state.dropdown) {
+      let s = this.state.status;
+      if (this.state.emailRequested == "") {
+        s = "";
+      }
       this.setState({
         dropdown: false,
         inputValue: "",
-        status: ""
+        status: s
       });
     } else {
       this.setState({dropdown: true});
@@ -99,12 +118,24 @@ class DMNewChat extends React.Component {
       event.stopPropagation();
 
       if (/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(this.state.inputValue)) {
-        this.setState({
-          inputValue: "",
-          status: "Sending request...",
-          emailRequested: this.state.inputValue,
-        });
-        dms_request_to_chat(this.state.inputValue);
+        if (this.props.requested.includes(this.state.inputValue) || this.props.already_requested.includes(this.state.inputValue)) {
+          this.setState({
+            status: "You already requested that person!"
+          });
+        } else if (this.props.chat_exists.includes(this.state.inputValue) || Object.keys(this.props.chats).includes(this.state.inputValue)) {
+          this.setState({
+            status: "You already have a chat that person!"
+          });
+        } else {
+          this.setState({
+            inputValue: "",
+            status: "Sending request to " + this.state.inputValue + "...",
+            emailRequested: this.state.inputValue,
+          });
+          const iv = this.state.inputValue;
+          this.props.addRequest({type: "requesting", email: iv})
+          dms_request_to_chat(iv);
+        }
       } else {
         this.setState({
           status: "Invalid email"
@@ -124,7 +155,7 @@ class DMNewChat extends React.Component {
           {/*<p style={{color: "white", fontFamily: "Comic Sans MS", margin: "10px"}}>new chat lol</p>*/}
           <h1 className="ncddTitle">New Chat</h1>
           <h1 className="ncddText">Email:</h1>
-          <input value={this.state.inputValue} onChange={this.handleInputChange} onKeyPress={this.inputEnterPressed} className="ncddInput" placeholder="Type email here" ref={this.inputRef} />
+          <input value={this.state.inputValue} onChange={this.handleInputChange} onKeyPress={this.inputEnterPressed} className="ncddInput" placeholder="Type email here" ref={this.inputRef} disabled={this.state.emailRequested == "" ? "" : "disabled"} />
           <h1 className="ncddStatus">{this.state.status}</h1>
         </div>
       </Fragment>
@@ -133,8 +164,16 @@ class DMNewChat extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
+  requesting: state.dms.requesting,
   requested: state.dms.requested,
-  alreadyRequested: state.dms.alreadyRequested
+  requested_me: state.dms.requested_me,
+  already_requested: state.dms.already_requested,
+  chat_exists: state.dms.chat_exists,
+  chats: state.dms.chats
 });
 
-export default connect(mapStateToProps, null)(DMNewChat);
+const mapDispatchToProps = {
+  addRequest
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(DMNewChat);

@@ -1,7 +1,9 @@
 import firebase from 'firebase/app';
 import { useDispatch } from 'react-redux'
 import { setdmsLoaded, setpeopleLoaded, setSocket } from './redux/userReducer.js'
-import { addChat, addRequested, addAlreadyRequested } from './redux/dmsReducer.js'
+import { addChat, addRequest, removeRequest
+  // removeRequesting, addRequested, addRequestedMe
+ } from './redux/dmsReducer.js'
 import { addPerson } from './redux/peopleReducer.js'
 import mainStore from './redux/mainStore.js';
 
@@ -59,11 +61,8 @@ export function startSocket() {
       else if (com == "add_user") {
         dms_get_chats();
       } else if (com == "request_to_chat") {
-        if (!jsonData["already_requested"]) {
-          mainStore.dispatch(addRequested(jsonData["requested"]));
-        } else {
-          mainStore.dispatch(addAlreadyRequested(jsonData["requested"]));
-        }
+        mainStore.dispatch(addRequest({"type": jsonData["response"], "email": jsonData["requested"]}));
+        mainStore.dispatch(removeRequest({"type": "requesting", "email": jsonData["requested"]}));
       }
     }
   }

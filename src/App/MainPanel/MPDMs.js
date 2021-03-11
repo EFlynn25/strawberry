@@ -185,10 +185,10 @@ class MPDMs extends React.Component {
 
     return (
       <div className="MPDMs">
-        <div className="dmsStartConversationDiv">
-          <h1 className="dmsStartConversationText">This is the start of your conversation with {otherName}</h1>
-        </div>
         <div className="dmsMessages" ref={this.messagesRef}>
+          <div className="dmsStartConversationDiv">
+            <h1 className="dmsStartConversationText">This is the start of your conversation with {otherName}</h1>
+          </div>
           {this.state.messages}
         </div>
         {this.state.messages.length > 0 ? null : <h1 className="dmsNoMessageText">No messages.<br/>Try sending one!</h1>}

@@ -41,8 +41,11 @@ export const dmsSlice = createSlice({
       }
     },
 
+    requesting: [],
     requested: [],
-    alreadyRequested: []
+    requested_me: [],
+    already_requested: [],
+    chat_exists: []
   },
   reducers: {
     setopenedChat: (state, action) => {
@@ -76,6 +79,32 @@ export const dmsSlice = createSlice({
     setLastRead: (state, action) => {
       state.chats[action.payload["chat"]].lastRead = action.payload["lastRead"];
     },
+
+    addRequest: (state, action) => {
+      console.log(action.payload);
+      if (!state[action.payload["type"]].includes(action.payload)) {
+        state[action.payload["type"]].push(action.payload["email"]);
+      }
+    },
+    removeRequest: (state, action) => {
+      console.log(action.payload);
+      var index = state[action.payload["type"]].indexOf(action.payload["email"]);
+      if (index > -1) {
+        state[action.payload["type"]].splice(index, 1);
+      }
+    },
+
+    addRequesting: (state, action) => {
+      if (!state.requesting.includes(action.payload)) {
+        state.requesting.push(action.payload);
+      }
+    },
+    removeRequesting: (state, action) => {
+      var index = state.requesting.indexOf(action.payload);
+      if (index > -1) {
+        state.requesting.splice(index, 1);
+      }
+    },
     addRequested: (state, action) => {
       if (!state.requested.includes(action.payload)) {
         state.requested.push(action.payload);
@@ -87,21 +116,26 @@ export const dmsSlice = createSlice({
         state.requested.splice(index, 1);
       }
     },
-    addAlreadyRequested: (state, action) => {
-      if (!state.alreadyRequested.includes(action.payload)) {
-        state.alreadyRequested.push(action.payload);
+    addRequestedMe: (state, action) => {
+      if (!state.requestedMe.includes(action.payload)) {
+        state.requestedMe.push(action.payload);
       }
     },
-    removeAlreadyRequested: (state, action) => {
-      var index = state.alreadyRequested.indexOf(action.payload);
+    removeRequestedMe: (state, action) => {
+      var index = state.requestedMe.indexOf(action.payload);
       if (index > -1) {
-        state.alreadyRequested.splice(index, 1);
+        state.requestedMe.splice(index, 1);
       }
     }
   },
 });
 
-export const { setopenedChat, addChat, addMessage, setTempMessageInput, setLastRead, addRequested, removeRequested, addAlreadyRequested, removeAlreadyRequested } = dmsSlice.actions;
+export const { setopenedChat, addChat, addMessage, setTempMessageInput, setLastRead,
+  // addRequesting, removeRequesting,
+  // addRequested, removeRequested,
+  // addRequestedMe, removeRequestedMe
+  addRequest, removeRequest
+ } = dmsSlice.actions;
 
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of
@@ -109,6 +143,6 @@ export const { setopenedChat, addChat, addMessage, setTempMessageInput, setLastR
 export const getopenedChat = state => state.dms.openedChat;
 export const getChats = state => state.dms.chats;
 export const getRequested = state => state.dms.requested;
-export const getAlreadyRequested = state => state.dms.alreadyRequested;
+export const getRequestedMe = state => state.dms.requestedMe;
 
 export default dmsSlice.reducer;
