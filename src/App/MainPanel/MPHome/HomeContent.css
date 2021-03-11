@@ -25,7 +25,10 @@
 .hcTabIcon {
   width: 25px;
   float: left;
-  filter: invert(0.3);
+}
+
+.hcTabIcon {
+  fill: #FFFB;
 }
 
 .hcTitle {
@@ -38,14 +41,14 @@
   font-size: 16px;
   line-height: 25px;
 
-  color: white;
-  filter: invert(0.3);
+  color: #FFFB;
 }
 
 /* ...hover */
 
 .hcTab:hover .hcTitle, .hcTab:hover .hcTabIcon {
-  filter: unset;
+  fill: white;
+  color: white;
 }
 
 .hcTab:hover {
@@ -65,7 +68,7 @@
 }
 
 .hctiSelected {
-  filter: invert(48%) sepia(56%) saturate(6388%) hue-rotate(327deg) brightness(93%) contrast(79%) !important;
+  fill: #D54D5E;
 }
 
 

@@ -1,4 +1,5 @@
-import wlogo from '../../assets/icons/swhite.svg';
+// import wlogo from '../../assets/icons/swhite.svg';
+import { ReactComponent as SLogo } from '../../assets/icons/strawberry.svg';
 import everett from '../../assets/images/everett.jpeg';
 import './OTopBar.css';
 

@@ -2,7 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from "react-router-dom";
 
-import wlogo from '../assets/icons/swhite.svg';
+// import wlogo from '../assets/icons/swhite.svg';
+import { ReactComponent as SLogo } from '../assets/icons/strawberry.svg';
 import everett from '../assets/images/everett.jpeg';
 import './TopBar.css';
 
@@ -56,11 +57,13 @@ class TopBar extends React.Component {
           <TBProfilePicture src={this.props.picture} />
           <h1 className="tbWelcomeText">Hey, {this.props.name}!</h1>
         </div>
-        <img src={wlogo} className={this.state.tbLeftLogoClass} alt="Strawberry logo" />
+        {/*<img src={wlogo} className={this.state.tbLeftLogoClass} alt="Strawberry logo" />*/}
+        <SLogo className={this.state.tbLeftLogoClass} />
 
         {/* Right side */}
         <div className={this.state.tbLogoDivClass}>
-          <img src={wlogo} className="tbLogo" alt="Strawberry logo" />
+          {/*<img src={wlogo} className="tbLogo" alt="Strawberry logo" />*/}
+          <SLogo className="tbLogo" />
         </div>
       </div>
     );

@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import { withRouter } from "react-router-dom";
 import VisibilitySensor from 'react-visibility-sensor';
 
-import wlogo from '../../assets/icons/swhite.svg';
+// import wlogo from '../../assets/icons/swhite.svg';
+import { ReactComponent as SLogo } from '../../assets/icons/strawberry.svg';
 import './MPHome.css';
 import {
   sethideRightPanel

@@ -32,7 +32,7 @@ class App extends React.Component {
         this.props.history.push("/welcome");
       } else {
         if (this.props.history.location.pathname == "/") {
-          this.props.history.push("/home");
+          //this.props.history.push("/home");
         }
         startSocket();
         this.props.setUserName(user.displayName);
@@ -44,10 +44,11 @@ class App extends React.Component {
 
   componentDidUpdate() {
     if (this.props.history.location.pathname == "/") {
-      this.props.history.push("/home");
+      // this.props.history.push("/home");
     }
 
     if (!this.state.pageLoaded && this.props.dmsLoaded) {
+      this.props.history.push("/home");
       this.setState({
         pageLoaded: true
       });
