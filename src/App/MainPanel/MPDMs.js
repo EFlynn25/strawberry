@@ -13,7 +13,8 @@ import {
 } from '../../redux/dmsReducer';
 import ethan from "../../assets/images/ethan.webp"
 import {
-  dms_send_message
+  dms_send_message,
+  dms_in_chat
 } from '../../socket.js';
 
 console.debug = function() {}
@@ -65,6 +66,10 @@ class MPDMs extends React.Component {
     } else {
       this.reloadMessages();
       this.setState({inputValue: ''});
+      if (prevProps.openedChat in this.props.chats) {
+        dms_in_chat(prevProps.openedChat, false);
+      }
+      dms_in_chat(propsOpenedChat, true);
     }
 
     const thisChat = this.props.chats[this.props.openedChat];

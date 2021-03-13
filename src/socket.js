@@ -227,6 +227,13 @@ export function dms_send_message(chat, message) {
   socket.send(jsonString);
 }
 
+export function dms_in_chat(chat, data) {
+  var jsonObj = {"product": "dms", "command": "in_chat", "chat": chat, "data": data}
+  var jsonString = JSON.stringify(jsonObj);
+  console.log("WebSocket message sending: " + jsonString);
+  socket.send(jsonString);
+}
+
 
 
 // Groups Functions

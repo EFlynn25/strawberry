@@ -54,7 +54,7 @@ function Overlay(props) {
         <div className="overlayLoading">
           {/*<img src={wlogo} className="oLoadingIcon" alt="Strawberry logo" />*/}
           <SLogo className="oLoadingIcon" />
-          <h1 className={props.socket == false ? "oLoadingText" : "oLoadingText oLoadingTextHide"}>An error occurred<br/>(server did not respond)</h1>
+          <h1 className={props.socket == false ? "oLoadingText" : "oLoadingText oLoadingTextHide"}>An error occurred<br/>(server connection closed)</h1>
           <h1 className={props.socket == false ? "oLoadingText oltLoading oLoadingTextHide" : "oLoadingText oltLoading"}>Loading...</h1>
         </div>
       );
