@@ -35,7 +35,7 @@ export const userSlice = createSlice({
       state.dmsLoaded = action.payload;
     },
     setpeopleLoaded: (state, action) => {
-      state.dmsLoaded = action.payload;
+      state.peopleLoaded = action.payload;
     },
     setSocket: (state, action) => {
       state.socket = action.payload;

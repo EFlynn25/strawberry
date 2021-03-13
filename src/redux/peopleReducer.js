@@ -4,6 +4,7 @@ export const peopleSlice = createSlice({
   name: 'people',
   initialState: {
     knownPeople: {
+      /*
       "ethanflynn2007@gmail.com": {
         name: "Ethan Flynn",
         picture: "https://lh3.googleusercontent.com/a-/AOh14Gj-rEO3nti6bJpDqs3DgH6yEYxfgMAmhKjcAQFCAA=s70-p-k-rw-no"
@@ -20,6 +21,7 @@ export const peopleSlice = createSlice({
         name: "Everett Flynn",
         picture: "https://lh3.googleusercontent.com/a-/AOh14GiunFHTaV5EdC9DKpm1utK0Y7K-cP1lD-nh9vISog=s96-c"
       }
+      */
     }
   },
   reducers: {

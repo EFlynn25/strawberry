@@ -47,7 +47,7 @@ class App extends React.Component {
       // this.props.history.push("/home");
     }
 
-    if (!this.state.pageLoaded && this.props.dmsLoaded) {
+    if (!this.state.pageLoaded && this.props.dmsLoaded && this.props.peopleLoaded) {
       if (this.props.history.location.pathname == "/") {
         this.props.history.push("/home");
       }
@@ -107,6 +107,7 @@ const mapStateToProps = (state) => ({
   picture: state.user.picture,
   hideRightPanel: state.user.hideRightPanel,
   dmsLoaded: state.user.dmsLoaded,
+  peopleLoaded: state.user.peopleLoaded,
   socket: state.user.socket
 });
 

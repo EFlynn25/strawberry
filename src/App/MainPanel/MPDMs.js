@@ -2,6 +2,7 @@ import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Switch, Route } from "react-router-dom";
 import TextareaAutosize from 'react-autosize-textarea';
+import { Helmet } from 'react-helmet';
 
 import './MPDMs.css';
 import {
@@ -321,8 +322,16 @@ class MPDMs extends React.Component {
       children = (<h1 className="dmsCenterText">That chat doesn't exist...</h1>);
     }
 
+    let title = "404";
+    if (this.props.openedChat in this.props.chats) {
+      title = this.props.getknownPeople[this.props.openedChat].name;
+    }
+
     return (
       <div className="MPDMs">
+        <Helmet>
+          <title>{title} - Strawberry</title>
+        </Helmet>
         { children }
       </div>
     );

@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from "react-router-dom";
 import VisibilitySensor from 'react-visibility-sensor';
+import { Helmet } from 'react-helmet';
 
 // import wlogo from '../../assets/icons/swhite.svg';
 import { ReactComponent as SLogo } from '../../assets/icons/strawberry.svg';
@@ -43,6 +44,9 @@ class MPHome extends React.Component {
     return (
       <VisibilitySensor onChange={this.transitionCheck}>
         <div className={this.state.homeClass}>
+          <Helmet>
+            <title>Home - Strawberry</title>
+          </Helmet>
           <div className="mpHomeWelcome">
             <img src={this.props.picture} className="mphwPFP" alt={this.props.name} />
             <h1 className="mphwName">Hey, {this.props.name}!</h1>

@@ -2,6 +2,7 @@ import { Fragment } from 'react';
 import { useHistory } from "react-router-dom";
 import firebase from 'firebase/app';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
+import { Helmet } from 'react-helmet';
 
 // import wlogo from '../assets/icons/swhite.svg';
 import { ReactComponent as SLogo } from '../assets/icons/strawberry.svg';
@@ -30,6 +31,9 @@ function Overlay(props) {
     });
     overlayContent =
       <div className="overlayPanel">
+        <Helmet>
+          <title>Welcome - Strawberry</title>
+        </Helmet>
         {/*<img src={wlogo} className="oWelcomeLogo" alt="Strawberry logo" />*/}
         <SLogo className="oLoadingIcon" />
         <h1 className="oWelcomeText">Looks like you're not signed in.</h1>
@@ -51,6 +55,7 @@ function Overlay(props) {
           {/*<img src={wlogo} className="oLoadingIcon" alt="Strawberry logo" />*/}
           <SLogo className="oLoadingIcon" />
           <h1 className={props.socket == false ? "oLoadingText" : "oLoadingText oLoadingTextHide"}>An error occurred<br/>(server did not respond)</h1>
+          <h1 className={props.socket == false ? "oLoadingText oltLoading oLoadingTextHide" : "oLoadingText oltLoading"}>Loading...</h1>
         </div>
       );
   } else if (props.type == "blur") {

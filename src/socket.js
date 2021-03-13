@@ -41,6 +41,19 @@ export function startSocket() {
         // }
         mainStore.dispatch(addPerson({"email": jsonData["email"], "name": jsonData["name"], "picture": jsonData["picture"]}));
 
+        if (!mainStore.getState().user.peopleLoaded) {
+          let missingPerson = false;
+          const chats = Object.keys(mainStore.getState().dms.chats);
+          const people = Object.keys(mainStore.getState().people.knownPeople);
+          chats.map(item => {
+            if (!people.includes(item)) {
+              missingPerson = true;
+            }
+          });
+          if (!missingPerson) {
+            mainStore.dispatch(setpeopleLoaded(true));
+          }
+        }
       }
     } else if (product == "dms") {
       /* Get Functions */
@@ -60,7 +73,7 @@ export function startSocket() {
           mainStore.dispatch(addChat(item));
           dms_get_messages(item, "latest", 20);
         }
-        mainStore.dispatch(setdmsLoaded(true));
+        //mainStore.dispatch(setdmsLoaded(true));
       } else if (com == "get_messages") {
         if (jsonData["response"] == true) {
           jsonData["messages"].map(item => {
@@ -75,6 +88,30 @@ export function startSocket() {
             const item = jsonData["message"];
             mainStore.dispatch(addMessage({chat: jsonData["chat"], message: item["message"], from: myFrom, id: item["id"], timestamp: item["timestamp"]}));
         }
+
+        if (!mainStore.getState().user.dmsLoaded) {
+          let missingMessages = false;
+          console.log(jsonData.chat);
+          const messages = mainStore.getState().dms.chats;
+          const messageKeys = Object.keys(messages);
+          messageKeys.map(item => {
+            const myMessages = messages[item].messages;
+            if (myMessages == null) {
+              missingMessages = true;
+            }
+          });
+          /*const chat = jsonData["chat"];
+          const people = Object.keys(mainStore.getState().people.knownPeople);
+          chats.map(item => {
+            if (!people.includes(item)) {
+              missingPerson = true;
+            }
+          });*/
+          if (!missingMessages) {
+            mainStore.dispatch(setdmsLoaded(true));
+          }
+        }
+        //mainStore.dispatch(setdmsLoaded(true));
       }
 
       /* Set Functions */

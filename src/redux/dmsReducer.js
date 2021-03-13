@@ -55,7 +55,7 @@ export const dmsSlice = createSlice({
       state.openedChat = action.payload;
     },
     addChat: (state, action) => {
-      state.chats[action.payload] = {messages: []};
+      state.chats[action.payload] = {messages: null};
     },
     addMessage: (state, action) => {
       let myChatEmail = state.openedChat;
@@ -64,6 +64,10 @@ export const dmsSlice = createSlice({
       }
 
       let myMessages = state.chats[myChatEmail]["messages"];
+      if (myMessages == null) {
+        myMessages = [];
+      }
+
       let myId = 0;
       // if (myMessages.length > 0) {
       //   myId = myMessages[myMessages.length - 1]["id"] + 1;
