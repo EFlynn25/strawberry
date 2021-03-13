@@ -57,10 +57,14 @@ class MPDMs extends React.Component {
     console.log("[MPDMs]: componentDidUpdate with thread ID " + this.props.openedChat);
 
     const propsOpenedChat = this.props.openedChat;
-    if (prevProps.openedChat != propsOpenedChat || prevProps.chats[propsOpenedChat] != this.props.chats[propsOpenedChat]) {
-      this.reloadMessages();
-      this.setState({inputValue: ""});
+    if (prevProps.openedChat == propsOpenedChat) {
+      if (prevProps.chats[propsOpenedChat] != this.props.chats[propsOpenedChat]) {
+        this.reloadMessages();
+      }
       // this.inputRef.current.focus();
+    } else {
+      this.reloadMessages();
+      this.setState({inputValue: ''});
     }
 
     const thisChat = this.props.chats[this.props.openedChat];
@@ -283,7 +287,7 @@ class MPDMs extends React.Component {
       if (iv != null && iv != "") {
         dms_send_message(this.props.openedChat, iv);
         this.props.addSendingMessage({message: iv});
-        this.setState({inputValue: ""});
+        this.setState({inputValue: ''});
       }
     }
   }
