@@ -45,7 +45,7 @@ export function startSocket() {
     } else if (product == "dms") {
       /* Get Functions */
       if (com == "get_chats") {
-        if ("chats" in jsonData) {
+        if (jsonData["response"] == true) {
           const chatsList = jsonData["chats"];
           if (Array.isArray(chatsList) && chatsList.length) {
             chatsList.map(item => {
@@ -54,6 +54,11 @@ export function startSocket() {
               dms_get_messages(item, "latest", 20);
             });
           }
+        } else if (jsonData["response"] == "accepted_request") {
+          const item = jsonData["chat"];
+          get_user_info(item);
+          mainStore.dispatch(addChat(item));
+          dms_get_messages(item, "latest", 20);
         }
         mainStore.dispatch(setdmsLoaded(true));
       } else if (com == "get_messages") {
@@ -65,6 +70,10 @@ export function startSocket() {
             }
             mainStore.dispatch(addMessage({chat: jsonData["chat"], message: item["message"], from: myFrom, id: item["id"], timestamp: item["timestamp"]}));
           });
+        } else if (jsonData["response"] == "receive_message") {
+            let myFrom = "them";
+            const item = jsonData["message"];
+            mainStore.dispatch(addMessage({chat: jsonData["chat"], message: item["message"], from: myFrom, id: item["id"], timestamp: item["timestamp"]}));
         }
       }
 
@@ -75,7 +84,6 @@ export function startSocket() {
         mainStore.dispatch(addRequest({"type": jsonData["response"], "email": jsonData["requested"]}));
         mainStore.dispatch(removeRequest({"type": "requesting", "email": jsonData["requested"]}));
       } else if (com == "send_message") {
-        console.error(" SEND MESSAGE ");
         const myMessage = jsonData["message"];
         mainStore.dispatch(removeSendingMessage({"chat": jsonData["chat"], "message": jsonData.message.message}));
         mainStore.dispatch(addMessage({chat: jsonData["chat"], message: myMessage["message"], from: "me", id: myMessage["id"], timestamp: myMessage["timestamp"]}));

@@ -7,7 +7,7 @@ export const dmsSlice = createSlice({
 
 
     chats: {
-      "ethanflynn2007@gmail.com": {
+      /*"ethanflynn2007@gmail.com": {
         messages: [
           {message: "heh heh", from: "me", id: 14},
           {message: "ha ha", from: "me", id: 15},
@@ -41,7 +41,7 @@ export const dmsSlice = createSlice({
           {message: "super test", from: "them", id: 2},
           {message: "ultra test", from: "them", id: 3}
         ]
-      }
+      }*/
     },
 
     requesting: [],
@@ -65,8 +65,15 @@ export const dmsSlice = createSlice({
 
       let myMessages = state.chats[myChatEmail]["messages"];
       let myId = 0;
-      if (myMessages.length > 0) {
-        myId = myMessages[myMessages.length - 1]["id"] + 1;
+      // if (myMessages.length > 0) {
+      //   myId = myMessages[myMessages.length - 1]["id"] + 1;
+      // }
+      if ("id" in action.payload) {
+        myId = action.payload["id"];
+      } else {
+        if (myMessages.length > 0) {
+          myId = myMessages[myMessages.length - 1]["id"] + 1;
+        }
       }
       let myFrom = "me";
       if ("from" in action.payload) {
@@ -104,9 +111,6 @@ export const dmsSlice = createSlice({
       if ("chat" in action.payload) {
         myChatEmail = action.payload["chat"];
       }
-
-      console.log("follows rsm: ");
-      console.log(action.payload);
 
       let mySendingMessages = state.chats[myChatEmail]["sendingMessages"];
       var index = mySendingMessages.indexOf(action.payload["message"]);

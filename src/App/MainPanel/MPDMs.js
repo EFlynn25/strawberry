@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Switch, Route } from "react-router-dom";
 import TextareaAutosize from 'react-autosize-textarea';
@@ -15,12 +15,15 @@ import {
   dms_send_message
 } from '../../socket.js';
 
+console.debug = function() {}
+
 class MPDMs extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       inputValue: '',
-      messages: []
+      messages: [],
+      loaded: false
     };
     //this.baseState = this.state;
 
@@ -36,6 +39,7 @@ class MPDMs extends React.Component {
 
     console.log("[MPDMs]: componentDidMount with thread ID " + this.props.openedChat);
     //this.messagesRef.current.scrollTop = this.messagesRef.current.scrollHeight;
+
     if (this.props.openedChat in this.props.chats) {
       this.reloadMessages();
 
@@ -46,17 +50,16 @@ class MPDMs extends React.Component {
         });
       }
     }
-
-    this.inputRef.current.focus();
   }
 
   componentDidUpdate(prevProps) {
     console.log("[MPDMs]: componentDidUpdate with thread ID " + this.props.openedChat);
+
     const propsOpenedChat = this.props.openedChat;
     if (prevProps.openedChat != propsOpenedChat || prevProps.chats[propsOpenedChat] != this.props.chats[propsOpenedChat]) {
       this.reloadMessages();
       this.setState({inputValue: ""});
-      this.inputRef.current.focus();
+      // this.inputRef.current.focus();
     }
 
     const thisChat = this.props.chats[this.props.openedChat];
@@ -76,7 +79,10 @@ class MPDMs extends React.Component {
         });
       }
     }
-    this.inputRef.current.focus();
+
+    if (this.state.loaded && this.props.openedChat in this.props.chats) {
+      this.inputRef.current.focus();
+    }
   }
 
   componentWillUnmount() {
@@ -90,6 +96,15 @@ class MPDMs extends React.Component {
   }
 
   reloadMessages() {
+    console.log(this.props.openedChat);
+    console.log(this.props.chats);
+    if (!(this.props.openedChat in this.props.chats)) {
+      this.setState({
+        messages: []
+      });
+      return false;
+    }
+
     const thisChatReference = this.props.chats[this.props.openedChat];
     const thisChat = JSON.parse(JSON.stringify(thisChatReference));
     //const startID = thisChat["messages"][0]["id"];
@@ -162,23 +177,23 @@ class MPDMs extends React.Component {
         const lastMessage = thisChat.messages[thisChat.messages.length - 1];
         let sendingElement;
         if (lastMessage.id == messageIDs[messageIDs.length - 1] && "sending" in lastMessage) {
-          sendingElement = <h1 className="recieveMessageSendingText">Sending...</h1>;
+          sendingElement = <h1 className="receiveMessageSendingText">Sending...</h1>;
         }
 
         const lastID = messageIDs[messageIDs.length - 1];
         const lastReadyMessage = thisChat["messages"].find( ({ id }) => id === lastID );
         let timestampElement;
         if (!("sending" in lastReadyMessage)) {
-          timestampElement = lastReadyMessage.timestamp;
+          timestampElement = this.parseDate(lastReadyMessage.timestamp);
         }
         const newMessage = (
-          <div className="recieveMessage" key={"group" + i}>
-          <img src={newMessagePicture} className="recieveMessagePFP" alt={newMessageName} />
-            <div className="recieveMessageName">
+          <div className="receiveMessage" key={"group" + i}>
+          <img src={newMessagePicture} className="receiveMessagePFP" alt={newMessageName} />
+            <div className="receiveMessageName">
               {newMessageName}
               {sendingElement}
             </div>
-            <div className="recieveMessageGroup">
+            <div className="receiveMessageGroup">
               {
                 messageIDs.map(item => {
                   const message = thisChat["messages"].find( ({ id }) => id === item );
@@ -186,15 +201,15 @@ class MPDMs extends React.Component {
                   console.debug("messageKey: " + messageKey);
                   let messageElement;
                   if ("sending" in message) {
-                    messageElement = <p key={messageKey} className="recieveMessageText recieveMessageSending">{message.message}</p>;
+                    messageElement = <p key={messageKey} className="receiveMessageText receiveMessageSending">{message.message}</p>;
                   } else {
-                    messageElement = <p key={messageKey} className="recieveMessageText">{message.message}</p>;
+                    messageElement = <p key={messageKey} title={this.parseDate(message.timestamp)} className="receiveMessageText">{message.message}</p>;
                   }
                   return messageElement;
                 })
               }
             </div>
-            <h1 className="recieveMessageTimestamp">{timestampElement}</h1>
+            <h1 className="receiveMessageTimestamp">{timestampElement}</h1>
           </div>
         );
         console.debug(newMessage);
@@ -209,18 +224,18 @@ class MPDMs extends React.Component {
       let myName = this.props.myName;
       let myPicture = this.props.myPicture;
       const newMessage = (
-        <div className="recieveMessage" key={"sendinggroup"}>
-        <img src={myPicture} className="recieveMessagePFP" alt={myName} />
-          <div className="recieveMessageName">
+        <div className="receiveMessage" key={"sendinggroup"}>
+        <img src={myPicture} className="receiveMessagePFP" alt={myName} />
+          <div className="receiveMessageName">
             {myName}
-            <h1 className="recieveMessageSendingText">Sending...</h1>
+            <h1 className="receiveMessageSendingText">Sending...</h1>
           </div>
-          <div className="recieveMessageGroup">
+          <div className="receiveMessageGroup">
             {
               thisChat["sendingMessages"].map(item => {
                 console.debug(item);
                 const messageKey = "id" + item;
-                const messageElement = <p key={messageKey} className="recieveMessageText recieveMessageSending">{item}</p>;
+                const messageElement = <p key={messageKey} className="receiveMessageText receiveMessageSending">{item}</p>;
                 return messageElement;
               })
             }
@@ -231,7 +246,25 @@ class MPDMs extends React.Component {
       tempMessages.push(newMessage);
     }
 
-    this.setState({messages: tempMessages});
+    this.setState({messages: tempMessages, loaded: true});
+  }
+
+  parseDate(timestamp) {
+    const shortMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const date = new Date(timestamp * 1000);
+
+    let month = shortMonths[date.getMonth()];
+    let hours = date.getHours();
+    let minutes = date.getMinutes();
+    let ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    minutes = minutes < 10 ? '0' + minutes : minutes;
+
+    const timeString = month + ' ' + date.getDate() + ', ' + date.getFullYear() + ' • ' + hours + ':' + minutes + ' ' + ampm;
+
+    const lol = "Mar 12, 2021 • 8:47 PM";
+    return(timeString);
   }
 
   handleInputChange(event) {
@@ -261,25 +294,38 @@ class MPDMs extends React.Component {
       otherName = this.props.getknownPeople[this.props.openedChat].name;
     }
 
+    let children = (<h1 className="dmsCenterText">Loading...</h1>);
+    console.log(this.state.loaded);
+    if (this.state.loaded) {
+      children = (
+        <Fragment>
+          <div className="dmsMessages" ref={this.messagesRef}>
+            {
+              (this.props.openedChat != "" && this.props.openedChat in this.props.chats && this.props.chats[this.props.openedChat].messages.length > 0 && this.props.chats[this.props.openedChat].messages[0].id == 0)
+              || (this.props.openedChat != "" && this.props.openedChat in this.props.chats && this.props.chats[this.props.openedChat].messages.length <= 0) ?
+
+              <div className="dmsStartConversationDiv">
+                <h1 className="dmsStartConversationText">This is the start of your conversation with {otherName}</h1>
+              </div>
+
+              :
+
+              null
+            }
+            {this.state.messages}
+          </div>
+          {this.state.messages.length > 0 ? null : <h1 className="dmsNoMessageText">No messages.<br/>Try sending one!</h1>}
+          <TextareaAutosize value={this.state.inputValue} onChange={this.handleInputChange} onKeyPress={this.inputEnterPressed} placeholder="Type message here" className="dmsMessagesInput" maxLength="2000" ref={this.inputRef} />
+        </Fragment>
+      );
+    }
+    if (!(this.props.openedChat in this.props.chats)) {
+      children = (<h1 className="dmsCenterText">That chat doesn't exist...</h1>);
+    }
+
     return (
       <div className="MPDMs">
-        <div className="dmsMessages" ref={this.messagesRef}>
-          {
-            (this.props.openedChat != "" && this.props.chats[this.props.openedChat].messages.length > 0 && this.props.chats[this.props.openedChat].messages[0].id == 0)
-            || (this.props.openedChat != "" && this.props.chats[this.props.openedChat].messages.length <= 0) ?
-
-            <div className="dmsStartConversationDiv">
-              <h1 className="dmsStartConversationText">This is the start of your conversation with {otherName}</h1>
-            </div>
-
-            :
-
-            null
-          }
-          {this.state.messages}
-        </div>
-        {this.state.messages.length > 0 ? null : <h1 className="dmsNoMessageText">No messages.<br/>Try sending one!</h1>}
-        <TextareaAutosize value={this.state.inputValue} onChange={this.handleInputChange} onKeyPress={this.inputEnterPressed} placeholder="Type message here" className="dmsMessagesInput" maxLength="2000" ref={this.inputRef} />
+        { children }
       </div>
     );
   }
