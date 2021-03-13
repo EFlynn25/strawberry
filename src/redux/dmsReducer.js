@@ -19,6 +19,9 @@ export const dmsSlice = createSlice({
           {message: "werido", from: "them", id: 21},
           {message: "bruh", from: "me", id: 22},
         ],
+        sendingMessages: [
+          "Heya, brah. This message is sending."
+        ],
         tempMessageInput: "",
         lastRead: 22
       },
@@ -69,10 +72,50 @@ export const dmsSlice = createSlice({
       if ("from" in action.payload) {
         myFrom = action.payload["from"];
       }
-      const newMessage = {message: action.payload["message"], from: myFrom, id: myId};
+      const newMessage = {message: action.payload["message"], from: myFrom, id: myId, timestamp: action.payload["timestamp"]};
       myMessages.push(newMessage);
       state.chats[myChatEmail]["messages"] = myMessages;
     },
+    addSendingMessage: (state, action) => {
+      let myChatEmail = state.openedChat;
+      if ("chat" in action.payload) {
+        myChatEmail = action.payload["chat"];
+      }
+
+      let mySendingMessages = state.chats[myChatEmail]["sendingMessages"];
+      if (mySendingMessages != null) {
+        mySendingMessages.push(action.payload["message"]);
+        state.chats[myChatEmail]["sendingMessages"] = mySendingMessages;
+      } else {
+        state.chats[myChatEmail]["sendingMessages"] = [action.payload["message"]];
+      }
+      // let myId = 0;
+      // if (myMessages.length > 0) {
+      //   myId = myMessages[myMessages.length - 1]["id"] + 1;
+      // }
+      // let myFrom = "me";
+      // if ("from" in action.payload) {
+      //   myFrom = action.payload["from"];
+      // }
+      // const newMessage = {message: action.payload["message"], from: myFrom, id: myId};
+    },
+    removeSendingMessage: (state, action) => {
+      let myChatEmail = state.openedChat;
+      if ("chat" in action.payload) {
+        myChatEmail = action.payload["chat"];
+      }
+
+      console.log("follows rsm: ");
+      console.log(action.payload);
+
+      let mySendingMessages = state.chats[myChatEmail]["sendingMessages"];
+      var index = mySendingMessages.indexOf(action.payload["message"]);
+      if (index > -1) {
+        mySendingMessages.splice(index, 1);
+      }
+      state.chats[myChatEmail]["sendingMessages"] = mySendingMessages;
+    },
+
     setTempMessageInput: (state, action) => {
       state.chats[action.payload["chat"]].tempMessageInput = action.payload["input"];
     },
@@ -81,59 +124,21 @@ export const dmsSlice = createSlice({
     },
 
     addRequest: (state, action) => {
-      console.log(action.payload);
       if (!state[action.payload["type"]].includes(action.payload)) {
         state[action.payload["type"]].push(action.payload["email"]);
       }
     },
     removeRequest: (state, action) => {
-      console.log(action.payload);
       var index = state[action.payload["type"]].indexOf(action.payload["email"]);
       if (index > -1) {
         state[action.payload["type"]].splice(index, 1);
       }
     },
-
-    addRequesting: (state, action) => {
-      if (!state.requesting.includes(action.payload)) {
-        state.requesting.push(action.payload);
-      }
-    },
-    removeRequesting: (state, action) => {
-      var index = state.requesting.indexOf(action.payload);
-      if (index > -1) {
-        state.requesting.splice(index, 1);
-      }
-    },
-    addRequested: (state, action) => {
-      if (!state.requested.includes(action.payload)) {
-        state.requested.push(action.payload);
-      }
-    },
-    removeRequested: (state, action) => {
-      var index = state.requested.indexOf(action.payload);
-      if (index > -1) {
-        state.requested.splice(index, 1);
-      }
-    },
-    addRequestedMe: (state, action) => {
-      if (!state.requestedMe.includes(action.payload)) {
-        state.requestedMe.push(action.payload);
-      }
-    },
-    removeRequestedMe: (state, action) => {
-      var index = state.requestedMe.indexOf(action.payload);
-      if (index > -1) {
-        state.requestedMe.splice(index, 1);
-      }
-    }
   },
 });
 
-export const { setopenedChat, addChat, addMessage, setTempMessageInput, setLastRead,
-  // addRequesting, removeRequesting,
-  // addRequested, removeRequested,
-  // addRequestedMe, removeRequestedMe
+export const { setopenedChat, addChat, addMessage, addSendingMessage, removeSendingMessage,
+  setTempMessageInput, setLastRead,
   addRequest, removeRequest
  } = dmsSlice.actions;
 

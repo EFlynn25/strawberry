@@ -48,7 +48,9 @@ class App extends React.Component {
     }
 
     if (!this.state.pageLoaded && this.props.dmsLoaded) {
-      this.props.history.push("/home");
+      if (this.props.history.location.pathname == "/") {
+        this.props.history.push("/home");
+      }
       this.setState({
         pageLoaded: true
       });

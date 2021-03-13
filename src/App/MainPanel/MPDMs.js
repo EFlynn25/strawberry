@@ -6,10 +6,14 @@ import TextareaAutosize from 'react-autosize-textarea';
 import './MPDMs.css';
 import {
   setopenedChat,
-  addMessage,
+  // addMessage,
+  addSendingMessage,
   setTempMessageInput
 } from '../../redux/dmsReducer';
 import ethan from "../../assets/images/ethan.webp"
+import {
+  dms_send_message
+} from '../../socket.js';
 
 class MPDMs extends React.Component {
   constructor(props) {
@@ -86,7 +90,8 @@ class MPDMs extends React.Component {
   }
 
   reloadMessages() {
-    const thisChat = this.props.chats[this.props.openedChat];
+    const thisChatReference = this.props.chats[this.props.openedChat];
+    const thisChat = JSON.parse(JSON.stringify(thisChatReference));
     //const startID = thisChat["messages"][0]["id"];
     //let nextID = startID;
 
@@ -97,30 +102,50 @@ class MPDMs extends React.Component {
       return false;
     }
 
+    let hasSending = false;
+    let handledSending = false;
+
+    if ("sendingMessages" in thisChat && thisChat["sendingMessages"].length > 0) {
+      hasSending = true;
+      let myID = thisChat.messages[thisChat.messages.length - 1].id + 1;
+      thisChat["sendingMessages"].map(item => {
+        const myMessage = {message: item, sending: true, id: myID};
+        thisChat["messages"].push(myMessage);
+        myID++;
+      });
+    }
+
     let nextID = thisChat["messages"][0]["id"];
     let tempMessages = [];
     thisChat["messages"].map((message, i) => {
       console.debug(message);
 
-      if (message["id"] >= nextID) {
+      if (message["id"] >= nextID && !("sending" in message)) {
         let messageIDs = [message["id"]];
         const messageFrom = message["from"];
         console.debug("before while");
         while (true) {
-          //if (thisChat["messages"] message["id"])
           const localNextID = messageIDs[messageIDs.length - 1] + 1;
           const findNextID = thisChat["messages"].find( ({ id }) => id === localNextID );
 
-          console.debug("findNextID: " + findNextID);
+          console.debug("findNextID: " + JSON.stringify(findNextID));
+          // console.debug(findNextID);
 
           if (findNextID == null) {
+            console.debug("breaking, due to null");
             break;
           }
 
-          if (findNextID["from"] == messageFrom) {
+          if ("sending" in findNextID && messageFrom == "me") {
+            console.log("HANDLED SENDING");
+            handledSending = true;
+          }
+
+          if (findNextID["from"] == messageFrom || handledSending) {
             messageIDs.push(localNextID);
             nextID = localNextID + 1;
           } else {
+            console.debug("breaking, due to new sender");
             break;
           }
         }
@@ -133,28 +158,78 @@ class MPDMs extends React.Component {
           newMessageName = messageFrom == "me" ? this.props.myName : myPerson.name;
           newMessagePicture = messageFrom == "me" ? this.props.myPicture : myPerson.picture;
         }
+
+        const lastMessage = thisChat.messages[thisChat.messages.length - 1];
+        let sendingElement;
+        if (lastMessage.id == messageIDs[messageIDs.length - 1] && "sending" in lastMessage) {
+          sendingElement = <h1 className="recieveMessageSendingText">Sending...</h1>;
+        }
+
+        const lastID = messageIDs[messageIDs.length - 1];
+        const lastReadyMessage = thisChat["messages"].find( ({ id }) => id === lastID );
+        let timestampElement;
+        if (!("sending" in lastReadyMessage)) {
+          timestampElement = lastReadyMessage.timestamp;
+        }
         const newMessage = (
           <div className="recieveMessage" key={"group" + i}>
           <img src={newMessagePicture} className="recieveMessagePFP" alt={newMessageName} />
-            <h1 className="recieveMessageName">{newMessageName}</h1>
+            <div className="recieveMessageName">
+              {newMessageName}
+              {sendingElement}
+            </div>
             <div className="recieveMessageGroup">
               {
                 messageIDs.map(item => {
-                  const message = thisChat["messages"].find( ({ id }) => id === item )["message"];
+                  const message = thisChat["messages"].find( ({ id }) => id === item );
                   const messageKey = "id" + item;
                   console.debug("messageKey: " + messageKey);
-                  const messageElement = <p key={messageKey} className="recieveMessageText">{message}</p>;
+                  let messageElement;
+                  if ("sending" in message) {
+                    messageElement = <p key={messageKey} className="recieveMessageText recieveMessageSending">{message.message}</p>;
+                  } else {
+                    messageElement = <p key={messageKey} className="recieveMessageText">{message.message}</p>;
+                  }
                   return messageElement;
                 })
               }
             </div>
-            <h1 className="recieveMessageTimestamp">4:21 PM</h1>
+            <h1 className="recieveMessageTimestamp">{timestampElement}</h1>
           </div>
         );
         console.debug(newMessage);
         tempMessages.push(newMessage);
       }
     });
+
+    console.debug("COMPLETE, HERES SENDING:");
+    console.debug(hasSending);
+    console.debug(handledSending);
+    if (hasSending && !handledSending) {
+      let myName = this.props.myName;
+      let myPicture = this.props.myPicture;
+      const newMessage = (
+        <div className="recieveMessage" key={"sendinggroup"}>
+        <img src={myPicture} className="recieveMessagePFP" alt={myName} />
+          <div className="recieveMessageName">
+            {myName}
+            <h1 className="recieveMessageSendingText">Sending...</h1>
+          </div>
+          <div className="recieveMessageGroup">
+            {
+              thisChat["sendingMessages"].map(item => {
+                console.debug(item);
+                const messageKey = "id" + item;
+                const messageElement = <p key={messageKey} className="recieveMessageText recieveMessageSending">{item}</p>;
+                return messageElement;
+              })
+            }
+          </div>
+        </div>
+      );
+      console.debug(newMessage);
+      tempMessages.push(newMessage);
+    }
 
     this.setState({messages: tempMessages});
   }
@@ -171,9 +246,12 @@ class MPDMs extends React.Component {
       event.preventDefault();
       event.stopPropagation();
 
-      console.log("send: " + this.state.inputValue)
-      this.props.addMessage({message: this.state.inputValue});
-      this.setState({inputValue: ""});
+      const iv = this.state.inputValue;
+      if (iv != null && iv != "") {
+        dms_send_message(this.props.openedChat, iv);
+        this.props.addSendingMessage({message: iv});
+        this.setState({inputValue: ""});
+      }
     }
   }
 
@@ -189,7 +267,7 @@ class MPDMs extends React.Component {
           {
             (this.props.openedChat != "" && this.props.chats[this.props.openedChat].messages.length > 0 && this.props.chats[this.props.openedChat].messages[0].id == 0)
             || (this.props.openedChat != "" && this.props.chats[this.props.openedChat].messages.length <= 0) ?
-            
+
             <div className="dmsStartConversationDiv">
               <h1 className="dmsStartConversationText">This is the start of your conversation with {otherName}</h1>
             </div>
@@ -218,7 +296,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
   setopenedChat,
-  addMessage,
+  // addMessage,
+  addSendingMessage,
   setTempMessageInput
 }
 

@@ -1,7 +1,7 @@
 import firebase from 'firebase/app';
 import { useDispatch } from 'react-redux'
 import { setdmsLoaded, setpeopleLoaded, setSocket } from './redux/userReducer.js'
-import { addChat, addRequest, removeRequest
+import { addChat, addMessage, removeSendingMessage, addRequest, removeRequest
   // removeRequesting, addRequested, addRequestedMe
  } from './redux/dmsReducer.js'
 import { addPerson } from './redux/peopleReducer.js'
@@ -58,7 +58,13 @@ export function startSocket() {
         mainStore.dispatch(setdmsLoaded(true));
       } else if (com == "get_messages") {
         if (jsonData["response"] == true) {
-          console.log("GOT MESSAGES!");
+          jsonData["messages"].map(item => {
+            let myFrom = "them";
+            if (mainStore.getState().user.email == item["email"]) {
+              myFrom = "me";
+            }
+            mainStore.dispatch(addMessage({chat: jsonData["chat"], message: item["message"], from: myFrom, id: item["id"], timestamp: item["timestamp"]}));
+          });
         }
       }
 
@@ -68,6 +74,11 @@ export function startSocket() {
       } else if (com == "request_to_chat") {
         mainStore.dispatch(addRequest({"type": jsonData["response"], "email": jsonData["requested"]}));
         mainStore.dispatch(removeRequest({"type": "requesting", "email": jsonData["requested"]}));
+      } else if (com == "send_message") {
+        console.error(" SEND MESSAGE ");
+        const myMessage = jsonData["message"];
+        mainStore.dispatch(removeSendingMessage({"chat": jsonData["chat"], "message": jsonData.message.message}));
+        mainStore.dispatch(addMessage({chat: jsonData["chat"], message: myMessage["message"], from: "me", id: myMessage["id"], timestamp: myMessage["timestamp"]}));
       }
     }
   }
@@ -126,15 +137,26 @@ export function get_user_info(requested) {
 
 // DMS Functions
 
-export function dms_add_user(idToken) {
-  var jsonObj = {"product": "dms", "command": "add_user", "idToken": idToken}
+// Get functions
+
+export function dms_get_chats() {
+  var jsonObj = {"product": "dms", "command": "get_chats"}
   var jsonString = JSON.stringify(jsonObj);
   console.log("WebSocket message sending: " + jsonString);
   socket.send(jsonString);
 }
 
-export function dms_get_chats() {
-  var jsonObj = {"product": "dms", "command": "get_chats"}
+export function dms_get_messages(email, id, amount) {
+  var jsonObj = {"product": "dms", "command": "get_messages", "chat": email, "id": id, "amount": amount}
+  var jsonString = JSON.stringify(jsonObj);
+  console.log("WebSocket message sending: " + jsonString);
+  socket.send(jsonString);
+}
+
+// Set functions
+
+export function dms_add_user(idToken) {
+  var jsonObj = {"product": "dms", "command": "add_user", "idToken": idToken}
   var jsonString = JSON.stringify(jsonObj);
   console.log("WebSocket message sending: " + jsonString);
   socket.send(jsonString);
@@ -147,8 +169,8 @@ export function dms_request_to_chat(email) {
   socket.send(jsonString);
 }
 
-export function dms_get_messages(email, id, amount) {
-  var jsonObj = {"product": "dms", "command": "get_messages", "chat": email, "id": id, "amount": amount}
+export function dms_send_message(chat, message) {
+  var jsonObj = {"product": "dms", "command": "send_message", "chat": chat, "message": message}
   var jsonString = JSON.stringify(jsonObj);
   console.log("WebSocket message sending: " + jsonString);
   socket.send(jsonString);

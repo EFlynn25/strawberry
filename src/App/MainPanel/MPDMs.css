@@ -120,6 +120,28 @@
   color: #DDD;
 }
 
+.recieveMessageSending {
+  color: #888;
+}
+
+.recieveMessageSendingText {
+  position: absolute;
+  height: auto;
+  width: 65px;
+  right: -65px;
+  bottom: 1px;
+  margin: 0;
+
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  font-style: italic;
+  text-align: right;
+  line-height: normal;
+
+  color: #999;
+}
+
 .recieveMessageTimestamp {
   position: absolute;
   height: 20px;
