@@ -96,8 +96,6 @@ class MPDMs extends React.Component {
   }
 
   reloadMessages() {
-    console.log(this.props.openedChat);
-    console.log(this.props.chats);
     if (!(this.props.openedChat in this.props.chats)) {
       this.setState({
         messages: []
@@ -296,7 +294,6 @@ class MPDMs extends React.Component {
     }
 
     let children = (<h1 className="dmsCenterText">Loading...</h1>);
-    console.log(this.state.loaded);
     if (this.state.loaded) {
       children = (
         <Fragment>
