@@ -112,7 +112,8 @@ class MPDMs extends React.Component {
 
     if (thisChat == null || thisChat["messages"].length <= 0) {
       this.setState({
-        messages: []
+        messages: [],
+        loaded: true
       });
       return false;
     }

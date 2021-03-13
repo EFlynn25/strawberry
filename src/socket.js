@@ -83,6 +83,12 @@ export function startSocket() {
       } else if (com == "request_to_chat") {
         mainStore.dispatch(addRequest({"type": jsonData["response"], "email": jsonData["requested"]}));
         mainStore.dispatch(removeRequest({"type": "requesting", "email": jsonData["requested"]}));
+        if (jsonData["response"] == "requested_me") {
+          const item = jsonData["chat"];
+          get_user_info(item);
+          mainStore.dispatch(addChat(item));
+          dms_get_messages(item, "latest", 20);
+        }
       } else if (com == "send_message") {
         const myMessage = jsonData["message"];
         mainStore.dispatch(removeSendingMessage({"chat": jsonData["chat"], "message": jsonData.message.message}));
