@@ -7,8 +7,8 @@
 .dmsMessages {
   position: relative;
   width: calc(100% - 80px);
-  height: calc(100% - 250px);
-  padding: 200px 40px 50px 40px;
+  height: calc(100% - 290px);
+  padding: 200px 40px 90px 40px;
   overflow-y: auto;
 }
 
@@ -78,6 +78,21 @@
   line-height: 50px;
 
   color: #FFF4;
+}
+
+.dmsLastRead {
+  position: absolute;
+  left: 50px;
+  width: 30px;
+  height: 30px;
+  border-radius: 15px;
+
+  filter: brightness(50%);
+  transition: filter .5s;
+}
+
+.dmsInChat {
+  filter: brightness(100%);
 }
 
 

@@ -130,6 +130,9 @@ export const dmsSlice = createSlice({
     setLastRead: (state, action) => {
       state.chats[action.payload["chat"]].lastRead = action.payload["lastRead"];
     },
+    setInChat: (state, action) => {
+      state.chats[action.payload["chat"]].inChat = action.payload["data"];
+    },
 
     addRequest: (state, action) => {
       if (!state[action.payload["type"]].includes(action.payload)) {
@@ -146,7 +149,7 @@ export const dmsSlice = createSlice({
 });
 
 export const { setopenedChat, addChat, addMessage, addSendingMessage, removeSendingMessage,
-  setTempMessageInput, setLastRead,
+  setTempMessageInput, setLastRead, setInChat,
   addRequest, removeRequest
  } = dmsSlice.actions;
 

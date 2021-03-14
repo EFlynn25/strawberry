@@ -42,20 +42,31 @@ class MPDMs extends React.Component {
     console.log("[MPDMs]: componentDidMount with thread ID " + this.props.openedChat);
     //this.messagesRef.current.scrollTop = this.messagesRef.current.scrollHeight;
 
-    if (this.props.openedChat in this.props.chats) {
+    const propsOpenedChat = this.props.openedChat;
+    if (propsOpenedChat in this.props.chats) {
       this.reloadMessages();
+      dms_in_chat(propsOpenedChat, true);
+      dms_in_chat(propsOpenedChat, "get_in_chat");
 
-      const tmi = this.props.chats[this.props.openedChat].tempMessageInput;
+      const tmi = this.props.chats[propsOpenedChat].tempMessageInput;
       if (tmi != "") {
         this.setState({
           inputValue: tmi
         });
+      }
+
+      if (this.messagesRef.current != null) {
+        this.messagesRef.current.scrollTop = this.messagesRef.current.scrollHeight;
       }
     }
   }
 
   componentDidUpdate(prevProps) {
     console.log("[MPDMs]: componentDidUpdate with thread ID " + this.props.openedChat);
+
+    if (this.messagesRef.current != null) {
+      this.messagesRef.current.scrollTop = this.messagesRef.current.scrollHeight;
+    }
 
     const propsOpenedChat = this.props.openedChat;
     if (prevProps.openedChat == propsOpenedChat) {
@@ -70,6 +81,7 @@ class MPDMs extends React.Component {
         dms_in_chat(prevProps.openedChat, false);
       }
       dms_in_chat(propsOpenedChat, true);
+      dms_in_chat(propsOpenedChat, "get_in_chat");
     }
 
     const thisChat = this.props.chats[this.props.openedChat];
@@ -102,6 +114,7 @@ class MPDMs extends React.Component {
         chat: this.props.openedChat,
         input: iv
       });
+      dms_in_chat(this.props.openedChat, false);
     }
   }
 
@@ -138,6 +151,12 @@ class MPDMs extends React.Component {
         myID++;
       });
     }
+
+    let inChat = false;
+    if (thisChat.inChat != null) {
+      inChat = thisChat.inChat;
+    }
+    console.log(inChat);
 
     let nextID = thisChat["messages"][0]["id"];
     let tempMessages = [];
@@ -219,6 +238,7 @@ class MPDMs extends React.Component {
               }
             </div>
             <h1 className="receiveMessageTimestamp">{timestampElement}</h1>
+            {messageIDs[messageIDs.length - 1] == thisChat.messages[thisChat.messages.length - 1].id ? <img src={myPerson.picture} className={inChat ? "dmsLastRead dmsInChat" : "dmsLastRead"} alt={myPerson.name} /> : null}
           </div>
         );
         console.debug(newMessage);

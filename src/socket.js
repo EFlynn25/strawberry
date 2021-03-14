@@ -1,7 +1,7 @@
 import firebase from 'firebase/app';
 import { useDispatch } from 'react-redux'
 import { setdmsLoaded, setpeopleLoaded, setSocket } from './redux/userReducer.js'
-import { addChat, addMessage, removeSendingMessage, addRequest, removeRequest
+import { addChat, addMessage, removeSendingMessage, setInChat, addRequest, removeRequest
   // removeRequesting, addRequested, addRequestedMe
  } from './redux/dmsReducer.js'
 import { addPerson } from './redux/peopleReducer.js'
@@ -65,6 +65,7 @@ export function startSocket() {
               get_user_info(item);
               mainStore.dispatch(addChat(item));
               dms_get_messages(item, "latest", 20);
+              dms_in_chat(item, "get_in_chat");
             });
           }
         } else if (jsonData["response"] == "accepted_request") {
@@ -72,6 +73,7 @@ export function startSocket() {
           get_user_info(item);
           mainStore.dispatch(addChat(item));
           dms_get_messages(item, "latest", 20);
+          dms_in_chat(item, "get_in_chat");
         }
         //mainStore.dispatch(setdmsLoaded(true));
       } else if (com == "get_messages") {
@@ -125,11 +127,16 @@ export function startSocket() {
           get_user_info(item);
           mainStore.dispatch(addChat(item));
           dms_get_messages(item, "latest", 20);
+          dms_in_chat(item, "get_in_chat");
         }
       } else if (com == "send_message") {
         const myMessage = jsonData["message"];
         mainStore.dispatch(removeSendingMessage({"chat": jsonData["chat"], "message": jsonData.message.message}));
         mainStore.dispatch(addMessage({chat: jsonData["chat"], message: myMessage["message"], from: "me", id: myMessage["id"], timestamp: myMessage["timestamp"]}));
+      } else if (com == "in_chat") {
+        if (mainStore.getState().user.email != jsonData["email"]) {
+          mainStore.dispatch(setInChat({"chat": jsonData["chat"], "data": jsonData["data"]}));
+        }
       }
     }
   }
