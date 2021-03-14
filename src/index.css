@@ -26,6 +26,14 @@ code {
 
 
 
+/* Helper Classes */
+
+.noTransition {
+  transition: none !important;
+}
+
+
+
 /* Scrollbar */
 
 ::-webkit-scrollbar {

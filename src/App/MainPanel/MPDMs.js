@@ -9,7 +9,8 @@ import {
   setopenedChat,
   // addMessage,
   addSendingMessage,
-  setTempMessageInput
+  setTempMessageInput,
+  setLastRead
 } from '../../redux/dmsReducer';
 import ethan from "../../assets/images/ethan.webp"
 import {
@@ -44,7 +45,7 @@ class MPDMs extends React.Component {
 
     const propsOpenedChat = this.props.openedChat;
     if (propsOpenedChat in this.props.chats) {
-      this.reloadMessages();
+      this.reloadMessages(null);
       dms_in_chat(propsOpenedChat, true);
       dms_in_chat(propsOpenedChat, "get_in_chat");
 
@@ -64,7 +65,7 @@ class MPDMs extends React.Component {
   componentDidUpdate(prevProps) {
     console.log("[MPDMs]: componentDidUpdate with thread ID " + this.props.openedChat);
 
-    if (this.messagesRef.current != null) {
+    if (this.messagesRef.current != null && !this.state.loaded) {
       this.messagesRef.current.scrollTop = this.messagesRef.current.scrollHeight;
     }
 
@@ -75,7 +76,7 @@ class MPDMs extends React.Component {
       }
       // this.inputRef.current.focus();
     } else {
-      this.reloadMessages();
+      this.reloadMessages(prevProps);
       this.setState({inputValue: ''});
       if (prevProps.openedChat in this.props.chats) {
         dms_in_chat(prevProps.openedChat, false);
@@ -118,7 +119,7 @@ class MPDMs extends React.Component {
     }
   }
 
-  reloadMessages() {
+  reloadMessages(prevProps) {
     if (!(this.props.openedChat in this.props.chats)) {
       this.setState({
         messages: []
@@ -152,9 +153,18 @@ class MPDMs extends React.Component {
       });
     }
 
+    let lastRead;
+    if (thisChat.inChat != null) {
+      lastRead = thisChat.lastRead.them;
+    }
+
     let inChat = false;
     if (thisChat.inChat != null) {
       inChat = thisChat.inChat;
+      if (prevProps != null && this.props.openedChat in prevProps.chats && prevProps.chats[this.props.openedChat].inChat != null && prevProps.chats[this.props.openedChat].inChat && !inChat) {
+        //this.props.setLastRead({"who": "them", "chat": this.props.openedChat, "lastRead": thisChat["messages"][thisChat["messages"].length - 1].id});
+        lastRead = thisChat["messages"][thisChat["messages"].length - 1].id;
+      }
     }
     console.log(inChat);
 
@@ -214,6 +224,18 @@ class MPDMs extends React.Component {
         if (!("sending" in lastReadyMessage)) {
           timestampElement = this.parseDate(lastReadyMessage.timestamp);
         }
+
+        let inChatClasses = "dmsInChat dmsInChatHide";
+        if ((messageIDs[messageIDs.length - 1] == lastRead || inChat) && messageIDs[messageIDs.length - 1] == thisChat.messages[thisChat.messages.length - 1].id && (!("sending" in thisChat.messages[thisChat.messages.length - 1]) || inChat)) {
+          if (inChat) {
+            inChatClasses = "dmsInChat";
+          } else {
+            inChatClasses = "dmsInChat dmsInChatGone";
+          }
+        }
+        if ((prevProps != null && prevProps.chats[this.props.openedChat].messages[thisChat.messages.length - 1].id + 1 == thisChat.messages[thisChat.messages.length - 1].id) || "sending" in thisChat.messages[thisChat.messages.length - 1]) {
+          inChatClasses += " noTransition";
+        }
         const newMessage = (
           <div className="receiveMessage" key={"group" + i}>
           <img src={newMessagePicture} className="receiveMessagePFP" alt={newMessageName} />
@@ -227,18 +249,33 @@ class MPDMs extends React.Component {
                   const message = thisChat["messages"].find( ({ id }) => id === item );
                   const messageKey = "id" + item;
                   console.debug("messageKey: " + messageKey);
+                  let lastReadElement;
+                  // if (!inChat && lastRead != null && item == lastRead && lastRead != thisChat.messages[thisChat.messages.length - 1].id) {
+                  if (lastRead != null && item == lastRead) {
+                    let myClasses = "dmsLastRead dmsLastReadHide";
+                    if (!inChat && lastRead != thisChat.messages[thisChat.messages.length - 1].id) {
+                      myClasses = "dmsLastRead";
+                    }
+                    if (prevProps != null && prevProps.chats[this.props.openedChat].messages[thisChat.messages.length - 1].id + 1 == thisChat.messages[thisChat.messages.length - 1].id) {
+                      myClasses += " noTransition";
+                    }
+                    lastReadElement = <img src={myPerson.picture} className={myClasses + " noTransition"} alt={myPerson.name} />;
+                  }
                   let messageElement;
                   if ("sending" in message) {
                     messageElement = <p key={messageKey} className="receiveMessageText receiveMessageSending">{message.message}</p>;
                   } else {
-                    messageElement = <p key={messageKey} title={this.parseDate(message.timestamp)} className="receiveMessageText">{message.message}</p>;
+                    messageElement = <p key={messageKey} title={this.parseDate(message.timestamp)} className="receiveMessageText">{message.message}{lastReadElement}</p>;
                   }
+
+                  // const finalElement = <Fragment>{lastReadElement}{messageElement}</Fragment>;
+                  //const finalElement = messageElement;
                   return messageElement;
                 })
               }
             </div>
             <h1 className="receiveMessageTimestamp">{timestampElement}</h1>
-            {messageIDs[messageIDs.length - 1] == thisChat.messages[thisChat.messages.length - 1].id ? <img src={myPerson.picture} className={inChat ? "dmsLastRead dmsInChat" : "dmsLastRead"} alt={myPerson.name} /> : null}
+            <img src={myPerson.picture} className={inChatClasses} alt={myPerson.name} />
           </div>
         );
         console.debug(newMessage);
@@ -380,7 +417,8 @@ const mapDispatchToProps = {
   setopenedChat,
   // addMessage,
   addSendingMessage,
-  setTempMessageInput
+  setTempMessageInput,
+  setLastRead
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(MPDMs);

@@ -82,17 +82,46 @@
 
 .dmsLastRead {
   position: absolute;
-  left: 50px;
+  right: -40px;
+  bottom: -5px;
   width: 30px;
   height: 30px;
   border-radius: 15px;
 
   filter: brightness(50%);
-  transition: filter .5s;
+
+  transition: opacity .1s, right .1s;
+  opacity: 1;
+}
+
+.dmsLastReadHide {
+  transition: opacity .1s, right .1s, visibility 0s .1s;
+  visibility: hidden;
+  right: -30px;
+  opacity: 0 !important;
 }
 
 .dmsInChat {
   filter: brightness(100%);
+  position: absolute;
+  left: 50px;
+  width: 30px;
+  height: 30px;
+  border-radius: 15px;
+
+  transition: filter .5s, opacity .1s, left .1s;
+  opacity: 1;
+}
+
+.dmsInChatHide {
+  transition: opacity .1s, left .1s, visibility 0s .1s;
+  visibility: hidden;
+  left: 40px;
+  opacity: 0 !important;
+}
+
+.dmsInChatGone {
+  filter: brightness(50%);
 }
 
 
@@ -134,6 +163,7 @@
 }
 
 .receiveMessageText {
+  position: relative;
   margin: 0;
   margin-bottom: 3px;
 

@@ -55,7 +55,7 @@ export const dmsSlice = createSlice({
       state.openedChat = action.payload;
     },
     addChat: (state, action) => {
-      state.chats[action.payload] = {messages: null};
+      state.chats[action.payload] = {messages: null, lastRead: {me: 0, them: 1}};
     },
     addMessage: (state, action) => {
       let myChatEmail = state.openedChat;
@@ -128,7 +128,11 @@ export const dmsSlice = createSlice({
       state.chats[action.payload["chat"]].tempMessageInput = action.payload["input"];
     },
     setLastRead: (state, action) => {
-      state.chats[action.payload["chat"]].lastRead = action.payload["lastRead"];
+      if (action.payload["who"] == "me") {
+        state.chats[action.payload["chat"]].lastRead.me = action.payload["lastRead"];
+      } else if (action.payload["who"] == "them") {
+        state.chats[action.payload["chat"]].lastRead.them = action.payload["lastRead"];
+      }
     },
     setInChat: (state, action) => {
       state.chats[action.payload["chat"]].inChat = action.payload["data"];

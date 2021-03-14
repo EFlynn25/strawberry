@@ -133,11 +133,11 @@
 .oltLoading {
   text-align: center;
 
-  background: linear-gradient(to right, #FFF 10%, #F66 15%, #FFF 20%,
-                                        #FFF 30%, #F66 35%, #FFF 40%,
-                                        #FFF 50%, #F66 55%, #FFF 60%,
-                                        #FFF 70%, #F66 75%, #FFF 80%,
-                                        #FFF 90%, #F66 95%, #FFF 100%);
+  background: linear-gradient(to right, #FFF 10%, #D56 15%, #FFF 20%,
+                                        #FFF 30%, #D56 35%, #FFF 40%,
+                                        #FFF 50%, #D56 55%, #FFF 60%,
+                                        #FFF 70%, #D56 75%, #FFF 80%,
+                                        #FFF 90%, #D56 95%, #FFF 100%);
   background-size: 200% auto;
 
   color: #000;

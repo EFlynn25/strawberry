@@ -34,7 +34,7 @@ class DMChat extends React.Component {
     const myChatMessages = myChat.messages;
 
     if (this.props.chatEmail == this.props.openedChat && myChatMessages.length > 0) {
-      this.props.setLastRead({"chat": this.props.chatEmail, "lastRead": myChatMessages[myChatMessages.length - 1].id});
+      this.props.setLastRead({"who": "me", "chat": this.props.chatEmail, "lastRead": myChatMessages[myChatMessages.length - 1].id});
     }
 
     const cEmail = this.props.chatEmail;
@@ -82,7 +82,7 @@ class DMChat extends React.Component {
 
     let read = true;
     if (myChatMessages.length > 0) {
-      if (myChat.lastRead < myChatMessages[myChatMessages.length - 1].id || myChat.lastRead == null) {
+      if (myChat.lastRead.me < myChatMessages[myChatMessages.length - 1].id || myChat.lastRead.me == null) {
         read = false;
       }
     } else {

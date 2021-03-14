@@ -1,7 +1,7 @@
 import firebase from 'firebase/app';
 import { useDispatch } from 'react-redux'
 import { setdmsLoaded, setpeopleLoaded, setSocket } from './redux/userReducer.js'
-import { addChat, addMessage, removeSendingMessage, setInChat, addRequest, removeRequest
+import { addChat, addMessage, removeSendingMessage, setLastRead, setInChat, addRequest, removeRequest
   // removeRequesting, addRequested, addRequestedMe
  } from './redux/dmsReducer.js'
 import { addPerson } from './redux/peopleReducer.js'
@@ -56,6 +56,8 @@ export function startSocket() {
         }
       }
     } else if (product == "dms") {
+
+
       /* Get Functions */
       if (com == "get_chats") {
         if (jsonData["response"] == true) {
@@ -75,7 +77,6 @@ export function startSocket() {
           dms_get_messages(item, "latest", 20);
           dms_in_chat(item, "get_in_chat");
         }
-        //mainStore.dispatch(setdmsLoaded(true));
       } else if (com == "get_messages") {
         if (jsonData["response"] == true) {
           jsonData["messages"].map(item => {
@@ -102,19 +103,12 @@ export function startSocket() {
               missingMessages = true;
             }
           });
-          /*const chat = jsonData["chat"];
-          const people = Object.keys(mainStore.getState().people.knownPeople);
-          chats.map(item => {
-            if (!people.includes(item)) {
-              missingPerson = true;
-            }
-          });*/
           if (!missingMessages) {
             mainStore.dispatch(setdmsLoaded(true));
           }
         }
-        //mainStore.dispatch(setdmsLoaded(true));
       }
+
 
       /* Set Functions */
       else if (com == "add_user") {
@@ -133,9 +127,23 @@ export function startSocket() {
         const myMessage = jsonData["message"];
         mainStore.dispatch(removeSendingMessage({"chat": jsonData["chat"], "message": jsonData.message.message}));
         mainStore.dispatch(addMessage({chat: jsonData["chat"], message: myMessage["message"], from: "me", id: myMessage["id"], timestamp: myMessage["timestamp"]}));
-      } else if (com == "in_chat") {
+      }
+
+
+      /* Hybrid Functions */
+      else if (com == "in_chat") {
         if (mainStore.getState().user.email != jsonData["email"]) {
           mainStore.dispatch(setInChat({"chat": jsonData["chat"], "data": jsonData["data"]}));
+        }
+        if ("lastRead" in jsonData) {
+          if (mainStore.getState().user.email != jsonData["email"]) {
+            mainStore.dispatch(setLastRead({"who": "them", "chat": jsonData["chat"], "lastRead": jsonData["lastRead"]}));
+          } else if (mainStore.getState().user.email == jsonData["email"]) {
+            mainStore.dispatch(setLastRead({"who": "me", "chat": jsonData["chat"], "lastRead": jsonData["lastRead"]}));
+          }
+        } else if (!("lastRead" in jsonData) && !jsonData["data"] && jsonData["response"] != "get_in_chat") {
+          const myMessages = mainStore.getState().dms.chats[jsonData["chat"]].messages;
+          mainStore.dispatch(setLastRead({"who": "them", "chat": jsonData["chat"], "lastRead": myMessages[myMessages.length - 1].id}));
         }
       }
     }
