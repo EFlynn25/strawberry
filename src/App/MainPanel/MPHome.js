@@ -25,11 +25,11 @@ class MPHome extends React.Component {
   }
 
   componentDidMount() {
-    this.props.sethideRightPanel(true);
+    // this.props.sethideRightPanel(true);
   }
 
   componentWillUnmount() {
-    this.props.sethideRightPanel(false);
+    // this.props.sethideRightPanel(false);
   }
 
   transitionCheck(isVisible) {

@@ -57,6 +57,24 @@ class DMChat extends React.Component {
     this.props.history.push("/dms/" + this.props.chatEmail);
   }
 
+  parseDate(timestamp) {
+    const shortMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const date = new Date(timestamp * 1000);
+
+    let month = shortMonths[date.getMonth()];
+    let hours = date.getHours();
+    let minutes = date.getMinutes();
+    let ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    minutes = minutes < 10 ? '0' + minutes : minutes;
+
+    const timeString = hours + ':' + minutes + ' ' + ampm;
+    const fullString = month + ' ' + date.getDate() + ', ' + date.getFullYear() + ' • ' + hours + ':' + minutes + ' ' + ampm;
+
+    return(timeString);
+  }
+
   render() {
     //console.log("[DMChat] [from " + this.props.chatEmail + "] selected: " + this.props.openedChat)
     const myChat =  this.props.chats[this.props.chatEmail];
@@ -68,6 +86,7 @@ class DMChat extends React.Component {
     }
 
     let chatMessage = "";
+    let chatTime = "4:20 PM";
     if (Array.isArray(myChatMessages) && myChatMessages.length) {
       const lastMessage = myChatMessages[myChatMessages.length - 1];
       let you = "";
@@ -76,17 +95,17 @@ class DMChat extends React.Component {
         you = "You: "
       }
       chatMessage = you + lastMessage["message"];
+
+      chatTime = this.parseDate(lastMessage.timestamp);
     }
 
-    let chatTime = "4:20 PM";
-
     let read = true;
-    if (myChatMessages.length > 0) {
+    if (myChatMessages != null && myChatMessages.length > 0) {
       if (myChat.lastRead.me < myChatMessages[myChatMessages.length - 1].id || myChat.lastRead.me == null) {
         read = false;
       }
     } else {
-      chatMessage = <i>No messages</i>
+      chatMessage = <i>No messages</i>;
       chatTime = null;
     }
 

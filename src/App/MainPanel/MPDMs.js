@@ -15,7 +15,8 @@ import {
 import ethan from "../../assets/images/ethan.webp"
 import {
   dms_send_message,
-  dms_in_chat
+  dms_in_chat,
+  dms_last_read
 } from '../../socket.js';
 
 console.debug = function() {}
@@ -48,6 +49,7 @@ class MPDMs extends React.Component {
       this.reloadMessages(null);
       dms_in_chat(propsOpenedChat, true);
       dms_in_chat(propsOpenedChat, "get_in_chat");
+      dms_last_read(propsOpenedChat);
 
       const tmi = this.props.chats[propsOpenedChat].tempMessageInput;
       if (tmi != "") {
@@ -72,7 +74,7 @@ class MPDMs extends React.Component {
     const propsOpenedChat = this.props.openedChat;
     if (prevProps.openedChat == propsOpenedChat) {
       if (prevProps.chats[propsOpenedChat] != this.props.chats[propsOpenedChat]) {
-        this.reloadMessages();
+        this.reloadMessages(prevProps);
       }
       // this.inputRef.current.focus();
     } else {
@@ -83,6 +85,7 @@ class MPDMs extends React.Component {
       }
       dms_in_chat(propsOpenedChat, true);
       dms_in_chat(propsOpenedChat, "get_in_chat");
+      dms_last_read(propsOpenedChat);
     }
 
     const thisChat = this.props.chats[this.props.openedChat];
@@ -233,7 +236,19 @@ class MPDMs extends React.Component {
             inChatClasses = "dmsInChat dmsInChatGone";
           }
         }
-        if ((prevProps != null && prevProps.chats[this.props.openedChat].messages[thisChat.messages.length - 1].id + 1 == thisChat.messages[thisChat.messages.length - 1].id) || "sending" in thisChat.messages[thisChat.messages.length - 1]) {
+
+        let noTransition = false;
+        let myOldMessages = null;
+        if (prevProps != null) {
+          myOldMessages = prevProps.chats[this.props.openedChat].messages;
+          if (myOldMessages[myOldMessages.length - 1].id + 1 == thisChat.messages[thisChat.messages.length - 1].id) {
+            noTransition = true;
+          }
+        }
+        if ("sending" in thisChat.messages[thisChat.messages.length - 1]) {
+          noTransition = true;
+        }
+        if (noTransition) {
           inChatClasses += " noTransition";
         }
         const newMessage = (
@@ -256,7 +271,7 @@ class MPDMs extends React.Component {
                     if (!inChat && lastRead != thisChat.messages[thisChat.messages.length - 1].id) {
                       myClasses = "dmsLastRead";
                     }
-                    if (prevProps != null && prevProps.chats[this.props.openedChat].messages[thisChat.messages.length - 1].id + 1 == thisChat.messages[thisChat.messages.length - 1].id) {
+                    if (myOldMessages != null && myOldMessages[myOldMessages.length - 1].id + 1 == thisChat.messages[thisChat.messages.length - 1].id) {
                       myClasses += " noTransition";
                     }
                     lastReadElement = <img src={myPerson.picture} className={myClasses + " noTransition"} alt={myPerson.name} />;
@@ -327,10 +342,9 @@ class MPDMs extends React.Component {
     hours = hours ? hours : 12; // the hour '0' should be '12'
     minutes = minutes < 10 ? '0' + minutes : minutes;
 
-    const timeString = month + ' ' + date.getDate() + ', ' + date.getFullYear() + ' • ' + hours + ':' + minutes + ' ' + ampm;
+    const fullString = month + ' ' + date.getDate() + ', ' + date.getFullYear() + ' • ' + hours + ':' + minutes + ' ' + ampm;
 
-    const lol = "Mar 12, 2021 • 8:47 PM";
-    return(timeString);
+    return(fullString);
   }
 
   handleInputChange(event) {

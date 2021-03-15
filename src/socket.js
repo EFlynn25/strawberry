@@ -64,18 +64,12 @@ export function startSocket() {
           const chatsList = jsonData["chats"];
           if (Array.isArray(chatsList) && chatsList.length) {
             chatsList.map(item => {
-              get_user_info(item);
-              mainStore.dispatch(addChat(item));
-              dms_get_messages(item, "latest", 20);
-              dms_in_chat(item, "get_in_chat");
+              get_chat_info(item);
             });
           }
         } else if (jsonData["response"] == "accepted_request") {
           const item = jsonData["chat"];
-          get_user_info(item);
-          mainStore.dispatch(addChat(item));
-          dms_get_messages(item, "latest", 20);
-          dms_in_chat(item, "get_in_chat");
+          get_chat_info(item);
         }
       } else if (com == "get_messages") {
         if (jsonData["response"] == true) {
@@ -94,7 +88,6 @@ export function startSocket() {
 
         if (!mainStore.getState().user.dmsLoaded) {
           let missingMessages = false;
-          console.log(jsonData.chat);
           const messages = mainStore.getState().dms.chats;
           const messageKeys = Object.keys(messages);
           messageKeys.map(item => {
@@ -118,10 +111,7 @@ export function startSocket() {
         mainStore.dispatch(removeRequest({"type": "requesting", "email": jsonData["requested"]}));
         if (jsonData["response"] == "requested_me") {
           const item = jsonData["chat"];
-          get_user_info(item);
-          mainStore.dispatch(addChat(item));
-          dms_get_messages(item, "latest", 20);
-          dms_in_chat(item, "get_in_chat");
+          get_chat_info(item);
         }
       } else if (com == "send_message") {
         const myMessage = jsonData["message"];
@@ -145,6 +135,9 @@ export function startSocket() {
           const myMessages = mainStore.getState().dms.chats[jsonData["chat"]].messages;
           mainStore.dispatch(setLastRead({"who": "them", "chat": jsonData["chat"], "lastRead": myMessages[myMessages.length - 1].id}));
         }
+      } else if (com == "last_read") {
+        mainStore.dispatch(setLastRead({"who": "me", "chat": jsonData.chat, "lastRead": jsonData.me}));
+        mainStore.dispatch(setLastRead({"who": "them", "chat": jsonData.chat, "lastRead": jsonData.them}));
       }
     }
   }
@@ -179,6 +172,14 @@ export function startSocket() {
   window.addEventListener("beforeunload", function(event) {
     socket.close(1000, "Browser unloading");
   });
+}
+
+function get_chat_info(chat) {
+  get_user_info(chat);
+  mainStore.dispatch(addChat(chat));
+  dms_get_messages(chat, "latest", 20);
+  dms_in_chat(chat, "get_in_chat");
+  dms_last_read(chat);
 }
 
 
@@ -242,8 +243,17 @@ export function dms_send_message(chat, message) {
   socket.send(jsonString);
 }
 
+// Hybrid Functions
+
 export function dms_in_chat(chat, data) {
   var jsonObj = {"product": "dms", "command": "in_chat", "chat": chat, "data": data}
+  var jsonString = JSON.stringify(jsonObj);
+  console.log("WebSocket message sending: " + jsonString);
+  socket.send(jsonString);
+}
+
+export function dms_last_read(chat) {
+  var jsonObj = {"product": "dms", "command": "last_read", "chat": chat}
   var jsonString = JSON.stringify(jsonObj);
   console.log("WebSocket message sending: " + jsonString);
   socket.send(jsonString);

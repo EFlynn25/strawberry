@@ -8,7 +8,7 @@ export const userSlice = createSlice({
     picture: "",
 
     dmsOrGroups: "",
-    hideRightPanel: false,
+    hideRightPanel: true,
 
     dmsLoaded: false,
     peopleLoaded: false,
