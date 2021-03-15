@@ -55,7 +55,7 @@ export const dmsSlice = createSlice({
       state.openedChat = action.payload;
     },
     addChat: (state, action) => {
-      state.chats[action.payload] = {messages: null, lastRead: {me: 0, them: 1}};
+      state.chats[action.payload] = {messages: null, lastRead: {me: 0, them: null}};
     },
     addMessage: (state, action) => {
       let myChatEmail = state.openedChat;

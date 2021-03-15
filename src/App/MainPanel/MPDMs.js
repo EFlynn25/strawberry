@@ -36,6 +36,8 @@ class MPDMs extends React.Component {
 
     this.handleInputChange = this.handleInputChange.bind(this);
     this.inputEnterPressed = this.inputEnterPressed.bind(this);
+
+    this.shouldScroll = false;
   }
 
   componentDidMount() {
@@ -64,22 +66,27 @@ class MPDMs extends React.Component {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     console.log("[MPDMs]: componentDidUpdate with thread ID " + this.props.openedChat);
 
-    if (this.messagesRef.current != null && !this.state.loaded) {
-      this.messagesRef.current.scrollTop = this.messagesRef.current.scrollHeight;
+    const propsOpenedChat = this.props.openedChat;
+
+    if (prevState.loaded != this.state.loaded) {
+      this.messagesRef.current.scrollTop = this.messagesRef.current.scrollHeight - this.messagesRef.current.clientHeight;
     }
 
-    const propsOpenedChat = this.props.openedChat;
+    if (this.shouldScroll) {
+      this.messagesRef.current.scrollTop = this.messagesRef.current.scrollHeight - this.messagesRef.current.clientHeight;
+      this.shouldScroll = false;
+    }
+
     if (prevProps.openedChat == propsOpenedChat) {
       if (prevProps.chats[propsOpenedChat] != this.props.chats[propsOpenedChat]) {
         this.reloadMessages(prevProps);
       }
-      // this.inputRef.current.focus();
     } else {
+      this.setState({inputValue: '', loaded: false});
       this.reloadMessages(prevProps);
-      this.setState({inputValue: ''});
       if (prevProps.openedChat in this.props.chats) {
         dms_in_chat(prevProps.openedChat, false);
       }
@@ -132,8 +139,6 @@ class MPDMs extends React.Component {
 
     const thisChatReference = this.props.chats[this.props.openedChat];
     const thisChat = JSON.parse(JSON.stringify(thisChatReference));
-    //const startID = thisChat["messages"][0]["id"];
-    //let nextID = startID;
 
     if (thisChat == null || thisChat["messages"].length <= 0) {
       this.setState({
@@ -165,7 +170,6 @@ class MPDMs extends React.Component {
     if (thisChat.inChat != null) {
       inChat = thisChat.inChat;
       if (prevProps != null && this.props.openedChat in prevProps.chats && prevProps.chats[this.props.openedChat].inChat != null && prevProps.chats[this.props.openedChat].inChat && !inChat) {
-        //this.props.setLastRead({"who": "them", "chat": this.props.openedChat, "lastRead": thisChat["messages"][thisChat["messages"].length - 1].id});
         lastRead = thisChat["messages"][thisChat["messages"].length - 1].id;
       }
     }
@@ -283,8 +287,6 @@ class MPDMs extends React.Component {
                     messageElement = <p key={messageKey} title={this.parseDate(message.timestamp)} className="receiveMessageText">{message.message}{lastReadElement}</p>;
                   }
 
-                  // const finalElement = <Fragment>{lastReadElement}{messageElement}</Fragment>;
-                  //const finalElement = messageElement;
                   return messageElement;
                 })
               }
@@ -328,6 +330,9 @@ class MPDMs extends React.Component {
     }
 
     this.setState({messages: tempMessages, loaded: true});
+    if (this.messagesRef.current != null && this.messagesRef.current.scrollTop + this.messagesRef.current.clientHeight == this.messagesRef.current.scrollHeight) {
+      this.shouldScroll = true;
+    }
   }
 
   parseDate(timestamp) {

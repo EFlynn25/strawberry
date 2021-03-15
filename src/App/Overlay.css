@@ -43,11 +43,10 @@
 
 .oWelcomeLogo {
   position: absolute;
-  width: 75px;
-  height: 75px;
+  width: 65px;
+  height: 65px;
   left: calc(50% - 37.5px);
-  top: 30px;
-  margin-bottom: 30px;
+  top: 60px;
 }
 
 .oWelcomeText {

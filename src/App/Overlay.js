@@ -35,7 +35,7 @@ function Overlay(props) {
           <title>Welcome - Strawberry</title>
         </Helmet>
         {/*<img src={wlogo} className="oWelcomeLogo" alt="Strawberry logo" />*/}
-        <SLogo className="oLoadingIcon" />
+        <SLogo className="oWelcomeLogo" />
         <h1 className="oWelcomeText">Looks like you're not signed in.</h1>
         <div className="oWelcomeFirebaseDiv">
           <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />
