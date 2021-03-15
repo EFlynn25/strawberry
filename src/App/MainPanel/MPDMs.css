@@ -165,6 +165,7 @@
 .receiveMessageText {
   position: relative;
   margin: 0;
+  left: -5px;
   margin-bottom: 3px;
 
   font-style: normal;
@@ -176,6 +177,13 @@
 
   color: #FFFFFF;
   color: #DDD;
+
+  border-radius: 5px;
+  padding: 0 5px;
+}
+
+.receiveMessageText:hover {
+  background: #fff1;
 }
 
 .receiveMessageSending {

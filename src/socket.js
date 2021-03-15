@@ -66,6 +66,9 @@ export function startSocket() {
             chatsList.map(item => {
               get_chat_info(item);
             });
+          } else {
+            mainStore.dispatch(setpeopleLoaded(true));
+            mainStore.dispatch(setdmsLoaded(true));
           }
         } else if (jsonData["response"] == "accepted_request") {
           const item = jsonData["chat"];
@@ -96,7 +99,7 @@ export function startSocket() {
               missingMessages = true;
             }
           });
-          if (!missingMessages) {
+          if (!missingMessages || jsonData["response"] == "no_messages") {
             mainStore.dispatch(setdmsLoaded(true));
           }
         }

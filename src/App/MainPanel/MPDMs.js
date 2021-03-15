@@ -86,13 +86,15 @@ class MPDMs extends React.Component {
       }
     } else {
       this.setState({inputValue: '', loaded: false});
-      this.reloadMessages(prevProps);
-      if (prevProps.openedChat in this.props.chats) {
-        dms_in_chat(prevProps.openedChat, false);
+      if (propsOpenedChat in this.props.chats) {
+        this.reloadMessages(prevProps);
+        if (prevProps.openedChat in this.props.chats) {
+          dms_in_chat(prevProps.openedChat, false);
+        }
+        dms_in_chat(propsOpenedChat, true);
+        dms_in_chat(propsOpenedChat, "get_in_chat");
+        dms_last_read(propsOpenedChat);
       }
-      dms_in_chat(propsOpenedChat, true);
-      dms_in_chat(propsOpenedChat, "get_in_chat");
-      dms_last_read(propsOpenedChat);
     }
 
     const thisChat = this.props.chats[this.props.openedChat];
@@ -140,7 +142,7 @@ class MPDMs extends React.Component {
     const thisChatReference = this.props.chats[this.props.openedChat];
     const thisChat = JSON.parse(JSON.stringify(thisChatReference));
 
-    if (thisChat == null || thisChat["messages"].length <= 0) {
+    if (thisChat == null || thisChat["messages"] == null || thisChat["messages"].length <= 0) {
       this.setState({
         messages: [],
         loaded: true
@@ -245,7 +247,7 @@ class MPDMs extends React.Component {
         let myOldMessages = null;
         if (prevProps != null) {
           myOldMessages = prevProps.chats[this.props.openedChat].messages;
-          if (myOldMessages[myOldMessages.length - 1].id + 1 == thisChat.messages[thisChat.messages.length - 1].id) {
+          if (myOldMessages != null && myOldMessages[myOldMessages.length - 1].id + 1 == thisChat.messages[thisChat.messages.length - 1].id) {
             noTransition = true;
           }
         }
@@ -385,7 +387,8 @@ class MPDMs extends React.Component {
         <Fragment>
           <div className="dmsMessages" ref={this.messagesRef}>
             {
-              (this.props.openedChat != "" && this.props.openedChat in this.props.chats && this.props.chats[this.props.openedChat].messages.length > 0 && this.props.chats[this.props.openedChat].messages[0].id == 0)
+              (this.props.chats[this.props.openedChat].messages == null)
+              || (this.props.openedChat != "" && this.props.openedChat in this.props.chats && this.props.chats[this.props.openedChat].messages.length > 0 && this.props.chats[this.props.openedChat].messages[0].id == 0)
               || (this.props.openedChat != "" && this.props.openedChat in this.props.chats && this.props.chats[this.props.openedChat].messages.length <= 0) ?
 
               <div className="dmsStartConversationDiv">
