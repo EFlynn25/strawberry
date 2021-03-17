@@ -62,17 +62,15 @@ export function startSocket() {
       if (com == "get_chats") {
         if (jsonData["response"] == true) {
           const chatsList = jsonData["chats"];
-          if (Array.isArray(chatsList) && chatsList.length) {
-            chatsList.map(item => {
-              get_chat_info(item);
-            });
-          } else {
-            mainStore.dispatch(setpeopleLoaded(true));
-            mainStore.dispatch(setdmsLoaded(true));
-          }
+          chatsList.map(item => {
+            get_chat_info(item);
+          });
         } else if (jsonData["response"] == "accepted_request") {
           const item = jsonData["chat"];
           get_chat_info(item);
+        } else if (jsonData["response"] == "no_chats") {
+          mainStore.dispatch(setpeopleLoaded(true));
+          mainStore.dispatch(setdmsLoaded(true));
         }
       } else if (com == "get_messages") {
         if (jsonData["response"] == true) {
