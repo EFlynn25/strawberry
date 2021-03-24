@@ -47,7 +47,7 @@ class App extends React.Component {
       // this.props.history.push("/home");
     }
 
-    if (!this.state.pageLoaded && this.props.dmsLoaded && this.props.peopleLoaded) {
+    if (!this.state.pageLoaded && this.props.dmsLoaded && this.props.peopleLoaded && this.props.socket == true) {
       if (this.props.history.location.pathname == "/") {
         this.props.history.push("/home");
       }
@@ -56,10 +56,10 @@ class App extends React.Component {
       });
     }
 
-    if (!this.state.pageLoaded && this.props.socket != null) {
-      // this.setState({
-      //   pageLoaded: true
-      // });
+    if (this.state.pageLoaded && this.props.socket == false) {
+      this.setState({
+        pageLoaded: false
+      });
     }
   }
 

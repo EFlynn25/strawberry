@@ -1,7 +1,7 @@
 import firebase from 'firebase/app';
 import { useDispatch } from 'react-redux'
 import { setdmsLoaded, setpeopleLoaded, setSocket } from './redux/userReducer.js'
-import { addChat, addMessage, removeSendingMessage, setLastRead, setInChat, addRequest, removeRequest
+import { addChat, addMessage, removeSendingMessage, setCreated, setLastRead, setInChat, addRequest, removeRequest
   // removeRequesting, addRequested, addRequestedMe
  } from './redux/dmsReducer.js'
 import { addPerson } from './redux/peopleReducer.js'
@@ -13,7 +13,8 @@ import mainStore from './redux/mainStore.js';
 let socket = null;
 
 export function startSocket() {
-  socket = new WebSocket('wss://sberrychat.ddns.net:5000');
+  // socket = new WebSocket('wss://sberrychat.ddns.net:5000');
+  socket = new WebSocket('wss://sberrychat.ddns.net:5001');
 
   setTimeout(function() {
     if (socket.readyState == 0) {
@@ -85,6 +86,8 @@ export function startSocket() {
             let myFrom = "them";
             const item = jsonData["message"];
             mainStore.dispatch(addMessage({chat: jsonData["chat"], message: item["message"], from: myFrom, id: item["id"], timestamp: item["timestamp"]}));
+        } else if (jsonData["response"] == "no_messages") {
+          dms_get_chat_created(jsonData["chat"]);
         }
 
         if (!mainStore.getState().user.dmsLoaded) {
@@ -100,6 +103,10 @@ export function startSocket() {
           if (!missingMessages || jsonData["response"] == "no_messages") {
             mainStore.dispatch(setdmsLoaded(true));
           }
+        }
+      } else if (com == "get_chat_created") {
+        if (jsonData.response == true) {
+          mainStore.dispatch(setCreated({chat: jsonData.chat, created: jsonData.created}));
         }
       }
 
@@ -163,11 +170,10 @@ export function startSocket() {
       console.warn("WebSocket closed uncleanly, code=" + event.code);
     }
     mainStore.dispatch(setSocket(false));
-    //mainError("Oops! Server connection closed.", true);
   };
 
   socket.onerror = function(error) {
-    console.error("WebSocket error: " + error);
+    console.error("WebSocket error: ", error);
   };
 
   window.addEventListener("beforeunload", function(event) {
@@ -216,6 +222,13 @@ export function dms_get_chats() {
 
 export function dms_get_messages(email, id, amount) {
   var jsonObj = {"product": "dms", "command": "get_messages", "chat": email, "id": id, "amount": amount}
+  var jsonString = JSON.stringify(jsonObj);
+  console.log("WebSocket message sending: " + jsonString);
+  socket.send(jsonString);
+}
+
+export function dms_get_chat_created(email) {
+  var jsonObj = {"product": "dms", "command": "get_chat_created", "chat": email}
   var jsonString = JSON.stringify(jsonObj);
   console.log("WebSocket message sending: " + jsonString);
   socket.send(jsonString);

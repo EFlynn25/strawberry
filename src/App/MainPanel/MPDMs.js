@@ -29,7 +29,6 @@ class MPDMs extends React.Component {
       messages: [],
       loaded: false
     };
-    //this.baseState = this.state;
 
     this.messagesRef = React.createRef();
     this.inputRef = React.createRef();
