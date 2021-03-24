@@ -37,19 +37,17 @@ class LPDMs extends React.Component {
       const thisChatMessages = chats[key].messages;
       return [key, thisChatMessages[thisChatMessages.length - 1].timestamp];
     });
+    noMessageChats.forEach(function (item, index) {
+      const thisChat = chats[item];
+      chatTimestampList.push([item, thisChat.created]);
+    });
+
     chatTimestampList.sort(function(first, second) {
       return second[1] - first[1];
     });
-
     const chatKeys = chatTimestampList.map(function(x) {
         return x[0];
     });
-    if (Array.isArray(noMessageChats) && noMessageChats.length) {
-      noMessageChats.map(item => {
-        const chatElement = <DMChat key={"id" + item} chatEmail={item} />;
-        children.push(chatElement);
-      });
-    }
     if (Array.isArray(chatKeys) && chatKeys.length) {
       chatKeys.map(item => {
         const chatElement = <DMChat key={"id" + item} chatEmail={item} />;
