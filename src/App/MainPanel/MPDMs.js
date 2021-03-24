@@ -96,7 +96,7 @@ class MPDMs extends React.Component {
       }
     }
 
-    const thisChat = this.props.chats[this.props.openedChat];
+    const thisChat = this.props.chats[propsOpenedChat];
     if (thisChat != null) {
       const iv = this.state.inputValue
       const tmi = thisChat.tempMessageInput
@@ -108,13 +108,17 @@ class MPDMs extends React.Component {
           });
         }
 
-        this.setState({
-          inputValue: tmi
-        });
+        if (tmi != null) {
+          this.setState({
+            inputValue: tmi
+          }, () => {
+            this.inputRef.current.select();
+          });
+        }
       }
     }
 
-    if (this.state.loaded && this.props.openedChat in this.props.chats) {
+    if (this.state.loaded && prevProps.openedChat != propsOpenedChat && propsOpenedChat in this.props.chats) {
       this.inputRef.current.focus();
     }
   }
@@ -222,7 +226,7 @@ class MPDMs extends React.Component {
         const lastMessage = thisChat.messages[thisChat.messages.length - 1];
         let sendingElement;
         if (lastMessage.id == messageIDs[messageIDs.length - 1] && "sending" in lastMessage) {
-          sendingElement = <h1 className="receiveMessageSendingText">Sending...</h1>;
+          sendingElement = <h1 className="defaultMessageSendingText">Sending...</h1>;
         }
 
         const lastID = messageIDs[messageIDs.length - 1];
@@ -256,13 +260,13 @@ class MPDMs extends React.Component {
           inChatClasses += " noTransition";
         }
         const newMessage = (
-          <div className="receiveMessage" key={"group" + i}>
-          <img src={newMessagePicture} className="receiveMessagePFP" alt={newMessageName} />
-            <div className="receiveMessageName">
+          <div className="defaultMessage" key={"group" + i}>
+          <img src={newMessagePicture} className="defaultMessagePFP" alt={newMessageName} />
+            <div className="defaultMessageName">
               {newMessageName}
               {sendingElement}
             </div>
-            <div className="receiveMessageGroup">
+            <div className="defaultMessageGroup">
               {
                 messageIDs.map(item => {
                   const message = thisChat["messages"].find( ({ id }) => id === item );
@@ -282,16 +286,16 @@ class MPDMs extends React.Component {
                   }
                   let messageElement;
                   if ("sending" in message) {
-                    messageElement = <p key={messageKey} className="receiveMessageText receiveMessageSending">{message.message}</p>;
+                    messageElement = <p key={messageKey} className="defaultMessageText defaultMessageSending">{message.message}</p>;
                   } else {
-                    messageElement = <p key={messageKey} title={this.parseDate(message.timestamp)} className="receiveMessageText">{message.message}{lastReadElement}</p>;
+                    messageElement = <p key={messageKey} title={this.parseDate(message.timestamp)} className="defaultMessageText">{message.message}{lastReadElement}</p>;
                   }
 
                   return messageElement;
                 })
               }
             </div>
-            <h1 className="receiveMessageTimestamp">{timestampElement}</h1>
+            <h1 className="defaultMessageTimestamp">{timestampElement}</h1>
             <img src={myPerson.picture} className={inChatClasses} alt={myPerson.name} />
           </div>
         );
@@ -307,18 +311,18 @@ class MPDMs extends React.Component {
       let myName = this.props.myName;
       let myPicture = this.props.myPicture;
       const newMessage = (
-        <div className="receiveMessage" key={"sendinggroup"}>
-        <img src={myPicture} className="receiveMessagePFP" alt={myName} />
-          <div className="receiveMessageName">
+        <div className="defaultMessage" key={"sendinggroup"}>
+        <img src={myPicture} className="defaultMessagePFP" alt={myName} />
+          <div className="defaultMessageName">
             {myName}
-            <h1 className="receiveMessageSendingText">Sending...</h1>
+            <h1 className="defaultMessageSendingText">Sending...</h1>
           </div>
-          <div className="receiveMessageGroup">
+          <div className="defaultMessageGroup">
             {
               thisChat["sendingMessages"].map(item => {
                 console.debug(item);
                 const messageKey = "id" + item;
-                const messageElement = <p key={messageKey} className="receiveMessageText receiveMessageSending">{item}</p>;
+                const messageElement = <p key={messageKey} className="defaultMessageText defaultMessageSending">{item}</p>;
                 return messageElement;
               })
             }

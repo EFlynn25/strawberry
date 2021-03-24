@@ -83,7 +83,8 @@
 .dmsLastRead {
   position: absolute;
   right: -40px;
-  bottom: -5px;
+  /* bottom: -5px; */
+  top: calc(50% - 15px);
   width: 30px;
   height: 30px;
   border-radius: 15px;
@@ -126,20 +127,20 @@
 
 
 
-/* Receive Message */
+/* Default Message */
 
-.receiveMessage {
+.defaultMessage {
   position: relative;
   margin-bottom: 20px;
 }
 
-.receiveMessagePFP {
+.defaultMessagePFP {
   width: 40px;
   height: 40px;
   border-radius: 20px;
 }
 
-.receiveMessageName {
+.defaultMessageName {
   position: absolute;
   height: 20px;
   left: 50px;
@@ -154,7 +155,7 @@
   color: #FFFFFF;
 }
 
-.receiveMessageGroup {
+.defaultMessageGroup {
   position: relative;
   width: calc(100% - 100px);
   left: 50px;
@@ -162,7 +163,7 @@
   top: -22px;
 }
 
-.receiveMessageText {
+.defaultMessageText {
   position: relative;
   margin: 0;
   left: -5px;
@@ -173,7 +174,6 @@
   font-size: 14px;
 
   overflow-wrap: break-word;
-  hyphens: auto;
 
   color: #FFFFFF;
   color: #DDD;
@@ -182,15 +182,15 @@
   padding: 0 5px;
 }
 
-.receiveMessageText:hover {
+.defaultMessageText:hover {
   background: #fff1;
 }
 
-.receiveMessageSending {
+.defaultMessageSending {
   color: #888;
 }
 
-.receiveMessageSendingText {
+.defaultMessageSendingText {
   position: absolute;
   height: auto;
   width: 65px;
@@ -208,7 +208,7 @@
   color: #999;
 }
 
-.receiveMessageTimestamp {
+.defaultMessageTimestamp {
   position: absolute;
   height: 20px;
   bottom: 0;
