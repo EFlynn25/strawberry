@@ -174,7 +174,6 @@ class MPDMs extends React.Component {
         lastRead = thisChat["messages"][thisChat["messages"].length - 1].id;
       }
     }
-    console.log(inChat);
 
     let nextID = thisChat["messages"][0]["id"];
     let tempMessages = [];
