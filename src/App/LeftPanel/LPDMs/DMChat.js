@@ -86,7 +86,7 @@ class DMChat extends React.Component {
     }
 
     let chatMessage = "";
-    let chatTime = "4:20 PM";
+    let chatTime = "";
     if (Array.isArray(myChatMessages) && myChatMessages.length) {
       const lastMessage = myChatMessages[myChatMessages.length - 1];
       let you = "";

@@ -85,7 +85,7 @@ class App extends React.Component {
                 null
               }
 
-              <Overlay type="loading" hide={this.state.pageLoaded} socket={this.props.socket} />
+              <Overlay type="loading" hide={this.state.pageLoaded} socket={this.props.socket} dmsLoaded={this.props.dmsLoaded} peopleLoaded={this.props.peopleLoaded} />
               {/*
               <TopBar />
               <LeftPanel />

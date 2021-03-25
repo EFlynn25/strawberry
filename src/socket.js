@@ -141,7 +141,9 @@ export function startSocket() {
           }
         } else if (!("lastRead" in jsonData) && !jsonData["data"] && jsonData["response"] != "get_in_chat") {
           const myMessages = mainStore.getState().dms.chats[jsonData["chat"]].messages;
-          mainStore.dispatch(setLastRead({"who": "them", "chat": jsonData["chat"], "lastRead": myMessages[myMessages.length - 1].id}));
+          if (myMessages != null && myMessages.length > 0) {
+            mainStore.dispatch(setLastRead({"who": "them", "chat": jsonData["chat"], "lastRead": myMessages[myMessages.length - 1].id}));
+          }
         }
       } else if (com == "last_read") {
         mainStore.dispatch(setLastRead({"who": "me", "chat": jsonData.chat, "lastRead": jsonData.me}));

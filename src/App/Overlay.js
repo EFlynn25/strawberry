@@ -50,12 +50,27 @@ function Overlay(props) {
         ovClass = "OverlayView OverlayViewHide";
       }
       showBg = false;
+      var myProgress = "";
+      var hideProgress = false;
+      if (props.socket == null) {
+        myProgress = "Connecting to server...";
+      } else if (props.dmsLoaded == false) {
+        myProgress = "Loading DMs...";
+      } else if (props.peopleLoaded == false) {
+        myProgress = "Loading people...";
+      }
+      if (props.socket == false) {
+        myProgress = "Connecting to server...";
+        hideProgress = true;
+      }
+
       overlayContent = (
         <div className="overlayLoading">
           {/*<img src={wlogo} className="oLoadingIcon" alt="Strawberry logo" />*/}
           <SLogo className="oLoadingIcon" />
           <h1 className={props.socket == false ? "oLoadingText" : "oLoadingText oLoadingTextHide"}>An error occurred<br/>(server connection closed)</h1>
           <h1 className={props.socket == false ? "oLoadingText oltLoading oLoadingTextHide" : "oLoadingText oltLoading"}>Loading...</h1>
+          <h1 className={hideProgress ? "oLoadingText oltProgress oLoadingTextHide" : "oLoadingText oltProgress"}>{myProgress}</h1>
         </div>
       );
   } else if (props.type == "blur") {

@@ -96,6 +96,12 @@ class MPDMs extends React.Component {
       }
     }
 
+    if (!(propsOpenedChat in prevProps.chats) && propsOpenedChat in this.props.chats) {
+      dms_in_chat(propsOpenedChat, true);
+      dms_in_chat(propsOpenedChat, "get_in_chat");
+      dms_last_read(propsOpenedChat);
+    }
+
     const thisChat = this.props.chats[propsOpenedChat];
     if (thisChat != null) {
       const iv = this.state.inputValue
@@ -249,7 +255,7 @@ class MPDMs extends React.Component {
         let myOldMessages = null;
         if (prevProps != null) {
           myOldMessages = prevProps.chats[this.props.openedChat].messages;
-          if (myOldMessages != null && myOldMessages[myOldMessages.length - 1].id + 1 == thisChat.messages[thisChat.messages.length - 1].id) {
+          if ((myOldMessages != null && myOldMessages[myOldMessages.length - 1].id + 1 == thisChat.messages[thisChat.messages.length - 1].id) || prevProps.openedChat != this.props.openedChat) {
             noTransition = true;
           }
         }
@@ -413,7 +419,7 @@ class MPDMs extends React.Component {
     }
 
     let title = "404";
-    if (this.props.openedChat in this.props.chats) {
+    if (this.props.openedChat in this.props.chats && this.props.openedChat in this.props.getknownPeople) {
       title = this.props.getknownPeople[this.props.openedChat].name;
     }
 

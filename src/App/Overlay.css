@@ -115,7 +115,7 @@
 
   color: #944;
 
-  transition: opacity .2s, top .2s;
+  transition: opacity .5s cubic-bezier(0.16, 1, 0.3, 1), transform .5s cubic-bezier(0.16, 1, 0.3, 1);
   opacity: 1;
 }
 
@@ -125,13 +125,12 @@
 }
 
 .oLoadingTextHide {
-  top: calc(50% + 70px);
+  /* top: calc(50% + 70px); */
+  transform: translateY(10px);
   opacity: 0;
 }
 
 .oltLoading {
-  text-align: center;
-
   background: linear-gradient(to right, #FFF 10%, #D56 15%, #FFF 20%,
                                         #FFF 30%, #D56 35%, #FFF 40%,
                                         #FFF 50%, #D56 55%, #FFF 60%,
@@ -150,15 +149,25 @@
   animation: loadingShine 5s linear infinite;
 }
 
-.oltLoading::first-line {
-  font-size: inherit;
-  color: inherit;
-}
-
 @keyframes loadingShine {
   to {
     background-position: 200% center;
   }
+}
+
+.oltProgress {
+  top: calc(50% + 120px);
+
+  font-size: 18px;
+  font-weight: normal;
+  font-style: italic;
+
+  color: #fff5;
+}
+
+.oltProgress::first-line {
+  font-size: unset;
+  color: unset;
 }
 
 
