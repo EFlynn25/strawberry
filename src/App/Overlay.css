@@ -76,6 +76,11 @@
   top: 250px;
 }
 
+.oHide {
+  transform: translateY(10px) !important;
+  opacity: 0 !important;
+}
+
 
 
 /* Loading */
@@ -124,12 +129,6 @@
   color: #F66;
 }
 
-.oLoadingTextHide {
-  /* top: calc(50% + 70px); */
-  transform: translateY(10px);
-  opacity: 0;
-}
-
 .oltLoading {
   background: linear-gradient(to right, #FFF 10%, #D56 15%, #FFF 20%,
                                         #FFF 30%, #D56 35%, #FFF 40%,
@@ -151,12 +150,12 @@
 
 @keyframes loadingShine {
   to {
-    background-position: 200% center;
+    background-position: -200% center;
   }
 }
 
 .oltProgress {
-  top: calc(50% + 120px);
+  top: calc(50% + 115px);
 
   font-size: 18px;
   font-weight: normal;
@@ -168,6 +167,16 @@
 .oltProgress::first-line {
   font-size: unset;
   color: unset;
+}
+
+.olProgressBar {
+  position: absolute;
+  width: 200px;
+  top: calc(50% + 100px);
+  left: calc(50% - 100px);
+
+  transition: stroke-dashoffset 0.3s ease 0s, stroke-dasharray 0.3s ease 0s, stroke 0.3s linear 0s,
+  opacity .5s cubic-bezier(0.16, 1, 0.3, 1), transform .5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 
