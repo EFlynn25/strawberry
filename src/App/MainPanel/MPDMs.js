@@ -16,6 +16,7 @@ import ethan from "../../assets/images/ethan.webp"
 import {
   dms_send_message,
   dms_in_chat,
+  dms_typing,
   dms_last_read
 } from '../../socket.js';
 
@@ -50,13 +51,19 @@ class MPDMs extends React.Component {
       this.reloadMessages(null);
       dms_in_chat(propsOpenedChat, true);
       dms_in_chat(propsOpenedChat, "get_in_chat");
+      dms_typing(propsOpenedChat, "get_typing");
       dms_last_read(propsOpenedChat);
 
       const tmi = this.props.chats[propsOpenedChat].tempMessageInput;
+      console.log(tmi);
       if (tmi != "") {
         this.setState({
           inputValue: tmi
         });
+      }
+
+      if (tmi == "" || tmi == null) {
+        dms_typing(propsOpenedChat, false);
       }
 
       if (this.messagesRef.current != null) {
@@ -89,9 +96,11 @@ class MPDMs extends React.Component {
         this.reloadMessages(prevProps);
         if (prevProps.openedChat in this.props.chats) {
           dms_in_chat(prevProps.openedChat, false);
+          dms_typing(this.props.openedChat, false);
         }
         dms_in_chat(propsOpenedChat, true);
         dms_in_chat(propsOpenedChat, "get_in_chat");
+        dms_typing(propsOpenedChat, "get_typing");
         dms_last_read(propsOpenedChat);
       }
     }
@@ -99,6 +108,7 @@ class MPDMs extends React.Component {
     if (!(propsOpenedChat in prevProps.chats) && propsOpenedChat in this.props.chats) {
       dms_in_chat(propsOpenedChat, true);
       dms_in_chat(propsOpenedChat, "get_in_chat");
+      dms_typing(propsOpenedChat, "get_typing");
       dms_last_read(propsOpenedChat);
     }
 
@@ -120,6 +130,10 @@ class MPDMs extends React.Component {
           }, () => {
             this.inputRef.current.select();
           });
+        }
+
+        if (tmi == "" || tmi == null) {
+          dms_typing(propsOpenedChat, false);
         }
       }
     }
@@ -242,10 +256,14 @@ class MPDMs extends React.Component {
           timestampElement = this.parseDate(lastReadyMessage.timestamp);
         }
 
-        let inChatClasses = "dmsInChat dmsInChatHide";
+        let inChatClasses = "dmsInChat dmsIndicatorHide";
+        let inChatTypingClasses = "dmsInChatTyping dmsInChatTypingHide";
         if ((messageIDs[messageIDs.length - 1] == lastRead || inChat) && messageIDs[messageIDs.length - 1] == thisChat.messages[thisChat.messages.length - 1].id && (!("sending" in thisChat.messages[thisChat.messages.length - 1]) || inChat)) {
           if (inChat) {
             inChatClasses = "dmsInChat";
+            if (thisChat.typing != null && thisChat.typing == true) {
+              inChatTypingClasses = "dmsInChatTyping";
+            }
           } else {
             inChatClasses = "dmsInChat dmsInChatGone";
           }
@@ -257,6 +275,7 @@ class MPDMs extends React.Component {
           myOldMessages = prevProps.chats[this.props.openedChat].messages;
           if ((myOldMessages != null && myOldMessages[myOldMessages.length - 1].id + 1 == thisChat.messages[thisChat.messages.length - 1].id) || prevProps.openedChat != this.props.openedChat) {
             noTransition = true;
+            inChatTypingClasses += " noTransition";
           }
         }
         if ("sending" in thisChat.messages[thisChat.messages.length - 1]) {
@@ -281,14 +300,14 @@ class MPDMs extends React.Component {
                   let lastReadElement;
                   // if (!inChat && lastRead != null && item == lastRead && lastRead != thisChat.messages[thisChat.messages.length - 1].id) {
                   if (lastRead != null && item == lastRead) {
-                    let myClasses = "dmsLastRead dmsLastReadHide";
+                    let myClasses = "dmsLastRead dmsIndicatorHide";
                     if (!inChat && lastRead != thisChat.messages[thisChat.messages.length - 1].id) {
                       myClasses = "dmsLastRead";
                     }
                     if (myOldMessages != null && myOldMessages[myOldMessages.length - 1].id + 1 == thisChat.messages[thisChat.messages.length - 1].id) {
                       myClasses += " noTransition";
                     }
-                    lastReadElement = <img src={myPerson.picture} className={myClasses + " noTransition"} alt={myPerson.name} />;
+                    lastReadElement = <img src={myPerson.picture} className={myClasses} alt={myPerson.name} />;
                   }
                   let messageElement;
                   if ("sending" in message) {
@@ -303,6 +322,11 @@ class MPDMs extends React.Component {
             </div>
             <h1 className="defaultMessageTimestamp">{timestampElement}</h1>
             <img src={myPerson.picture} className={inChatClasses} alt={myPerson.name} />
+            <div className={inChatTypingClasses}>
+              <div className="dmsInChatTypingDot" style={{left: "15px", animationDelay: ".25s"}}></div>
+              <div className="dmsInChatTypingDot" style={{left: "24px", animationDelay: ".5s"}}></div>
+              <div className="dmsInChatTypingDot"></div>
+            </div>
           </div>
         );
         console.debug(newMessage);
@@ -363,8 +387,21 @@ class MPDMs extends React.Component {
   }
 
   handleInputChange(event) {
+    // const thisChat = this.props.chats[this.props.openedChat];
+    // if (thisChat.inChat != null && thisChat.inChat == true) {
+      var val = event.target.value;
+      var iv = this.state.inputValue;
+      var nowEmpty = val == "" || val == null;
+      var pastEmpty = iv == "" || iv == null;
+      if (pastEmpty && !nowEmpty) {
+        dms_typing(this.props.openedChat, true);
+      } else if (!pastEmpty && nowEmpty) {
+        dms_typing(this.props.openedChat, false);
+      }
+    // }
+
     this.setState({
-      inputValue: event.target.value
+      inputValue: val
     });
   }
 
@@ -377,6 +414,7 @@ class MPDMs extends React.Component {
       const iv = this.state.inputValue;
       if (iv != null && iv != "") {
         dms_send_message(this.props.openedChat, iv);
+        dms_typing(this.props.openedChat, false);
         this.props.addSendingMessage({message: iv});
         this.setState({inputValue: ''});
       }

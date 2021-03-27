@@ -69,9 +69,6 @@ export const dmsSlice = createSlice({
       }
 
       let myId = 0;
-      // if (myMessages.length > 0) {
-      //   myId = myMessages[myMessages.length - 1]["id"] + 1;
-      // }
       if ("id" in action.payload) {
         myId = action.payload["id"];
       } else {
@@ -100,15 +97,6 @@ export const dmsSlice = createSlice({
       } else {
         state.chats[myChatEmail]["sendingMessages"] = [action.payload["message"]];
       }
-      // let myId = 0;
-      // if (myMessages.length > 0) {
-      //   myId = myMessages[myMessages.length - 1]["id"] + 1;
-      // }
-      // let myFrom = "me";
-      // if ("from" in action.payload) {
-      //   myFrom = action.payload["from"];
-      // }
-      // const newMessage = {message: action.payload["message"], from: myFrom, id: myId};
     },
     removeSendingMessage: (state, action) => {
       let myChatEmail = state.openedChat;
@@ -123,7 +111,7 @@ export const dmsSlice = createSlice({
       }
       state.chats[myChatEmail]["sendingMessages"] = mySendingMessages;
     },
-    
+
     setCreated: (state, action) => {
       let myChatEmail = state.openedChat;
       if ("chat" in action.payload) {
@@ -141,6 +129,9 @@ export const dmsSlice = createSlice({
       } else if (action.payload["who"] == "them") {
         state.chats[action.payload["chat"]].lastRead.them = action.payload["lastRead"];
       }
+    },
+    setTyping: (state, action) => {
+      state.chats[action.payload["chat"]].typing = action.payload["data"];
     },
     setInChat: (state, action) => {
       state.chats[action.payload["chat"]].inChat = action.payload["data"];
@@ -161,7 +152,7 @@ export const dmsSlice = createSlice({
 });
 
 export const { setopenedChat, addChat, addMessage, addSendingMessage, removeSendingMessage,
-  setCreated, setTempMessageInput, setLastRead, setInChat,
+  setCreated, setTempMessageInput, setLastRead, setTyping, setInChat,
   addRequest, removeRequest
  } = dmsSlice.actions;
 

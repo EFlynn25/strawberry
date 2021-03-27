@@ -1,7 +1,7 @@
 import firebase from 'firebase/app';
 import { useDispatch } from 'react-redux'
 import { setdmsLoaded, setpeopleLoaded, setSocket } from './redux/userReducer.js'
-import { addChat, addMessage, removeSendingMessage, setCreated, setLastRead, setInChat, addRequest, removeRequest
+import { addChat, addMessage, removeSendingMessage, setCreated, setLastRead, setTyping, setInChat, addRequest, removeRequest
   // removeRequesting, addRequested, addRequestedMe
  } from './redux/dmsReducer.js'
 import { addPerson } from './redux/peopleReducer.js'
@@ -145,6 +145,12 @@ export function startSocket() {
             mainStore.dispatch(setLastRead({"who": "them", "chat": jsonData["chat"], "lastRead": myMessages[myMessages.length - 1].id}));
           }
         }
+      } else if (com == "typing") {
+        // mainStore.dispatch(setLastRead({"who": "me", "chat": jsonData.chat, "lastRead": jsonData.me}));
+        // mainStore.dispatch(setLastRead({"who": "them", "chat": jsonData.chat, "lastRead": jsonData.them}));
+        if (mainStore.getState().user.email != jsonData.email) {
+          mainStore.dispatch(setTyping({"chat": jsonData.chat, "data": jsonData.data}));
+        }
       } else if (com == "last_read") {
         mainStore.dispatch(setLastRead({"who": "me", "chat": jsonData.chat, "lastRead": jsonData.me}));
         mainStore.dispatch(setLastRead({"who": "them", "chat": jsonData.chat, "lastRead": jsonData.them}));
@@ -263,6 +269,13 @@ export function dms_send_message(chat, message) {
 
 export function dms_in_chat(chat, data) {
   var jsonObj = {"product": "dms", "command": "in_chat", "chat": chat, "data": data}
+  var jsonString = JSON.stringify(jsonObj);
+  console.log("WebSocket message sending: " + jsonString);
+  socket.send(jsonString);
+}
+
+export function dms_typing(chat, data) {
+  var jsonObj = {"product": "dms", "command": "typing", "chat": chat, "data": data}
   var jsonString = JSON.stringify(jsonObj);
   console.log("WebSocket message sending: " + jsonString);
   socket.send(jsonString);

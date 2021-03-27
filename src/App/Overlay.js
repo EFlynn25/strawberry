@@ -86,10 +86,10 @@ function Overlay(props) {
         <div className="overlayLoading">
           {/*<img src={wlogo} className="oLoadingIcon" alt="Strawberry logo" />*/}
           <SLogo className="oLoadingIcon" />
-          <h1 className={props.socket == false ? "oLoadingText" : "oLoadingText oHide"}>An error occurred<br/>(server connection closed)</h1>
-          <h1 className={props.socket == false ? "oLoadingText oltLoading oHide" : "oLoadingText oltLoading"}>Loading...</h1>
-          <Line className={hideProgress ? "olProgressBar oHide" : "olProgressBar"} percent={percent} strokeWidth="1" strokeColor={color} />
-          <h1 className={hideProgress ? "oLoadingText oltProgress oHide" : "oLoadingText oltProgress"}>{myProgress}</h1>
+          <h1 className={props.socket == false ? "oLoadingText" : "oLoadingText oLoadingHide"}>An error occurred<br/>(server connection closed)</h1>
+          <h1 className={props.socket == false ? "oLoadingText oltLoading oLoadingHide" : "oLoadingText oltLoading"}>Loading...</h1>
+          <Line className={hideProgress ? "olProgressBar oLoadingHide" : "olProgressBar"} percent={percent} strokeWidth="1" strokeColor={color} />
+          <h1 className={hideProgress ? "oLoadingText oltProgress oLoadingHide" : "oLoadingText oltProgress"}>{myProgress}</h1>
         </div>
       );
   } else if (props.type == "blur") {

@@ -80,6 +80,17 @@
   color: #FFF4;
 }
 
+
+
+/* Indicators */
+
+.dmsIndicatorHide {
+  transition: opacity .1s, transform .1s, visibility 0s .1s !important;
+  visibility: hidden;
+  transform: translateX(-10px);
+  opacity: 0 !important;
+}
+
 .dmsLastRead {
   position: absolute;
   right: -40px;
@@ -91,15 +102,8 @@
 
   filter: brightness(50%);
 
-  transition: opacity .1s, right .1s;
+  transition: opacity .1s, transform .1s;
   opacity: 1;
-}
-
-.dmsLastReadHide {
-  transition: opacity .1s, right .1s, visibility 0s .1s;
-  visibility: hidden;
-  right: -30px;
-  opacity: 0 !important;
 }
 
 .dmsInChat {
@@ -110,19 +114,63 @@
   height: 30px;
   border-radius: 15px;
 
-  transition: filter .5s, opacity .1s, left .1s;
+  transition: filter .5s, opacity .1s, transform .1s;
   opacity: 1;
-}
-
-.dmsInChatHide {
-  transition: opacity .1s, left .1s, visibility 0s .1s;
-  visibility: hidden;
-  left: 40px;
-  opacity: 0 !important;
 }
 
 .dmsInChatGone {
   filter: brightness(50%);
+}
+
+.dmsInChatTyping {
+  position: absolute;
+  margin: 4px;
+  left: 82px;
+  width: 35px;
+  height: 20px;
+  border-radius: 20px;
+  border: 1px solid;
+  border-color: #37383A;
+
+  transition: filter .5s, opacity .1s, transform .1s;
+  opacity: 1;
+
+  background: #2A2B2DBB;
+}
+
+.dmsInChatTypingDot {
+  position: absolute;
+  left: 6px;
+  top: 7px;
+  width: 5px;
+  height: 5px;
+  border-radius: 10px;
+
+  background: #FFF8;
+
+  animation: typingDotSequential 2s linear infinite;
+}
+
+@keyframes typingDotSequential {
+  0% {
+    background: #FFF8;
+  }
+  20% {
+    background: #FFF4;
+  }
+  30% {
+    background: #FFFF;
+  }
+  40% {
+    background: #FFF8;
+  }
+}
+
+.dmsInChatTypingHide {
+  transition: opacity .1s, transform .1s, visibility 0s .1s !important;
+  visibility: hidden;
+  transform: translateX(-5px);
+  opacity: 0 !important;
 }
 
 

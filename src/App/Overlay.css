@@ -76,14 +76,14 @@
   top: 250px;
 }
 
-.oHide {
-  transform: translateY(10px) !important;
-  opacity: 0 !important;
-}
-
 
 
 /* Loading */
+
+.oLoadingHide {
+  transform: translateY(10px) !important;
+  opacity: 0 !important;
+}
 
 .overlayLoading {
   position: absolute;
@@ -176,7 +176,7 @@
   left: calc(50% - 100px);
 
   transition: stroke-dashoffset 0.3s ease 0s, stroke-dasharray 0.3s ease 0s, stroke 0.3s linear 0s,
-  opacity .5s cubic-bezier(0.16, 1, 0.3, 1), transform .5s cubic-bezier(0.16, 1, 0.3, 1);
+              opacity .5s cubic-bezier(0.16, 1, 0.3, 1), transform .5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 
