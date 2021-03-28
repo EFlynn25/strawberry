@@ -3,17 +3,20 @@ import { withRouter } from "react-router-dom";
 import { connect } from 'react-redux';
 
 import './LPDMs.css';
+import {
+  setNotificationCount
+} from '../../redux/userReducer';
 import DMChat from './LPDMs/DMChat'
 import DMNewChat from './LPDMs/DMNewChat'
 
 class LPDMs extends React.Component {
-  // constructor(props) {
-  //   super(props);
-  //
-  //   this.state = {
-  //     children: []
-  //   };
-  // }
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      faviconHref: "/favicon_package/favicon.ico"
+    };
+  }
 
   componentDidMount() {
     if (this.props.openedChat != "") {
@@ -23,14 +26,20 @@ class LPDMs extends React.Component {
 
   render() {
     let children = [];
+    let unreadMessages = 0;
 
     const noMessageChats = [];
     const chats = JSON.parse(JSON.stringify(this.props.chats));
     var chatTimestampList = Object.keys(chats).filter(function(key) {
-      const thisChatMessages = chats[key].messages;
+      const thisChat = chats[key];
+      const thisChatMessages = thisChat.messages;
       if (thisChatMessages == null) {
         noMessageChats.push(key);
         return false;
+      } else {
+        if (thisChatMessages[thisChatMessages.length - 1].id > thisChat.lastRead.me) {
+          unreadMessages++;
+        }
       }
       return true;
     }).map(function(key) {
@@ -61,6 +70,8 @@ class LPDMs extends React.Component {
       );
     }
 
+    this.props.setNotificationCount({type: "dms", count: unreadMessages});
+
     return (
       <div className="LPDMs">
         <div className="lpdmChats">
@@ -77,4 +88,8 @@ const mapStateToProps = (state) => ({
   chats: state.dms.chats
 });
 
-export default connect(mapStateToProps, null)(withRouter(LPDMs));
+const mapDispatchToProps = {
+  setNotificationCount
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(LPDMs));

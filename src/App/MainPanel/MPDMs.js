@@ -2,7 +2,6 @@ import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Switch, Route } from "react-router-dom";
 import TextareaAutosize from 'react-autosize-textarea';
-import { Helmet } from 'react-helmet';
 
 import './MPDMs.css';
 import {
@@ -12,6 +11,9 @@ import {
   setTempMessageInput,
   setLastRead
 } from '../../redux/dmsReducer';
+import {
+  setCurrentPage
+} from '../../redux/userReducer';
 import ethan from "../../assets/images/ethan.webp"
 import {
   dms_send_message,
@@ -19,6 +21,7 @@ import {
   dms_typing,
   dms_last_read
 } from '../../socket.js';
+import DMsDefaultMessage from './MPDMs/DMsDefaultMessage';
 
 console.debug = function() {}
 
@@ -273,7 +276,8 @@ class MPDMs extends React.Component {
         let myOldMessages = null;
         if (prevProps != null) {
           myOldMessages = prevProps.chats[this.props.openedChat].messages;
-          if ((myOldMessages != null && myOldMessages[myOldMessages.length - 1].id + 1 == thisChat.messages[thisChat.messages.length - 1].id) || prevProps.openedChat != this.props.openedChat) {
+          var firstCondition = myOldMessages != null && myOldMessages[myOldMessages.length - 1].id + 1 == thisChat.messages[thisChat.messages.length - 1].id;
+          if (firstCondition || prevProps.openedChat != this.props.openedChat) {
             noTransition = true;
             inChatTypingClasses += " noTransition";
           }
@@ -284,7 +288,7 @@ class MPDMs extends React.Component {
         if (noTransition) {
           inChatClasses += " noTransition";
         }
-        const newMessage = (
+        const oldMessage = (
           <div className="defaultMessage" key={"group" + i}>
           <img src={newMessagePicture} className="defaultMessagePFP" alt={newMessageName} />
             <div className="defaultMessageName">
@@ -329,6 +333,7 @@ class MPDMs extends React.Component {
             </div>
           </div>
         );
+        const newMessage = (<DMsDefaultMessage inChat={inChat} typing={thisChat.typing} id={messageIDs[0]} />);
         console.debug(newMessage);
         tempMessages.push(newMessage);
       }
@@ -387,18 +392,15 @@ class MPDMs extends React.Component {
   }
 
   handleInputChange(event) {
-    // const thisChat = this.props.chats[this.props.openedChat];
-    // if (thisChat.inChat != null && thisChat.inChat == true) {
-      var val = event.target.value;
-      var iv = this.state.inputValue;
-      var nowEmpty = val == "" || val == null;
-      var pastEmpty = iv == "" || iv == null;
-      if (pastEmpty && !nowEmpty) {
-        dms_typing(this.props.openedChat, true);
-      } else if (!pastEmpty && nowEmpty) {
-        dms_typing(this.props.openedChat, false);
-      }
-    // }
+    var val = event.target.value;
+    var iv = this.state.inputValue;
+    var nowEmpty = val == "" || val == null;
+    var pastEmpty = iv == "" || iv == null;
+    if (pastEmpty && !nowEmpty) {
+      dms_typing(this.props.openedChat, true);
+    } else if (!pastEmpty && nowEmpty) {
+      dms_typing(this.props.openedChat, false);
+    }
 
     this.setState({
       inputValue: val
@@ -461,11 +463,10 @@ class MPDMs extends React.Component {
       title = this.props.getknownPeople[this.props.openedChat].name;
     }
 
+    this.props.setCurrentPage(title);
+
     return (
       <div className="MPDMs">
-        <Helmet>
-          <title>{title} - Strawberry</title>
-        </Helmet>
         { children }
       </div>
     );
@@ -486,7 +487,8 @@ const mapDispatchToProps = {
   // addMessage,
   addSendingMessage,
   setTempMessageInput,
-  setLastRead
+  setLastRead,
+  setCurrentPage
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(MPDMs);

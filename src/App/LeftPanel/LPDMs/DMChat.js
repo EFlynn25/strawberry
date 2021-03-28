@@ -76,7 +76,6 @@ class DMChat extends React.Component {
   }
 
   render() {
-    //console.log("[DMChat] [from " + this.props.chatEmail + "] selected: " + this.props.openedChat)
     const myChat =  this.props.chats[this.props.chatEmail];
     const myChatMessages = myChat.messages;
 

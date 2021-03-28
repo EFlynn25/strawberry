@@ -2,7 +2,6 @@ import { Fragment } from 'react';
 import { useHistory } from "react-router-dom";
 import firebase from 'firebase/app';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
-import { Helmet } from 'react-helmet';
 import { Line } from 'rc-progress';
 
 // import wlogo from '../assets/icons/swhite.svg';
@@ -22,20 +21,16 @@ function Overlay(props) {
   let overlayContent;
   let showBg = true;
   if (props.type == "welcome") {
-    //const mainPage = () =>
-
     firebase.auth().onAuthStateChanged(user => {
       if (!!user) {
-        //mainPage();
         history.push('/');
       }
     });
+
+    // SET CURRENTPAGE
+
     overlayContent =
       <div className="overlayPanel">
-        <Helmet>
-          <title>Welcome - Strawberry</title>
-        </Helmet>
-        {/*<img src={wlogo} className="oWelcomeLogo" alt="Strawberry logo" />*/}
         <SLogo className="oWelcomeLogo" />
         <h1 className="oWelcomeText">Looks like you're not signed in.</h1>
         <div className="oWelcomeFirebaseDiv">
@@ -43,10 +38,6 @@ function Overlay(props) {
         </div>
       </div>;
   } else if (props.type == "loading") {
-    /*overlayContent =
-      <div className="overlayPanel">
-        <h1 className="oLoadingText">Loading...</h1>
-      </div>;*/
       if (props.hide != null && props.hide) {
         ovClass = "OverlayView OverlayViewHide";
       }
@@ -84,7 +75,6 @@ function Overlay(props) {
 
       overlayContent = (
         <div className="overlayLoading">
-          {/*<img src={wlogo} className="oLoadingIcon" alt="Strawberry logo" />*/}
           <SLogo className="oLoadingIcon" />
           <h1 className={props.socket == false ? "oLoadingText" : "oLoadingText oLoadingHide"}>An error occurred<br/>(server connection closed)</h1>
           <h1 className={props.socket == false ? "oLoadingText oltLoading oLoadingHide" : "oLoadingText oltLoading"}>Loading...</h1>

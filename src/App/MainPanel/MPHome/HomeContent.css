@@ -56,19 +56,34 @@
   border-bottom: 1px solid white;
 }
 
+/* ...active */
+
+.hcTab:active .hcTitle, .hcTab:active .hcTabIcon {
+  fill: #fff9;
+  color: #fff9;
+}
+
+.hcTab:active {
+  cursor: pointer;
+  border-bottom: 1px solid #fff9;
+}
+
 /* ...selected */
 
 .hctSelected {
   border-bottom: 1px solid #D54D5E !important;
+  border-bottom: 1px solid #EF6778 !important;
 }
 
 .hcttSelected {
-  filter: unset;
-  color: #D54D5E;
+  filter: unset  !important;
+  color: #D54D5E !important;
+  color: #EF6778 !important;
 }
 
 .hctiSelected {
-  fill: #D54D5E;
+  fill: #D54D5E  !important;
+  fill: #EF6778  !important;
 }
 
 

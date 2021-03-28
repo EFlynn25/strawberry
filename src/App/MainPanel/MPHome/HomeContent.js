@@ -1,8 +1,5 @@
 import React from 'react';
 
-// import notify from '../../../assets/icons/notify.svg';
-// import people from '../../../assets/icons/people.svg';
-// import profile from '../../../assets/icons/profile.svg';
 import { ReactComponent as Notify } from '../../../assets/icons/notify.svg';
 import { ReactComponent as People } from '../../../assets/icons/people.svg';
 import { ReactComponent as Profile } from '../../../assets/icons/profile.svg';
@@ -11,26 +8,27 @@ import './HomeContent.css';
 class HomeContent extends React.Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      tab: 1
+    };
   }
 
   render() {
     return (
       <div className="HomeContent">
         <div className="hcTabs">
-          <div className="hcTab">
-            {/*<img src={notify} className="hcTabIcon hctiNotify" alt="Notify Icon" />*/}
-            <Notify className="hcTabIcon hctiNotify" />
-            <h1 className="hcTitle">NOTIFICATIONS</h1>
+          <div className={this.state.tab == 1 ? "hcTab hctSelected" : "hcTab"} onClick={() => this.setState({tab: 1})}>
+            <Notify className={this.state.tab == 1 ? "hcTabIcon hctiNotify hctiSelected" : "hcTabIcon hctiNotify"} />
+            <h1 className={this.state.tab == 1 ? "hcTitle hcttSelected" : "hcTitle"}>NOTIFICATIONS</h1>
           </div>
-          <div className="hcTab">
-            {/*<img src={people} className="hcTabIcon hctiPeople" alt="People Icon" />*/}
-            <People className="hcTabIcon hctiPeople" />
-            <h1 className="hcTitle">PEOPLE</h1>
+          <div className={this.state.tab == 2 ? "hcTab hctSelected" : "hcTab"} onClick={() => this.setState({tab: 2})}>
+            <People className={this.state.tab == 2 ? "hcTabIcon hctiNotify hctiSelected" : "hcTabIcon hctiNotify"} />
+            <h1 className={this.state.tab == 2 ? "hcTitle hcttSelected" : "hcTitle"}>PEOPLE</h1>
           </div>
-          <div className="hcTab">
-            {/*<img src={profile} className="hcTabIcon hctiProfile" alt="Profile Icon" />*/}
-            <Profile className="hcTabIcon hctiProfile" />
-            <h1 className="hcTitle">PROFILE</h1>
+          <div className={this.state.tab == 3 ? "hcTab hctSelected" : "hcTab"} onClick={() => this.setState({tab: 3})}>
+            <Profile className={this.state.tab == 3 ? "hcTabIcon hctiNotify hctiSelected" : "hcTabIcon hctiNotify"} />
+            <h1 className={this.state.tab == 3 ? "hcTitle hcttSelected" : "hcTitle"}>PROFILE</h1>
           </div>
         </div>
       </div>
