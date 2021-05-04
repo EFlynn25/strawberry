@@ -12,7 +12,9 @@ class DMsDefaultMessage extends React.Component {
       messageEmail: "",
       messageName: "",
       messagePicture: "",
-      messageElements: []
+      messageElements: [],
+      inChatClasses: "dmsInChat dmsIndicatorHide",
+      inChatTypingClasses: "dmsInChatTyping dmsInChatTypingHide"
     };
   }
 
@@ -31,11 +33,12 @@ class DMsDefaultMessage extends React.Component {
 
     const idsChanged = prevState.myIDs != this.state.myIDs;
     const themLastReadChanged = prevCurrentChat.lastRead.them != thisChat.lastRead.them;
+    const otherUserStateChanged = prevProps.inChat != this.props.inChat || prevProps.typing != this.props.typing;
     if (messagesExist && (sentNewMessage || openedChatChanged)) {
       this.reloadData();
       this.reloadMessages(prevProps);
     } else {
-      if (idsChanged || themLastReadChanged) {
+      if (idsChanged || themLastReadChanged || otherUserStateChanged) {
         this.reloadMessages(prevProps);
       }
     }
@@ -129,6 +132,56 @@ class DMsDefaultMessage extends React.Component {
       newMessages.push(messageElement);
     });
     this.setState({messageElements: newMessages});
+
+    this.reloadIndicators(prevProps);
+  }
+
+  reloadIndicators(prevProps) {
+    const thisChat = this.props.chats[this.props.openedChat];
+    const myIDs = this.state.myIDs;
+
+
+    const lastRead = thisChat.lastRead.them;
+    const inChat = this.props.inChat;
+    const typing = this.props.typing;
+
+    let inChatClasses = "dmsInChat dmsIndicatorHide";
+    let inChatTypingClasses = "dmsInChatTyping dmsInChatTypingHide";
+    if ((myIDs[myIDs.length - 1] == lastRead || inChat) && myIDs[myIDs.length - 1] == thisChat.messages[thisChat.messages.length - 1].id && (!("sending" in thisChat.messages[thisChat.messages.length - 1]) || inChat)) {
+      if (inChat) {
+        inChatClasses = "dmsInChat";
+        if (typing != null && typing == true) {
+          inChatTypingClasses = "dmsInChatTyping";
+        }
+      } else {
+        inChatClasses = "dmsInChat dmsInChatGone";
+      }
+    }
+
+    let noTransition = false;
+    let myOldMessages = null;
+    if (prevProps != null) {
+      myOldMessages = prevProps.chats[this.props.openedChat].messages;
+      var sentNewMessage = myOldMessages != null && myOldMessages[myOldMessages.length - 1].id + 1 == thisChat.messages[thisChat.messages.length - 1].id;
+      console.log(thisChat.messages[thisChat.messages.length - 1].id);
+      console.log(myIDs);
+      console.log(thisChat.messages[thisChat.messages.length - 1].id != myIDs[myIDs.length - 1]);
+      if (sentNewMessage || this.state.messageElements.length == 0 || thisChat.messages[thisChat.messages.length - 1].id != myIDs[myIDs.length - 1]) {
+        noTransition = true;
+        inChatTypingClasses += " noTransition";
+      }
+    }
+    if ("sending" in thisChat.messages[thisChat.messages.length - 1]) {
+      noTransition = true;
+    }
+    if (noTransition) {
+      inChatClasses += " noTransition";
+    }
+
+    this.setState({
+      inChatClasses: inChatClasses,
+      inChatTypingClasses: inChatTypingClasses
+    });
   }
 
   parseDate(timestamp) {
@@ -149,6 +202,11 @@ class DMsDefaultMessage extends React.Component {
   }
 
   render() {
+    let timestampElement = "";
+    if (this.state.messageElements != null && this.state.messageElements.length > 0) {
+      timestampElement = this.state.messageElements[this.state.messageElements.length - 1].props.title;
+    }
+
     return (
       <div className="DMsDefaultMessage">
 
@@ -161,12 +219,12 @@ class DMsDefaultMessage extends React.Component {
         <div className="defaultMessageGroup">
           {this.state.messageElements}
         </div>
-        <h1 className="defaultMessageTimestamp">{/*timestampElement*/}4:20 PM</h1>
-        <img src={this.props.knownPeople[this.props.openedChat].picture} className={"dmsInChat dmsIndicatorHide"/*inChatClasses*/} alt={this.props.knownPeople[this.props.openedChat].name} />
-        <div className={"dmsInChatTyping dmsInChatTypingHide"/*inChatTypingClasses*/}>
+        <h1 className="defaultMessageTimestamp">{timestampElement}</h1>
+        <img src={this.props.knownPeople[this.props.openedChat].picture} className={this.state.inChatClasses} alt={this.props.knownPeople[this.props.openedChat].name} />
+        <div className={this.state.inChatTypingClasses}>
+          <div className="dmsInChatTypingDot"></div>
           <div className="dmsInChatTypingDot" style={{left: "15px", animationDelay: ".25s"}}></div>
           <div className="dmsInChatTypingDot" style={{left: "24px", animationDelay: ".5s"}}></div>
-          <div className="dmsInChatTypingDot"></div>
         </div>
 
 
