@@ -6,6 +6,9 @@ import './LPDMs.css';
 import {
   setNotificationCount
 } from '../../redux/userReducer';
+import {
+  setopenedChat
+} from "../../redux/dmsReducer"
 import DMChat from './LPDMs/DMChat'
 import DMNewChat from './LPDMs/DMNewChat'
 
@@ -14,7 +17,8 @@ class LPDMs extends React.Component {
     super(props);
 
     this.state = {
-      faviconHref: "/favicon_package/favicon.ico"
+      faviconHref: "/favicon_package/favicon.ico",
+      children: []
     };
   }
 
@@ -22,10 +26,20 @@ class LPDMs extends React.Component {
     if (this.props.openedChat != "") {
       this.props.history.push("/dms/" + this.props.openedChat);
     }
+
+    this.reloadChats();
+
+    document.addEventListener("keydown", this.handleKeyDown.bind(this))
   }
 
-  render() {
-    let children = [];
+  componentDidUpdate(prevProps) {
+    if (this.props.chats != prevProps.chats) {
+      this.reloadChats();
+    }
+  }
+
+  reloadChats() {
+    // let children = [];
     let unreadMessages = 0;
 
     const noMessageChats = [];
@@ -58,12 +72,16 @@ class LPDMs extends React.Component {
         return x[0];
     });
     if (Array.isArray(chatKeys) && chatKeys.length) {
+      let newChildren = [];
       chatKeys.map(item => {
         const chatElement = <DMChat key={"id" + item} chatEmail={item} />;
-        children.push(chatElement);
+        newChildren.push(chatElement);
+      });
+      this.setState({
+        children: newChildren
       });
     } else {
-      children.push(
+      const newChildren = (
         <div key="id_no_chats" style={{display: "table", width: "100%", height: "100%"}}>
           <h1 style={{position: "relative", display: "table-cell", margin: "0", textAlign: "center", verticalAlign: "middle", color: "#fff5", fontSize: "16px"}}>No chats</h1>
         </div>
@@ -71,11 +89,47 @@ class LPDMs extends React.Component {
     }
 
     this.props.setNotificationCount({type: "dms", count: unreadMessages});
+  }
 
+  handleKeyDown(e) {
+    if (e.ctrlKey && e.which === 38) {
+      for (var i = 0; i < this.state.children.length; i++) {
+        if (this.state.children[i].props.chatEmail == this.props.openedChat) {
+          if (i != 0) {
+            const newChat = this.state.children[i - 1].props.chatEmail;
+            this.props.setopenedChat(newChat);
+            this.props.history.push("/dms/" + newChat);
+          } else {
+            this.props.history.push("/home");
+          }
+          break;
+        }
+      }
+    } else if (e.ctrlKey && e.which === 40) {
+      if (this.props.history.location.pathname.startsWith("/home")) {
+        const newChat = this.state.children[0].props.chatEmail;
+        this.props.setopenedChat(newChat);
+        this.props.history.push("/dms/" + newChat);
+      } else {
+        for (var i = 0; i < this.state.children.length; i++) {
+          if (this.state.children[i].props.chatEmail == this.props.openedChat) {
+            if (i != this.state.children.length - 1) {
+              const newChat = this.state.children[i + 1].props.chatEmail;
+              this.props.setopenedChat(newChat);
+              this.props.history.push("/dms/" + newChat);
+            }
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  render() {
     return (
       <div className="LPDMs">
         <div className="lpdmChats">
-          { children }
+          { this.state.children }
         </div>
         <DMNewChat />
       </div>
@@ -89,7 +143,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
-  setNotificationCount
+  setNotificationCount,
+  setopenedChat
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(LPDMs));

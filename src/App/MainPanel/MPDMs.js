@@ -73,6 +73,13 @@ class MPDMs extends React.Component {
         this.messagesRef.current.scrollTop = this.messagesRef.current.scrollHeight;
       }
     }
+
+    let title = "404";
+    if (this.props.openedChat in this.props.chats && this.props.openedChat in this.props.getknownPeople) {
+      title = this.props.getknownPeople[this.props.openedChat].name;
+    }
+
+    this.props.setCurrentPage(title);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -141,9 +148,16 @@ class MPDMs extends React.Component {
       }
     }
 
-    if (this.state.loaded && prevProps.openedChat != propsOpenedChat && propsOpenedChat in this.props.chats) {
+    if (this.state.loaded && prevProps.currentPage != this.props.currentPage && propsOpenedChat in this.props.chats) {
       this.inputRef.current.focus();
     }
+
+    let title = "404";
+    if (this.props.openedChat in this.props.chats && this.props.openedChat in this.props.getknownPeople) {
+      title = this.props.getknownPeople[this.props.openedChat].name;
+    }
+
+    this.props.setCurrentPage(title);
   }
 
   componentWillUnmount() {
@@ -290,7 +304,7 @@ class MPDMs extends React.Component {
         }
         const oldMessage = (
           <div className="defaultMessage" key={"group" + i}>
-          <img src={newMessagePicture} className="defaultMessagePFP" alt={newMessageName} />
+            <img src={newMessagePicture} className="defaultMessagePFP" alt={newMessageName} />
             <div className="defaultMessageName">
               {newMessageName}
               {sendingElement}
@@ -333,7 +347,7 @@ class MPDMs extends React.Component {
             </div>
           </div>
         );
-        const newMessage = (<DMsDefaultMessage inChat={inChat} typing={thisChat.typing} id={messageIDs[0]} />);
+        const newMessage = (<DMsDefaultMessage inChat={inChat} typing={thisChat.typing} id={messageIDs[0]} key={messageIDs[0]} />);
         console.debug(newMessage);
         tempMessages.push(newMessage);
       }
@@ -458,13 +472,6 @@ class MPDMs extends React.Component {
       children = (<h1 className="dmsCenterText">That chat doesn't exist...</h1>);
     }
 
-    let title = "404";
-    if (this.props.openedChat in this.props.chats && this.props.openedChat in this.props.getknownPeople) {
-      title = this.props.getknownPeople[this.props.openedChat].name;
-    }
-
-    this.props.setCurrentPage(title);
-
     return (
       <div className="MPDMs">
         { children }
@@ -479,7 +486,8 @@ const mapStateToProps = (state) => ({
   myName: state.user.name,
   myEmail: state.user.email,
   myPicture: state.user.picture,
-  getknownPeople: state.people.knownPeople
+  getknownPeople: state.people.knownPeople,
+  currentPage: state.user.currentPage
 });
 
 const mapDispatchToProps = {
