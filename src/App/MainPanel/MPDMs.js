@@ -360,7 +360,7 @@ class MPDMs extends React.Component {
       let myName = this.props.myName;
       let myPicture = this.props.myPicture;
       const newMessage = (
-        <div className="defaultMessage" key={"sendinggroup"}>
+        <div className="DMsDefaultMessage" key={"sendinggroup"}>
         <img src={myPicture} className="defaultMessagePFP" alt={myName} />
           <div className="defaultMessageName">
             {myName}
@@ -429,7 +429,7 @@ class MPDMs extends React.Component {
 
       const iv = this.state.inputValue;
       if (iv != null && iv != "") {
-        dms_send_message(this.props.openedChat, iv);
+        // dms_send_message(this.props.openedChat, iv);
         dms_typing(this.props.openedChat, false);
         this.props.addSendingMessage({message: iv});
         this.setState({inputValue: ''});

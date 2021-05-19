@@ -3,6 +3,8 @@ import { useHistory } from "react-router-dom";
 import firebase from 'firebase/app';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import { Line } from 'rc-progress';
+import { useDispatch } from 'react-redux'
+import { setCurrentPage } from '../redux/userReducer';
 
 // import wlogo from '../assets/icons/swhite.svg';
 import { ReactComponent as SLogo } from '../assets/icons/strawberry.svg';
@@ -16,6 +18,7 @@ import ORightPanel from './Overlay/ORightPanel';
 
 function Overlay(props) {
   const history = useHistory();
+  const dispatch = useDispatch();
 
   let ovClass = "OverlayView";
   let overlayContent;
@@ -27,7 +30,7 @@ function Overlay(props) {
       }
     });
 
-    // SET CURRENTPAGE
+    dispatch(setCurrentPage("Welcome"));
 
     overlayContent =
       <div className="overlayPanel">

@@ -34,11 +34,13 @@ class DMsDefaultMessage extends React.Component {
     const idsChanged = prevState.myIDs != this.state.myIDs;
     const themLastReadChanged = prevCurrentChat.lastRead.them != thisChat.lastRead.them;
     const otherUserStateChanged = prevProps.inChat != this.props.inChat || prevProps.typing != this.props.typing;
+    // const newSentMessage = prevCurrentChat.sendingMessages != null && thisChat.sendingMessages != null && prevCurrentChat.sendingMessages != thisChat.sendingMessages;
+    const newSentMessage = prevCurrentChat.sendingMessages != thisChat.sendingMessages;
     if (messagesExist && (sentNewMessage || openedChatChanged)) {
       this.reloadData();
       this.reloadMessages(prevProps);
     } else {
-      if (idsChanged || themLastReadChanged || otherUserStateChanged) {
+      if (idsChanged || themLastReadChanged || otherUserStateChanged || newSentMessage) {
         this.reloadMessages(prevProps);
       }
     }
@@ -122,15 +124,27 @@ class DMsDefaultMessage extends React.Component {
         }
         lastReadElement = <img src={this.props.knownPeople[this.props.openedChat].picture} className={myClasses} alt={this.props.knownPeople[this.props.openedChat].name} />;
       }
+
       let messageElement;
-      if ("sending" in message) {
-        messageElement = <p key={messageKey} className="defaultMessageText defaultMessageSending">{message.message}</p>;
-      } else {
-        messageElement = <p key={messageKey} title={this.parseDate(message.timestamp)} className="defaultMessageText">{message.message}{lastReadElement}</p>;
-      }
+      messageElement = <p key={messageKey} title={this.parseDate(message.timestamp)} className="defaultMessageText">{message.message}{lastReadElement}</p>;
+      // if ("sending" in message) {
+      //   messageElement = <p key={messageKey} className="defaultMessageText defaultMessageSending">{message.message}</p>;
+      // } else {
+      // }
 
       newMessages.push(messageElement);
     });
+
+    const message = thisChat.messages.find( ({ id }) => id === this.state.myIDs[0] );
+    if (message.from == "me" && this.state.myIDs.includes(thisChat.messages[thisChat.messages.length - 1].id) && thisChat.sendingMessages != null) {
+      thisChat.sendingMessages.map(item => {
+        console.log(item);
+        let messageElement;
+        messageElement = <p key={"key" + item} className="defaultMessageText defaultMessageSending">{item}</p>;
+        newMessages.push(messageElement);
+      });
+    }
+
     this.setState({messageElements: newMessages});
 
     this.reloadIndicators(prevProps);
@@ -163,9 +177,9 @@ class DMsDefaultMessage extends React.Component {
     if (prevProps != null) {
       myOldMessages = prevProps.chats[this.props.openedChat].messages;
       var sentNewMessage = myOldMessages != null && myOldMessages[myOldMessages.length - 1].id + 1 == thisChat.messages[thisChat.messages.length - 1].id;
-      console.log(thisChat.messages[thisChat.messages.length - 1].id);
-      console.log(myIDs);
-      console.log(thisChat.messages[thisChat.messages.length - 1].id != myIDs[myIDs.length - 1]);
+      // console.log(thisChat.messages[thisChat.messages.length - 1].id);
+      // console.log(myIDs);
+      // console.log(thisChat.messages[thisChat.messages.length - 1].id != myIDs[myIDs.length - 1]);
       if (sentNewMessage || this.state.messageElements.length == 0 || thisChat.messages[thisChat.messages.length - 1].id != myIDs[myIDs.length - 1]) {
         noTransition = true;
         inChatTypingClasses += " noTransition";
@@ -215,6 +229,8 @@ class DMsDefaultMessage extends React.Component {
         <div className="defaultMessageName">
           {this.state.messageName}
           {/*sendingElement*/}
+          {console.log(this.state.messageElements[this.state.messageElements.length - 1])}
+          {this.state.messageElements.length > 0 && this.state.messageElements[this.state.messageElements.length - 1].props.className.includes("defaultMessageSending") ? <h1 className="defaultMessageSendingText">Sending...</h1> : null}
         </div>
         <div className="defaultMessageGroup">
           {this.state.messageElements}
