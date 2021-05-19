@@ -16,10 +16,19 @@ class DMsDefaultMessage extends React.Component {
       inChatClasses: "dmsInChat dmsIndicatorHide",
       inChatTypingClasses: "dmsInChatTyping dmsInChatTypingHide"
     };
+
+    this.canScroll = true;
+  }
+
+  handleScroll() {
+    this.canScroll = false;
+    console.log("you scrolled");
   }
 
   componentDidMount() {
     this.reloadData();
+
+    document.querySelector('.dmsMessages').addEventListener("scroll", this.handleScroll);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -42,6 +51,21 @@ class DMsDefaultMessage extends React.Component {
     } else {
       if (idsChanged || themLastReadChanged || otherUserStateChanged || newSentMessage) {
         this.reloadMessages(prevProps);
+      }
+    }
+
+    if (openedChatChanged) {
+      this.canScroll = true;
+    }
+
+    if (thisChat.messages[thisChat.messages.length - 1].id == this.state.myIDs[this.state.myIDs.length - 1]) {
+      console.log("I am last message! " + this.state.myIDs[this.state.myIDs.length - 1]);
+      console.log(document.querySelector('.dmsMessages').scrollTop);
+      console.log(document.querySelector('.dmsMessages').scrollHeight);
+      console.log(document.querySelector('.dmsMessages').clientHeight);
+      if (this.canScroll || document.querySelector('.dmsMessages').scrollTop < document.querySelector('.dmsMessages').scrollHeight - document.querySelector('.dmsMessages').clientHeight - 4) {
+        //console.log("OPENED CHAT CHANGED");
+        document.querySelector('.dmsMessages').scrollTop = document.querySelector('.dmsMessages').scrollHeight - document.querySelector('.dmsMessages').clientHeight;
       }
     }
   }
@@ -119,7 +143,7 @@ class DMsDefaultMessage extends React.Component {
         if (!this.props.inChat && lastRead != thisChat.messages[thisChat.messages.length - 1].id) {
           myClasses = "dmsLastRead";
         }
-        if (myOldMessages != null && myOldMessages[myOldMessages.length - 1].id + 1 == thisChat.messages[thisChat.messages.length - 1].id) {
+        if (prevProps.openedChat != this.props.openedChat || (myOldMessages != null && myOldMessages[myOldMessages.length - 1].id + 1 == thisChat.messages[thisChat.messages.length - 1].id)) {
           myClasses += " noTransition";
         }
         lastReadElement = <img src={this.props.knownPeople[this.props.openedChat].picture} className={myClasses} alt={this.props.knownPeople[this.props.openedChat].name} />;
@@ -229,15 +253,14 @@ class DMsDefaultMessage extends React.Component {
         <div className="defaultMessageName">
           {this.state.messageName}
           {/*sendingElement*/}
-          {console.log(this.state.messageElements[this.state.messageElements.length - 1])}
           {this.state.messageElements.length > 0 && this.state.messageElements[this.state.messageElements.length - 1].props.className.includes("defaultMessageSending") ? <h1 className="defaultMessageSendingText">Sending...</h1> : null}
         </div>
         <div className="defaultMessageGroup">
           {this.state.messageElements}
         </div>
         <h1 className="defaultMessageTimestamp">{timestampElement}</h1>
-        <img src={this.props.knownPeople[this.props.openedChat].picture} className={this.state.inChatClasses} alt={this.props.knownPeople[this.props.openedChat].name} />
-        <div className={this.state.inChatTypingClasses}>
+        <img src={this.props.knownPeople[this.props.openedChat].picture} className={this.state.inChatClasses} alt={this.props.knownPeople[this.props.openedChat].name} style={this.state.messageElements.length > 0 && this.state.messageElements[this.state.messageElements.length - 1].props.className.includes("defaultMessageSending") ? {bottom: "-15px"} : null} />
+        <div style={this.state.messageElements.length > 0 && this.state.messageElements[this.state.messageElements.length - 1].props.className.includes("defaultMessageSending") ? {bottom: "-15px"} : null} className={this.state.inChatTypingClasses}>
           <div className="dmsInChatTypingDot"></div>
           <div className="dmsInChatTypingDot" style={{left: "15px", animationDelay: ".25s"}}></div>
           <div className="dmsInChatTypingDot" style={{left: "24px", animationDelay: ".5s"}}></div>
