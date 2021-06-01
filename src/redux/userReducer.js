@@ -16,7 +16,9 @@ export const userSlice = createSlice({
     socket: null,
 
     currentPage: "",
-    notificationCount: {}
+    notificationCount: {},
+
+    messageStyle: "default"
   },
   reducers: {
     setUserName: (state, action) => {
@@ -48,6 +50,9 @@ export const userSlice = createSlice({
     },
     setNotificationCount: (state, action) => {
       state.notificationCount[action.payload.type] = action.payload.count;
+    },
+    setMessageStyle: (state, action) => {
+      state.messageStyle = action.payload;
     }
   },
 });
@@ -56,7 +61,8 @@ export const { setUserName, setUserEmail, setUserPicture,
   setdmsOrGroups, sethideRightPanel,
   setdmsLoaded, setpeopleLoaded,
   setSocket,
-  setCurrentPage, setNotificationCount
+  setCurrentPage, setNotificationCount,
+  setMessageStyle
 } = userSlice.actions;
 
 // The function below is called a selector and allows us to select a value from
@@ -72,5 +78,6 @@ export const getpeopleLoaded = state => state.user.peopleLoaded;
 export const getSocket = state => state.user.socket;
 export const getCurrentPage = state => state.user.currentPage;
 export const getNotificationCount = state => state.user.notificationCount;
+export const getMessageStyle = state => state.user.messageStyle;
 
 export default userSlice.reducer;

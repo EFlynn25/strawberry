@@ -1,9 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import './DMsDefaultMessage.css';
+import './DMsMessage.css';
 
-class DMsDefaultMessage extends React.Component {
+class DMsMessage extends React.Component {
   constructor(props) {
     super(props);
 
@@ -250,7 +250,7 @@ class DMsDefaultMessage extends React.Component {
     }
 
     return (
-      <div className="DMsDefaultMessage">
+      <div className="DMsMessage">
 
 
         <img src={this.state.messagePicture} className="defaultMessagePFP" alt={this.state.messageName} />
@@ -285,4 +285,4 @@ const mapStateToProps = (state) => ({
   knownPeople: state.people.knownPeople
 });
 
-export default connect(mapStateToProps, null)(DMsDefaultMessage);
+export default connect(mapStateToProps, null)(DMsMessage);

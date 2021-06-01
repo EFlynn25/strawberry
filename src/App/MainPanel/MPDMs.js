@@ -21,7 +21,7 @@ import {
   dms_typing,
   dms_last_read
 } from '../../socket.js';
-import DMsDefaultMessage from './MPDMs/DMsDefaultMessage';
+import DMsMessage from './MPDMs/DMsMessage';
 
 console.debug = function() {}
 
@@ -39,15 +39,44 @@ class MPDMs extends React.Component {
 
     this.handleInputChange = this.handleInputChange.bind(this);
     this.inputEnterPressed = this.inputEnterPressed.bind(this);
+    this.handleScroll = this.handleScroll.bind(this);
+    this.scrollToBottom = this.scrollToBottom.bind(this);
 
-    this.shouldScroll = false;
+    this.shouldScroll = true;
+    this.scrollsToIgnore = 0;
   }
+
+  handleScroll() {
+    let logtext = "scrolling!! " + this.scrollsToIgnore;
+    if (this.scrollsToIgnore > 0) {
+      this.scrollsToIgnore--;
+    } else {
+      if (this.messagesRef.current.scrollTop >= this.messagesRef.current.scrollHeight - this.messagesRef.current.clientHeight - 20) {
+        this.shouldScroll = true;
+      } else {
+        this.shouldScroll = false;
+      }
+    }
+    console.log(logtext + " | shouldScroll " + this.shouldScroll);
+  }
+
+  scrollToBottom() {
+    if (this.shouldScroll && this.messagesRef.current != null) {
+      if (this.messagesRef.current.scrollTop != this.messagesRef.current.scrollHeight - this.messagesRef.current.clientHeight) {
+        this.scrollsToIgnore++;
+      }
+      this.messagesRef.current.scrollTop = this.messagesRef.current.scrollHeight - this.messagesRef.current.clientHeight;
+    }
+  }
+
+
 
   componentDidMount() {
     this.props.setopenedChat(this.props.match.params.chatEmail);
 
     console.log("[MPDMs]: componentDidMount with thread ID " + this.props.openedChat);
     //this.messagesRef.current.scrollTop = this.messagesRef.current.scrollHeight;
+    // this.messagesRef.current.scrollTop = this.messagesRef.current.scrollHeight - this.messagesRef.current.clientHeight;
 
     const propsOpenedChat = this.props.openedChat;
     if (propsOpenedChat in this.props.chats) {
@@ -91,10 +120,7 @@ class MPDMs extends React.Component {
       // this.messagesRef.current.scrollTop = this.messagesRef.current.scrollHeight - this.messagesRef.current.clientHeight;
     }
 
-    if (this.shouldScroll) {
-      // this.messagesRef.current.scrollTop = this.messagesRef.current.scrollHeight - this.messagesRef.current.clientHeight;
-      this.shouldScroll = false;
-    }
+    // this.scrollToBottom();
 
     if (prevProps.openedChat == propsOpenedChat) {
       if (prevProps.chats[propsOpenedChat] != this.props.chats[propsOpenedChat]) {
@@ -347,7 +373,7 @@ class MPDMs extends React.Component {
             </div>
           </div>
         );
-        const newMessage = (<DMsDefaultMessage inChat={inChat} typing={thisChat.typing} id={messageIDs[0]} key={messageIDs[0]} />);
+        const newMessage = (<DMsMessage inChat={inChat} typing={thisChat.typing} id={messageIDs[0]} key={messageIDs[0]} onUpdate={this.scrollToBottom} />);
         console.debug(newMessage);
         tempMessages.push(newMessage);
       }
@@ -360,7 +386,7 @@ class MPDMs extends React.Component {
       let myName = this.props.myName;
       let myPicture = this.props.myPicture;
       const newMessage = (
-        <div className="DMsDefaultMessage" key={"sendinggroup"}>
+        <div className="DMsMessage" key={"sendinggroup"}>
         <img src={myPicture} className="defaultMessagePFP" alt={myName} />
           <div className="defaultMessageName">
             {myName}
@@ -432,7 +458,7 @@ class MPDMs extends React.Component {
         // dms_send_message(this.props.openedChat, iv);
         const oc = this.props.openedChat;
         setTimeout(function() {
-          dms_send_message(oc, iv);
+          // dms_send_message(oc, iv);
         }, 3000);
         dms_typing(this.props.openedChat, false);
         this.props.addSendingMessage({message: iv});
@@ -451,7 +477,7 @@ class MPDMs extends React.Component {
     if (this.state.loaded) {
       children = (
         <Fragment>
-          <div className="dmsMessages" ref={this.messagesRef}>
+          <div className="dmsMessages" ref={this.messagesRef} onScroll={this.handleScroll}>
             {
               (this.props.chats[this.props.openedChat].messages == null)
               || (this.props.openedChat != "" && this.props.openedChat in this.props.chats && this.props.chats[this.props.openedChat].messages.length > 0 && this.props.chats[this.props.openedChat].messages[0].id == 0)

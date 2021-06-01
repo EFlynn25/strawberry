@@ -46,9 +46,13 @@ code {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #555;
+  background: #4c4c4c;
 }
 
 ::-webkit-scrollbar-thumb:hover {
+  background: #585858;
+}
+
+::-webkit-scrollbar-thumb:active {
   background: #444;
 }
