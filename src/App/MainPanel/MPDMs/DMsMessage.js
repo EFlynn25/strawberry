@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import './DMsMessage.css';
+import DMsDefaultMessage from './DMsMessage/DMsDefaultMessage';
 
 class DMsMessage extends React.Component {
   constructor(props) {
@@ -12,23 +13,16 @@ class DMsMessage extends React.Component {
       messageEmail: "",
       messageName: "",
       messagePicture: "",
+      messageList: [],
       messageElements: [],
-      inChatClasses: "dmsInChat dmsIndicatorHide",
-      inChatTypingClasses: "dmsInChatTyping dmsInChatTypingHide"
+      inChat: "no",
+      inChatClasses: "defaultInChat defaultIndicatorHide",
+      inChatTypingClasses: "defaultInChatTyping defaultInChatTypingHide"
     };
-
-    this.canScroll = true;
-  }
-
-  handleScroll() {
-    this.canScroll = false;
-    console.log("you scrolled");
   }
 
   componentDidMount() {
     this.reloadData();
-
-    // document.querySelector('.dmsMessages').addEventListener("scroll", this.handleScroll);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -51,25 +45,6 @@ class DMsMessage extends React.Component {
     } else {
       if (idsChanged || themLastReadChanged || otherUserStateChanged || newSentMessage) {
         this.reloadMessages(prevProps);
-      }
-    }
-
-    if (openedChatChanged) {
-      // this.canScroll = true;
-    }
-
-    if (this.props.onUpdate != null) {
-      this.props.onUpdate();
-    }
-
-    if (thisChat.messages[thisChat.messages.length - 1].id == this.state.myIDs[this.state.myIDs.length - 1]) {
-      console.log("I am last message! " + this.state.myIDs[this.state.myIDs.length - 1]);
-      console.log(document.querySelector('.dmsMessages').scrollTop);
-      console.log(document.querySelector('.dmsMessages').scrollHeight);
-      console.log(document.querySelector('.dmsMessages').clientHeight);
-      if (this.canScroll || document.querySelector('.dmsMessages').scrollTop < document.querySelector('.dmsMessages').scrollHeight - document.querySelector('.dmsMessages').clientHeight - 4) {
-        //console.log("OPENED CHAT CHANGED");
-        // document.querySelector('.dmsMessages').scrollTop = document.querySelector('.dmsMessages').scrollHeight - document.querySelector('.dmsMessages').clientHeight;
       }
     }
   }
@@ -113,7 +88,7 @@ class DMsMessage extends React.Component {
     } else if (from == "them") {
       this.setState({
         myIDs: ids,
-        messageEmail: this.props.knownPeople[propsOpenedChat].email,
+        messageEmail: propsOpenedChat,
         messageName: this.props.knownPeople[propsOpenedChat].name,
         messagePicture: this.props.knownPeople[propsOpenedChat].picture,
       });
@@ -121,11 +96,15 @@ class DMsMessage extends React.Component {
   }
 
   reloadMessages(prevProps) {
+
+
+
+
     let myOldMessages;
     if (prevProps != null) {
       myOldMessages = prevProps.chats[this.props.openedChat].messages;
     }
-    let newMessages = [];
+    let newMessageObjects = [];
     const thisChat = this.props.chats[this.props.openedChat];
     this.state.myIDs.filter(item => {
       const message = thisChat.messages.find( ({ id }) => id === item );
@@ -140,28 +119,25 @@ class DMsMessage extends React.Component {
       const lastRead = thisChat.lastRead.them;
 
 
-
-      let lastReadElement;
+      let lrClasses = "defaultLastRead defaultIndicatorHide";
+      let noTransition = true;
       if (lastRead != null && item == lastRead) {
-        let myClasses = "dmsLastRead dmsIndicatorHide";
         if (!this.props.inChat && lastRead != thisChat.messages[thisChat.messages.length - 1].id) {
-          myClasses = "dmsLastRead";
+          lrClasses = "defaultLastRead";
         }
-        if (prevProps.openedChat != this.props.openedChat || (myOldMessages != null && myOldMessages[myOldMessages.length - 1].id + 1 == thisChat.messages[thisChat.messages.length - 1].id)) {
-          myClasses += " noTransition";
-        }
-        lastReadElement = <img src={this.props.knownPeople[this.props.openedChat].picture} className={myClasses} alt={this.props.knownPeople[this.props.openedChat].name} />;
+      }
+      if (noTransition) {
+        lrClasses += " noTransition";
       }
 
-      let messageElement;
-      messageElement = <p key={messageKey} title={this.parseDate(message.timestamp)} className="defaultMessageText">{message.message}{lastReadElement}</p>;
-      // if ("sending" in message) {
-      //   messageElement = <p key={messageKey} className="defaultMessageText defaultMessageSending">{message.message}</p>;
-      // } else {
-      // }
+      let messageObject;
+      messageObject = {message: message.message, timestamp: this.parseDate(message.timestamp), lastReadClasses: lrClasses, id: item};
 
-      newMessages.push(messageElement);
+      newMessageObjects.push(messageObject);
     });
+
+
+
 
     const message = thisChat.messages.find( ({ id }) => id === this.state.myIDs[0] );
     if (message.from == "me" && this.state.myIDs.includes(thisChat.messages[thisChat.messages.length - 1].id) && thisChat.sendingMessages != null) {
@@ -169,61 +145,11 @@ class DMsMessage extends React.Component {
         console.log(item);
         let messageElement;
         messageElement = <p key={"key" + item} className="defaultMessageText defaultMessageSending">{item}</p>;
-        newMessages.push(messageElement);
+        //newMessages.push(messageElement);
       });
     }
 
-    this.setState({messageElements: newMessages});
-
-    this.reloadIndicators(prevProps);
-  }
-
-  reloadIndicators(prevProps) {
-    const thisChat = this.props.chats[this.props.openedChat];
-    const myIDs = this.state.myIDs;
-
-
-    const lastRead = thisChat.lastRead.them;
-    const inChat = this.props.inChat;
-    const typing = this.props.typing;
-
-    let inChatClasses = "dmsInChat dmsIndicatorHide";
-    let inChatTypingClasses = "dmsInChatTyping dmsInChatTypingHide";
-    if ((myIDs[myIDs.length - 1] == lastRead || inChat) && myIDs[myIDs.length - 1] == thisChat.messages[thisChat.messages.length - 1].id && (!("sending" in thisChat.messages[thisChat.messages.length - 1]) || inChat)) {
-      if (inChat) {
-        inChatClasses = "dmsInChat";
-        if (typing != null && typing == true) {
-          inChatTypingClasses = "dmsInChatTyping";
-        }
-      } else {
-        inChatClasses = "dmsInChat dmsInChatGone";
-      }
-    }
-
-    let noTransition = false;
-    let myOldMessages = null;
-    if (prevProps != null) {
-      myOldMessages = prevProps.chats[this.props.openedChat].messages;
-      var sentNewMessage = myOldMessages != null && myOldMessages[myOldMessages.length - 1].id + 1 == thisChat.messages[thisChat.messages.length - 1].id;
-      // console.log(thisChat.messages[thisChat.messages.length - 1].id);
-      // console.log(myIDs);
-      // console.log(thisChat.messages[thisChat.messages.length - 1].id != myIDs[myIDs.length - 1]);
-      if (sentNewMessage || this.state.messageElements.length == 0 || thisChat.messages[thisChat.messages.length - 1].id != myIDs[myIDs.length - 1]) {
-        noTransition = true;
-        inChatTypingClasses += " noTransition";
-      }
-    }
-    if ("sending" in thisChat.messages[thisChat.messages.length - 1]) {
-      noTransition = true;
-    }
-    if (noTransition) {
-      inChatClasses += " noTransition";
-    }
-
-    this.setState({
-      inChatClasses: inChatClasses,
-      inChatTypingClasses: inChatTypingClasses
-    });
+    this.setState({messageList: newMessageObjects});
   }
 
   parseDate(timestamp) {
@@ -244,11 +170,23 @@ class DMsMessage extends React.Component {
   }
 
   render() {
-    let timestampElement = "";
-    if (this.state.messageElements != null && this.state.messageElements.length > 0) {
-      timestampElement = this.state.messageElements[this.state.messageElements.length - 1].props.title;
+    // let timestampElement = "";
+    // if (this.state.messageElements != null && this.state.messageElements.length > 0) {
+    //   timestampElement = this.state.messageElements[this.state.messageElements.length - 1].props.title;
+    // }
+
+    let MessageType;
+    if (this.props.messageStyle == "default") {
+      MessageType = DMsDefaultMessage;
     }
 
+    return (
+      <div className="DMsMessage">
+        <MessageType email={this.state.messageEmail} name={this.state.messageName} picture={this.state.messagePicture} messages={this.state.messageList} inChat={this.state.inChat} onUpdate={this.props.onUpdate} />
+      </div>
+    );
+
+    /*
     return (
       <div className="DMsMessage">
 
@@ -256,7 +194,7 @@ class DMsMessage extends React.Component {
         <img src={this.state.messagePicture} className="defaultMessagePFP" alt={this.state.messageName} />
         <div className="defaultMessageName">
           {this.state.messageName}
-          {/*sendingElement*/}
+          {/*sendingElement*}
           {this.state.messageElements.length > 0 && this.state.messageElements[this.state.messageElements.length - 1].props.className.includes("defaultMessageSending") ? <h1 className="defaultMessageSendingText">Sending...</h1> : null}
         </div>
         <div className="defaultMessageGroup">
@@ -273,6 +211,7 @@ class DMsMessage extends React.Component {
 
       </div>
     );
+    */
   }
 }
 
@@ -282,7 +221,8 @@ const mapStateToProps = (state) => ({
   myName: state.user.name,
   myEmail: state.user.email,
   myPicture: state.user.picture,
-  knownPeople: state.people.knownPeople
+  knownPeople: state.people.knownPeople,
+  messageStyle: state.user.messageStyle
 });
 
 export default connect(mapStateToProps, null)(DMsMessage);

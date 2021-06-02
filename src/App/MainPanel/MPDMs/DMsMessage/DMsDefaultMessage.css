@@ -100,14 +100,14 @@
 
 /* Indicators */
 
-.dmsIndicatorHide {
-  transition: opacity .1s, transform .1s, visibility 0s .1s !important;
+.defaultIndicatorHide {
+  transition: opacity .1s, transform .1s, visibility 0s .1s;
   visibility: hidden;
   transform: translateX(-10px);
   opacity: 0 !important;
 }
 
-.dmsLastRead {
+.defaultLastRead {
   position: absolute;
   right: -40px;
   /* bottom: -5px; */
@@ -122,7 +122,7 @@
   opacity: 1;
 }
 
-.dmsInChat {
+.defaultInChat {
   filter: brightness(100%);
   position: absolute;
   left: 50px;
@@ -134,11 +134,11 @@
   opacity: 1;
 }
 
-.dmsInChatGone {
+.defaultInChatGone {
   filter: brightness(50%);
 }
 
-.dmsInChatTyping {
+.defaultInChatTyping {
   position: absolute;
   margin: 4px;
   left: 82px;
@@ -154,7 +154,7 @@
   background: #2A2B2DBB;
 }
 
-.dmsInChatTypingDot {
+.defaultInChatTypingDot {
   position: absolute;
   left: 6px;
   top: 7px;
@@ -182,7 +182,7 @@
   }
 }
 
-.dmsInChatTypingHide {
+.defaultInChatTypingHide {
   transition: opacity .1s, transform .1s, visibility 0s .1s !important;
   visibility: hidden;
   transform: translateX(-5px);
