@@ -16,8 +16,7 @@ class DMsMessage extends React.Component {
       messageList: [],
       messageElements: [],
       inChat: "no",
-      inChatClasses: "defaultInChat defaultIndicatorHide",
-      inChatTypingClasses: "defaultInChatTyping defaultInChatTypingHide"
+      inChatNoTransition: true,
     };
   }
 
@@ -41,10 +40,10 @@ class DMsMessage extends React.Component {
     const newSentMessage = prevCurrentChat.sendingMessages != thisChat.sendingMessages;
     if (messagesExist && (sentNewMessage || openedChatChanged)) {
       this.reloadData();
-      this.reloadMessages(prevProps);
+      this.reloadMessage(prevProps);
     } else {
       if (idsChanged || themLastReadChanged || otherUserStateChanged || newSentMessage) {
-        this.reloadMessages(prevProps);
+        this.reloadMessage(prevProps);
       }
     }
   }
@@ -95,17 +94,14 @@ class DMsMessage extends React.Component {
     }
   }
 
-  reloadMessages(prevProps) {
-
-
-
-
+  reloadMessage(prevProps) {
     let myOldMessages;
     if (prevProps != null) {
       myOldMessages = prevProps.chats[this.props.openedChat].messages;
     }
     let newMessageObjects = [];
     const thisChat = this.props.chats[this.props.openedChat];
+    const lastRead = thisChat.lastRead.them;
     this.state.myIDs.filter(item => {
       const message = thisChat.messages.find( ({ id }) => id === item );
       if (message == null) {
@@ -116,25 +112,30 @@ class DMsMessage extends React.Component {
       const message = thisChat.messages.find( ({ id }) => id === item );
       const messageKey = "id" + item;
 
-      const lastRead = thisChat.lastRead.them;
-
-
-      let lrClasses = "defaultLastRead defaultIndicatorHide";
-      let noTransition = true;
+      let lr = false;
+      let nt = true;
       if (lastRead != null && item == lastRead) {
         if (!this.props.inChat && lastRead != thisChat.messages[thisChat.messages.length - 1].id) {
-          lrClasses = "defaultLastRead";
+          lr = true;
         }
       }
-      if (noTransition) {
-        lrClasses += " noTransition";
+      if (this.state.inChat == "no" && this.props.inChat) {
+        nt = false;
       }
 
       let messageObject;
-      messageObject = {message: message.message, timestamp: this.parseDate(message.timestamp), lastReadClasses: lrClasses, id: item};
+      messageObject = {message: message.message, timestamp: this.parseDate(message.timestamp), lastRead: lr, noTransition: nt, id: item};
 
       newMessageObjects.push(messageObject);
     });
+
+    let newInChat = "no";
+    const lastMessageID = thisChat.messages[thisChat.messages.length - 1].id;
+    if (this.props.inChat) {
+      newInChat = "here";
+    } else if (lastRead == lastMessageID && this.state.myIDs[this.state.myIDs.length - 1] == lastMessageID) {
+      newInChat = "gone";
+    }
 
 
 
@@ -149,7 +150,7 @@ class DMsMessage extends React.Component {
       });
     }
 
-    this.setState({messageList: newMessageObjects});
+    this.setState({messageList: newMessageObjects, inChat: newInChat});
   }
 
   parseDate(timestamp) {
@@ -182,7 +183,7 @@ class DMsMessage extends React.Component {
 
     return (
       <div className="DMsMessage">
-        <MessageType email={this.state.messageEmail} name={this.state.messageName} picture={this.state.messagePicture} messages={this.state.messageList} inChat={this.state.inChat} onUpdate={this.props.onUpdate} />
+        <MessageType email={this.state.messageEmail} name={this.state.messageName} picture={this.state.messagePicture} messages={this.state.messageList} inChat={[this.state.inChat, this.state.inChatNoTransition]} onUpdate={this.props.onUpdate} />
       </div>
     );
 

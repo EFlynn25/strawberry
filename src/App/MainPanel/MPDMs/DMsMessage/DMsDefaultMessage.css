@@ -100,13 +100,6 @@
 
 /* Indicators */
 
-.defaultIndicatorHide {
-  transition: opacity .1s, transform .1s, visibility 0s .1s;
-  visibility: hidden;
-  transform: translateX(-10px);
-  opacity: 0 !important;
-}
-
 .defaultLastRead {
   position: absolute;
   right: -40px;
@@ -186,5 +179,12 @@
   transition: opacity .1s, transform .1s, visibility 0s .1s !important;
   visibility: hidden;
   transform: translateX(-5px);
+  opacity: 0 !important;
+}
+
+.defaultIndicatorHide {
+  transition: opacity .1s, transform .1s, visibility 0s .1s;
+  visibility: hidden;
+  transform: translateX(-10px);
   opacity: 0 !important;
 }

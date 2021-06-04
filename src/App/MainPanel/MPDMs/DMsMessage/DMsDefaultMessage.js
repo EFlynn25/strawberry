@@ -129,6 +129,20 @@ class DMsDefaultMessage extends React.Component {
   // }
 
   render() {
+    const thisChat = this.props.chats[this.props.openedChat];
+
+    let inChatClasses = "defaultInChat defaultIndicatorHide";
+    if (this.props.messages != null && this.props.messages.length > 0 && thisChat.messages[thisChat.messages.length - 1].id == this.props.messages[this.props.messages.length - 1].id) {
+      let nt = true;
+      if (this.props.inChat[0] == "here") {
+        inChatClasses = "defaultInChat";
+      } else if (this.props.inChat[0] == "gone") {
+        inChatClasses = "defaultInChat defaultInChatGone";
+      }
+      if (nt) {
+        inChatClasses += " noTransition";
+      }
+    }
 
     return (
       <div className="DMsDefaultMessage">
@@ -143,13 +157,20 @@ class DMsDefaultMessage extends React.Component {
           {/*this.props.messages*/}
           { this.props.messages == null ? null :
             this.props.messages.map(item => {
-              const lastReadElement = <img src={this.props.knownPeople[this.props.openedChat].picture} className={item.lastReadClasses} alt={this.props.knownPeople[this.props.openedChat].name} />;
+              let lrClasses = "defaultLastRead defaultIndicatorHide"
+              if (item.lastRead) {
+                lrClasses = "defaultLastRead";
+              }
+              if (item.noTransition) {
+                lrClasses += " noTransition";
+              }
+              const lastReadElement = <img src={this.props.knownPeople[this.props.openedChat].picture} className={lrClasses} alt={this.props.knownPeople[this.props.openedChat].name} />;
               return (<p key={"id" + item.id} title={item.timestamp} className="defaultMessageText">{item.message}{lastReadElement}</p>);
             })
           }
         </div>
         <h1 className="defaultMessageTimestamp">{this.props.messages == null || this.props.messages.length == 0 ? "" : this.props.messages[this.props.messages.length - 1].timestamp/*"time lol"*/}</h1>
-        <img src={this.props.knownPeople[this.props.openedChat].picture} className={/*this.state.inChatClasses*/"defaultInChat defaultIndicatorHide"} alt={this.props.knownPeople[this.props.openedChat].name} style={this.props.messages.length > 0 && this.props.messages[this.props.messages.length - 1].sending ? {bottom: "-15px"} : null} />
+        <img src={this.props.knownPeople[this.props.openedChat].picture} className={inChatClasses} alt={this.props.knownPeople[this.props.openedChat].name} style={this.props.messages.length > 0 && this.props.messages[this.props.messages.length - 1].sending ? {bottom: "-15px"} : null} />
         <div style={this.props.messages.length > 0 && this.props.messages[this.props.messages.length - 1].sending ? {bottom: "-15px"} : null} className={/*this.state.inChatTypingClasses*/"defaultInChatTyping defaultInChatTypingHide"}>
           <div className="defaultInChatTypingDot"></div>
           <div className="defaultInChatTypingDot" style={{left: "15px", animationDelay: ".25s"}}></div>
@@ -164,6 +185,7 @@ class DMsDefaultMessage extends React.Component {
 
 const mapStateToProps = (state) => ({
   openedChat: state.dms.openedChat,
+  chats: state.dms.chats,
   knownPeople: state.people.knownPeople
 });
 
