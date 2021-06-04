@@ -6,4 +6,5 @@
   width: 300px;
   height: calc(100% - 50px);
   background: #1B1C1E;
+  background: transparent;
 }
