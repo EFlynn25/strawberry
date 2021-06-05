@@ -469,12 +469,11 @@ class MPDMs extends React.Component {
 
       const iv = this.state.inputValue;
       if (iv != null && iv != "") {
-        // dms_send_message(this.props.openedChat, iv);
         const oc = this.props.openedChat;
         setTimeout(function() {
-          dms_send_message(oc, iv);
+          // dms_send_message(oc, iv);
         }, 3000);
-        // dms_send_message(oc, iv);
+        dms_send_message(oc, iv);
         dms_typing(this.props.openedChat, false);
         this.props.addSendingMessage({message: iv});
         this.setState({inputValue: ''});
