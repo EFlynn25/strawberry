@@ -71,22 +71,25 @@ class LPDMs extends React.Component {
     const chatKeys = chatTimestampList.map(function(x) {
         return x[0];
     });
+    console.log(chatKeys);
+    console.log(chatKeys.length);
+    let newChildren = null;
     if (Array.isArray(chatKeys) && chatKeys.length) {
-      let newChildren = [];
+      newChildren = [];
       chatKeys.map(item => {
         const chatElement = <DMChat key={"id" + item} chatEmail={item} />;
         newChildren.push(chatElement);
       });
-      this.setState({
-        children: newChildren
-      });
     } else {
-      const newChildren = (
+      newChildren = (
         <div key="id_no_chats" style={{display: "table", width: "100%", height: "100%"}}>
           <h1 style={{position: "relative", display: "table-cell", margin: "0", textAlign: "center", verticalAlign: "middle", color: "#fff5", fontSize: "16px"}}>No chats</h1>
         </div>
       );
     }
+    this.setState({
+      children: newChildren
+    });
 
     this.props.setNotificationCount({type: "dms", count: unreadMessages});
   }

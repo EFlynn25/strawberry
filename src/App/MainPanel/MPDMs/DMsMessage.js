@@ -17,6 +17,7 @@ class DMsMessage extends React.Component {
       messageElements: [],
       inChat: "no",
       inChatNoTransition: true,
+      inChatTyping: false,
     };
   }
 
@@ -130,13 +131,72 @@ class DMsMessage extends React.Component {
     });
 
     let newInChat = "no";
+    let icnt = true;
+    let newICT = false;
     const lastMessageID = thisChat.messages[thisChat.messages.length - 1].id;
-    if (this.props.inChat) {
-      newInChat = "here";
-    } else if (lastRead == lastMessageID && this.state.myIDs[this.state.myIDs.length - 1] == lastMessageID) {
-      newInChat = "gone";
+    if (newMessageObjects[newMessageObjects.length - 1].id == lastMessageID/* && prevProps.openedChat == this.props.openedChat*/) {
+      if (this.props.inChat) {
+        newInChat = "here";
+      } else if (lastRead == lastMessageID && this.state.myIDs[this.state.myIDs.length - 1] == lastMessageID) {
+        newInChat = "gone";
+      }
+
+      const oldStateMessages = this.state.messageList;
+      if (oldStateMessages != null && oldStateMessages.length > 0 && oldStateMessages[oldStateMessages.length - 1].id == thisChat.messages[thisChat.messages.length - 1].id) {
+      // if (lastMessageID == newMessageObjects[newMessageObjects.length - 1].id) {
+        if (this.state.inChat == "here" && !this.props.inChat) {
+          newInChat = "gone";
+          icnt = false;
+        }
+        if (this.state.inChat == "gone" && newInChat == "here") {
+          icnt = false;
+        }
+        console.log(prevProps.openedChat);
+        console.log(this.props.openedChat);
+        if (this.state.inChat == "no" && newInChat == "here" /*&& lastRead < lastMessageID*/) {
+          icnt = false;
+        }
+      }
+
+
+
+      if (newInChat == "here" && this.props.typing) {
+        newICT = true;
+      }
+
+
+      
+      if (thisChat.sendingMessages != null && thisChat.sendingMessages.length > 0 && this.state.messageEmail == this.props.myEmail) {
+        var currentSendingID = 0;
+        thisChat["sendingMessages"].map(item => {
+          const messageObject = {message: item, lastRead: false, noTransition: true, sending: true, id: "sending" + currentSendingID};
+          newMessageObjects.push(messageObject);
+          currentSendingID++;
+        });
+      }
     }
 
+
+    // console.log("start in chat test");
+    // console.log("lastMessageID: " + lastMessageID);
+    // console.log("lastRead: " + lastRead);
+    // console.log("last of myIDs: " + this.state.myIDs[this.state.myIDs.length - 1]);
+    // const wasHere = this.state.inChat == "here";
+    // const noNewMessage = myOldMessages != null && myOldMessages.length > 0 && myOldMessages[myOldMessages.length - 1].id == thisChat.messages[thisChat.messages.length - 1].id;
+    // const wasHereNoNewMessage = wasHere && noNewMessage;
+    // if (this.props.inChat) {
+    //   newInChat = "here";
+    // } else if (wasHereNoNewMessage || (lastRead == lastMessageID && this.state.myIDs[this.state.myIDs.length - 1] == lastMessageID)) {
+    //   newInChat = "gone";
+    // }
+    // const wasLastRead = this.state.inChat == "no" && this.props.inChat;
+    // const wasGoneNowHere = this.state.inChat == "gone" && newInChat == "here";
+    // console.log("was: " + this.state.inChat);
+    // console.log("now: " + newInChat);
+    // console.log("messages the same?: " + noNewMessage);
+    // if ((wasLastRead || wasGoneNowHere || wasHere) && noNewMessage) {
+    //   icnt = false;
+    // }
 
 
 
@@ -150,7 +210,7 @@ class DMsMessage extends React.Component {
       });
     }
 
-    this.setState({messageList: newMessageObjects, inChat: newInChat});
+    this.setState({messageList: newMessageObjects, inChat: newInChat, inChatNoTransition: icnt, inChatTyping: newICT});
   }
 
   parseDate(timestamp) {
@@ -183,7 +243,7 @@ class DMsMessage extends React.Component {
 
     return (
       <div className="DMsMessage">
-        <MessageType email={this.state.messageEmail} name={this.state.messageName} picture={this.state.messagePicture} messages={this.state.messageList} inChat={[this.state.inChat, this.state.inChatNoTransition]} onUpdate={this.props.onUpdate} />
+        <MessageType email={this.state.messageEmail} name={this.state.messageName} picture={this.state.messagePicture} messages={this.state.messageList} inChat={[this.state.inChat, this.state.inChatNoTransition]} inChatTyping={this.state.inChatTyping} onUpdate={this.props.onUpdate} />
       </div>
     );
 
