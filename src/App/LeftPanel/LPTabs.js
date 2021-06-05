@@ -53,7 +53,7 @@ class LPTabs extends React.Component {
               <path d="M0 0h24v24H0z" fill="none"/>
               <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" />
             </svg>
-            <h1 className="dmText" style={{fontWeight: this.props.dmsOrGroups == "dms" ? "600" : "500"}}>DMs</h1>
+            <h1 className="dmText" style={{fontWeight: this.props.dmsOrGroups == "dms" ? "700" : "500"}}>DMs</h1>
           </div>
           <div className={this.props.dmsOrGroups == "dms" ? "dmSelected" : "dmHovering"} />
         </div>
@@ -75,7 +75,7 @@ class LPTabs extends React.Component {
               <path d="M0 0h24v24H0z" fill="none"/>
               <path d="M21 6h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1zm-4 6V3c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1v14l4-4h10c.55 0 1-.45 1-1z"/>
             </svg>
-            <h1 className="groupsText" style={{fontWeight: this.props.dmsOrGroups == "groups" ? "600" : "500"}}>Groups</h1>
+            <h1 className="groupsText" style={{fontWeight: this.props.dmsOrGroups == "groups" ? "700" : "500"}}>Groups</h1>
           </div>
           <div className={this.props.dmsOrGroups == "groups" ? "groupsSelected" : "groupsHovering"} />
         </div>

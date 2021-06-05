@@ -1,7 +1,7 @@
 import firebase from 'firebase/app';
 import { useDispatch } from 'react-redux'
 import { setdmsLoaded, setpeopleLoaded, setSocket } from './redux/userReducer.js'
-import { addChat, addMessage, removeSendingMessage, setLastRead, setInChat, addRequest, removeRequest
+import { addChat, addMessage, removeSendingMessage, setCreated, setLastRead, setTyping, setInChat, addRequest, removeRequest
   // removeRequesting, addRequested, addRequestedMe
  } from './redux/dmsReducer.js'
 import { addPerson } from './redux/peopleReducer.js'
@@ -14,6 +14,7 @@ let socket = null;
 
 export function startSocket() {
   socket = new WebSocket('wss://sberrychat.ddns.net:5000');
+  // socket = new WebSocket('wss://sberrychat.ddns.net:5001');
 
   setTimeout(function() {
     if (socket.readyState == 0) {
@@ -24,13 +25,13 @@ export function startSocket() {
   socket.onmessage = function(event) {
     console.log("WebSocket message received: ", event);
     var jsonData = JSON.parse(event.data);
-    var product = jsonData["product"];
-    var com = jsonData["command"];
+    var product = jsonData.product;
+    var com = jsonData.command;
     if (product == "app") {
       if (com == "get_user_info") {
 
         // if ("chats" in jsonData) {
-        //   const chatsList = jsonData["chats"];
+        //   const chatsList = jsonData.chats;
         //   console.log(chatsList);
         //   if (Array.isArray(chatsList) && chatsList.length) {
         //     chatsList.map(item => {
@@ -39,7 +40,7 @@ export function startSocket() {
         //     });
         //   }
         // }
-        mainStore.dispatch(addPerson({"email": jsonData["email"], "name": jsonData["name"], "picture": jsonData["picture"]}));
+        mainStore.dispatch(addPerson({"email": jsonData.email, "name": jsonData.name, "picture": jsonData.picture}));
 
         if (!mainStore.getState().user.peopleLoaded) {
           let missingPerson = false;
@@ -60,31 +61,33 @@ export function startSocket() {
 
       /* Get Functions */
       if (com == "get_chats") {
-        if (jsonData["response"] == true) {
-          const chatsList = jsonData["chats"];
+        if (jsonData.response == true) {
+          const chatsList = jsonData.chats;
           chatsList.map(item => {
             get_chat_info(item);
           });
-        } else if (jsonData["response"] == "accepted_request") {
-          const item = jsonData["chat"];
+        } else if (jsonData.response == "accepted_request") {
+          const item = jsonData.chat;
           get_chat_info(item);
-        } else if (jsonData["response"] == "no_chats") {
+        } else if (jsonData.response == "no_chats") {
           mainStore.dispatch(setpeopleLoaded(true));
           mainStore.dispatch(setdmsLoaded(true));
         }
       } else if (com == "get_messages") {
-        if (jsonData["response"] == true) {
-          jsonData["messages"].map(item => {
+        if (jsonData.response == true) {
+          jsonData.messages.map(item => {
             let myFrom = "them";
-            if (mainStore.getState().user.email == item["email"]) {
+            if (mainStore.getState().user.email == item.email) {
               myFrom = "me";
             }
-            mainStore.dispatch(addMessage({chat: jsonData["chat"], message: item["message"], from: myFrom, id: item["id"], timestamp: item["timestamp"]}));
+            mainStore.dispatch(addMessage({chat: jsonData.chat, message: item.message, from: myFrom, id: item.id, timestamp: item.timestamp}));
           });
-        } else if (jsonData["response"] == "receive_message") {
+        } else if (jsonData.response == "receive_message") {
             let myFrom = "them";
-            const item = jsonData["message"];
-            mainStore.dispatch(addMessage({chat: jsonData["chat"], message: item["message"], from: myFrom, id: item["id"], timestamp: item["timestamp"]}));
+            const item = jsonData.message;
+            mainStore.dispatch(addMessage({chat: jsonData.chat, message: item.message, from: myFrom, id: item.id, timestamp: item.timestamp}));
+        } else if (jsonData.response == "no_messages") {
+          dms_get_chat_created(jsonData.chat);
         }
 
         if (!mainStore.getState().user.dmsLoaded) {
@@ -97,9 +100,13 @@ export function startSocket() {
               missingMessages = true;
             }
           });
-          if (!missingMessages || jsonData["response"] == "no_messages") {
+          if (!missingMessages || jsonData.response == "no_messages") {
             mainStore.dispatch(setdmsLoaded(true));
           }
+        }
+      } else if (com == "get_chat_created") {
+        if (jsonData.response == true) {
+          mainStore.dispatch(setCreated({chat: jsonData.chat, created: jsonData.created}));
         }
       }
 
@@ -108,33 +115,41 @@ export function startSocket() {
       else if (com == "add_user") {
         dms_get_chats();
       } else if (com == "request_to_chat") {
-        mainStore.dispatch(addRequest({"type": jsonData["response"], "email": jsonData["requested"]}));
-        mainStore.dispatch(removeRequest({"type": "requesting", "email": jsonData["requested"]}));
-        if (jsonData["response"] == "requested_me") {
-          const item = jsonData["chat"];
+        mainStore.dispatch(addRequest({"type": jsonData.response, "email": jsonData.requested}));
+        mainStore.dispatch(removeRequest({"type": "requesting", "email": jsonData.requested}));
+        if (jsonData.response == "requested_me") {
+          const item = jsonData.chat;
           get_chat_info(item);
         }
       } else if (com == "send_message") {
-        const myMessage = jsonData["message"];
-        mainStore.dispatch(removeSendingMessage({"chat": jsonData["chat"], "message": jsonData.message.message}));
-        mainStore.dispatch(addMessage({chat: jsonData["chat"], message: myMessage["message"], from: "me", id: myMessage["id"], timestamp: myMessage["timestamp"]}));
+        const myMessage = jsonData.message;
+        mainStore.dispatch(removeSendingMessage({"chat": jsonData.chat, "message": jsonData.message.message}));
+        mainStore.dispatch(addMessage({chat: jsonData.chat, message: myMessage.message, from: "me", id: myMessage.id, timestamp: myMessage.timestamp}));
       }
 
 
       /* Hybrid Functions */
       else if (com == "in_chat") {
-        if (mainStore.getState().user.email != jsonData["email"]) {
-          mainStore.dispatch(setInChat({"chat": jsonData["chat"], "data": jsonData["data"]}));
+        if (mainStore.getState().user.email != jsonData.email) {
+          mainStore.dispatch(setInChat({"chat": jsonData.chat, "data": jsonData.data}));
         }
         if ("lastRead" in jsonData) {
-          if (mainStore.getState().user.email != jsonData["email"]) {
-            mainStore.dispatch(setLastRead({"who": "them", "chat": jsonData["chat"], "lastRead": jsonData["lastRead"]}));
-          } else if (mainStore.getState().user.email == jsonData["email"]) {
-            mainStore.dispatch(setLastRead({"who": "me", "chat": jsonData["chat"], "lastRead": jsonData["lastRead"]}));
+          if (mainStore.getState().user.email != jsonData.email) {
+            mainStore.dispatch(setLastRead({"who": "them", "chat": jsonData.chat, "lastRead": jsonData.lastRead}));
+          } else if (mainStore.getState().user.email == jsonData.email) {
+            mainStore.dispatch(setLastRead({"who": "me", "chat": jsonData.chat, "lastRead": jsonData.lastRead}));
           }
-        } else if (!("lastRead" in jsonData) && !jsonData["data"] && jsonData["response"] != "get_in_chat") {
-          const myMessages = mainStore.getState().dms.chats[jsonData["chat"]].messages;
-          mainStore.dispatch(setLastRead({"who": "them", "chat": jsonData["chat"], "lastRead": myMessages[myMessages.length - 1].id}));
+        } else if (!("lastRead" in jsonData) && !jsonData.data && jsonData.response != "get_in_chat") {
+          const myMessages = mainStore.getState().dms.chats[jsonData.chat].messages;
+          if (myMessages != null && myMessages.length > 0) {
+            mainStore.dispatch(setLastRead({"who": "them", "chat": jsonData.chat, "lastRead": myMessages[myMessages.length - 1].id}));
+          }
+        }
+      } else if (com == "typing") {
+        // mainStore.dispatch(setLastRead({"who": "me", "chat": jsonData.chat, "lastRead": jsonData.me}));
+        // mainStore.dispatch(setLastRead({"who": "them", "chat": jsonData.chat, "lastRead": jsonData.them}));
+        if (mainStore.getState().user.email != jsonData.email) {
+          mainStore.dispatch(setTyping({"chat": jsonData.chat, "data": jsonData.data}));
         }
       } else if (com == "last_read") {
         mainStore.dispatch(setLastRead({"who": "me", "chat": jsonData.chat, "lastRead": jsonData.me}));
@@ -163,11 +178,10 @@ export function startSocket() {
       console.warn("WebSocket closed uncleanly, code=" + event.code);
     }
     mainStore.dispatch(setSocket(false));
-    //mainError("Oops! Server connection closed.", true);
   };
 
   socket.onerror = function(error) {
-    console.error("WebSocket error: " + error);
+    console.error("WebSocket error: ", error);
   };
 
   window.addEventListener("beforeunload", function(event) {
@@ -221,6 +235,13 @@ export function dms_get_messages(email, id, amount) {
   socket.send(jsonString);
 }
 
+export function dms_get_chat_created(email) {
+  var jsonObj = {"product": "dms", "command": "get_chat_created", "chat": email}
+  var jsonString = JSON.stringify(jsonObj);
+  console.log("WebSocket message sending: " + jsonString);
+  socket.send(jsonString);
+}
+
 // Set functions
 
 export function dms_add_user(idToken) {
@@ -248,6 +269,13 @@ export function dms_send_message(chat, message) {
 
 export function dms_in_chat(chat, data) {
   var jsonObj = {"product": "dms", "command": "in_chat", "chat": chat, "data": data}
+  var jsonString = JSON.stringify(jsonObj);
+  console.log("WebSocket message sending: " + jsonString);
+  socket.send(jsonString);
+}
+
+export function dms_typing(chat, data) {
+  var jsonObj = {"product": "dms", "command": "typing", "chat": chat, "data": data}
   var jsonString = JSON.stringify(jsonObj);
   console.log("WebSocket message sending: " + jsonString);
   socket.send(jsonString);

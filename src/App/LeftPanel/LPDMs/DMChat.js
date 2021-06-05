@@ -76,7 +76,6 @@ class DMChat extends React.Component {
   }
 
   render() {
-    //console.log("[DMChat] [from " + this.props.chatEmail + "] selected: " + this.props.openedChat)
     const myChat =  this.props.chats[this.props.chatEmail];
     const myChatMessages = myChat.messages;
 
@@ -86,7 +85,7 @@ class DMChat extends React.Component {
     }
 
     let chatMessage = "";
-    let chatTime = "4:20 PM";
+    let chatTime = "";
     if (Array.isArray(myChatMessages) && myChatMessages.length) {
       const lastMessage = myChatMessages[myChatMessages.length - 1];
       let you = "";

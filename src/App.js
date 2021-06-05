@@ -3,6 +3,7 @@ import { Switch, Route, withRouter } from "react-router-dom";
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import { connect } from 'react-redux';
+import { Helmet } from 'react-helmet';
 
 import './App.css';
 import {
@@ -31,9 +32,6 @@ class App extends React.Component {
       if (!user) {
         this.props.history.push("/welcome");
       } else {
-        if (this.props.history.location.pathname == "/") {
-          //this.props.history.push("/home");
-        }
         startSocket();
         this.props.setUserName(user.displayName);
         this.props.setUserEmail(user.email);
@@ -43,11 +41,7 @@ class App extends React.Component {
   }
 
   componentDidUpdate() {
-    if (this.props.history.location.pathname == "/") {
-      // this.props.history.push("/home");
-    }
-
-    if (!this.state.pageLoaded && this.props.dmsLoaded && this.props.peopleLoaded) {
+    if (!this.state.pageLoaded && this.props.dmsLoaded && this.props.peopleLoaded && this.props.socket == true) {
       if (this.props.history.location.pathname == "/") {
         this.props.history.push("/home");
       }
@@ -56,46 +50,62 @@ class App extends React.Component {
       });
     }
 
-    if (!this.state.pageLoaded && this.props.socket != null) {
-      // this.setState({
-      //   pageLoaded: true
-      // });
+    if (this.state.pageLoaded && this.props.socket == false) {
+      this.setState({
+        pageLoaded: false
+      });
     }
   }
 
   render() {
+    var myTitle = "";
+    var tnc = 0;
+    var newHref = "/favicon_package/favicon.ico";
+    const nc = this.props.notificationCount;
+    Object.keys(nc).map(function(key) {
+      tnc += nc[key];
+    });
+    if (tnc > 0) {
+      myTitle = "(" + tnc + ") ";
+      newHref = "/favicon_package/nfavicon.ico"
+    }
+    if (this.props.currentPage != "") {
+      myTitle += this.props.currentPage + " - ";
+    }
+    myTitle += "Strawberry";
+
+    const favicon = document.getElementById("favicon");
+    favicon.href = newHref;
+
+    document.title = myTitle;
+
     return (
       <div className="App">
-          <Switch>
-            <Route path="/welcome">
-              <Overlay type="welcome" />
-            </Route>
-            <Route path="/">
-              {  this.state.pageLoaded ?
+        {/*<Helmet>
+          <title>{myTitle}</title>
+        </Helmet>*/}
+        <Switch>
+          <Route path="/welcome">
+            <Overlay type="welcome" />
+          </Route>
+          <Route path="/">
+            {  this.state.pageLoaded ?
 
-                <Fragment>
-                  <TopBar />
-                  <LeftPanel />
-                  <MainPanel />
-                  {this.props.hideRightPanel ? null : <RightPanel />}
-                </Fragment>
+              <Fragment>
+                <TopBar />
+                <LeftPanel />
+                <MainPanel />
+                {this.props.hideRightPanel ? null : <RightPanel />}
+              </Fragment>
 
-                :
+              :
 
-                null
-              }
+              null
+            }
 
-              <Overlay type="loading" hide={this.state.pageLoaded} socket={this.props.socket} />
-              {/*
-              <TopBar />
-              <LeftPanel />
-              <MainPanel />
-              {this.props.hideRightPanel ? null : <RightPanel />}
-              <Overlay type="loading" hide={this.state.pageLoaded} />
-              */}
-            </Route>
-          </Switch>
-
+            <Overlay type="loading" hide={this.state.pageLoaded} socket={this.props.socket} dmsLoaded={this.props.dmsLoaded} peopleLoaded={this.props.peopleLoaded} />
+          </Route>
+        </Switch>
       </div>
     );
   }
@@ -108,7 +118,9 @@ const mapStateToProps = (state) => ({
   hideRightPanel: state.user.hideRightPanel,
   dmsLoaded: state.user.dmsLoaded,
   peopleLoaded: state.user.peopleLoaded,
-  socket: state.user.socket
+  socket: state.user.socket,
+  currentPage: state.user.currentPage,
+  notificationCount: state.user.notificationCount
 });
 
 const mapDispatchToProps = {
