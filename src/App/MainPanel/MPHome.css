@@ -6,7 +6,8 @@
   top: -20px;
 
   transition: opacity .3s cubic-bezier(0.65, 0, 0.35, 1),
-              top .3s cubic-bezier(0.65, 0, 0.35, 1);
+              top .3s cubic-bezier(0.65, 0, 0.35, 1),
+              transform .3s;
 }
 
 .MPHomeTransition {
@@ -14,28 +15,42 @@
   top: 0;
 }
 
-
-
-/* mpHomeWelcome */
-
-.mpHomeWelcome {
-  width: 100%;
+.MPHomeShrink {
+  transform: scale(.8);
+  transform: scale(.9);
 }
 
-.mphwPFP {
+.homeContent {
+  position: relative;
+  width: 100%;
+  top: 271px;
+  height: calc(100% - 271px);
+}
+
+
+
+/* Welcome */
+
+.homeWelcome {
+  position: absolute;
+  width: 100%;
+  height: 271px;
+}
+
+.hwPFP {
   position: absolute;
   width: 100px;
   height: 100px;
   left: calc(50% - 50px);
-  top: 80px;
+  top: 40px;
   border-radius: 100px;
 }
 
-.mphwName {
+.hwName {
   position: absolute;
   width: 100%;
   height: 40px;
-  top: 180px;
+  top: 140px;
   margin: 0;
 
   /* font-family: inherit; */
@@ -62,4 +77,106 @@
   vertical-align: middle;
   color: #fff5;
   font-size: 20px;
+}
+
+
+
+/* Tabs */
+
+.homeTabs {
+  position: absolute;
+  width: 100%;
+  height: 10px;
+  top: 240px;
+
+  display: flex;
+  justify-content: center;
+}
+
+.homeTab {
+  height: 25px;
+  margin: 0 25px;
+  padding-bottom: 4px;
+  border-bottom: 2px solid #b2b2b2;
+  user-select: none;
+}
+
+.homeTabIcon {
+  width: 25px;
+  float: left;
+}
+
+.homeTabIcon {
+  fill: #FFFB;
+}
+
+.homeTitle {
+  height: 25px;
+  margin: 0;
+  margin-left: 4px;
+  margin-right: -10px;
+  float: right;
+
+  font-size: 16px;
+  line-height: 25px;
+
+  color: #FFFB;
+}
+
+/* ...hover */
+
+.homeTab:hover .homeTitle, .homeTab:hover .homeTabIcon {
+  fill: white;
+  color: white;
+}
+
+.homeTab:hover {
+  cursor: pointer;
+  border-bottom: 2px solid white;
+}
+
+/* ...active */
+
+.homeTab:active .homeTitle, .homeTab:active .homeTabIcon {
+  fill: #fff9;
+  color: #fff9;
+}
+
+.homeTab:active {
+  cursor: pointer;
+  border-bottom: 2px solid #fff9;
+}
+
+/* ...selected */
+
+.htSelected {
+  border-bottom: 1px solid #D54D5E !important;
+  border-bottom: 2px solid var(--accent-color) !important;
+}
+
+.httSelected {
+  filter: unset  !important;
+  color: #D54D5E !important;
+  color: var(--accent-color) !important;
+}
+
+.htiSelected {
+  fill: #D54D5E  !important;
+  fill: var(--accent-color)  !important;
+}
+
+
+
+/* Specific Tab Icons */
+
+.htiNotify {
+  margin-left: -14px;
+}
+
+.htiPeople {
+  margin-left: -11px;
+}
+
+.htiProfile {
+  margin-left: -12px;
 }

@@ -71,8 +71,6 @@ class LPDMs extends React.Component {
     const chatKeys = chatTimestampList.map(function(x) {
         return x[0];
     });
-    console.log(chatKeys);
-    console.log(chatKeys.length);
     let newChildren = null;
     if (Array.isArray(chatKeys) && chatKeys.length) {
       newChildren = [];
