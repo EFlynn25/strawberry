@@ -50,7 +50,17 @@ class HomePeople extends React.Component {
   render() {
     let people = [];
 
-    Object.keys(this.props.knownPeople).map((item) => {
+    let alphabeticalPeople = [];
+    const localKnownPeople = this.props.knownPeople;
+    Object.keys(this.props.chats).forEach(function (item, index) {
+      alphabeticalPeople.push([item, localKnownPeople[item].name]);
+    });
+    alphabeticalPeople.sort((a,b) => a[1].toUpperCase().localeCompare(b[1].toUpperCase()));
+    const newPeople = alphabeticalPeople.map(function(x) {
+        return x[0];
+    });
+
+    newPeople.map((item) => {
       const personName = this.props.knownPeople[item].name;
       const personPicture = this.props.knownPeople[item].picture;
       let status = "hi im " + personName + " and this is my status";
@@ -86,7 +96,8 @@ class HomePeople extends React.Component {
 const mapStateToProps = (state) => ({
   picture: state.user.picture,
   name: state.user.name,
-  knownPeople: state.people.knownPeople
+  knownPeople: state.people.knownPeople,
+  chats: state.dms.chats,
 });
 
 export default connect(mapStateToProps, null)(HomePeople);

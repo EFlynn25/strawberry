@@ -25,6 +25,7 @@ class MPHome extends React.Component {
 
     this.state = {
       homeClass: "MPHome",
+      specialEasing: true,
       tab: 1,
       notifyClasses: "HomeNotifications hnHideRight"
     };
@@ -66,6 +67,7 @@ class MPHome extends React.Component {
   }
 
   enableShrink() {
+    this.setState({ specialEasing: false });
     if (this.state.homeClass != "MPHome MPHomeTransition MPHomeShrink") {
       this.setState({ homeClass: "MPHome MPHomeTransition MPHomeShrink" });
     }
@@ -80,7 +82,7 @@ class MPHome extends React.Component {
   render() {
     return (
       <VisibilitySensor onChange={this.transitionCheck}>
-        <div className={this.state.homeClass}>
+        <div className={this.state.homeClass} style={this.state.specialEasing ? {transition: "opacity .3s cubic-bezier(0.65, 0, 0.35, 1), transform .3s cubic-bezier(0.65, 0, 0.35, 1)"} : null}>
           <div className="homeWelcome">
             <img src={this.props.picture} className="hwPFP" alt={this.props.name} />
             <h1 className="hwName">Hey, {this.props.name}!</h1>
