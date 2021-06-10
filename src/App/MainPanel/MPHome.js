@@ -5,9 +5,10 @@ import VisibilitySensor from 'react-visibility-sensor';
 
 // import wlogo from '../../assets/icons/swhite.svg';
 import { ReactComponent as SLogo } from '../../assets/icons/strawberry.svg';
-import { ReactComponent as Notify } from '../../assets/icons/notify.svg';
 import { ReactComponent as People } from '../../assets/icons/people.svg';
+import { ReactComponent as Notify } from '../../assets/icons/notify.svg';
 import { ReactComponent as Profile } from '../../assets/icons/profile.svg';
+import { ReactComponent as Settings } from '../../assets/icons/settings.svg';
 import './MPHome.css';
 import {
   sethideRightPanel,
@@ -83,6 +84,7 @@ class MPHome extends React.Component {
           <div className="homeWelcome">
             <img src={this.props.picture} className="hwPFP" alt={this.props.name} />
             <h1 className="hwName">Hey, {this.props.name}!</h1>
+            <Settings className="hwSettingsIcon" />
           </div>
 
           <div className="homeTabs">
