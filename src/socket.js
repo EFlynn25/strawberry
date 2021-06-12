@@ -1,6 +1,6 @@
 import firebase from 'firebase/app';
 import { useDispatch } from 'react-redux'
-import { setdmsLoaded, setpeopleLoaded, setSocket } from './redux/userReducer.js'
+import { setdmsLoaded, setpeopleLoaded, setSocket, setAnnouncement, setAnnouncementRead } from './redux/appReducer.js'
 import { addChat, addMessage, removeSendingMessage, setCreated, setLastRead, setTyping, setInChat, addRequest, removeRequest
   // removeRequesting, addRequested, addRequestedMe
  } from './redux/dmsReducer.js'
@@ -19,6 +19,9 @@ export function startSocket() {
   setTimeout(function() {
     if (socket.readyState == 0) {
       socket.close();
+    } else {
+      add_announcement("home_update", "v0.1 - The Home Update!", "Wow cool! Now you have a hub for everything!");
+      set_announcement_read("home_update");
     }
   }, 5000);
 
@@ -28,6 +31,9 @@ export function startSocket() {
     var product = jsonData.product;
     var com = jsonData.command;
     if (product == "app") {
+
+
+      /* Get functions */
       if (com == "get_user_info") {
 
         // if ("chats" in jsonData) {
@@ -42,7 +48,7 @@ export function startSocket() {
         // }
         mainStore.dispatch(addPerson({"email": jsonData.email, "name": jsonData.name, "picture": jsonData.picture}));
 
-        if (!mainStore.getState().user.peopleLoaded) {
+        if (!mainStore.getState().app.peopleLoaded) {
           let missingPerson = false;
           const chats = Object.keys(mainStore.getState().dms.chats);
           const people = Object.keys(mainStore.getState().people.knownPeople);
@@ -55,7 +61,24 @@ export function startSocket() {
             mainStore.dispatch(setpeopleLoaded(true));
           }
         }
+      } else if (com == "get_announcements") {
+        if (jsonData.response == true || jsonData.response == "receive_new_announcement") {
+          jsonData.announcements.forEach((announcement) => {
+            // console.log(announcement);
+            mainStore.dispatch(setAnnouncement({"id": announcement.id, "title": announcement.title, "content": announcement.content, "timestamp": announcement.timestamp}));
+          });
+          jsonData.announcements_read.forEach((id) => {
+            // console.log(id);
+            mainStore.dispatch(setAnnouncementRead(id));
+          });
+        }
       }
+
+
+      /* Set functions */
+
+      // there are none
+
     } else if (product == "dms") {
 
 
@@ -77,7 +100,7 @@ export function startSocket() {
         if (jsonData.response == true) {
           jsonData.messages.map(item => {
             let myFrom = "them";
-            if (mainStore.getState().user.email == item.email) {
+            if (mainStore.getState().app.email == item.email) {
               myFrom = "me";
             }
             mainStore.dispatch(addMessage({chat: jsonData.chat, message: item.message, from: myFrom, id: item.id, timestamp: item.timestamp}));
@@ -90,7 +113,7 @@ export function startSocket() {
           dms_get_chat_created(jsonData.chat);
         }
 
-        if (!mainStore.getState().user.dmsLoaded) {
+        if (!mainStore.getState().app.dmsLoaded) {
           let missingMessages = false;
           const messages = mainStore.getState().dms.chats;
           const messageKeys = Object.keys(messages);
@@ -130,13 +153,13 @@ export function startSocket() {
 
       /* Hybrid Functions */
       else if (com == "in_chat") {
-        if (mainStore.getState().user.email != jsonData.email) {
+        if (mainStore.getState().app.email != jsonData.email) {
           mainStore.dispatch(setInChat({"chat": jsonData.chat, "data": jsonData.data}));
         }
         if ("lastRead" in jsonData) {
-          if (mainStore.getState().user.email != jsonData.email) {
+          if (mainStore.getState().app.email != jsonData.email) {
             mainStore.dispatch(setLastRead({"who": "them", "chat": jsonData.chat, "lastRead": jsonData.lastRead}));
-          } else if (mainStore.getState().user.email == jsonData.email) {
+          } else if (mainStore.getState().app.email == jsonData.email) {
             mainStore.dispatch(setLastRead({"who": "me", "chat": jsonData.chat, "lastRead": jsonData.lastRead}));
           }
         } else if (!("lastRead" in jsonData) && !jsonData.data && jsonData.response != "get_in_chat") {
@@ -148,7 +171,7 @@ export function startSocket() {
       } else if (com == "typing") {
         // mainStore.dispatch(setLastRead({"who": "me", "chat": jsonData.chat, "lastRead": jsonData.me}));
         // mainStore.dispatch(setLastRead({"who": "them", "chat": jsonData.chat, "lastRead": jsonData.them}));
-        if (mainStore.getState().user.email != jsonData.email) {
+        if (mainStore.getState().app.email != jsonData.email) {
           mainStore.dispatch(setTyping({"chat": jsonData.chat, "data": jsonData.data}));
         }
       } else if (com == "last_read") {
@@ -201,6 +224,24 @@ function get_chat_info(chat) {
 
 // App Functions
 
+// Get functions
+
+export function get_user_info(requested) {
+  var jsonObj = {"product": "app", "command": "get_user_info", "requested": requested}
+  var jsonString = JSON.stringify(jsonObj);
+  console.log("WebSocket message sending: " + jsonString);
+  socket.send(jsonString);
+}
+
+export function get_announcements() {
+  var jsonObj = {"product": "app", "command": "get_announcements"}
+  var jsonString = JSON.stringify(jsonObj);
+  console.log("WebSocket message sending: " + jsonString);
+  socket.send(jsonString);
+}
+
+// Set functions
+
 export function add_user(idToken) {
   var jsonObj = {"product": "app", "command": "add_user", "idToken": idToken}
   var jsonString = JSON.stringify(jsonObj);
@@ -208,8 +249,15 @@ export function add_user(idToken) {
   socket.send(jsonString);
 }
 
-export function get_user_info(requested) {
-  var jsonObj = {"product": "app", "command": "get_user_info", "requested": requested}
+export function add_announcement(id, title, content) {
+  var jsonObj = {"product": "app", "command": "add_announcement", "id": id, "title": title, "content": content}
+  var jsonString = JSON.stringify(jsonObj);
+  console.log("WebSocket message sending: " + jsonString);
+  socket.send(jsonString);
+}
+
+export function set_announcement_read(id, title, content) {
+  var jsonObj = {"product": "app", "command": "set_announcement_read", "id": id}
   var jsonString = JSON.stringify(jsonObj);
   console.log("WebSocket message sending: " + jsonString);
   socket.send(jsonString);

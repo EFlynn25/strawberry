@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import './LPDMs.css';
 import {
   setNotificationCount
-} from '../../redux/userReducer';
+} from '../../redux/appReducer';
 import {
   setopenedChat
 } from "../../redux/dmsReducer"

@@ -75,13 +75,26 @@
   transform: none;
 }
 
-.hwSettingsIcon:hover {
+.hwAnnouncementsIcon {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  top: 20px;
+  right: 60px;
+
+  fill: #fffb;
+
+  transition: transform .1s;
+  transform: none;
+}
+
+.hwTopRightIcon:hover {
   transform: scale(1.05);
   cursor: pointer;
   fill: white;
 }
 
-.hwSettingsIcon:active {
+.hwTopRightIcon:active {
   transform: scale(.95);
   fill: #fff8;
 }

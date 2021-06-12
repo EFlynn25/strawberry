@@ -158,7 +158,7 @@ export const { setopenedChat, addChat, addMessage, addSendingMessage, removeSend
 
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of
-// in the slice file. For example: `useSelector((state) => state.user.name)`
+// in the slice file. For example: `useSelector((state) => state.app.name)`
 export const getopenedChat = state => state.dms.openedChat;
 export const getChats = state => state.dms.chats;
 export const getRequested = state => state.dms.requested;

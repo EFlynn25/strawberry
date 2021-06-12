@@ -9,15 +9,18 @@ import { ReactComponent as People } from '../../assets/icons/people.svg';
 import { ReactComponent as Notify } from '../../assets/icons/notify.svg';
 import { ReactComponent as Profile } from '../../assets/icons/profile.svg';
 import { ReactComponent as Settings } from '../../assets/icons/settings.svg';
+import { ReactComponent as Announcements } from '../../assets/icons/announcements.svg';
 import './MPHome.css';
 import {
   sethideRightPanel,
   setCurrentPage
-} from '../../redux/userReducer';
+} from '../../redux/appReducer';
+import { get_announcements } from '../../socket.js';
 
 import HomePeople from './MPHome/HomePeople';
 import HomeNotifications from './MPHome/HomeNotifications';
 import HomeProfile from './MPHome/HomeProfile';
+import HomePanel from './MPHome/HomePanel';
 
 class MPHome extends React.Component {
   constructor(props) {
@@ -27,17 +30,24 @@ class MPHome extends React.Component {
       homeClass: "MPHome",
       specialEasing: true,
       tab: 1,
-      notifyClasses: "HomeNotifications hnHideRight"
+      notifyClasses: "HomeNotifications hnHideRight",
+      showAnnouncementsPanel: false,
+      panelType: "",
+      panelData: ""
     };
 
     this.transitionCheck = this.transitionCheck.bind(this);
     this.enableShrink = this.enableShrink.bind(this);
     this.disableShrink = this.disableShrink.bind(this);
+
+    this.openPanel = this.openPanel.bind(this);
+    this.closePanel = this.closePanel.bind(this);
   }
 
   componentDidMount() {
     // this.props.sethideRightPanel(true);
     this.props.setCurrentPage("Home");
+    get_announcements();
   }
 
   componentDidUpdate(prevState) {
@@ -79,6 +89,23 @@ class MPHome extends React.Component {
     }
   }
 
+  openPanel(newType, newData) {
+    this.enableShrink();
+    if (this.state.panelType != newType || this.state.panelData != newData) {
+      this.setState({
+        panelType: newType,
+        panelData: newData
+      });
+    }
+  }
+
+  closePanel() {
+    this.disableShrink();
+    this.setState({
+      panelType: ""
+    });
+  }
+
   render() {
     return (
       <VisibilitySensor onChange={this.transitionCheck}>
@@ -86,7 +113,8 @@ class MPHome extends React.Component {
           <div className="homeWelcome">
             <img src={this.props.picture} className="hwPFP" alt={this.props.name} />
             <h1 className="hwName">Hey, {this.props.name}!</h1>
-            <Settings className="hwSettingsIcon" />
+            <Settings className="hwSettingsIcon hwTopRightIcon" onClick={() => this.openPanel("settings", "")} />
+            <Announcements className="hwAnnouncementsIcon hwTopRightIcon" onClick={() => this.openPanel("announcements", "")} />
           </div>
 
           <div className="homeTabs">
@@ -108,10 +136,27 @@ class MPHome extends React.Component {
             {/*this.state.tab == 1 ? <HomePeople /> : null*/}
             {/*this.state.tab == 2 ? <HomeNotifications /> : null*/}
             {/*this.state.tab == 3 ? <HomeProfile /> : null*/}
-            <HomePeople classes={this.state.tab == 1 ? "HomePeople" : "HomePeople HomePeopleHide"} opendialog={this.enableShrink} closedialog={this.disableShrink} />
+            <HomePeople classes={this.state.tab == 1 ? "HomePeople" : "HomePeople HomePeopleHide"} opendialog={this.openPanel} closedialog={this.disableShrink} />
             <HomeNotifications classes={this.state.notifyClasses} />
             <HomeProfile classes={this.state.tab == 3 ? "HomeProfile" : "HomeProfile HomeProfileHide"} />
           </div>
+
+          {/*<HomeAnnouncements showPanel={this.state.showAnnouncementsPanel} onclose={this.closeAnnouncements} />*/}
+          <HomePanel type={this.state.panelType} data={this.state.panelData} onclose={this.closePanel} />
+
+          {
+            /*Object.keys(this.props.announcements).map((item) => {
+              const title = this.props.announcements[item].title;
+              // console.log(title);
+
+              let color = "indianred";
+              if (this.props.announcementsRead.includes(item)) {
+                color = "white";
+              }
+
+              return <p key={item} style={{color: color}}>{title}</p>;
+            })*/
+          }
         </div>
       </VisibilitySensor>
     );
@@ -119,8 +164,10 @@ class MPHome extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  picture: state.user.picture,
-  name: state.user.name
+  picture: state.app.picture,
+  name: state.app.name,
+  // announcements: state.app.announcements,
+  // announcementsRead: state.app.announcementsRead
 });
 
 const mapDispatchToProps = {

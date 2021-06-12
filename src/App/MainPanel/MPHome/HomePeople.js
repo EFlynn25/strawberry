@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import './HomePeople.css';
-import UserProfile from './HomePeople/UserProfile';
 
 class HomePeople extends React.Component {
   constructor(props) {
@@ -12,39 +11,6 @@ class HomePeople extends React.Component {
       profileEmail: "",
       showProfileViewer: true
     };
-
-    this.checkClasses = this.checkClasses.bind(this);
-  }
-
-  componentDidMount() {
-    this.checkClasses();
-  }
-
-  componentDidUpdate(prevProps) {
-    this.checkClasses(prevProps);
-  }
-
-  checkClasses() {
-    if (this.state.profileEmail != "") {
-      this.props.opendialog();
-    } else {
-      this.props.closedialog();
-    }
-
-    if (!this.props.classes.includes("HomePeopleHide") && !this.state.showProfileViewer) {
-      setTimeout(function() {
-        this.setState({ showProfileViewer: true });
-      }.bind(this), 300);
-    } else if (this.props.classes.includes("HomePeopleHide") && this.state.showProfileViewer) {
-      this.setState({ showProfileViewer: false });
-    }
-  }
-
-  viewProfile(email) {
-    console.log("view " + email);
-    this.setState({
-      profileEmail: email
-    });
   }
 
   render() {
@@ -76,7 +42,7 @@ class HomePeople extends React.Component {
       }
 
       people.push(
-        <div className="hpPerson" key={item} onClick={() => this.viewProfile(item)}>
+        <div className="hpPerson" key={item} onClick={() => this.props.opendialog("profile", item)}>
           <img src={personPicture} className="hpPFP" alt={personName} />
           <h1 className="hpName">{personName}</h1>
           <p className="hpStatus" title={status}>{status}</p>
@@ -87,15 +53,14 @@ class HomePeople extends React.Component {
     return (
       <div className={this.props.classes}>
         { people }
-        { this.state.showProfileViewer ? <UserProfile email={this.state.profileEmail} onclose={() => this.setState({ profileEmail: "" })} /> : null }
       </div>
     );
   }
 }
 
 const mapStateToProps = (state) => ({
-  picture: state.user.picture,
-  name: state.user.name,
+  picture: state.app.picture,
+  name: state.app.name,
   knownPeople: state.people.knownPeople,
   chats: state.dms.chats,
 });

@@ -62,9 +62,9 @@ class TopBar extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  name: state.user.name,
-  email: state.user.email,
-  picture: state.user.picture
+  name: state.app.name,
+  email: state.app.email,
+  picture: state.app.picture
 });
 
 export default connect(mapStateToProps, null)(withRouter(TopBar));

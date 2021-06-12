@@ -10,7 +10,7 @@ import {
   setUserName,
   setUserEmail,
   setUserPicture
-} from './redux/userReducer';
+} from './redux/appReducer';
 
 import Overlay from './App/Overlay';
 import TopBar from './App/TopBar';
@@ -112,15 +112,15 @@ class App extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  name: state.user.name,
-  email: state.user.email,
-  picture: state.user.picture,
-  hideRightPanel: state.user.hideRightPanel,
-  dmsLoaded: state.user.dmsLoaded,
-  peopleLoaded: state.user.peopleLoaded,
-  socket: state.user.socket,
-  currentPage: state.user.currentPage,
-  notificationCount: state.user.notificationCount
+  name: state.app.name,
+  email: state.app.email,
+  picture: state.app.picture,
+  hideRightPanel: state.app.hideRightPanel,
+  dmsLoaded: state.app.dmsLoaded,
+  peopleLoaded: state.app.peopleLoaded,
+  socket: state.app.socket,
+  currentPage: state.app.currentPage,
+  notificationCount: state.app.notificationCount
 });
 
 const mapDispatchToProps = {

@@ -13,7 +13,7 @@ import {
 } from '../../redux/dmsReducer';
 import {
   setCurrentPage
-} from '../../redux/userReducer';
+} from '../../redux/appReducer';
 import ethan from "../../assets/images/ethan.webp"
 import {
   dms_send_message,
@@ -527,12 +527,12 @@ class MPDMs extends React.Component {
 const mapStateToProps = (state) => ({
   openedChat: state.dms.openedChat,
   chats: state.dms.chats,
-  myName: state.user.name,
-  myEmail: state.user.email,
-  myPicture: state.user.picture,
+  myName: state.app.name,
+  myEmail: state.app.email,
+  myPicture: state.app.picture,
   getknownPeople: state.people.knownPeople,
-  currentPage: state.user.currentPage,
-  messageStyle: state.user.messageStyle
+  currentPage: state.app.currentPage,
+  messageStyle: state.app.messageStyle
 });
 
 const mapDispatchToProps = {

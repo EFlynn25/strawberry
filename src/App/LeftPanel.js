@@ -11,7 +11,7 @@ import LPGroups from './LeftPanel/LPGroups'
 import LPDMs from './LeftPanel/LPDMs'
 import {
   setdmsOrGroups
-} from "../redux/userReducer"
+} from "../redux/appReducer"
 
 // import { Switch, Route } from "react-router-dom";
 
@@ -46,7 +46,7 @@ class LeftPanel extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  dmsOrGroups: state.user.dmsOrGroups
+  dmsOrGroups: state.app.dmsOrGroups
 });
 
 const mapDispatchToProps = {

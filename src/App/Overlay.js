@@ -4,7 +4,7 @@ import firebase from 'firebase/app';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import { Line } from 'rc-progress';
 import { useDispatch } from 'react-redux'
-import { setCurrentPage } from '../redux/userReducer';
+import { setCurrentPage } from '../redux/appReducer';
 
 // import wlogo from '../assets/icons/swhite.svg';
 import { ReactComponent as SLogo } from '../assets/icons/strawberry.svg';
