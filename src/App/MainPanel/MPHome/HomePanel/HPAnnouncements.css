@@ -1,12 +1,38 @@
 .HPAnnouncements {
+  position: relative;
+
   width: calc(100% - 40px);
   height: calc(100% - 40px);
   padding: 20px;
+
+  overflow: hidden;
 }
 
 
 
-/* Content */
+/* List */
+
+.AAnnouncementsList {
+  position: absolute;
+  width: calc(100% - 40px);
+  height: calc(100% - 40px);
+  top: 20px;
+  left: 20px;
+
+  transition: transform .2s cubic-bezier(0.65, 0, 0.35, 1),
+              opacity .2s cubic-bezier(0.65, 0, 0.35, 1);
+  opacity: 1;
+  visibility: visible;
+}
+
+.AAnnouncementsListHide {
+  transition: transform .2s cubic-bezier(0.65, 0, 0.35, 1),
+              opacity .2s cubic-bezier(0.65, 0, 0.35, 1),
+              visibility 0s .2s;
+  transform: translateX(-40px);
+  opacity: 0;
+  visibility: hidden;
+}
 
 .announcementsTitle {
   margin-top: 10px;
@@ -16,22 +42,136 @@
 .announcements {
   width: 100%;
   height: calc(100% - 70px);
+  overflow-y: auto;
 }
 
 
 
-/* Announcement div */
+/* List Item */
 
-.announcementDiv {
+.aliDiv {
   padding: 10px;
   margin-bottom: 20px;
 
   border-radius: 15px;
   background: #0002;
+
+  transition: transform .1s, background .1s;
 }
 
-.announcementTitle {
+.aliDiv:hover {
+  background: #0003;
+  cursor: pointer;
+}
+
+.aliDiv:active {
+  background: #0005;
+  transform: scale(.985);
+}
+
+.aliTitle {
   margin: 0;
   font-size: 24px;
   color: white;
+}
+
+.aliPreview {
+  margin-top: 10px;
+}
+
+.aliPreview p {
+  margin: 0;
+
+  font-size: 16px;
+  color: #bbb;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+
+
+/* Announcement */
+
+.AAnnouncement {
+  position: absolute;
+  width: calc(100% - 80px);
+  height: calc(100% - 80px);
+  top: 40px;
+  left: 40px;
+
+  transition: transform .2s cubic-bezier(0.65, 0, 0.35, 1),
+              opacity .2s cubic-bezier(0.65, 0, 0.35, 1);
+  opacity: 1;
+  visibility: visible;
+
+  /* background: black; */
+}
+
+.AAnnouncementHide {
+  transition: transform .2s cubic-bezier(0.65, 0, 0.35, 1),
+              opacity .2s cubic-bezier(0.65, 0, 0.35, 1),
+              visibility 0s .2s;
+  transform: translateX(40px);
+  opacity: 0;
+  visibility: hidden;
+}
+
+.announcementTopDiv {
+  width: 100%;
+  height: 50px;
+
+  display: flex;
+  align-items: center;
+}
+
+.announcementCloseIcon {
+  width: 30px;
+  height: 30px;
+  transition: transform .2s, fill .2s;
+}
+
+.announcementCloseIcon:hover {
+  cursor: pointer;
+}
+
+.announcementCloseIcon:active {
+  transform: scale(.9);
+  fill: #ddd;
+}
+
+.announcementTitle {
+  width: 100%;
+  margin: 0;
+  margin-left: 10px;
+
+  font-size: 28px;
+  color: white;
+}
+
+.announcementContent {
+  width: 100%;
+  height: calc(100% - 70px);
+  margin: 0;
+  padding-right: 10px;
+
+  font-size: 16px;
+  color: #bbb;
+  color: white;
+
+  overflow-y: auto;
+}
+
+.announcementTimestamp {
+  width: 100%;
+  height: 20px;
+  margin: 0;
+  margin-top: 20px;
+
+  font-size: 14px;
+
+  color: #bbb;
 }

@@ -40,6 +40,9 @@ class HomePanel extends React.Component {
     let newData = this.state.data;
     if (this.props.type == "") {
       newClasses = "HomePanel HomePanelHide";
+      setTimeout(function() {
+        this.setState({ type: "" });
+      }.bind(this), 300);
     } else {
       newClasses = "HomePanel";
       newType = this.props.type;
