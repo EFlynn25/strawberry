@@ -6,7 +6,7 @@ import { withRouter } from "react-router-dom";
 import './LPTabs.css';
 import {
   setdmsOrGroups
-} from "../../redux/userReducer"
+} from "../../redux/appReducer"
 
 class LPTabs extends React.Component {
   constructor(props) {
@@ -85,7 +85,7 @@ class LPTabs extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  dmsOrGroups: state.user.dmsOrGroups,
+  dmsOrGroups: state.app.dmsOrGroups,
   openedChat: state.dms.openedChat
 });
 

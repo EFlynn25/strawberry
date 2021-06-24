@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import './LPDMs.css';
 import {
   setNotificationCount
-} from '../../redux/userReducer';
+} from '../../redux/appReducer';
 import {
   setopenedChat
 } from "../../redux/dmsReducer"
@@ -71,8 +71,6 @@ class LPDMs extends React.Component {
     const chatKeys = chatTimestampList.map(function(x) {
         return x[0];
     });
-    console.log(chatKeys);
-    console.log(chatKeys.length);
     let newChildren = null;
     if (Array.isArray(chatKeys) && chatKeys.length) {
       newChildren = [];

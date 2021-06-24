@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from "react-router-dom";
 
-// import wlogo from '../assets/icons/swhite.svg';
 import { ReactComponent as SLogo } from '../assets/icons/strawberry.svg';
 import everett from '../assets/images/everett.jpeg';
 import './TopBar.css';
@@ -14,9 +13,8 @@ class TopBar extends React.Component {
     super(props);
 
     this.state = {
-      tbLogoDivClass: "tbLogoDiv",
       tbWelcomeDivClass: "tbWelcomeDiv",
-      tbLeftLogoClass: "tbLeftLogo"
+      tbLogoDivClass: "tbLogoDiv tbLogoDivHide",
     };
   }
 
@@ -30,19 +28,17 @@ class TopBar extends React.Component {
 
   reloadClasses() {
     if (this.props.history.location.pathname.startsWith("/home")) {
-      if (this.state.tbLogoDivClass != "tbLogoDiv tbLogoDivHide") {
+      if (this.state.tbWelcomeDivClass != "tbWelcomeDiv tbWelcomeDivHide") {
         this.setState({
-          tbLogoDivClass: "tbLogoDiv tbLogoDivHide",
           tbWelcomeDivClass: "tbWelcomeDiv tbWelcomeDivHide",
-          tbLeftLogoClass: "tbLeftLogo tbLeftLogoShow"
+          tbLogoDivClass: "tbLogoDiv"
         });
       }
     } else {
-      if (this.state.tbLogoDivClass != "tbLogoDiv") {
+      if (this.state.tbWelcomeDivClass != "tbWelcomeDiv") {
         this.setState({
-          tbLogoDivClass: "tbLogoDiv",
           tbWelcomeDivClass: "tbWelcomeDiv",
-          tbLeftLogoClass: "tbLeftLogo"
+          tbLogoDivClass: "tbLogoDiv tbLogoDivHide"
         });
       }
     }
@@ -51,19 +47,14 @@ class TopBar extends React.Component {
   render() {
     return (
       <div className="TopBar">
-        {/* Left side */}
-        {/*<img src={picture} className="mainPFP" alt="Profile picture" />*/}
         <div className={this.state.tbWelcomeDivClass}>
-          <TBProfilePicture src={this.props.picture} />
+          {/*<TBProfilePicture src={this.props.picture} />*/}
+          <img src={this.props.picture} className="tbPFP" alt="Profile picture" />
           <h1 className="tbWelcomeText">Hey, {this.props.name}!</h1>
+          <SLogo className="tbLogoRight" />
         </div>
-        {/*<img src={wlogo} className={this.state.tbLeftLogoClass} alt="Strawberry logo" />*/}
-        <SLogo className={this.state.tbLeftLogoClass} />
-
-        {/* Right side */}
         <div className={this.state.tbLogoDivClass}>
-          {/*<img src={wlogo} className="tbLogo" alt="Strawberry logo" />*/}
-          <SLogo className="tbLogo" />
+          <SLogo className="tbLogoLeft" />
         </div>
       </div>
     );
@@ -71,9 +62,9 @@ class TopBar extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  name: state.user.name,
-  email: state.user.email,
-  picture: state.user.picture
+  name: state.app.name,
+  email: state.app.email,
+  picture: state.app.picture
 });
 
 export default connect(mapStateToProps, null)(withRouter(TopBar));

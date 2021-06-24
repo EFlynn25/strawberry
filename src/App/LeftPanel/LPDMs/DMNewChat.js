@@ -2,6 +2,7 @@ import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 
 import add from '../../../assets/icons/add.svg';
+import { ReactComponent as Add } from '../../../assets/icons/add.svg';
 import './DMNewChat.css';
 import { dms_request_to_chat } from '../../../socket.js';
 import { addRequest } from '../../../redux/dmsReducer.js'
@@ -28,11 +29,13 @@ class DMNewChat extends React.Component {
   }
 
   componentDidMount() {
-    document.addEventListener('mousedown', this.handleClickOutside);
+    // document.addEventListener('mousedown', this.handleClickOutside);
+    document.addEventListener('mouseup', this.handleClickOutside);
   }
 
   componentWillUnmount() {
-    document.removeEventListener('mousedown', this.handleClickOutside);
+    // document.removeEventListener('mousedown', this.handleClickOutside);
+    document.removeEventListener('mouseup', this.handleClickOutside);
   }
 
   componentDidUpdate() {
@@ -126,7 +129,7 @@ class DMNewChat extends React.Component {
           });
         } else if (this.props.chat_exists.includes(this.state.inputValue) || Object.keys(this.props.chats).includes(this.state.inputValue)) {
           this.setState({
-            status: "You already have a chat that person!"
+            status: "You already have a chat with that person!"
           });
         } else {
           this.setState({
@@ -149,16 +152,25 @@ class DMNewChat extends React.Component {
   render() {
     return(
       <Fragment>
-        <div className="DMNewChat" onClick={this.handleClick} ref={this.setWrapperRef}>
-          <img src={add} className="ncAddIcon" alt="Add Icon" />
+        <div className={this.state.dropdown ? "DMNewChat DMNewChatHide" : "DMNewChat"} onClick={this.handleClick} ref={this.setWrapperRef}>
+          {/*<img src={add} className="ncAddIcon" alt="Add Icon" />*/}
+          <Add className="ncAddIcon" alt="Add Icon" />
           <h1 className="ncText">Create Chat</h1>
         </div>
+        {/*
+        <div className={this.state.dropdown ? "oldncDropdown" : "oldncDropdown oldncDropdownHide"} ref={this.setWrapperRef}>
+          <h1 className="oldncddTitle">New Chat</h1>
+          <h1 className="oldncddText">Email:</h1>
+          <input value={this.state.inputValue} onChange={this.handleInputChange} onKeyPress={this.inputEnterPressed} className="oldncddInput" placeholder="Type email here" ref={this.inputRef} disabled={this.state.emailRequested == "" ? "" : "disabled"} />
+          <h1 className="oldncddStatus">{this.state.status}</h1>
+        </div>
+        */}
         <div className={this.state.dropdown ? "ncDropdown" : "ncDropdown ncDropdownHide"} ref={this.setWrapperRef}>
-          {/*<p style={{color: "white", fontFamily: "Comic Sans MS", margin: "10px"}}>new chat lol</p>*/}
-          <h1 className="ncddTitle">New Chat</h1>
-          <h1 className="ncddText">Email:</h1>
-          <input value={this.state.inputValue} onChange={this.handleInputChange} onKeyPress={this.inputEnterPressed} className="ncddInput" placeholder="Type email here" ref={this.inputRef} disabled={this.state.emailRequested == "" ? "" : "disabled"} />
-          <h1 className="ncddStatus">{this.state.status}</h1>
+          {/*<img src={add} className="ncAddIcon" alt="Add Icon" />*/}
+          <h1 className="ncdTitle">Create Chat</h1>
+          <h1 className="ncdText">Email:</h1>
+          <input value={this.state.inputValue} onChange={this.handleInputChange} onKeyPress={this.inputEnterPressed} className="ncdInput" placeholder="Type email here" ref={this.inputRef} disabled={this.state.emailRequested == "" ? "" : "disabled"} />
+          <h1 className="ncdStatus">{this.state.status}</h1>
         </div>
       </Fragment>
     )

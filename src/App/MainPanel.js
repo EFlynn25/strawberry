@@ -39,7 +39,7 @@ class MainPanel extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  hideRightPanel: state.user.hideRightPanel
+  hideRightPanel: state.app.hideRightPanel
 });
 
 export default connect(mapStateToProps, null)(MainPanel);

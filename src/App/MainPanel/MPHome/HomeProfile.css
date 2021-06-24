@@ -1,0 +1,27 @@
+.HomeProfile {
+  position: absolute;
+  width: 60%;
+  height: 80%;
+  left: calc(20% - 10px);
+  top: 10%;
+
+  padding: 0 10px;
+
+  border-left: 2px solid #ffffff05 !important;
+
+  transition: transform .2s cubic-bezier(0.65, 0, 0.35, 1),
+              opacity .2s cubic-bezier(0.65, 0, 0.35, 1);
+  opacity: 1;
+  visibility: visible;
+
+  overflow-y: scroll;
+}
+
+.HomeProfileHide {
+  transition: transform .2s cubic-bezier(0.65, 0, 0.35, 1),
+              opacity .2s cubic-bezier(0.65, 0, 0.35, 1),
+              visibility 0s .2s;
+  transform: translateX(40px);
+  opacity: 0;
+  visibility: hidden;
+}

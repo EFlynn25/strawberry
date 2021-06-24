@@ -1,19 +1,29 @@
 .DMNewChat {
   position: absolute;
-  width: 100%;
+  width: calc(100% - 40px);
   height: 75px;
-  bottom: 0;
+  bottom: 20px;
+  margin: 0 20px;
 
-  border-top: 1px solid #fff1;
+  border-radius: 20px;
+  background: var(--darker-accent-color);
+
+  transition: filter .1s, opacity .1s, transform .1s;
 }
 
 .DMNewChat:hover {
   cursor: pointer;
-  background: #fff1;
+  filter: brightness(1.1);
 }
 
 .DMNewChat:active {
-  background: #ffffff07;
+  filter: brightness(.9);
+  transform: scale(.95);
+}
+
+.DMNewChatHide {
+  transform: scale(.8);
+  opacity: 0 !important;
 }
 
 
@@ -36,7 +46,6 @@
   top: 17.5px;
   margin: 0;
 
-  /* font-family: inherit; */
   font-style: normal;
   font-weight: 500;
   font-size: 16px;
@@ -44,22 +53,22 @@
 
   user-select: none;
 
-  color: #FFF;
+  color: white;
 }
 
 
 
-/* Dropdown */
+/* New dropdown */
 
 .ncDropdown {
   position: absolute;
-  width: 300px;
-  height: 140px;
+  width: 284px;
+  height: 200px;
   left: 8px;
-  bottom: 83px;
+  bottom: 8px;
 
   background: #2A2B2D;
-  border-radius: 10px;
+  border-radius: 20px;
 
   z-index: 2;
 
@@ -70,35 +79,41 @@
 .ncDropdownHide {
   transition: opacity .1s, transform .1s, visibility 0s .1s;
   visibility: hidden;
-  /* left: -2px; */
-  transform: translateX(-10px);
+  transform: scale(1.2);
   opacity: 0 !important;
 }
 
-.ncddTitle {
+.ncdIcon {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  top: 17.5px;
+  left: 20px;
+  user-select: none;
+}
+
+.ncdTitle {
   position: absolute;
   left: 20px;
   top: 20px;
   margin: 0;
 
-  /* font-family: inherit; */
   font-style: normal;
   font-weight: 500;
   font-size: 22px;
 
   user-select: none;
 
-  color: #FFFFFF;
+  color: white;
 }
 
-.ncddText {
+.ncdText {
   position: absolute;
   height: 25px;
-  left: 20px;
-  top: 55px;
+  left: 28px;
+  top: 60px;
   margin: 0;
 
-  /* font-family: inherit; */
   font-style: normal;
   font-weight: 400;
   font-size: 14px;
@@ -109,11 +124,11 @@
   color: #DDD;
 }
 
-.ncddInput {
+.ncdInput {
   position: absolute;
   height: 25px;
-  left: 65px;
-  top: 55px;
+  left: 20px;
+  top: 85px;
 
   padding: 0 10px;
   border: 0;
@@ -132,12 +147,12 @@
   resize: none;
 }
 
-.ncddStatus {
+.ncdStatus {
   position: absolute;
   height: 50px;
   left: 30px;
   right: 30px;
-  top: 90px;
+  top: 135px;
   margin: 0;
 
   font-style: normal;

@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-export const userSlice = createSlice({
-  name: 'user',
+export const appSlice = createSlice({
+  name: 'app',
   initialState: {
     name: "",
     email: "",
@@ -18,7 +18,10 @@ export const userSlice = createSlice({
     currentPage: "",
     notificationCount: {},
 
-    messageStyle: "default"
+    messageStyle: "default",
+
+    announcements: {},
+    announcementsRead: []
   },
   reducers: {
     setUserName: (state, action) => {
@@ -53,6 +56,12 @@ export const userSlice = createSlice({
     },
     setMessageStyle: (state, action) => {
       state.messageStyle = action.payload;
+    },
+    setAnnouncement: (state, action) => {
+      state.announcements[action.payload.id] = {title: action.payload.title, content: action.payload.content, timestamp: action.payload.timestamp};
+    },
+    setAnnouncementRead: (state, action) => {
+      state.announcementsRead.push(action.payload);
     }
   },
 });
@@ -62,22 +71,23 @@ export const { setUserName, setUserEmail, setUserPicture,
   setdmsLoaded, setpeopleLoaded,
   setSocket,
   setCurrentPage, setNotificationCount,
-  setMessageStyle
-} = userSlice.actions;
+  setMessageStyle,
+  setAnnouncement, setAnnouncementRead
+} = appSlice.actions;
 
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of
-// in the slice file. For example: `useSelector((state) => state.user.name)`
-export const getUserName = state => state.user.name;
-export const getUserEmail = state => state.user.email;
-export const getUserPicture = state => state.user.picture;
-export const getdmsOrGroups = state => state.user.dmsOrGroups;
-export const gethideRightPanel = state => state.user.hideRightPanel;
-export const getdmsLoaded = state => state.user.dmsLoaded;
-export const getpeopleLoaded = state => state.user.peopleLoaded;
-export const getSocket = state => state.user.socket;
-export const getCurrentPage = state => state.user.currentPage;
-export const getNotificationCount = state => state.user.notificationCount;
-export const getMessageStyle = state => state.user.messageStyle;
+// in the slice file. For example: `useSelector((state) => state.app.name)`
+export const getUserName = state => state.app.name;
+export const getUserEmail = state => state.app.email;
+export const getUserPicture = state => state.app.picture;
+export const getdmsOrGroups = state => state.app.dmsOrGroups;
+export const gethideRightPanel = state => state.app.hideRightPanel;
+export const getdmsLoaded = state => state.app.dmsLoaded;
+export const getpeopleLoaded = state => state.app.peopleLoaded;
+export const getSocket = state => state.app.socket;
+export const getCurrentPage = state => state.app.currentPage;
+export const getNotificationCount = state => state.app.notificationCount;
+export const getMessageStyle = state => state.app.messageStyle;
 
-export default userSlice.reducer;
+export default appSlice.reducer;

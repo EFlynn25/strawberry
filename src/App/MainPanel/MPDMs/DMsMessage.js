@@ -279,11 +279,11 @@ class DMsMessage extends React.Component {
 const mapStateToProps = (state) => ({
   openedChat: state.dms.openedChat,
   chats: state.dms.chats,
-  myName: state.user.name,
-  myEmail: state.user.email,
-  myPicture: state.user.picture,
+  myName: state.app.name,
+  myEmail: state.app.email,
+  myPicture: state.app.picture,
   knownPeople: state.people.knownPeople,
-  messageStyle: state.user.messageStyle
+  messageStyle: state.app.messageStyle
 });
 
 export default connect(mapStateToProps, null)(DMsMessage);

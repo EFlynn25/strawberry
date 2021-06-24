@@ -1,12 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
-import userReducer from './userReducer';
+import appReducer from './appReducer';
 import dmsReducer from './dmsReducer';
 import groupsReducer from './groupsReducer';
 import peopleReducer from './peopleReducer';
 
 const mainStore = configureStore({
   reducer: {
-    user: userReducer,
+    app: appReducer,
     dms: dmsReducer,
     groups: groupsReducer,
     people: peopleReducer

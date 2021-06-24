@@ -15,4 +15,7 @@
   width: 100%;
   height: calc(100% - 75px);
   overflow-y: auto;
+
+  height: calc(100% - 115px);
+  padding-bottom: 115px;
 }

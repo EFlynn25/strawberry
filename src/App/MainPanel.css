@@ -8,4 +8,6 @@
   height: calc(100% - 50px);
   background: #18191B;
   background: #131416;
+
+  overflow: hidden;
 }
