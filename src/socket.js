@@ -63,19 +63,25 @@ export function startSocket() {
       } else if (com == "get_announcements") {
         if (jsonData.response == true || jsonData.response == "receive_new_announcement") {
           jsonData.announcements.forEach((announcement) => {
-            mainStore.dispatch(setAnnouncement({"id": announcement.id, "title": announcement.title, "content": announcement.content, "timestamp": announcement.timestamp}));
+            if (!Object.keys(mainStore.getState().app.announcements).includes(announcement.id)) {
+              mainStore.dispatch(setAnnouncement({"id": announcement.id, "title": announcement.title, "content": announcement.content, "timestamp": announcement.timestamp}));
+            }
           });
 
           if (jsonData.response != "receive_new_announcement") {
             jsonData.announcements_read.forEach((id) => {
-              mainStore.dispatch(setAnnouncementRead(id));
+              if (!mainStore.getState().app.announcementsRead.includes(id)) {
+                mainStore.dispatch(setAnnouncementRead(id));
+              }
             });
           }
         }
       } else if (com == "set_announcement_read") {
         if (jsonData.response == true) {
           jsonData.ids.forEach((id) => {
-            mainStore.dispatch(setAnnouncementRead(id));
+            if (!mainStore.getState().app.announcementsRead.includes(id)) {
+              mainStore.dispatch(setAnnouncementRead(id));
+            }
           });
         }
       }
