@@ -74,11 +74,12 @@ class HomePanel extends React.Component {
       child = <HPAnnouncements />
     } else {
       child = (
-        <div style={{display: "table", width: "100%", height: "100%"}}>
-          <h1 style={{position: "relative", display: "table-cell", margin: "0", textAlign: "center", verticalAlign: "middle", color: "#fff5", fontSize: "16px"}}>
+        <div style={{display: "flex", width: "100%", height: "100%", flexDirection: "column", justifyContent: "center", alignItems: "center"}}>
+          <h1 style={{margin: "0", color: "#fff5", fontSize: "18px"}}>
             {this.state.type}
-            {this.state.data != "" ? <h1 style={{fontSize: "18px", color: "#fff3"}}>({this.state.data})</h1> : null}
+            {/*this.state.data != "" ? this.state.data : null*/}
           </h1>
+          {this.state.data != "" ? <h1 style={{margin: "0", marginTop: "10px", color: "#fff3", fontSize: "18px"}}>({this.state.data})</h1> : null}
         </div>
       );
     }

@@ -6,43 +6,7 @@ export const dmsSlice = createSlice({
     openedChat: "",
 
 
-    chats: {
-      /*"ethanflynn2007@gmail.com": {
-        messages: [
-          {message: "heh heh", from: "me", id: 14},
-          {message: "ha ha", from: "me", id: 15},
-          {message: "ehhhh", from: "me", id: 16},
-          {message: "lololol", from: "me", id: 17},
-          {message: "what?", from: "them", id: 18},
-          {message: "nothing", from: "me", id: 19},
-          {message: "ok", from: "them", id: 20},
-          {message: "werido", from: "them", id: 21},
-          {message: "bruh", from: "me", id: 22},
-        ],
-        sendingMessages: [
-          "Heya, brah. This message is sending."
-        ],
-        tempMessageInput: "",
-        lastRead: 22
-      },
-      "toastmaster9804@gmail.com": {
-        messages: [
-          {message: "sup", from: "them", id: 110},
-          {message: "go workout", from: "me", id: 111},
-          {message: "fine", from: "them", id: 112}
-        ],
-        tempMessageInput: "",
-        lastRead: 111
-      },
-      "katrinaflynn79@gmail.com": {
-        messages: [
-          {message: "test", from: "them", id: 0},
-          {message: "more test", from: "them", id: 1},
-          {message: "super test", from: "them", id: 2},
-          {message: "ultra test", from: "them", id: 3}
-        ]
-      }*/
-    },
+    chats: {},
 
     requesting: [],
     requested: [],

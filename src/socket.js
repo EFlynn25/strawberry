@@ -20,8 +20,7 @@ export function startSocket() {
     if (socket.readyState == 0) {
       socket.close();
     } else {
-      add_announcement("home_update", "v0.1 - The Home Update!", "Wow cool! Now you have a hub for everything!");
-      set_announcement_read("home_update");
+      // set_announcement_read("home_update");
     }
   }, 5000);
 
@@ -64,11 +63,18 @@ export function startSocket() {
       } else if (com == "get_announcements") {
         if (jsonData.response == true || jsonData.response == "receive_new_announcement") {
           jsonData.announcements.forEach((announcement) => {
-            // console.log(announcement);
             mainStore.dispatch(setAnnouncement({"id": announcement.id, "title": announcement.title, "content": announcement.content, "timestamp": announcement.timestamp}));
           });
-          jsonData.announcements_read.forEach((id) => {
-            // console.log(id);
+
+          if (jsonData.response != "receive_new_announcement") {
+            jsonData.announcements_read.forEach((id) => {
+              mainStore.dispatch(setAnnouncementRead(id));
+            });
+          }
+        }
+      } else if (com == "set_announcement_read") {
+        if (jsonData.response == true) {
+          jsonData.ids.forEach((id) => {
             mainStore.dispatch(setAnnouncementRead(id));
           });
         }
@@ -256,8 +262,8 @@ export function add_announcement(id, title, content) {
   socket.send(jsonString);
 }
 
-export function set_announcement_read(id, title, content) {
-  var jsonObj = {"product": "app", "command": "set_announcement_read", "id": id}
+export function set_announcement_read(ids) {
+  var jsonObj = {"product": "app", "command": "set_announcement_read", "ids": ids}
   var jsonString = JSON.stringify(jsonObj);
   console.log("WebSocket message sending: " + jsonString);
   socket.send(jsonString);
