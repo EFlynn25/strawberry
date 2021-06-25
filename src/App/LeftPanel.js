@@ -17,10 +17,11 @@ import {
 
 class LeftPanel extends React.Component {
   componentDidMount() {
-    this.props.setdmsOrGroups("dms");
+    let setTo = "dms";
     if (this.props.history.location.pathname.startsWith("/groups")) {
-      this.props.setdmsOrGroups("groups");
+      setTo = "groups";
     }
+    this.props.setdmsOrGroups(setTo);
   }
 
   render() {
@@ -28,18 +29,12 @@ class LeftPanel extends React.Component {
       <div className="LeftPanel">
         <LPHome />
         <LPSeparator />
-        <LPTabs />
-        {this.props.dmsOrGroups == "dms" ? <LPDMs /> : <LPGroups />}
-        {/*
-        <Switch>
-          <Route path="/groups">
-            <LPGroups />
-          </Route>
-          <Route path="/dms">
-            <LPDMs />
-          </Route>
-        </Switch>
-      */}
+        {/*this.props.dmsOrGroups == "dms" ? <LPDMs /> : <LPGroups />*/}
+        <div className="lpConversations">
+          <LPTabs />
+          <LPDMs mainClasses={this.props.dmsOrGroups == "dms" ? "LPDMs" : "LPDMs LPDMsHide"} />
+          <LPGroups mainClasses={this.props.dmsOrGroups == "groups" ? "LPGroups" : "LPGroups LPGroupsHide"} />
+        </div>
       </div>
     );
   }

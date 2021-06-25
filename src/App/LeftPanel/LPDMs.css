@@ -1,9 +1,16 @@
 .LPDMs {
   position: absolute;
   width: 100%;
-  height: calc(100% - 165px);
-  background: #1B1C1E;
-  background: #18191B;
+  height: 100%;
+
+  transition: transform .2s, opacity .2s;
+}
+
+.LPDMsHide {
+  transition: transform .2s, opacity .2s, visibility 0s .2s;
+  transform: translateX(-40px);
+  opacity: 0;
+  visibility: hidden;
 }
 
 

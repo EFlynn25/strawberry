@@ -128,7 +128,7 @@ class LPDMs extends React.Component {
 
   render() {
     return (
-      <div className="LPDMs">
+      <div className={this.props.mainClasses}>
         <div className="lpdmChats">
           { this.state.children }
         </div>
