@@ -60,13 +60,18 @@
 
 .hpName {
   position: absolute;
-  bottom: 43px;
+  width: calc(100% - 210px);
   left: 80px;
+  bottom: 43px;
   margin: 0;
 
   color: white;
   font-size: 22px;
   font-weight: 500;
+
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .hpStatus {
