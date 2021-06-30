@@ -225,7 +225,7 @@ export function startSocket() {
 function get_chat_info(chat) {
   get_user_info(chat);
   mainStore.dispatch(addChat(chat));
-  dms_get_messages(chat, "latest", 10);
+  dms_get_messages(chat, "latest", 5);
   dms_in_chat(chat, "get_in_chat");
   dms_last_read(chat);
 }

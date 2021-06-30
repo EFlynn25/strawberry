@@ -46,8 +46,8 @@ class MPDMs extends React.Component {
 
     this.shouldScroll = true;
     this.scrollsToIgnore = 0;
-    this.isLoadingMessages = false;
-    this.heightBeforeLoading = 0;
+    this.isLoadingMessages = {};
+    this.heightBeforeLoading = {};
   }
 
   handleScroll() {
@@ -76,17 +76,18 @@ class MPDMs extends React.Component {
   }
 
   loadMoreMessages() {
-    const thisChat = this.props.chats[this.props.openedChat];
+    const openedChat = this.props.openedChat;
+    const thisChat = this.props.chats[openedChat];
 
     if (thisChat.loadingMessages != null && thisChat.loadingMessages.length == 0) {
-      this.isLoadingMessages = false;
-      if (this.heightBeforeLoading != 0) {
-        this.messagesRef.current.scrollTop += this.messagesRef.current.scrollHeight - this.heightBeforeLoading;
-        this.heightBeforeLoading = 0;
+      this.isLoadingMessages[openedChat] = false;
+      if (this.heightBeforeLoading[openedChat] != 0) {
+        this.messagesRef.current.scrollTop += this.messagesRef.current.scrollHeight - this.heightBeforeLoading[openedChat];
+        this.heightBeforeLoading[openedChat] = 0;
       }
     }
 
-    if (!this.isLoadingMessages && this.messagesRef != null && this.messagesRef.current != null && this.messagesRef.current.scrollTop == 0) {
+    if (!this.isLoadingMessages[openedChat] && this.messagesRef != null && this.messagesRef.current != null && this.messagesRef.current.scrollTop == 0) {
       const myFirstID = thisChat.messages[0].id;
       if (myFirstID != 0) {
         let ids = [];
@@ -98,8 +99,8 @@ class MPDMs extends React.Component {
 
 
         this.props.setLoadingMessages({"chat": this.props.openedChat, "data": ids});
-        this.isLoadingMessages = true;
-        this.heightBeforeLoading = this.messagesRef.current.scrollHeight;
+        this.isLoadingMessages[openedChat] = true;
+        this.heightBeforeLoading[openedChat] = this.messagesRef.current.scrollHeight;
 
 
         dms_get_messages(this.props.openedChat, myFirstID - 1, 20);
@@ -549,7 +550,7 @@ class MPDMs extends React.Component {
               null
             }
             {
-              this.isLoadingMessages ?
+              this.isLoadingMessages[this.props.openedChat] ?
 
               <div className="dmsTopTextDiv">
                 <h1 className="dmsLoadingMessagesText">Loading...</h1>
