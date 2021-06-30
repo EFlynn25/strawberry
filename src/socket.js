@@ -1,7 +1,7 @@
 import firebase from 'firebase/app';
 import { useDispatch } from 'react-redux'
 import { setdmsLoaded, setpeopleLoaded, setSocket, setAnnouncement, setAnnouncementRead } from './redux/appReducer.js'
-import { addChat, addMessage, removeSendingMessage, setCreated, setLastRead, setTyping, setInChat, addRequest, removeRequest
+import { addChat, addMessage, removeSendingMessage, setCreated, setLastRead, setTyping, setInChat, setLoadingMessages, addRequest, removeRequest
   // removeRequesting, addRequested, addRequestedMe
  } from './redux/dmsReducer.js'
 import { addPerson } from './redux/peopleReducer.js'
@@ -19,8 +19,6 @@ export function startSocket() {
   setTimeout(function() {
     if (socket.readyState == 0) {
       socket.close();
-    } else {
-      // set_announcement_read("home_update");
     }
   }, 5000);
 
@@ -110,7 +108,7 @@ export function startSocket() {
         }
       } else if (com == "get_messages") {
         if (jsonData.response == true) {
-          jsonData.messages.map(item => {
+          jsonData.messages.reverse().map(item => {
             let myFrom = "them";
             if (mainStore.getState().app.email == item.email) {
               myFrom = "me";
@@ -227,7 +225,7 @@ export function startSocket() {
 function get_chat_info(chat) {
   get_user_info(chat);
   mainStore.dispatch(addChat(chat));
-  dms_get_messages(chat, "latest", 20);
+  dms_get_messages(chat, "latest", 10);
   dms_in_chat(chat, "get_in_chat");
   dms_last_read(chat);
 }

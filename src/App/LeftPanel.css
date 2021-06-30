@@ -11,6 +11,6 @@
 .lpConversations {
   position: absolute;
   width: 100%;
-  height: calc(100% - 165px);
+  height: calc(100% - 90px);
   background: #18191B;
 }

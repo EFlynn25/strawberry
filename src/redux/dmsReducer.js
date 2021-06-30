@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, current } from '@reduxjs/toolkit';
 
 export const dmsSlice = createSlice({
   name: 'dms',
@@ -32,21 +32,77 @@ export const dmsSlice = createSlice({
         myMessages = [];
       }
 
-      let myId = 0;
+      let myID = 0;
       if ("id" in action.payload) {
-        myId = action.payload["id"];
+        myID = action.payload["id"];
       } else {
         if (myMessages.length > 0) {
-          myId = myMessages[myMessages.length - 1]["id"] + 1;
+          myID = myMessages[myMessages.length - 1]["id"] + 1;
         }
       }
       let myFrom = "me";
       if ("from" in action.payload) {
         myFrom = action.payload["from"];
       }
-      const newMessage = {message: action.payload["message"], from: myFrom, id: myId, timestamp: action.payload["timestamp"]};
-      myMessages.push(newMessage);
-      state.chats[myChatEmail]["messages"] = myMessages;
+      const newMessage = {message: action.payload["message"], from: myFrom, id: myID, timestamp: action.payload["timestamp"]};
+
+
+      if (myMessages.find( ({ id }) => id === myID ) == null) {
+
+
+
+        // console.log(current(state).chats[myChatEmail]);
+
+        if (myMessages == null || myMessages.length == 0 || myMessages[myMessages.length - 1].id < myID) {
+          myMessages.push(newMessage);
+        } else if (myMessages[0].id > myID) {
+          myMessages.unshift(newMessage);
+        } else {
+          let findIDBefore;
+          let currentSubtractCheck = 1;
+          while (findIDBefore == null) {
+            const tempfidb = myMessages.find( ({ id }) => id === myID - currentSubtractCheck );
+            // console.log(myID - currentSubtractCheck);
+            // console.log(tempfidb);
+            if (tempfidb != null) {
+              findIDBefore = tempfidb;
+            } else {
+              if (myID - (currentSubtractCheck + 1) < 0) {
+                findIDBefore = false;
+              } else {
+                currentSubtractCheck++;
+              }
+            }
+          }
+
+          const theIndex = myMessages.indexOf(findIDBefore);
+          if (findIDBefore != false) {
+            console.log(findIDBefore);
+            console.log(theIndex);
+          }
+
+          myMessages.splice(theIndex, 0, newMessage);
+        }
+
+        state.chats[myChatEmail]["messages"] = myMessages;
+
+
+
+        const lm = state.chats[myChatEmail].loadingMessages;
+        if (lm != null) {
+          const index = lm.indexOf(myID);
+          if (index > -1) {
+            state.chats[myChatEmail].loadingMessages.splice(index, 1);
+          }
+        }
+
+        // console.log(current(state).chats[myChatEmail]);
+
+
+
+      }
+
+
     },
     addSendingMessage: (state, action) => {
       let myChatEmail = state.openedChat;
@@ -100,6 +156,9 @@ export const dmsSlice = createSlice({
     setInChat: (state, action) => {
       state.chats[action.payload["chat"]].inChat = action.payload["data"];
     },
+    setLoadingMessages: (state, action) => {
+      state.chats[action.payload["chat"]].loadingMessages = action.payload["data"];
+    },
 
     addRequest: (state, action) => {
       if (!state[action.payload["type"]].includes(action.payload)) {
@@ -116,7 +175,7 @@ export const dmsSlice = createSlice({
 });
 
 export const { setopenedChat, addChat, addMessage, addSendingMessage, removeSendingMessage,
-  setCreated, setTempMessageInput, setLastRead, setTyping, setInChat,
+  setCreated, setTempMessageInput, setLastRead, setTyping, setInChat, setLoadingMessages,
   addRequest, removeRequest
  } = dmsSlice.actions;
 

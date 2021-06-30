@@ -2,6 +2,7 @@ import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Switch, Route } from "react-router-dom";
 import TextareaAutosize from 'react-autosize-textarea';
+import Loader from "react-loader-spinner";
 
 import './MPDMs.css';
 import {
@@ -9,13 +10,14 @@ import {
   // addMessage,
   addSendingMessage,
   setTempMessageInput,
-  setLastRead
+  setLastRead,
+  setLoadingMessages
 } from '../../redux/dmsReducer';
 import {
   setCurrentPage
 } from '../../redux/appReducer';
-import ethan from "../../assets/images/ethan.webp"
 import {
+  dms_get_messages,
   dms_send_message,
   dms_in_chat,
   dms_typing,
@@ -23,8 +25,6 @@ import {
 } from '../../socket.js';
 import DMsMessage from './MPDMs/DMsMessage';
 import DMsDefaultMessage from './MPDMs/DMsMessage/DMsDefaultMessage';
-
-// console.debug = function() {}
 
 class MPDMs extends React.Component {
   constructor(props) {
@@ -42,9 +42,12 @@ class MPDMs extends React.Component {
     this.inputEnterPressed = this.inputEnterPressed.bind(this);
     this.handleScroll = this.handleScroll.bind(this);
     this.scrollToBottom = this.scrollToBottom.bind(this);
+    this.loadMoreMessages = this.loadMoreMessages.bind(this);
 
     this.shouldScroll = true;
     this.scrollsToIgnore = 0;
+    this.isLoadingMessages = false;
+    this.heightBeforeLoading = 0;
   }
 
   handleScroll() {
@@ -57,6 +60,8 @@ class MPDMs extends React.Component {
       } else {
         this.shouldScroll = false;
       }
+
+      this.loadMoreMessages();
     }
     console.log(logtext + " | shouldScroll " + this.shouldScroll);
   }
@@ -70,6 +75,38 @@ class MPDMs extends React.Component {
     }
   }
 
+  loadMoreMessages() {
+    const thisChat = this.props.chats[this.props.openedChat];
+
+    if (thisChat.loadingMessages != null && thisChat.loadingMessages.length == 0) {
+      this.isLoadingMessages = false;
+      if (this.heightBeforeLoading != 0) {
+        this.messagesRef.current.scrollTop = this.messagesRef.current.scrollHeight - this.heightBeforeLoading;
+        this.heightBeforeLoading = 0;
+      }
+    }
+
+    if (!this.isLoadingMessages && this.messagesRef != null && this.messagesRef.current != null && this.messagesRef.current.scrollTop == 0) {
+      const myFirstID = thisChat.messages[0].id;
+      if (myFirstID != 0) {
+        let ids = [];
+        for (var i = myFirstID - 20; i <= myFirstID - 1; i++) {
+          if (i >= 0) {
+            ids.push(i);
+          }
+        }
+
+
+        this.props.setLoadingMessages({"chat": this.props.openedChat, "data": ids});
+        this.isLoadingMessages = true;
+        this.heightBeforeLoading = this.messagesRef.current.scrollHeight;
+
+
+        dms_get_messages(this.props.openedChat, myFirstID - 1, 20);
+      }
+    }
+  }
+
 
 
   componentDidMount() {
@@ -80,6 +117,7 @@ class MPDMs extends React.Component {
     // this.messagesRef.current.scrollTop = this.messagesRef.current.scrollHeight - this.messagesRef.current.clientHeight;
 
     const propsOpenedChat = this.props.openedChat;
+    const thisChat = this.props.chats[propsOpenedChat];
     if (propsOpenedChat in this.props.chats) {
       this.reloadMessages(null);
       dms_in_chat(propsOpenedChat, true);
@@ -87,7 +125,7 @@ class MPDMs extends React.Component {
       dms_typing(propsOpenedChat, "get_typing");
       dms_last_read(propsOpenedChat);
 
-      const tmi = this.props.chats[propsOpenedChat].tempMessageInput;
+      const tmi = thisChat.tempMessageInput;
       console.log(tmi);
       if (tmi != "") {
         this.setState({
@@ -110,6 +148,9 @@ class MPDMs extends React.Component {
     }
 
     this.props.setCurrentPage(title);
+
+    // const myFirstID = thisChat.messages[thisChat.messages.length - 1].id;
+    // dms_get_messages(propsOpenedChat, myFirstID - 1, 20);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -179,6 +220,8 @@ class MPDMs extends React.Component {
       this.inputRef.current.focus();
     }
 
+    this.loadMoreMessages();
+
     let title = "404";
     if (this.props.openedChat in this.props.chats && this.props.openedChat in this.props.getknownPeople) {
       title = this.props.getknownPeople[this.props.openedChat].name;
@@ -246,26 +289,26 @@ class MPDMs extends React.Component {
     let nextID = thisChat["messages"][0]["id"];
     let tempMessages = [];
     thisChat["messages"].map((message, i) => {
-      console.debug(message);
+      // console.debug(message);
 
       if (message["id"] >= nextID && !("sending" in message)) {
         let messageIDs = [message["id"]];
         const messageFrom = message["from"];
-        console.debug("before while");
+        // console.debug("before while");
         while (true) {
           const localNextID = messageIDs[messageIDs.length - 1] + 1;
           const findNextID = thisChat["messages"].find( ({ id }) => id === localNextID );
 
-          console.debug("findNextID: " + JSON.stringify(findNextID));
+          // console.debug("findNextID: " + JSON.stringify(findNextID));
           // console.debug(findNextID);
 
           if (findNextID == null) {
-            console.debug("breaking, due to null");
+            // console.debug("breaking, due to null");
             break;
           }
 
           if ("sending" in findNextID && messageFrom == "me") {
-            console.log("HANDLED SENDING");
+            // console.log("HANDLED SENDING");
             handledSending = true;
           }
 
@@ -273,11 +316,11 @@ class MPDMs extends React.Component {
             messageIDs.push(localNextID);
             nextID = localNextID + 1;
           } else {
-            console.debug("breaking, due to new sender");
+            // console.debug("breaking, due to new sender");
             break;
           }
         }
-        console.debug("after while... " + messageIDs);
+        // console.debug("after while... " + messageIDs);
 
         // const myPerson = this.props.getknownPeople[this.props.openedChat];
         // let newMessageName = "";
@@ -375,14 +418,14 @@ class MPDMs extends React.Component {
         //   </div>
         // );
         const newMessage = (<DMsMessage inChat={inChat} typing={thisChat.typing} id={messageIDs[0]} key={messageIDs[0]} onUpdate={this.scrollToBottom} />);
-        console.debug(newMessage);
+        // console.debug(newMessage);
         tempMessages.push(newMessage);
       }
     });
 
-    console.debug("COMPLETE, HERES SENDING:");
-    console.debug(hasSending);
-    console.debug(handledSending);
+    // console.debug("COMPLETE, HERES SENDING:");
+    // console.debug(hasSending);
+    // console.debug(handledSending);
     if (hasSending && !handledSending) {
       // let myName = this.props.myName;
       // let myPicture = this.props.myPicture;
@@ -418,7 +461,7 @@ class MPDMs extends React.Component {
       }
 
       const newMessage = <MessageType email={this.props.myEmail} name={this.props.myName} picture={this.props.myPicture} messages={mySendingMessages} inChat={["no", true]} inChatTyping={false} onUpdate={this.props.onUpdate} />;
-      console.debug(newMessage);
+      // console.debug(newMessage);
       tempMessages.push(newMessage);
     }
 
@@ -497,8 +540,20 @@ class MPDMs extends React.Component {
               || (this.props.openedChat != "" && this.props.openedChat in this.props.chats && this.props.chats[this.props.openedChat].messages.length > 0 && this.props.chats[this.props.openedChat].messages[0].id == 0)
               || (this.props.openedChat != "" && this.props.openedChat in this.props.chats && this.props.chats[this.props.openedChat].messages.length <= 0) ?
 
-              <div className="dmsStartConversationDiv">
+              <div className="dmsTopTextDiv">
                 <h1 className="dmsStartConversationText">This is the start of your conversation with {otherName}</h1>
+              </div>
+
+              :
+
+              null
+            }
+            {
+              this.isLoadingMessages ?
+
+              <div className="dmsTopTextDiv">
+                <h1 className="dmsLoadingMessagesText">Loading...</h1>
+                <Loader className="dmsLoadingMessagesSpinner" type="Oval" color="var(--accent-color)" height={30} width={30} />
               </div>
 
               :
@@ -541,7 +596,8 @@ const mapDispatchToProps = {
   addSendingMessage,
   setTempMessageInput,
   setLastRead,
-  setCurrentPage
+  setLoadingMessages,
+  setCurrentPage,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(MPDMs);
