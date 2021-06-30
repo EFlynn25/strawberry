@@ -81,7 +81,7 @@ class MPDMs extends React.Component {
     if (thisChat.loadingMessages != null && thisChat.loadingMessages.length == 0) {
       this.isLoadingMessages = false;
       if (this.heightBeforeLoading != 0) {
-        this.messagesRef.current.scrollTop = this.messagesRef.current.scrollHeight - this.heightBeforeLoading;
+        this.messagesRef.current.scrollTop += this.messagesRef.current.scrollHeight - this.heightBeforeLoading;
         this.heightBeforeLoading = 0;
       }
     }
