@@ -25,6 +25,9 @@
 
   font-size: 30px;
   color: white;
+
+  word-wrap: break-word;
+  hyphens: auto;
 }
 
 .pplStatus {

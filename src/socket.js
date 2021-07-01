@@ -1,7 +1,7 @@
 import firebase from 'firebase/app';
 import { useDispatch } from 'react-redux'
 import { setdmsLoaded, setpeopleLoaded, setSocket, setAnnouncement, setAnnouncementRead } from './redux/appReducer.js'
-import { addChat, addMessage, removeSendingMessage, setCreated, setLastRead, setTyping, setInChat, addRequest, removeRequest
+import { addChat, addMessage, addLoadedMessages, removeSendingMessage, setCreated, setLastRead, setTyping, setInChat, setLoadingMessages, addRequest, removeRequest
   // removeRequesting, addRequested, addRequestedMe
  } from './redux/dmsReducer.js'
 import { addPerson } from './redux/peopleReducer.js'
@@ -13,14 +13,12 @@ import mainStore from './redux/mainStore.js';
 let socket = null;
 
 export function startSocket() {
-  // socket = new WebSocket('wss://sberrychat.ddns.net:5000');
   socket = new WebSocket('wss://sberrychat.ddns.net:5000');
+  // socket = new WebSocket('wss://sberrychat.ddns.net:5001');
 
   setTimeout(function() {
     if (socket.readyState == 0) {
       socket.close();
-    } else {
-      // set_announcement_read("home_update");
     }
   }, 5000);
 
@@ -110,13 +108,22 @@ export function startSocket() {
         }
       } else if (com == "get_messages") {
         if (jsonData.response == true) {
-          jsonData.messages.map(item => {
-            let myFrom = "them";
-            if (mainStore.getState().app.email == item.email) {
-              myFrom = "me";
+
+          const myEmail = mainStore.getState().app.email;
+          // let myMessages = jsonData.messages.reverse();
+          let myMessages = jsonData.messages;
+          console.log(myMessages);
+          myMessages.forEach((item, i) => {
+            if (item.email == myEmail) {
+              item.from = "me";
+            } else {
+              item.from = "them";
             }
-            mainStore.dispatch(addMessage({chat: jsonData.chat, message: item.message, from: myFrom, id: item.id, timestamp: item.timestamp}));
+            delete item.email;
           });
+          console.log(myMessages);
+          mainStore.dispatch(addLoadedMessages({"chat": jsonData.chat, "messages": myMessages}));
+
         } else if (jsonData.response == "receive_message") {
             let myFrom = "them";
             const item = jsonData.message;
@@ -127,10 +134,10 @@ export function startSocket() {
 
         if (!mainStore.getState().app.dmsLoaded) {
           let missingMessages = false;
-          const messages = mainStore.getState().dms.chats;
-          const messageKeys = Object.keys(messages);
-          messageKeys.map(item => {
-            const myMessages = messages[item].messages;
+          const chats = mainStore.getState().dms.chats;
+          const chatKeys = Object.keys(chats);
+          chatKeys.map(item => {
+            const myMessages = chats[item].messages;
             if (myMessages == null) {
               missingMessages = true;
             }
@@ -227,7 +234,7 @@ export function startSocket() {
 function get_chat_info(chat) {
   get_user_info(chat);
   mainStore.dispatch(addChat(chat));
-  dms_get_messages(chat, "latest", 20);
+  dms_get_messages(chat, "latest", 5);
   dms_in_chat(chat, "get_in_chat");
   dms_last_read(chat);
 }

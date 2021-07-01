@@ -20,6 +20,8 @@ class LPDMs extends React.Component {
       faviconHref: "/favicon_package/favicon.ico",
       children: []
     };
+
+    this.listOfEmails = [];
   }
 
   componentDidMount() {
@@ -36,6 +38,10 @@ class LPDMs extends React.Component {
     if (this.props.chats != prevProps.chats) {
       this.reloadChats();
     }
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener("keydown", this.handleKeyDown.bind(this))
   }
 
   reloadChats() {
@@ -74,14 +80,15 @@ class LPDMs extends React.Component {
     let newChildren = null;
     if (Array.isArray(chatKeys) && chatKeys.length) {
       newChildren = [];
+      this.listOfEmails = chatKeys;
       chatKeys.map(item => {
         const chatElement = <DMChat key={"id" + item} chatEmail={item} />;
         newChildren.push(chatElement);
       });
     } else {
       newChildren = (
-        <div key="id_no_chats" style={{display: "table", width: "100%", height: "100%"}}>
-          <h1 style={{position: "relative", display: "table-cell", margin: "0", textAlign: "center", verticalAlign: "middle", color: "#fff5", fontSize: "16px"}}>No chats</h1>
+        <div key="id_no_chats" style={{display: "flex", width: "100%", height: "calc(100% + 20px)", alignItems: "center", justifyContent: "center"}}>
+          <h1 style={{margin: "0", color: "#fff5", fontSize: "16px"}}>No chats</h1>
         </div>
       );
     }
@@ -94,42 +101,58 @@ class LPDMs extends React.Component {
 
   handleKeyDown(e) {
     if (e.ctrlKey && e.which === 38) {
-      for (var i = 0; i < this.state.children.length; i++) {
-        if (this.state.children[i].props.chatEmail == this.props.openedChat) {
-          if (i != 0) {
-            const newChat = this.state.children[i - 1].props.chatEmail;
-            this.props.setopenedChat(newChat);
-            this.props.history.push("/dms/" + newChat);
-          } else {
-            this.props.history.push("/home");
-          }
-          break;
+      e.preventDefault();
+      e.stopPropagation();
+
+      if (!this.props.history.location.pathname.startsWith("/home")) {
+        // const listOfChildrenEmails = this.state.children.map(child => child.props.chatEmail);
+        // const myIndex = listOfChildrenEmails.indexOf(this.props.openedChat);
+
+        const myIndex = this.listOfEmails.indexOf(this.props.openedChat);
+
+        if (myIndex != 0) {
+          // const newChat = listOfChildrenEmails[myIndex - 1];
+
+          const newChat = this.listOfEmails[myIndex - 1];
+          this.props.setopenedChat(newChat);
+          this.props.history.push("/dms/" + newChat);
+        } else {
+          this.props.history.push("/home");
         }
       }
+
     } else if (e.ctrlKey && e.which === 40) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      // const listOfChildrenEmails = this.state.children.map(child => child.props.chatEmail);
       if (this.props.history.location.pathname.startsWith("/home")) {
-        const newChat = this.state.children[0].props.chatEmail;
+        // const newChat = listOfChildrenEmails[0];
+        const newChat = this.listOfEmails[0];
         this.props.setopenedChat(newChat);
         this.props.history.push("/dms/" + newChat);
       } else {
-        for (var i = 0; i < this.state.children.length; i++) {
-          if (this.state.children[i].props.chatEmail == this.props.openedChat) {
-            if (i != this.state.children.length - 1) {
-              const newChat = this.state.children[i + 1].props.chatEmail;
-              this.props.setopenedChat(newChat);
-              this.props.history.push("/dms/" + newChat);
-            }
-            break;
-          }
+        // const myIndex = listOfChildrenEmails.indexOf(this.props.openedChat);
+
+        const myIndex = this.listOfEmails.indexOf(this.props.openedChat);
+
+        if (myIndex != this.listOfEmails.length - 1) {
+        // if (myIndex != listOfChildrenEmails.length - 1) {
+          // const newChat = listOfChildrenEmails[myIndex + 1];
+
+          const newChat = this.listOfEmails[myIndex + 1];
+          this.props.setopenedChat(newChat);
+          this.props.history.push("/dms/" + newChat);
         }
       }
+
     }
   }
 
   render() {
     return (
-      <div className="LPDMs">
-        <div className="lpdmChats">
+      <div className={this.props.mainClasses}>
+        <div className="lpdmChats" style={this.state.children.key == "id_no_chats" ? {overflow: "hidden"} : null}>
           { this.state.children }
         </div>
         <DMNewChat />

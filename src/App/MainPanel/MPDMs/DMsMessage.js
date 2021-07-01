@@ -151,8 +151,8 @@ class DMsMessage extends React.Component {
         if (this.state.inChat == "gone" && newInChat == "here") {
           icnt = false;
         }
-        console.log(prevProps.openedChat);
-        console.log(this.props.openedChat);
+        // console.log(prevProps.openedChat);
+        // console.log(this.props.openedChat);
         if (this.state.inChat == "no" && newInChat == "here" /*&& lastRead < lastMessageID*/) {
           icnt = false;
         }
@@ -165,7 +165,7 @@ class DMsMessage extends React.Component {
       }
 
 
-      
+
       if (thisChat.sendingMessages != null && thisChat.sendingMessages.length > 0 && this.state.messageEmail == this.props.myEmail) {
         var currentSendingID = 0;
         thisChat["sendingMessages"].map(item => {
