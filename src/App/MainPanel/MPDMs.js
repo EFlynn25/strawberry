@@ -79,7 +79,7 @@ class MPDMs extends React.Component {
     const openedChat = this.props.openedChat;
     const thisChat = this.props.chats[openedChat];
 
-    if (thisChat.loadingMessages != null && thisChat.loadingMessages.length == 0) {
+    if (thisChat != null && thisChat.loadingMessages != null && thisChat.loadingMessages.length == 0) {
       this.isLoadingMessages[openedChat] = false;
       if (this.heightBeforeLoading[openedChat] != 0) {
         this.messagesRef.current.scrollTop += this.messagesRef.current.scrollHeight - this.heightBeforeLoading[openedChat];
@@ -192,8 +192,8 @@ class MPDMs extends React.Component {
     }
 
     const thisChat = this.props.chats[propsOpenedChat];
-    const tmi = thisChat.tempMessageInput
     if (thisChat != null) {
+      const tmi = thisChat.tempMessageInput
       const iv = this.state.inputValue
       if (this.props.openedChat != "" && prevProps.openedChat != propsOpenedChat) {
         if (prevProps.openedChat in this.props.chats) {
