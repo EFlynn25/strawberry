@@ -35,40 +35,27 @@
 
 .dmsTopTextDiv {
   position: absolute;
-  /* display: table; */
   width: 60%;
   height: 200px;
   top: 0;
   left: 0;
-  /* text-align: center; */
+  padding: 0 20%;
+
   display: flex;
   align-items: center;
   justify-content: center;
-
-  padding: 0 20%;
 }
 
 .dmsStartConversationText {
-  /* display: table-cell; */
-  /* padding: 0 20%; */
-  /* margin: 0; */
-
   font-size: 24px;
   text-align: center;
-  /* line-height: 200px; */
-  /* vertical-align: middle; */
 
   color: #FFF8;
 }
 
 .dmsLoadingMessagesText {
-  /* display: table-cell; */
-  /* padding: 0 20%; */
-  /* margin: 0; */
-
   font-size: 20px;
   text-align: center;
-  /* vertical-align: middle; */
 
   color: #FFF6;
 }

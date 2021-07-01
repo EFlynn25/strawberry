@@ -38,6 +38,10 @@ class LPDMs extends React.Component {
     }
   }
 
+  componentWillUnmount() {
+    document.removeEventListener("keydown", this.handleKeyDown.bind(this))
+  }
+
   reloadChats() {
     // let children = [];
     let unreadMessages = 0;
@@ -94,35 +98,41 @@ class LPDMs extends React.Component {
 
   handleKeyDown(e) {
     if (e.ctrlKey && e.which === 38) {
-      for (var i = 0; i < this.state.children.length; i++) {
-        if (this.state.children[i].props.chatEmail == this.props.openedChat) {
-          if (i != 0) {
-            const newChat = this.state.children[i - 1].props.chatEmail;
-            this.props.setopenedChat(newChat);
-            this.props.history.push("/dms/" + newChat);
-          } else {
-            this.props.history.push("/home");
-          }
-          break;
+      e.preventDefault();
+      e.stopPropagation();
+
+      if (!this.props.history.location.pathname.startsWith("/home")) {
+        const listOfChildrenEmails = this.state.children.map(child => child.props.chatEmail);
+        const myIndex = listOfChildrenEmails.indexOf(this.props.openedChat);
+
+        if (myIndex != 0) {
+          const newChat = listOfChildrenEmails[myIndex - 1];
+          this.props.setopenedChat(newChat);
+          this.props.history.push("/dms/" + newChat);
+        } else {
+          this.props.history.push("/home");
         }
       }
+
     } else if (e.ctrlKey && e.which === 40) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const listOfChildrenEmails = this.state.children.map(child => child.props.chatEmail);
       if (this.props.history.location.pathname.startsWith("/home")) {
-        const newChat = this.state.children[0].props.chatEmail;
+        const newChat = listOfChildrenEmails[0];
         this.props.setopenedChat(newChat);
         this.props.history.push("/dms/" + newChat);
       } else {
-        for (var i = 0; i < this.state.children.length; i++) {
-          if (this.state.children[i].props.chatEmail == this.props.openedChat) {
-            if (i != this.state.children.length - 1) {
-              const newChat = this.state.children[i + 1].props.chatEmail;
-              this.props.setopenedChat(newChat);
-              this.props.history.push("/dms/" + newChat);
-            }
-            break;
-          }
+        const myIndex = listOfChildrenEmails.indexOf(this.props.openedChat);
+
+        if (myIndex != listOfChildrenEmails.length - 1) {
+          const newChat = listOfChildrenEmails[myIndex + 1];
+          this.props.setopenedChat(newChat);
+          this.props.history.push("/dms/" + newChat);
         }
       }
+
     }
   }
 

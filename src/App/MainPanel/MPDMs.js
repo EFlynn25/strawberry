@@ -63,7 +63,7 @@ class MPDMs extends React.Component {
 
       this.loadMoreMessages();
     }
-    console.log(logtext + " | shouldScroll " + this.shouldScroll);
+    // console.log(logtext + " | shouldScroll " + this.shouldScroll);
   }
 
   scrollToBottom() {
@@ -192,9 +192,9 @@ class MPDMs extends React.Component {
     }
 
     const thisChat = this.props.chats[propsOpenedChat];
+    const tmi = thisChat.tempMessageInput
     if (thisChat != null) {
       const iv = this.state.inputValue
-      const tmi = thisChat.tempMessageInput
       if (this.props.openedChat != "" && prevProps.openedChat != propsOpenedChat) {
         if (prevProps.openedChat in this.props.chats) {
           this.props.setTempMessageInput({

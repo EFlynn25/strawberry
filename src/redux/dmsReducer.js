@@ -77,8 +77,8 @@ export const dmsSlice = createSlice({
 
           const theIndex = myMessages.indexOf(findIDBefore);
           if (findIDBefore != false) {
-            console.log(findIDBefore);
-            console.log(theIndex);
+            // console.log(findIDBefore);
+            // console.log(theIndex);
           }
 
           myMessages.splice(theIndex, 0, newMessage);
@@ -103,6 +103,28 @@ export const dmsSlice = createSlice({
       }
 
 
+    },
+    addLoadedMessages: (state, action) => {
+      console.log("payload... ", action.payload);
+
+      let myChatEmail = action.payload.chat;
+      if (state.chats[myChatEmail].messages == null) {
+        state.chats[myChatEmail].messages = action.payload.messages;
+      } else {
+        const newArray = action.payload.messages.concat(state.chats[myChatEmail].messages);
+        state.chats[myChatEmail].messages = newArray;
+      }
+
+      const lm = state.chats[myChatEmail].loadingMessages;
+      if (lm != null) {
+        action.payload.messages.forEach((item, i) => {
+          const myID = item.id;
+          const index = lm.indexOf(myID);
+          if (index > -1) {
+            state.chats[myChatEmail].loadingMessages.splice(index, 1);
+          }
+        });
+      }
     },
     addSendingMessage: (state, action) => {
       let myChatEmail = state.openedChat;
@@ -174,7 +196,7 @@ export const dmsSlice = createSlice({
   },
 });
 
-export const { setopenedChat, addChat, addMessage, addSendingMessage, removeSendingMessage,
+export const { setopenedChat, addChat, addMessage, addLoadedMessages, addSendingMessage, removeSendingMessage,
   setCreated, setTempMessageInput, setLastRead, setTyping, setInChat, setLoadingMessages,
   addRequest, removeRequest
  } = dmsSlice.actions;
