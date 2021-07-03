@@ -22,6 +22,8 @@ class LPDMs extends React.Component {
     };
 
     this.listOfEmails = [];
+
+    this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
   componentDidMount() {
@@ -31,7 +33,7 @@ class LPDMs extends React.Component {
 
     this.reloadChats();
 
-    document.addEventListener("keydown", this.handleKeyDown.bind(this))
+    document.addEventListener("keydown", this.handleKeyDown);
   }
 
   componentDidUpdate(prevProps) {
@@ -41,7 +43,7 @@ class LPDMs extends React.Component {
   }
 
   componentWillUnmount() {
-    document.removeEventListener("keydown", this.handleKeyDown.bind(this))
+    document.removeEventListener("keydown", this.handleKeyDown);
   }
 
   reloadChats() {
