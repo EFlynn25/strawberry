@@ -87,7 +87,7 @@ class MPDMs extends React.Component {
       }
     }
 
-    if (!this.isLoadingMessages[openedChat] && this.messagesRef != null && this.messagesRef.current != null && this.messagesRef.current.scrollTop == 0) {
+    if (thisChat.messages != null && !this.isLoadingMessages[openedChat] && this.messagesRef != null && this.messagesRef.current != null && this.messagesRef.current.scrollTop == 0) {
       const myFirstID = thisChat.messages[0].id;
       if (myFirstID != 0) {
         let ids = [];
