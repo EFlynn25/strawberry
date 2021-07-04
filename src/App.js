@@ -35,7 +35,11 @@ class App extends React.Component {
         startSocket();
         this.props.setUserName(user.displayName);
         this.props.setUserEmail(user.email);
-        this.props.setUserPicture(user.photoURL);
+        let picture = user.photoURL
+        if (picture == null) {
+          picture = "https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg";
+        }
+        this.props.setUserPicture(picture);
       }
     });
   }
