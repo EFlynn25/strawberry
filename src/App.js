@@ -37,7 +37,7 @@ class App extends React.Component {
         this.props.setUserEmail(user.email);
         let picture = user.photoURL
         if (picture == null) {
-          picture = "https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg";
+          picture = "https://drive.google.com/uc?id=1Veh7wpXzbjuHHXPBafyWQfSNZr3zUsf-";
         }
         this.props.setUserPicture(picture);
       }

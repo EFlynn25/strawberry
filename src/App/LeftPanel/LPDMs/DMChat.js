@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { withRouter } from "react-router-dom";
 
 import './DMChat.css';
-import ethan from "../../../assets/images/ethan.webp"
 import {
   setopenedChat,
   setLastRead
