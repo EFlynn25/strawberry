@@ -21,11 +21,13 @@ class HomePanel extends React.Component {
     this.handleClickOutside = this.handleClickOutside.bind(this);
 
     this.noTypeTimeout = null;
+    this.mousePressedDown = false;
   }
 
   componentDidMount() {
     this.reloadData();
     document.addEventListener('mouseup', this.handleClickOutside);
+    document.addEventListener('mousedown', this.handleClickOutside);
   }
 
   componentDidUpdate() {
@@ -34,6 +36,7 @@ class HomePanel extends React.Component {
 
   componentWillUnmount() {
     document.removeEventListener('mouseup', this.handleClickOutside);
+    document.removeEventListener('mousedown', this.handleClickOutside);
   }
 
   reloadData() {
@@ -61,8 +64,18 @@ class HomePanel extends React.Component {
   }
 
   handleClickOutside(event) {
-    if (this.panelRef && !this.panelRef.contains(event.target) && this.props.email != "") {
-      this.props.onclose();
+    if (this.panelRef && !this.panelRef.contains(event.target) && this.props.type != "") {
+      if (event.type == "mousedown") {
+        this.mousePressedDown = true;
+      } else if (event.type == "mouseup") {
+        if (this.mousePressedDown) {
+          this.props.onclose();
+        }
+      }
+    }
+
+    if (event.type == "mouseup") {
+      this.mousePressedDown = false;
     }
   }
 
