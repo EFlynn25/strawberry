@@ -20,6 +20,12 @@ class HomePeople extends React.Component {
     const localKnownPeople = this.props.knownPeople;
     if (localKnownPeople != null && Object.keys(localKnownPeople).length > 0) {
       Object.keys(this.props.chats).forEach(function (item, index) {
+        let myName;
+        if (localKnownPeople[item] == null) {
+          myName = item;
+        } else {
+          myName = localKnownPeople[item].name;
+        }
         alphabeticalPeople.push([item, localKnownPeople[item].name]);
       });
       alphabeticalPeople.sort((a,b) => a[1].toUpperCase().localeCompare(b[1].toUpperCase()));

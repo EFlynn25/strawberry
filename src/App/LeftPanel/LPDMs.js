@@ -22,6 +22,8 @@ class LPDMs extends React.Component {
     };
 
     this.listOfEmails = [];
+
+    this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
   componentDidMount() {
@@ -31,7 +33,7 @@ class LPDMs extends React.Component {
 
     this.reloadChats();
 
-    document.addEventListener("keydown", this.handleKeyDown.bind(this))
+    document.addEventListener("keydown", this.handleKeyDown);
   }
 
   componentDidUpdate(prevProps) {
@@ -41,12 +43,12 @@ class LPDMs extends React.Component {
   }
 
   componentWillUnmount() {
-    document.removeEventListener("keydown", this.handleKeyDown.bind(this))
+    document.removeEventListener("keydown", this.handleKeyDown);
   }
 
   reloadChats() {
     // let children = [];
-    let unreadMessages = 0;
+    let unreadChats = 0;
 
     const noMessageChats = [];
     const chats = JSON.parse(JSON.stringify(this.props.chats));
@@ -57,8 +59,8 @@ class LPDMs extends React.Component {
         noMessageChats.push(key);
         return false;
       } else {
-        if (thisChatMessages[thisChatMessages.length - 1].id > thisChat.lastRead.me) {
-          unreadMessages++;
+        if (thisChatMessages[thisChatMessages.length - 1].id > thisChat.lastRead.me || thisChat.lastRead.me == null) {
+          unreadChats++;
         }
       }
       return true;
@@ -96,7 +98,7 @@ class LPDMs extends React.Component {
       children: newChildren
     });
 
-    this.props.setNotificationCount({type: "dms", count: unreadMessages});
+    this.props.setNotificationCount({type: "dms", count: unreadChats});
   }
 
   handleKeyDown(e) {

@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { withRouter } from "react-router-dom";
 
 import { ReactComponent as SLogo } from '../assets/icons/strawberry.svg';
-import everett from '../assets/images/everett.jpeg';
 import './TopBar.css';
 
 import TBProfilePicture from './TopBar/TBProfilePicture';

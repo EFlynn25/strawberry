@@ -11,31 +11,34 @@ class DMNewChat extends React.Component {
   constructor(props) {
     super(props);
 
-    this.setWrapperRef = this.setWrapperRef.bind(this);
-    this.handleClickOutside = this.handleClickOutside.bind(this);
-
-    this.handleInputChange = this.handleInputChange.bind(this);
-    this.inputEnterPressed = this.inputEnterPressed.bind(this);
-
-    this.inputRef = React.createRef();
-
-    this.handleClick = this.handleClick.bind(this);
     this.state = {
       dropdown: false,
       inputValue: "",
       status: "",
       emailRequested: ""
     };
+
+    this.setWrapperRef = this.setWrapperRef.bind(this);
+    this.handleClickOutside = this.handleClickOutside.bind(this);
+
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.inputEnterPressed = this.inputEnterPressed.bind(this);
+
+    this.handleClick = this.handleClick.bind(this);
+
+    this.inputRef = React.createRef();
+
+    this.mousePressedDown = false;
   }
 
   componentDidMount() {
-    // document.addEventListener('mousedown', this.handleClickOutside);
     document.addEventListener('mouseup', this.handleClickOutside);
+    document.addEventListener('mousedown', this.handleClickOutside);
   }
 
   componentWillUnmount() {
-    // document.removeEventListener('mousedown', this.handleClickOutside);
     document.removeEventListener('mouseup', this.handleClickOutside);
+    document.removeEventListener('mousedown', this.handleClickOutside);
   }
 
   componentDidUpdate() {
@@ -76,15 +79,25 @@ class DMNewChat extends React.Component {
 
   handleClickOutside(event) {
     if (this.ddWrapperRef && this.ncWrapperRef && !this.ddWrapperRef.contains(event.target) && !this.ncWrapperRef.contains(event.target) && this.state.dropdown) {
-      let s = this.state.status;
-      if (this.state.emailRequested == "") {
-        s = "";
+      if (event.type == "mousedown") {
+        this.mousePressedDown = true;
+      } else if (event.type == "mouseup") {
+        if (this.mousePressedDown) {
+          let s = this.state.status;
+          if (this.state.emailRequested == "") {
+            s = "";
+          }
+          this.setState({
+            dropdown: false,
+            inputValue: "",
+            status: s
+          });
+        }
       }
-      this.setState({
-        dropdown: false,
-        inputValue: "",
-        status: s
-      });
+    }
+
+    if (event.type == "mouseup") {
+      this.mousePressedDown = false;
     }
   }
 

@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { withRouter } from "react-router-dom";
 
 import './DMChat.css';
-import ethan from "../../../assets/images/ethan.webp"
 import {
   setopenedChat,
   setLastRead
@@ -110,10 +109,12 @@ class DMChat extends React.Component {
 
     return (
       <div className="DMChat" onClick={this.handleClick} style={{background: opened ? "linear-gradient(90deg, #282A2D 0%, transparent 100%)" : ""}}>
-        <img src={this.state.picture} className="dmChatPFP" alt={this.state.name} />
-        <h1 className={read ? "dmChatTitle" : "dmChatTitle dmChatTitleUnread"}>{this.state.name}</h1>
-        <p className={read ? "dmChatMessage" : "dmChatMessage dmChatUnread"}>{chatMessage}</p>
-        <h1 className={read ? "dmChatTime" : "dmChatTime dmChatUnread"}>{chatTime}</h1>
+      <img src={this.state.picture} className="dmChatPFP" alt={this.state.name} />
+        <div className="dmChatTitleTimeFlexbox">
+          <h1 className={read ? "dmChatTitle" : "dmChatTitle dmChatTitleUnread"}>{this.state.name}</h1>
+          <h1 className={read ? "dmChatTime" : "dmChatTime dmChatUnread"}>{chatTime}</h1>
+        </div>
+        <p className={read ? "dmChatMessage" : "dmChatMessage dmChatUnread"} title={chatMessage}>{chatMessage}</p>
         {opened ? <div className="dmChatSelected" /> : null}
         {read ? null : <div className="dmChatUnreadNotify" />}
       </div>

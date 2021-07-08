@@ -13,8 +13,9 @@ import mainStore from './redux/mainStore.js';
 let socket = null;
 
 export function startSocket() {
-  socket = new WebSocket('wss://sberrychat.ddns.net:5000');
-  // socket = new WebSocket('wss://sberrychat.ddns.net:5001');
+  // socket = new WebSocket('ws://localhost:5000');
+  // socket = new WebSocket('wss://sberrychat.ddns.net:5000');
+  socket = new WebSocket('wss://sberrychat.ddns.net:5001');
 
   setTimeout(function() {
     if (socket.readyState == 0) {

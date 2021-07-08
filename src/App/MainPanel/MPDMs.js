@@ -43,6 +43,8 @@ class MPDMs extends React.Component {
     this.handleScroll = this.handleScroll.bind(this);
     this.scrollToBottom = this.scrollToBottom.bind(this);
     this.loadMoreMessages = this.loadMoreMessages.bind(this);
+    this.handleWindowFocus = this.handleWindowFocus.bind(this);
+    this.handleWindowBlur = this.handleWindowBlur.bind(this);
 
     this.shouldScroll = true;
     this.scrollsToIgnore = 0;
@@ -87,7 +89,7 @@ class MPDMs extends React.Component {
       }
     }
 
-    if (!this.isLoadingMessages[openedChat] && this.messagesRef != null && this.messagesRef.current != null && this.messagesRef.current.scrollTop == 0) {
+    if (thisChat.messages != null && !this.isLoadingMessages[openedChat] && this.messagesRef != null && this.messagesRef.current != null && this.messagesRef.current.scrollTop == 0) {
       const myFirstID = thisChat.messages[0].id;
       if (myFirstID != 0) {
         let ids = [];
@@ -106,6 +108,16 @@ class MPDMs extends React.Component {
         dms_get_messages(this.props.openedChat, myFirstID - 1, 20);
       }
     }
+  }
+
+  handleWindowFocus() {
+    console.log("window focused.");
+    dms_in_chat(this.props.openedChat, true);
+  }
+
+  handleWindowBlur() {
+    console.log("window blurred.");
+    dms_in_chat(this.props.openedChat, false);
   }
 
 
@@ -152,6 +164,11 @@ class MPDMs extends React.Component {
 
     // const myFirstID = thisChat.messages[thisChat.messages.length - 1].id;
     // dms_get_messages(propsOpenedChat, myFirstID - 1, 20);
+
+    window.addEventListener("focus", this.handleWindowFocus);
+    window.addEventListener("blur", this.handleWindowBlur);
+    // window.onblur = this.handleWindowBlur.bind(this);
+    // window.addEventListener("focus", this.handleWindowBlur.bind(this));
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -240,6 +257,9 @@ class MPDMs extends React.Component {
       });
       dms_in_chat(this.props.openedChat, false);
     }
+
+    window.removeEventListener("focus", this.handleWindowFocus);
+    window.removeEventListener("blur", this.handleWindowBlur);
   }
 
   reloadMessages(prevProps) {

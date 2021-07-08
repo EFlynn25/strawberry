@@ -185,6 +185,32 @@
 
 .firebaseui-container {
   background: #2A2B2D !important;
+  border-radius: 10px !important;
+  color: white !important;
+  font: inherit !important;
+}
+
+.firebaseui-id-page-sign-in, .firebaseui-id-page-password-sign-in, .firebaseui-id-page-password-sign-up {
+  background: #37383A !important;
+}
+
+.firebaseui-title {
+  color: inherit !important;
+}
+
+.firebaseui-input {
+  color: white !important;
+}
+
+.firebaseui-list-item:last-child::after {
+  display: block;
+  color: #fff5;
+  content: "Email authentication is not recommended";
+  /* font-style: italic; */
+  /* margin: 20px auto; */
+  margin-top: 10px;
+  font-size: 14px;
+  text-align: center;
 }
 
 .mdl-shadow--2dp {
