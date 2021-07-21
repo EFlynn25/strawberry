@@ -6,7 +6,7 @@ import Loader from "react-loader-spinner";
 
 import './MPDMs.css';
 import {
-  setopenedChat,
+  setOpenedDM,
   // addMessage,
   addSendingMessage,
   setTempMessageInput,
@@ -78,18 +78,18 @@ class MPDMs extends React.Component {
   }
 
   loadMoreMessages() {
-    const openedChat = this.props.openedChat;
-    const thisChat = this.props.chats[openedChat];
+    const openedDM = this.props.openedDM;
+    const thisChat = this.props.chats[openedDM];
 
     if (thisChat != null && thisChat.loadingMessages != null && thisChat.loadingMessages.length == 0) {
-      this.isLoadingMessages[openedChat] = false;
-      if (this.heightBeforeLoading[openedChat] != 0) {
-        this.messagesRef.current.scrollTop += this.messagesRef.current.scrollHeight - this.heightBeforeLoading[openedChat];
-        this.heightBeforeLoading[openedChat] = 0;
+      this.isLoadingMessages[openedDM] = false;
+      if (this.heightBeforeLoading[openedDM] != 0) {
+        this.messagesRef.current.scrollTop += this.messagesRef.current.scrollHeight - this.heightBeforeLoading[openedDM];
+        this.heightBeforeLoading[openedDM] = 0;
       }
     }
 
-    if (thisChat.messages != null && !this.isLoadingMessages[openedChat] && this.messagesRef != null && this.messagesRef.current != null && this.messagesRef.current.scrollTop == 0) {
+    if (thisChat.messages != null && !this.isLoadingMessages[openedDM] && this.messagesRef != null && this.messagesRef.current != null && this.messagesRef.current.scrollTop == 0) {
       const myFirstID = thisChat.messages[0].id;
       if (myFirstID != 0) {
         let ids = [];
@@ -100,43 +100,43 @@ class MPDMs extends React.Component {
         }
 
 
-        this.props.setLoadingMessages({"chat": this.props.openedChat, "data": ids});
-        this.isLoadingMessages[openedChat] = true;
-        this.heightBeforeLoading[openedChat] = this.messagesRef.current.scrollHeight;
+        this.props.setLoadingMessages({"chat": this.props.openedDM, "data": ids});
+        this.isLoadingMessages[openedDM] = true;
+        this.heightBeforeLoading[openedDM] = this.messagesRef.current.scrollHeight;
 
 
-        dms_get_messages(this.props.openedChat, myFirstID - 1, 20);
+        dms_get_messages(this.props.openedDM, myFirstID - 1, 20);
       }
     }
   }
 
   handleWindowFocus() {
     console.log("window focused.");
-    dms_in_chat(this.props.openedChat, true);
+    dms_in_chat(this.props.openedDM, true);
   }
 
   handleWindowBlur() {
     console.log("window blurred.");
-    dms_in_chat(this.props.openedChat, false);
+    dms_in_chat(this.props.openedDM, false);
   }
 
 
 
   componentDidMount() {
-    this.props.setopenedChat(this.props.match.params.chatEmail);
+    this.props.setOpenedDM(this.props.match.params.chatEmail);
 
-    console.log("[MPDMs]: componentDidMount with thread ID " + this.props.openedChat);
+    console.log("[MPDMs]: componentDidMount with thread ID " + this.props.openedDM);
     //this.messagesRef.current.scrollTop = this.messagesRef.current.scrollHeight;
     // this.messagesRef.current.scrollTop = this.messagesRef.current.scrollHeight - this.messagesRef.current.clientHeight;
 
-    const propsOpenedChat = this.props.openedChat;
-    const thisChat = this.props.chats[propsOpenedChat];
-    if (propsOpenedChat in this.props.chats) {
+    const propsOpenedDM = this.props.openedDM;
+    const thisChat = this.props.chats[propsOpenedDM];
+    if (propsOpenedDM in this.props.chats) {
       this.reloadMessages(null);
-      dms_in_chat(propsOpenedChat, true);
-      dms_in_chat(propsOpenedChat, "get_in_chat");
-      dms_typing(propsOpenedChat, "get_typing");
-      dms_last_read(propsOpenedChat);
+      dms_in_chat(propsOpenedDM, true);
+      dms_in_chat(propsOpenedDM, "get_in_chat");
+      dms_typing(propsOpenedDM, "get_typing");
+      dms_last_read(propsOpenedDM);
 
       const tmi = thisChat.tempMessageInput;
       console.log(tmi);
@@ -147,7 +147,7 @@ class MPDMs extends React.Component {
       }
 
       if (tmi == "" || tmi == null) {
-        dms_typing(propsOpenedChat, false);
+        dms_typing(propsOpenedDM, false);
       }
 
       if (this.messagesRef.current != null) {
@@ -156,14 +156,14 @@ class MPDMs extends React.Component {
     }
 
     let title = "404";
-    if (this.props.openedChat in this.props.chats && this.props.openedChat in this.props.getknownPeople) {
-      title = this.props.getknownPeople[this.props.openedChat].name;
+    if (this.props.openedDM in this.props.chats && this.props.openedDM in this.props.getknownPeople) {
+      title = this.props.getknownPeople[this.props.openedDM].name;
     }
 
     this.props.setCurrentPage(title);
 
     // const myFirstID = thisChat.messages[thisChat.messages.length - 1].id;
-    // dms_get_messages(propsOpenedChat, myFirstID - 1, 20);
+    // dms_get_messages(propsOpenedDM, myFirstID - 1, 20);
 
     window.addEventListener("focus", this.handleWindowFocus);
     window.addEventListener("blur", this.handleWindowBlur);
@@ -172,9 +172,9 @@ class MPDMs extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    console.log("[MPDMs]: componentDidUpdate with thread ID " + this.props.openedChat);
+    console.log("[MPDMs]: componentDidUpdate with thread ID " + this.props.openedDM);
 
-    const propsOpenedChat = this.props.openedChat;
+    const propsOpenedDM = this.props.openedDM;
 
     if (prevState.loaded != this.state.loaded) {
       // this.messagesRef.current.scrollTop = this.messagesRef.current.scrollHeight - this.messagesRef.current.clientHeight;
@@ -182,40 +182,40 @@ class MPDMs extends React.Component {
 
     // this.scrollToBottom();
 
-    if (prevProps.openedChat == propsOpenedChat) {
-      if (prevProps.chats[propsOpenedChat] != this.props.chats[propsOpenedChat]) {
+    if (prevProps.openedDM == propsOpenedDM) {
+      if (prevProps.chats[propsOpenedDM] != this.props.chats[propsOpenedDM]) {
         this.reloadMessages(prevProps);
       }
     } else {
       this.setState({inputValue: '', loaded: false});
-      if (propsOpenedChat in this.props.chats) {
+      if (propsOpenedDM in this.props.chats) {
         this.reloadMessages(prevProps);
-        if (prevProps.openedChat in this.props.chats) {
-          dms_in_chat(prevProps.openedChat, false);
-          dms_typing(this.props.openedChat, false);
+        if (prevProps.openedDM in this.props.chats) {
+          dms_in_chat(prevProps.openedDM, false);
+          dms_typing(this.props.openedDM, false);
         }
-        dms_in_chat(propsOpenedChat, true);
-        dms_in_chat(propsOpenedChat, "get_in_chat");
-        dms_typing(propsOpenedChat, "get_typing");
-        dms_last_read(propsOpenedChat);
+        dms_in_chat(propsOpenedDM, true);
+        dms_in_chat(propsOpenedDM, "get_in_chat");
+        dms_typing(propsOpenedDM, "get_typing");
+        dms_last_read(propsOpenedDM);
       }
     }
 
-    if (!(propsOpenedChat in prevProps.chats) && propsOpenedChat in this.props.chats) {
-      dms_in_chat(propsOpenedChat, true);
-      dms_in_chat(propsOpenedChat, "get_in_chat");
-      dms_typing(propsOpenedChat, "get_typing");
-      dms_last_read(propsOpenedChat);
+    if (!(propsOpenedDM in prevProps.chats) && propsOpenedDM in this.props.chats) {
+      dms_in_chat(propsOpenedDM, true);
+      dms_in_chat(propsOpenedDM, "get_in_chat");
+      dms_typing(propsOpenedDM, "get_typing");
+      dms_last_read(propsOpenedDM);
     }
 
-    const thisChat = this.props.chats[propsOpenedChat];
+    const thisChat = this.props.chats[propsOpenedDM];
     if (thisChat != null) {
       const tmi = thisChat.tempMessageInput
       const iv = this.state.inputValue
-      if (this.props.openedChat != "" && prevProps.openedChat != propsOpenedChat) {
-        if (prevProps.openedChat in this.props.chats) {
+      if (this.props.openedDM != "" && prevProps.openedDM != propsOpenedDM) {
+        if (prevProps.openedDM in this.props.chats) {
           this.props.setTempMessageInput({
-            chat: prevProps.openedChat,
+            chat: prevProps.openedDM,
             input: iv
           });
         }
@@ -229,20 +229,20 @@ class MPDMs extends React.Component {
         }
 
         if (tmi == "" || tmi == null) {
-          dms_typing(propsOpenedChat, false);
+          dms_typing(propsOpenedDM, false);
         }
       }
     }
 
-    if (this.state.loaded && prevProps.currentPage != this.props.currentPage && propsOpenedChat in this.props.chats) {
+    if (this.state.loaded && prevProps.currentPage != this.props.currentPage && propsOpenedDM in this.props.chats) {
       this.inputRef.current.focus();
     }
 
     this.loadMoreMessages();
 
     let title = "404";
-    if (this.props.openedChat in this.props.chats && this.props.openedChat in this.props.getknownPeople) {
-      title = this.props.getknownPeople[this.props.openedChat].name;
+    if (this.props.openedDM in this.props.chats && this.props.openedDM in this.props.getknownPeople) {
+      title = this.props.getknownPeople[this.props.openedDM].name;
     }
 
     this.props.setCurrentPage(title);
@@ -250,12 +250,12 @@ class MPDMs extends React.Component {
 
   componentWillUnmount() {
     const iv = this.state.inputValue
-    if (this.props.openedChat in this.props.chats) {
+    if (this.props.openedDM in this.props.chats) {
       this.props.setTempMessageInput({
-        chat: this.props.openedChat,
+        chat: this.props.openedDM,
         input: iv
       });
-      dms_in_chat(this.props.openedChat, false);
+      dms_in_chat(this.props.openedDM, false);
     }
 
     window.removeEventListener("focus", this.handleWindowFocus);
@@ -263,14 +263,14 @@ class MPDMs extends React.Component {
   }
 
   reloadMessages(prevProps) {
-    if (!(this.props.openedChat in this.props.chats)) {
+    if (!(this.props.openedDM in this.props.chats)) {
       this.setState({
         messages: []
       });
       return false;
     }
 
-    const thisChatReference = this.props.chats[this.props.openedChat];
+    const thisChatReference = this.props.chats[this.props.openedDM];
     const thisChat = JSON.parse(JSON.stringify(thisChatReference));
 
     if (thisChat == null || thisChat["messages"] == null || thisChat["messages"].length <= 0) {
@@ -302,7 +302,7 @@ class MPDMs extends React.Component {
     let inChat = false;
     if (thisChat.inChat != null) {
       inChat = thisChat.inChat;
-      if (prevProps != null && this.props.openedChat in prevProps.chats && prevProps.chats[this.props.openedChat].inChat != null && prevProps.chats[this.props.openedChat].inChat && !inChat) {
+      if (prevProps != null && this.props.openedDM in prevProps.chats && prevProps.chats[this.props.openedDM].inChat != null && prevProps.chats[this.props.openedDM].inChat && !inChat) {
         lastRead = thisChat["messages"][thisChat["messages"].length - 1].id;
       }
     }
@@ -343,7 +343,7 @@ class MPDMs extends React.Component {
         }
         // console.debug("after while... " + messageIDs);
 
-        // const myPerson = this.props.getknownPeople[this.props.openedChat];
+        // const myPerson = this.props.getknownPeople[this.props.openedDM];
         // let newMessageName = "";
         // let newMessagePicture = "";
         // if (myPerson != null) {
@@ -380,9 +380,9 @@ class MPDMs extends React.Component {
         // let noTransition = false;
         // let myOldMessages = null;
         // if (prevProps != null) {
-        //   myOldMessages = prevProps.chats[this.props.openedChat].messages;
+        //   myOldMessages = prevProps.chats[this.props.openedDM].messages;
         //   var firstCondition = myOldMessages != null && myOldMessages[myOldMessages.length - 1].id + 1 == thisChat.messages[thisChat.messages.length - 1].id;
-        //   if (firstCondition || prevProps.openedChat != this.props.openedChat) {
+        //   if (firstCondition || prevProps.openedDM != this.props.openedDM) {
         //     noTransition = true;
         //     inChatTypingClasses += " noTransition";
         //   }
@@ -515,9 +515,9 @@ class MPDMs extends React.Component {
     var nowEmpty = val == "" || val == null;
     var pastEmpty = iv == "" || iv == null;
     if (pastEmpty && !nowEmpty) {
-      dms_typing(this.props.openedChat, true);
+      dms_typing(this.props.openedDM, true);
     } else if (!pastEmpty && nowEmpty) {
-      dms_typing(this.props.openedChat, false);
+      dms_typing(this.props.openedDM, false);
     }
 
     this.setState({
@@ -533,12 +533,12 @@ class MPDMs extends React.Component {
 
       const iv = this.state.inputValue;
       if (iv != null && iv != "") {
-        const oc = this.props.openedChat;
+        const oc = this.props.openedDM;
         setTimeout(function() {
           // dms_send_message(oc, iv);
         }, 3000);
         dms_send_message(oc, iv);
-        dms_typing(this.props.openedChat, false);
+        dms_typing(this.props.openedDM, false);
         this.props.addSendingMessage({message: iv});
         this.setState({inputValue: ''});
       }
@@ -547,8 +547,8 @@ class MPDMs extends React.Component {
 
   render() {
     let otherName = "";
-    if (this.props.getknownPeople[this.props.openedChat] != null) {
-      otherName = this.props.getknownPeople[this.props.openedChat].name;
+    if (this.props.getknownPeople[this.props.openedDM] != null) {
+      otherName = this.props.getknownPeople[this.props.openedDM].name;
     }
 
     let children = (<h1 className="dmsCenterText">Loading...</h1>);
@@ -557,9 +557,9 @@ class MPDMs extends React.Component {
         <Fragment>
           <div className="dmsMessages" ref={this.messagesRef} onScroll={this.handleScroll}>
             {
-              (this.props.chats[this.props.openedChat].messages == null)
-              || (this.props.openedChat != "" && this.props.openedChat in this.props.chats && this.props.chats[this.props.openedChat].messages.length > 0 && this.props.chats[this.props.openedChat].messages[0].id == 0)
-              || (this.props.openedChat != "" && this.props.openedChat in this.props.chats && this.props.chats[this.props.openedChat].messages.length <= 0) ?
+              (this.props.chats[this.props.openedDM].messages == null)
+              || (this.props.openedDM != "" && this.props.openedDM in this.props.chats && this.props.chats[this.props.openedDM].messages.length > 0 && this.props.chats[this.props.openedDM].messages[0].id == 0)
+              || (this.props.openedDM != "" && this.props.openedDM in this.props.chats && this.props.chats[this.props.openedDM].messages.length <= 0) ?
 
               <div className="dmsTopTextDiv">
                 <h1 className="dmsStartConversationText">This is the start of your conversation with {otherName}</h1>
@@ -570,7 +570,7 @@ class MPDMs extends React.Component {
               null
             }
             {
-              this.isLoadingMessages[this.props.openedChat] ?
+              this.isLoadingMessages[this.props.openedDM] ?
 
               <div className="dmsTopTextDiv">
                 <h1 className="dmsLoadingMessagesText">Loading...</h1>
@@ -588,7 +588,7 @@ class MPDMs extends React.Component {
         </Fragment>
       );
     }
-    if (!(this.props.openedChat in this.props.chats)) {
+    if (!(this.props.openedDM in this.props.chats)) {
       children = (<h1 className="dmsCenterText">That chat doesn't exist...</h1>);
     }
 
@@ -601,7 +601,7 @@ class MPDMs extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  openedChat: state.dms.openedChat,
+  openedDM: state.dms.openedDM,
   chats: state.dms.chats,
   myName: state.app.name,
   myEmail: state.app.email,
@@ -612,7 +612,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
-  setopenedChat,
+  setOpenedDM,
   // addMessage,
   addSendingMessage,
   setTempMessageInput,
