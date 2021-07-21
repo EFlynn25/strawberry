@@ -3,7 +3,7 @@ import { createSlice, current } from '@reduxjs/toolkit';
 export const dmsSlice = createSlice({
   name: 'dms',
   initialState: {
-    openedChat: "",
+    openedDM: "",
 
 
     chats: {},
@@ -15,14 +15,14 @@ export const dmsSlice = createSlice({
     chat_exists: []
   },
   reducers: {
-    setopenedChat: (state, action) => {
-      state.openedChat = action.payload;
+    setOpenedDM: (state, action) => {
+      state.openedDM = action.payload;
     },
     addChat: (state, action) => {
       state.chats[action.payload] = {messages: null, lastRead: {me: null, them: null}};
     },
     addMessage: (state, action) => {
-      let myChatEmail = state.openedChat;
+      let myChatEmail = state.openedDM;
       if ("chat" in action.payload) {
         myChatEmail = action.payload["chat"];
       }
@@ -127,7 +127,7 @@ export const dmsSlice = createSlice({
       }
     },
     addSendingMessage: (state, action) => {
-      let myChatEmail = state.openedChat;
+      let myChatEmail = state.openedDM;
       if ("chat" in action.payload) {
         myChatEmail = action.payload["chat"];
       }
@@ -141,7 +141,7 @@ export const dmsSlice = createSlice({
       }
     },
     removeSendingMessage: (state, action) => {
-      let myChatEmail = state.openedChat;
+      let myChatEmail = state.openedDM;
       if ("chat" in action.payload) {
         myChatEmail = action.payload["chat"];
       }
@@ -155,7 +155,7 @@ export const dmsSlice = createSlice({
     },
 
     setCreated: (state, action) => {
-      let myChatEmail = state.openedChat;
+      let myChatEmail = state.openedDM;
       if ("chat" in action.payload) {
         myChatEmail = action.payload["chat"];
       }
@@ -196,7 +196,7 @@ export const dmsSlice = createSlice({
   },
 });
 
-export const { setopenedChat, addChat, addMessage, addLoadedMessages, addSendingMessage, removeSendingMessage,
+export const { setOpenedDM, addChat, addMessage, addLoadedMessages, addSendingMessage, removeSendingMessage,
   setCreated, setTempMessageInput, setLastRead, setTyping, setInChat, setLoadingMessages,
   addRequest, removeRequest
  } = dmsSlice.actions;
@@ -204,7 +204,7 @@ export const { setopenedChat, addChat, addMessage, addLoadedMessages, addSending
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of
 // in the slice file. For example: `useSelector((state) => state.app.name)`
-export const getopenedChat = state => state.dms.openedChat;
+export const getopenedDM = state => state.dms.openedDM;
 export const getChats = state => state.dms.chats;
 export const getRequested = state => state.dms.requested;
 export const getRequestedMe = state => state.dms.requestedMe;
