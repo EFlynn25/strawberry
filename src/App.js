@@ -85,9 +85,6 @@ class App extends React.Component {
 
     return (
       <div className="App">
-        {/*<Helmet>
-          <title>{myTitle}</title>
-        </Helmet>*/}
         <Switch>
           <Route path="/welcome">
             <Overlay type="welcome" />

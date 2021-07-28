@@ -11,11 +11,6 @@ import { ReactComponent as SLogo } from '../assets/icons/strawberry.svg';
 import './Overlay.css';
 import { uiConfig, signedIn } from '../StartFirebase'
 
-import OTopBar from './Overlay/OTopBar';
-import OLeftPanel from './Overlay/OLeftPanel';
-import OMainPanel from './Overlay/OMainPanel';
-import ORightPanel from './Overlay/ORightPanel';
-
 function Overlay(props) {
   const history = useHistory();
   const dispatch = useDispatch();
@@ -99,10 +94,10 @@ function Overlay(props) {
         showBg ?
 
         <Fragment>
-          <OTopBar />
-          <OLeftPanel />
-          <OMainPanel />
-          <ORightPanel />
+          <div className="OTopBar"></div>
+          <div className="OLeftPanel"></div>
+          <div className="OMainPanel"></div>
+          {/*<div className="ORightPanel"></div>*/}
         </Fragment>
 
         :

@@ -7,10 +7,12 @@ import { addChat, addMessage, addLoadedMessages, removeSendingMessage, setCreate
 import { addPerson } from './redux/peopleReducer.js'
 import mainStore from './redux/mainStore.js';
 
+import textToneAudio from './assets/audio/text-tone.mp3';
 
 // Socket start
 
 let socket = null;
+const textTone = new Audio(textToneAudio);
 
 export function startSocket() {
   // socket = new WebSocket('ws://localhost:5000');
@@ -129,6 +131,15 @@ export function startSocket() {
             let myFrom = "them";
             const item = jsonData.message;
             mainStore.dispatch(addMessage({chat: jsonData.chat, message: item.message, from: myFrom, id: item.id, timestamp: item.timestamp}));
+
+            const openedDM = mainStore.getState().dms.openedDM;
+            const dmsOrGroups = mainStore.getState().app.dmsOrGroups;
+            console.log(openedDM);
+            console.log(dmsOrGroups);
+            if (openedDM != jsonData.chat || dmsOrGroups != "dms") {
+              console.log("NOTIFY NOW!!");
+              textTone.play();
+            }
         } else if (jsonData.response == "no_messages") {
           dms_get_chat_created(jsonData.chat);
         }

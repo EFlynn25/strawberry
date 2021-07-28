@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import './HomePanel.css';
 import HPUserProfile from './HomePanel/HPUserProfile';
 import HPAnnouncements from './HomePanel/HPAnnouncements';
+import HPSettings from './HomePanel/HPSettings';
 
 class HomePanel extends React.Component {
   constructor(props) {
@@ -90,7 +91,9 @@ class HomePanel extends React.Component {
     if (this.state.type == "profile") {
       child = <HPUserProfile email={this.state.data} />;
     } else if (this.state.type == "announcements") {
-      child = <HPAnnouncements />
+      child = <HPAnnouncements />;
+    } else if (this.state.type == "settings") {
+      child = <HPSettings />;
     } else {
       child = (
         <div style={{display: "flex", width: "100%", height: "100%", flexDirection: "column", justifyContent: "center", alignItems: "center"}}>

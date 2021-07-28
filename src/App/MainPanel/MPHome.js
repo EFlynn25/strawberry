@@ -45,7 +45,6 @@ class MPHome extends React.Component {
   }
 
   componentDidMount() {
-    // this.props.sethideRightPanel(true);
     this.props.setCurrentPage("Home");
     get_announcements();
   }
@@ -62,10 +61,6 @@ class MPHome extends React.Component {
     if (this.state.notifyClasses != newClasses) {
       this.setState({ notifyClasses: newClasses });
     }
-  }
-
-  componentWillUnmount() {
-    // this.props.sethideRightPanel(false);
   }
 
   transitionCheck(isVisible) {
@@ -133,30 +128,13 @@ class MPHome extends React.Component {
           </div>
 
           <div className="homeContent">
-            {/*this.state.tab == 1 ? <HomePeople /> : null*/}
-            {/*this.state.tab == 2 ? <HomeNotifications /> : null*/}
-            {/*this.state.tab == 3 ? <HomeProfile /> : null*/}
             <HomePeople classes={this.state.tab == 1 ? "HomePeople" : "HomePeople HomePeopleHide"} opendialog={this.openPanel} closedialog={this.disableShrink} />
             <HomeNotifications classes={this.state.notifyClasses} />
             <HomeProfile classes={this.state.tab == 3 ? "HomeProfile" : "HomeProfile HomeProfileHide"} />
           </div>
 
-          {/*<HomeAnnouncements showPanel={this.state.showAnnouncementsPanel} onclose={this.closeAnnouncements} />*/}
           <HomePanel type={this.state.panelType} data={this.state.panelData} onclose={this.closePanel} />
 
-          {
-            /*Object.keys(this.props.announcements).map((item) => {
-              const title = this.props.announcements[item].title;
-              // console.log(title);
-
-              let color = "indianred";
-              if (this.props.announcementsRead.includes(item)) {
-                color = "white";
-              }
-
-              return <p key={item} style={{color: color}}>{title}</p>;
-            })*/
-          }
         </div>
       </VisibilitySensor>
     );
@@ -166,8 +144,6 @@ class MPHome extends React.Component {
 const mapStateToProps = (state) => ({
   picture: state.app.picture,
   name: state.app.name,
-  // announcements: state.app.announcements,
-  // announcementsRead: state.app.announcementsRead
 });
 
 const mapDispatchToProps = {

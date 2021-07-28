@@ -13,15 +13,32 @@ class DMChat extends React.Component {
     super(props);
 
     this.handleClick = this.handleClick.bind(this);
-
-    this.state = {
-      name: "",
-      picture: ""
-    }
   }
 
   componentDidMount() {
     this.updateData();
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    // console.log("SHOULD I UPDATE?!");
+    const openedDMChanged = (this.props.chatEmail == nextProps.openedDM && this.props.chatEmail != this.props.openedDM) || (this.props.chatEmail != nextProps.openedDM && this.props.chatEmail == this.props.openedDM);
+
+    const thisChat = this.props.chats[this.props.chatEmail];
+    const nextChat = nextProps.chats[this.props.chatEmail];
+    const thisChatChanged = thisChat.lastRead.me != nextChat.lastRead.me || thisChat.messages[thisChat.messages.length - 1].id != nextChat.messages[nextChat.messages.length - 1].id;
+
+    // console.groupCollapsed(this.props.chatEmail);
+    // console.log(thisChat);
+    // console.log(nextChat);
+    // console.log(thisChat.messages[thisChat.messages.length - 1].id);
+    // console.log(nextChat.messages[nextChat.messages.length - 1].id);
+    // console.groupEnd();
+
+    if (openedDMChanged || thisChatChanged) {
+      return true;
+    }
+
+    return false;
   }
 
   componentDidUpdate() {
@@ -34,17 +51,6 @@ class DMChat extends React.Component {
 
     if (this.props.chatEmail == this.props.openedDM && myChatMessages != null && myChatMessages.length > 0) {
       this.props.setLastRead({"who": "me", "chat": this.props.chatEmail, "lastRead": myChatMessages[myChatMessages.length - 1].id});
-    }
-
-    const cEmail = this.props.chatEmail;
-    const myPerson = this.props.getknownPeople[cEmail];
-    if (myPerson != null) {
-      if (this.state.name != myPerson.name || this.state.picture != myPerson.picture) {
-        this.setState({
-          name: myPerson.name,
-          picture: myPerson.picture
-        });
-      }
     }
   }
 
@@ -83,6 +89,14 @@ class DMChat extends React.Component {
       opened = true;
     }
 
+    let chatName = "";
+    let chatPicture = "";
+    const myPerson = this.props.getknownPeople[this.props.chatEmail];
+    if (myPerson != null) {
+      chatName = myPerson.name;
+      chatPicture = myPerson.picture;
+    }
+
     let chatMessage = "";
     let chatTime = "";
     if (Array.isArray(myChatMessages) && myChatMessages.length) {
@@ -109,9 +123,9 @@ class DMChat extends React.Component {
 
     return (
       <div className="DMChat" onClick={this.handleClick} style={{background: opened ? "linear-gradient(90deg, #282A2D 0%, transparent 100%)" : ""}}>
-      <img src={this.state.picture} className="dmChatPFP" alt={this.state.name} />
+      <img src={chatPicture} className="dmChatPFP" alt={chatName} />
         <div className="dmChatTitleTimeFlexbox">
-          <h1 className={read ? "dmChatTitle" : "dmChatTitle dmChatTitleUnread"}>{this.state.name}</h1>
+          <h1 className={read ? "dmChatTitle" : "dmChatTitle dmChatTitleUnread"}>{chatName}</h1>
           <h1 className={read ? "dmChatTime" : "dmChatTime dmChatUnread"}>{chatTime}</h1>
         </div>
         <p className={read ? "dmChatMessage" : "dmChatMessage dmChatUnread"} title={chatMessage}>{chatMessage}</p>
