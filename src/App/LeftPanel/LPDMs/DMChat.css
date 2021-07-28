@@ -2,14 +2,27 @@
   position: relative;
   height: 75px;
   cursor: pointer;
+
+  background: linear-gradient(90deg, #282A2D 0%, transparent 50%, transparent 100%);
+  background-size: 200% auto;
+  background-position-x: -300px;
+  transition: background-position-x .3s;
 }
 
 .DMChat:hover {
-  background: linear-gradient(90deg, rgba(40, 42, 45, .5) 0%, transparent 50%, transparent 100%);
+  background-position-x: -100px;
 }
 
 .DMChat:active {
-  background: linear-gradient(90deg, rgba(40, 42, 45, .3) 0%, transparent 50%, transparent 100%);
+  background-position-x: -200px;
+}
+
+.DMChat:hover .dmChatPFP {
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.DMChat:active .dmChatPFP {
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 
@@ -26,6 +39,8 @@
   border-radius: 25px;
 
   user-select: none;
+
+  transition: box-shadow .1s;
 }
 
 
@@ -135,5 +150,8 @@
   left: 0px;
   top: 17px;
 
-  background: #FFFFFF;
+  background: #FFF;
+
+  transform: translateX(-4px);
+  transition: transform .1s;
 }

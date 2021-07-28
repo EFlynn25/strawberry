@@ -58,7 +58,7 @@ class LPGroups extends React.Component {
 
     this.reloadThreads();
 
-    document.addEventListener("keydown", this.handleKeyDown);
+    // document.addEventListener("keydown", this.handleKeyDown);
   }
 
   componentDidUpdate(prevProps) {
@@ -68,7 +68,7 @@ class LPGroups extends React.Component {
   }
 
   componentWillUnmount() {
-    document.removeEventListener("keydown", this.handleKeyDown);
+    // document.removeEventListener("keydown", this.handleKeyDown);
   }
 
   reloadThreads() {

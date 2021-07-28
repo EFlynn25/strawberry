@@ -2,31 +2,24 @@
   position: relative;
   height: 75px;
   cursor: pointer;
+
+  background: linear-gradient(90deg, #282A2D 0%, transparent 50%, transparent 100%);
+  background-size: 200% auto;
+  background-position-x: -300px;
+  transition: background-position-x .3s;
 }
 
 .GroupsThread:hover {
-  background: linear-gradient(90deg, rgba(40, 42, 45, .5) 0%, transparent 50%, transparent 100%);
+  background-position-x: -100px;
 }
 
 .GroupsThread:active {
-  background: linear-gradient(90deg, rgba(40, 42, 45, .3) 0%, transparent 50%, transparent 100%);
+  background-position-x: -200px;
 }
 
 
 
 /* Profiles Div */
-
-/* .gtProfilesDiv {
-  position: absolute;
-  width: 40px;
-  height: 40px;
-  left: 20px;
-  top: 17.5px;
-
-  border-radius: 25px;
-
-  user-select: none;
-} */
 
 .gtpdPFP {
   position: absolute;
@@ -226,4 +219,7 @@
   top: 17px;
 
   background: #FFFFFF;
+
+  transform: translateX(-4px);
+  transition: transform .1s;
 }

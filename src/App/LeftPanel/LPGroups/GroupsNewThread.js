@@ -3,9 +3,10 @@ import { connect } from 'react-redux';
 
 import add from '../../../assets/icons/add.svg';
 import { ReactComponent as Add } from '../../../assets/icons/add.svg';
+import { ReactComponent as AddGroup } from '../../../assets/icons/add_group.svg';
 import './GroupsNewThread.css';
-import { dms_request_to_chat } from '../../../socket.js';
-import { addRequest } from '../../../redux/dmsReducer.js'
+import { groups_create_thread } from '../../../socket.js';
+import { addThreadCreating } from '../../../redux/groupsReducer.js'
 
 class GroupsNewThread extends React.Component {
   constructor(props) {
@@ -15,7 +16,7 @@ class GroupsNewThread extends React.Component {
       dropdown: false,
       inputValue: "",
       status: "",
-      emailRequested: ""
+      threadCreating: ""
     };
 
     this.setWrapperRef = this.setWrapperRef.bind(this);
@@ -43,26 +44,11 @@ class GroupsNewThread extends React.Component {
 
   componentDidUpdate() {
 
-    if (this.state.emailRequested != "" && !this.props.requesting.includes(this.state.emailRequested)) {
-      if (this.props.requested.includes(this.state.emailRequested)) {
+    if (this.state.threadCreating != "" && !this.props.threadsCreating.includes(this.state.threadCreating)) {
+      if (this.props.threadsCreated.includes(this.state.threadCreating)) {
         this.setState({
-          status: "Successfully requested:\n" + this.state.emailRequested,
-          emailRequested: ""
-        });
-      } else if (this.props.requested_me.includes(this.state.emailRequested)) {
-        this.setState({
-          status: "That person already requested you! We created a chat for you.",
-          emailRequested: ""
-        });
-      } else if (this.props.already_requested.includes(this.state.emailRequested)) {
-        this.setState({
-          status: "You already requested that person!",
-          emailRequested: ""
-        });
-      } else if (this.props.chat_exists.includes(this.state.emailRequested)) {
-        this.setState({
-          status: "You already have a chat with that person!",
-          emailRequested: ""
+          status: ["Successfully created:", <br/>, this.state.threadCreating],
+          threadCreating: ""
         });
       }
     }
@@ -74,19 +60,19 @@ class GroupsNewThread extends React.Component {
       if (node.className.startsWith("ntDropdown")) {
         this.ddWrapperRef = node;
       } else if (node.className == "GroupsNewThread") {
-        this.ncWrapperRef = node;
+        this.ntWrapperRef = node;
       }
     }
   }
 
   handleClickOutside(event) {
-    if (this.ddWrapperRef && this.ncWrapperRef && !this.ddWrapperRef.contains(event.target) && !this.ncWrapperRef.contains(event.target) && this.state.dropdown) {
+    if (this.ddWrapperRef && this.ntWrapperRef && !this.ddWrapperRef.contains(event.target) && !this.ntWrapperRef.contains(event.target) && this.state.dropdown) {
       if (event.type == "mousedown") {
         this.mousePressedDown = true;
       } else if (event.type == "mouseup") {
         if (this.mousePressedDown) {
           let s = this.state.status;
-          if (this.state.emailRequested == "") {
+          if (this.state.threadCreating == "") {
             s = "";
           }
           this.setState({
@@ -104,9 +90,9 @@ class GroupsNewThread extends React.Component {
   }
 
   handleClick() {
-    if (this.state.dropdown) {
+    if (this.state.dropdown) { // may not need this since the button disappears when clicked
       let s = this.state.status;
-      if (this.state.emailRequested == "") {
+      if (this.state.threadCreating == "") {
         s = "";
       }
       this.setState({
@@ -135,32 +121,27 @@ class GroupsNewThread extends React.Component {
       event.preventDefault();
       event.stopPropagation();
 
-      // if (/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(this.state.inputValue)) {
-      if (/(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/
-        .test(this.state.inputValue)) {
-        if (this.props.requested.includes(this.state.inputValue) || this.props.already_requested.includes(this.state.inputValue)) {
-          this.setState({
-            status: "You already requested that person!"
-          });
-        } else if (this.props.chat_exists.includes(this.state.inputValue) || Object.keys(this.props.chats).includes(this.state.inputValue)) {
-          this.setState({
-            status: "You already have a chat with that person!"
-          });
-        } else {
-          this.setState({
-            inputValue: "",
-            status: "Sending request to " + this.state.inputValue + "...",
-            emailRequested: this.state.inputValue,
-          });
-          const iv = this.state.inputValue;
-          // this.props.addRequest({type: "requesting", email: iv})
-          // dms_request_to_chat(iv);
-        }
-      } else {
-        this.setState({
-          status: "Invalid email"
-        });
-      }
+      // if (this.props.requested.includes(this.state.inputValue) || this.props.already_requested.includes(this.state.inputValue)) {
+      //   this.setState({
+      //     status: "You already requested that person!"
+      //   });
+      // } else if (this.props.chat_exists.includes(this.state.inputValue) || Object.keys(this.props.chats).includes(this.state.inputValue)) {
+      //   this.setState({
+      //     status: "You already have a chat with that person!"
+      //   });
+      // } else {
+      //
+      // }
+
+      this.setState({
+        inputValue: "",
+        status: ["Creating thread named", <br/>, "\"", this.state.inputValue, "\""],
+        threadCreating: this.state.inputValue,
+      });
+      const iv = this.state.inputValue;
+      this.props.addThreadCreating(iv);
+      groups_create_thread(iv, []);
+
     }
   }
 
@@ -168,16 +149,15 @@ class GroupsNewThread extends React.Component {
     return(
       <Fragment>
         <div className={this.state.dropdown ? "GroupsNewThread GroupsNewThreadHide" : "GroupsNewThread"} onClick={this.handleClick} ref={this.setWrapperRef}>
-          {/*<img src={add} className="ncAddIcon" alt="Add Icon" />*/}
           <Add className="ntAddIcon" alt="Add Icon" />
           <h1 className="ntText">Create Thread</h1>
         </div>
-        <div className={this.state.dropdown ? "ncDropdown" : "ncDropdown ncDropdownHide"} ref={this.setWrapperRef}>
-          {/*<img src={add} className="ncAddIcon" alt="Add Icon" />*/}
+        <div className={this.state.dropdown ? "ntDropdown" : "ntDropdown ntDropdownHide"} ref={this.setWrapperRef}>
+          <AddGroup className="ntdIcon" />
           <h1 className="ntdTitle">Create Thread</h1>
           <h1 className="ntdText">Name:</h1>
-          <input value={this.state.inputValue} onChange={this.handleInputChange} onKeyPress={this.inputEnterPressed} className="ntdInput" placeholder="Type name here" ref={this.inputRef} disabled={this.state.emailRequested == "" ? "" : "disabled"} />
-          <h1 className="ntdStatus">{this.state.status}</h1>
+          <input value={this.state.inputValue} onChange={this.handleInputChange} onKeyPress={this.inputEnterPressed} className="ntdInput" placeholder="Type name here" ref={this.inputRef} disabled={this.state.threadCreating == "" ? "" : "disabled"} maxlength="48" />
+          <p className="ntdStatus">{this.state.status}</p>
         </div>
       </Fragment>
     )
@@ -185,16 +165,13 @@ class GroupsNewThread extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  requesting: state.dms.requesting,
-  requested: state.dms.requested,
-  requested_me: state.dms.requested_me,
-  already_requested: state.dms.already_requested,
-  chat_exists: state.dms.chat_exists,
-  chats: state.dms.chats
+  threadsCreating: state.groups.threadsCreating,
+  threadsCreated: state.groups.threadsCreated,
+  threads: state.groups.threads
 });
 
 const mapDispatchToProps = {
-  addRequest
+  addThreadCreating
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(GroupsNewThread);

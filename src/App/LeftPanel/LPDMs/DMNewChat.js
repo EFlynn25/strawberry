@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import add from '../../../assets/icons/add.svg';
 import { ReactComponent as Add } from '../../../assets/icons/add.svg';
+import { ReactComponent as AddPerson } from '../../../assets/icons/add_person.svg';
 import './DMNewChat.css';
 import { dms_request_to_chat } from '../../../socket.js';
 import { addRequest } from '../../../redux/dmsReducer.js'
@@ -180,6 +181,7 @@ class DMNewChat extends React.Component {
         */}
         <div className={this.state.dropdown ? "ncDropdown" : "ncDropdown ncDropdownHide"} ref={this.setWrapperRef}>
           {/*<img src={add} className="ncAddIcon" alt="Add Icon" />*/}
+          <AddPerson className="ntdIcon" />
           <h1 className="ncdTitle">Create Chat</h1>
           <h1 className="ncdText">Email:</h1>
           <input value={this.state.inputValue} onChange={this.handleInputChange} onKeyPress={this.inputEnterPressed} className="ncdInput" placeholder="Type email here" ref={this.inputRef} disabled={this.state.emailRequested == "" ? "" : "disabled"} />

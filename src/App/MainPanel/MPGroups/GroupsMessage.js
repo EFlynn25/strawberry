@@ -1,10 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import './DMsMessage.css';
-import DMsDefaultMessage from './DMsMessage/DMsDefaultMessage';
+import './GroupsMessage.css';
+import GroupsDefaultMessage from './GroupsMessage/GroupsDefaultMessage';
 
-class DMsMessage extends React.Component {
+class GroupsMessage extends React.Component {
   constructor(props) {
     super(props);
 
@@ -15,9 +15,9 @@ class DMsMessage extends React.Component {
       messagePicture: "",
       messageList: [],
       messageElements: [],
-      inChat: "no",
-      inChatNoTransition: true,
-      inChatTyping: false,
+      inThread: "no",
+      inThreadNoTransition: true,
+      inThreadTyping: false,
     };
   }
 
@@ -26,20 +26,20 @@ class DMsMessage extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const propsOpenedDM = this.props.openedDM;
-    const thisChat = this.props.chats[propsOpenedDM];
-    const prevCurrentChat = prevProps.chats[propsOpenedDM];
+    const propsOpenedThread = this.props.openedThread;
+    const thisThread = this.props.threads[propsOpenedThread];
+    const prevCurrentChat = prevProps.threads[propsOpenedThread];
 
-    const messagesExist = thisChat.messages != null && thisChat.messages.length > 0;
-    const sentNewMessage = prevCurrentChat.messages != thisChat.messages && prevCurrentChat.messages[prevCurrentChat.messages.length - 1].id == this.state.myIDs[this.state.myIDs.length - 1];
-    const openedDMChanged = prevProps.openedDM != propsOpenedDM;
+    const messagesExist = thisThread.messages != null && thisThread.messages.length > 0;
+    const sentNewMessage = prevCurrentChat.messages != thisThread.messages && prevCurrentChat.messages[prevCurrentChat.messages.length - 1].id == this.state.myIDs[this.state.myIDs.length - 1];
+    const openedThreadChanged = prevProps.openedThread != propsOpenedThread;
 
     const idsChanged = prevState.myIDs != this.state.myIDs;
-    const themLastReadChanged = prevCurrentChat.lastRead.them != thisChat.lastRead.them;
-    const otherUserStateChanged = prevProps.inChat != this.props.inChat || prevProps.typing != this.props.typing;
-    // const newSentMessage = prevCurrentChat.sendingMessages != null && thisChat.sendingMessages != null && prevCurrentChat.sendingMessages != thisChat.sendingMessages;
-    const newSentMessage = prevCurrentChat.sendingMessages != thisChat.sendingMessages;
-    if (messagesExist && (sentNewMessage || openedDMChanged)) {
+    const themLastReadChanged = prevCurrentChat.lastRead.them != thisThread.lastRead.them;
+    const otherUserStateChanged = prevProps.inThread != this.props.inThread || prevProps.typing != this.props.typing;
+    // const newSentMessage = prevCurrentChat.sendingMessages != null && thisThread.sendingMessages != null && prevCurrentChat.sendingMessages != thisThread.sendingMessages;
+    const newSentMessage = prevCurrentChat.sendingMessages != thisThread.sendingMessages;
+    if (messagesExist && (sentNewMessage || openedThreadChanged)) {
       this.reloadData();
       this.reloadMessage(prevProps);
     } else {
@@ -50,10 +50,10 @@ class DMsMessage extends React.Component {
   }
 
   reloadData() {
-    const propsOpenedDM = this.props.openedDM;
+    const propsOpenedThread = this.props.openedThread;
 
-    const myChat = this.props.chats[propsOpenedDM];
-    const myChatMessages = this.props.chats[propsOpenedDM].messages;
+    const myChat = this.props.threads[propsOpenedThread];
+    const myChatMessages = this.props.threads[propsOpenedThread].messages;
 
     const firstMessageID = myChatMessages[0].id;
     const myID = this.props.id;
@@ -78,19 +78,19 @@ class DMsMessage extends React.Component {
 
     // console.log(ids);
 
-    if (from == "me") {
+    if (from == this.props.myEmail) {
       this.setState({
         myIDs: ids,
         messageEmail: this.props.myEmail,
         messageName: this.props.myName,
         messagePicture: this.props.myPicture,
       });
-    } else if (from == "them") {
+    } else {
       this.setState({
         myIDs: ids,
-        messageEmail: propsOpenedDM,
-        messageName: this.props.knownPeople[propsOpenedDM].name,
-        messagePicture: this.props.knownPeople[propsOpenedDM].picture,
+        messageEmail: from,
+        messageName: this.props.knownPeople[from].name,
+        messagePicture: this.props.knownPeople[from].picture,
       });
     }
   }
@@ -98,111 +98,89 @@ class DMsMessage extends React.Component {
   reloadMessage(prevProps) {
     let myOldMessages;
     if (prevProps != null) {
-      myOldMessages = prevProps.chats[this.props.openedDM].messages;
+      myOldMessages = prevProps.threads[this.props.openedThread].messages;
     }
     let newMessageObjects = [];
-    const thisChat = this.props.chats[this.props.openedDM];
-    const lastRead = thisChat.lastRead.them;
+    const thisThread = this.props.threads[this.props.openedThread];
+    // const lastRead = thisThread.lastRead.them;
     this.state.myIDs.filter(item => {
-      const message = thisChat.messages.find( ({ id }) => id === item );
+      const message = thisThread.messages.find( ({ id }) => id === item );
       if (message == null) {
         return false;
       }
       return true;
     }).map(item => {
-      const message = thisChat.messages.find( ({ id }) => id === item );
+      const message = thisThread.messages.find( ({ id }) => id === item );
       const messageKey = "id" + item;
 
-      let lr = false;
-      let nt = true;
-      if (lastRead != null && item == lastRead) {
-        if (!this.props.inChat && lastRead != thisChat.messages[thisChat.messages.length - 1].id) {
-          lr = true;
-        }
-      }
-      if (this.state.inChat == "no" && this.props.inChat) {
-        nt = false;
-      }
+      // let lr = false;
+      // let nt = true;
+      // if (lastRead != null && item == lastRead) {
+      //   if (!this.props.inThread && lastRead != thisThread.messages[thisThread.messages.length - 1].id) {
+      //     lr = true;
+      //   }
+      // }
+      // if (this.state.inThread == "no" && this.props.inThread) {
+      //   nt = false;
+      // }
 
       let messageObject;
-      messageObject = {message: message.message, timestamp: this.parseDate(message.timestamp), lastRead: lr, noTransition: nt, id: item};
+      messageObject = {message: message.message, timestamp: this.parseDate(message.timestamp), lastRead: /*lr*/null, noTransition: /*nt*/null, id: item};
 
       newMessageObjects.push(messageObject);
     });
 
-    let newInChat = "no";
-    let icnt = true;
-    let newICT = false;
-    const lastMessageID = thisChat.messages[thisChat.messages.length - 1].id;
-    if (newMessageObjects[newMessageObjects.length - 1].id == lastMessageID/* && prevProps.openedDM == this.props.openedDM*/) {
-      if (this.props.inChat) {
-        newInChat = "here";
-      } else if (lastRead == lastMessageID && this.state.myIDs[this.state.myIDs.length - 1] == lastMessageID) {
-        newInChat = "gone";
-      }
-
-      const oldStateMessages = this.state.messageList;
-      if (oldStateMessages != null && oldStateMessages.length > 0 && oldStateMessages[oldStateMessages.length - 1].id == thisChat.messages[thisChat.messages.length - 1].id) {
-      // if (lastMessageID == newMessageObjects[newMessageObjects.length - 1].id) {
-        if (this.state.inChat == "here" && !this.props.inChat) {
-          newInChat = "gone";
-          icnt = false;
-        }
-        if (this.state.inChat == "gone" && newInChat == "here") {
-          icnt = false;
-        }
-        // console.log(prevProps.openedDM);
-        // console.log(this.props.openedDM);
-        if (this.state.inChat == "no" && newInChat == "here" /*&& lastRead < lastMessageID*/) {
-          icnt = false;
-        }
-      }
-
-
-
-      if (newInChat == "here" && this.props.typing) {
-        newICT = true;
-      }
-
-
-
-      if (thisChat.sendingMessages != null && thisChat.sendingMessages.length > 0 && this.state.messageEmail == this.props.myEmail) {
-        var currentSendingID = 0;
-        thisChat["sendingMessages"].map(item => {
-          const messageObject = {message: item, lastRead: false, noTransition: true, sending: true, id: "sending" + currentSendingID};
-          newMessageObjects.push(messageObject);
-          currentSendingID++;
-        });
-      }
-    }
-
-
-    // console.log("start in chat test");
-    // console.log("lastMessageID: " + lastMessageID);
-    // console.log("lastRead: " + lastRead);
-    // console.log("last of myIDs: " + this.state.myIDs[this.state.myIDs.length - 1]);
-    // const wasHere = this.state.inChat == "here";
-    // const noNewMessage = myOldMessages != null && myOldMessages.length > 0 && myOldMessages[myOldMessages.length - 1].id == thisChat.messages[thisChat.messages.length - 1].id;
-    // const wasHereNoNewMessage = wasHere && noNewMessage;
-    // if (this.props.inChat) {
-    //   newInChat = "here";
-    // } else if (wasHereNoNewMessage || (lastRead == lastMessageID && this.state.myIDs[this.state.myIDs.length - 1] == lastMessageID)) {
-    //   newInChat = "gone";
-    // }
-    // const wasLastRead = this.state.inChat == "no" && this.props.inChat;
-    // const wasGoneNowHere = this.state.inChat == "gone" && newInChat == "here";
-    // console.log("was: " + this.state.inChat);
-    // console.log("now: " + newInChat);
-    // console.log("messages the same?: " + noNewMessage);
-    // if ((wasLastRead || wasGoneNowHere || wasHere) && noNewMessage) {
-    //   icnt = false;
+    // let newInThread = "no";
+    // let icnt = true;
+    // let newICT = false;
+    // const lastMessageID = thisThread.messages[thisThread.messages.length - 1].id;
+    // if (newMessageObjects[newMessageObjects.length - 1].id == lastMessageID/* && prevProps.openedThread == this.props.openedThread*/) {
+    //   if (this.props.inThread) {
+    //     newInThread = "here";
+    //   } else if (lastRead == lastMessageID && this.state.myIDs[this.state.myIDs.length - 1] == lastMessageID) {
+    //     newInThread = "gone";
+    //   }
+    //
+    //   const oldStateMessages = this.state.messageList;
+    //   if (oldStateMessages != null && oldStateMessages.length > 0 && oldStateMessages[oldStateMessages.length - 1].id == thisThread.messages[thisThread.messages.length - 1].id) {
+    //   // if (lastMessageID == newMessageObjects[newMessageObjects.length - 1].id) {
+    //     if (this.state.inThread == "here" && !this.props.inThread) {
+    //       newInThread = "gone";
+    //       icnt = false;
+    //     }
+    //     if (this.state.inThread == "gone" && newInThread == "here") {
+    //       icnt = false;
+    //     }
+    //     // console.log(prevProps.openedThread);
+    //     // console.log(this.props.openedThread);
+    //     if (this.state.inThread == "no" && newInThread == "here" /*&& lastRead < lastMessageID*/) {
+    //       icnt = false;
+    //     }
+    //   }
+    //
+    //
+    //
+    //   if (newInThread == "here" && this.props.typing) {
+    //     newICT = true;
+    //   }
+    //
+    //
+    //
+    //   if (thisThread.sendingMessages != null && thisThread.sendingMessages.length > 0 && this.state.messageEmail == this.props.myEmail) {
+    //     var currentSendingID = 0;
+    //     thisThread["sendingMessages"].map(item => {
+    //       const messageObject = {message: item, lastRead: false, noTransition: true, sending: true, id: "sending" + currentSendingID};
+    //       newMessageObjects.push(messageObject);
+    //       currentSendingID++;
+    //     });
+    //   }
     // }
 
 
 
-    const message = thisChat.messages.find( ({ id }) => id === this.state.myIDs[0] );
-    if (message.from == "me" && this.state.myIDs.includes(thisChat.messages[thisChat.messages.length - 1].id) && thisChat.sendingMessages != null) {
-      thisChat.sendingMessages.map(item => {
+    const message = thisThread.messages.find( ({ id }) => id === this.state.myIDs[0] );
+    if (message.from == this.props.myEmail && this.state.myIDs.includes(thisThread.messages[thisThread.messages.length - 1].id) && thisThread.sendingMessages != null) {
+      thisThread.sendingMessages.map(item => {
         console.log(item);
         let messageElement;
         messageElement = <p key={"key" + item} className="defaultMessageText defaultMessageSending">{item}</p>;
@@ -210,7 +188,7 @@ class DMsMessage extends React.Component {
       });
     }
 
-    this.setState({messageList: newMessageObjects, inChat: newInChat, inChatNoTransition: icnt, inChatTyping: newICT});
+    this.setState({messageList: newMessageObjects, inThread: /*newInThread*/null, inThreadNoTransition: /*icnt*/null, inThreadTyping: /*newICT*/null});
   }
 
   parseDate(timestamp) {
@@ -231,54 +209,22 @@ class DMsMessage extends React.Component {
   }
 
   render() {
-    // let timestampElement = "";
-    // if (this.state.messageElements != null && this.state.messageElements.length > 0) {
-    //   timestampElement = this.state.messageElements[this.state.messageElements.length - 1].props.title;
-    // }
-
     let MessageType;
     if (this.props.messageStyle == "default") {
-      MessageType = DMsDefaultMessage;
+      MessageType = GroupsDefaultMessage;
     }
 
     return (
-      <div className="DMsMessage">
-        <MessageType email={this.state.messageEmail} name={this.state.messageName} picture={this.state.messagePicture} messages={this.state.messageList} inChat={[this.state.inChat, this.state.inChatNoTransition]} inChatTyping={this.state.inChatTyping} onUpdate={this.props.onUpdate} />
+      <div className="GroupsMessage">
+        <MessageType email={this.state.messageEmail} name={this.state.messageName} picture={this.state.messagePicture} messages={this.state.messageList} inThread={[this.state.inThread, this.state.inThreadNoTransition]} inThreadTyping={this.state.inThreadTyping} onUpdate={this.props.onUpdate} />
       </div>
     );
-
-    /*
-    return (
-      <div className="DMsMessage">
-
-
-        <img src={this.state.messagePicture} className="defaultMessagePFP" alt={this.state.messageName} />
-        <div className="defaultMessageName">
-          {this.state.messageName}
-          {/*sendingElement*}
-          {this.state.messageElements.length > 0 && this.state.messageElements[this.state.messageElements.length - 1].props.className.includes("defaultMessageSending") ? <h1 className="defaultMessageSendingText">Sending...</h1> : null}
-        </div>
-        <div className="defaultMessageGroup">
-          {this.state.messageElements}
-        </div>
-        <h1 className="defaultMessageTimestamp">{timestampElement}</h1>
-        <img src={this.props.knownPeople[this.props.openedDM].picture} className={this.state.inChatClasses} alt={this.props.knownPeople[this.props.openedDM].name} style={this.state.messageElements.length > 0 && this.state.messageElements[this.state.messageElements.length - 1].props.className.includes("defaultMessageSending") ? {bottom: "-15px"} : null} />
-        <div style={this.state.messageElements.length > 0 && this.state.messageElements[this.state.messageElements.length - 1].props.className.includes("defaultMessageSending") ? {bottom: "-15px"} : null} className={this.state.inChatTypingClasses}>
-          <div className="dmsInChatTypingDot"></div>
-          <div className="dmsInChatTypingDot" style={{left: "15px", animationDelay: ".25s"}}></div>
-          <div className="dmsInChatTypingDot" style={{left: "24px", animationDelay: ".5s"}}></div>
-        </div>
-
-
-      </div>
-    );
-    */
   }
 }
 
 const mapStateToProps = (state) => ({
-  openedDM: state.dms.openedDM,
-  chats: state.dms.chats,
+  openedThread: state.groups.openedThread,
+  threads: state.groups.threads,
   myName: state.app.name,
   myEmail: state.app.email,
   myPicture: state.app.picture,
@@ -286,4 +232,4 @@ const mapStateToProps = (state) => ({
   messageStyle: state.app.messageStyle
 });
 
-export default connect(mapStateToProps, null)(DMsMessage);
+export default connect(mapStateToProps, null)(GroupsMessage);

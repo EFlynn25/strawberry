@@ -188,7 +188,7 @@ export const dmsSlice = createSlice({
       }
     },
     removeRequest: (state, action) => {
-      var index = state[action.payload["type"]].indexOf(action.payload["email"]);
+      let index = state[action.payload["type"]].indexOf(action.payload["email"]);
       if (index > -1) {
         state[action.payload["type"]].splice(index, 1);
       }

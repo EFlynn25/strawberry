@@ -81,43 +81,52 @@ class MPDMs extends React.Component {
     const openedDM = this.props.openedDM;
     const thisChat = this.props.chats[openedDM];
 
-    if (thisChat != null && thisChat.loadingMessages != null && thisChat.loadingMessages.length == 0) {
-      this.isLoadingMessages[openedDM] = false;
-      if (this.heightBeforeLoading[openedDM] != 0) {
-        this.messagesRef.current.scrollTop += this.messagesRef.current.scrollHeight - this.heightBeforeLoading[openedDM];
-        this.heightBeforeLoading[openedDM] = 0;
-      }
-    }
+    if (thisChat != null) {
 
-    if (thisChat.messages != null && !this.isLoadingMessages[openedDM] && this.messagesRef != null && this.messagesRef.current != null && this.messagesRef.current.scrollTop == 0) {
-      const myFirstID = thisChat.messages[0].id;
-      if (myFirstID != 0) {
-        let ids = [];
-        for (var i = myFirstID - 20; i <= myFirstID - 1; i++) {
-          if (i >= 0) {
-            ids.push(i);
-          }
+      if (thisChat.loadingMessages != null && thisChat.loadingMessages.length == 0) {
+        this.isLoadingMessages[openedDM] = false;
+        if (this.heightBeforeLoading[openedDM] != 0) {
+          this.messagesRef.current.scrollTop += this.messagesRef.current.scrollHeight - this.heightBeforeLoading[openedDM];
+          this.heightBeforeLoading[openedDM] = 0;
         }
-
-
-        this.props.setLoadingMessages({"chat": this.props.openedDM, "data": ids});
-        this.isLoadingMessages[openedDM] = true;
-        this.heightBeforeLoading[openedDM] = this.messagesRef.current.scrollHeight;
-
-
-        dms_get_messages(this.props.openedDM, myFirstID - 1, 20);
       }
+
+      if (thisChat.messages != null && !this.isLoadingMessages[openedDM] && this.messagesRef != null && this.messagesRef.current != null && this.messagesRef.current.scrollTop == 0) {
+        const myFirstID = thisChat.messages[0].id;
+        if (myFirstID != 0) {
+          let ids = [];
+          for (var i = myFirstID - 20; i <= myFirstID - 1; i++) {
+            if (i >= 0) {
+              ids.push(i);
+            }
+          }
+
+
+          this.props.setLoadingMessages({"chat": this.props.openedDM, "data": ids});
+          this.isLoadingMessages[openedDM] = true;
+          this.heightBeforeLoading[openedDM] = this.messagesRef.current.scrollHeight;
+
+
+          dms_get_messages(this.props.openedDM, myFirstID - 1, 20);
+        }
+      }
+
     }
+
   }
 
   handleWindowFocus() {
     console.log("window focused.");
-    dms_in_chat(this.props.openedDM, true);
+    if (this.props.openedDM in this.props.chats) {
+      dms_in_chat(this.props.openedDM, true);
+    }
   }
 
   handleWindowBlur() {
     console.log("window blurred.");
-    dms_in_chat(this.props.openedDM, false);
+    if (this.props.openedDM in this.props.chats) {
+      dms_in_chat(this.props.openedDM, false);
+    }
   }
 
 
@@ -175,12 +184,6 @@ class MPDMs extends React.Component {
     console.log("[MPDMs]: componentDidUpdate with thread ID " + this.props.openedDM);
 
     const propsOpenedDM = this.props.openedDM;
-
-    if (prevState.loaded != this.state.loaded) {
-      // this.messagesRef.current.scrollTop = this.messagesRef.current.scrollHeight - this.messagesRef.current.clientHeight;
-    }
-
-    // this.scrollToBottom();
 
     if (prevProps.openedDM == propsOpenedDM) {
       if (prevProps.chats[propsOpenedDM] != this.props.chats[propsOpenedDM]) {

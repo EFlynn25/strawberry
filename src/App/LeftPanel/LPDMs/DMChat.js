@@ -121,15 +121,16 @@ class DMChat extends React.Component {
       chatTime = null;
     }
 
+    // <div className="DMChat" onClick={this.handleClick} style={{background: opened ? "linear-gradient(90deg, #282A2D 0%, transparent 100%)" : ""}}>
     return (
-      <div className="DMChat" onClick={this.handleClick} style={{background: opened ? "linear-gradient(90deg, #282A2D 0%, transparent 100%)" : ""}}>
-      <img src={chatPicture} className="dmChatPFP" alt={chatName} />
+      <div className="DMChat" onClick={this.handleClick} style={{backgroundPositionX: opened ? "0" : ""}}>
+        <img src={chatPicture} className="dmChatPFP" alt={chatName} style={{boxShadow: opened ? "none" : ""}} />
         <div className="dmChatTitleTimeFlexbox">
           <h1 className={read ? "dmChatTitle" : "dmChatTitle dmChatTitleUnread"}>{chatName}</h1>
           <h1 className={read ? "dmChatTime" : "dmChatTime dmChatUnread"}>{chatTime}</h1>
         </div>
         <p className={read ? "dmChatMessage" : "dmChatMessage dmChatUnread"} title={chatMessage}>{chatMessage}</p>
-        {opened ? <div className="dmChatSelected" /> : null}
+        <div className="dmChatSelected" style={{transform: opened ? "none" : ""}} />
         {read ? null : <div className="dmChatUnreadNotify" />}
       </div>
     );

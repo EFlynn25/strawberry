@@ -102,6 +102,10 @@ class LPDMs extends React.Component {
   }
 
   handleKeyDown(e) {
+    if (this.props.dmsOrGroups != "dms") {
+      return false;
+    }
+
     if (e.ctrlKey && e.which === 38) {
       e.preventDefault();
       e.stopPropagation();
@@ -165,7 +169,8 @@ class LPDMs extends React.Component {
 
 const mapStateToProps = (state) => ({
   openedDM: state.dms.openedDM,
-  chats: state.dms.chats
+  chats: state.dms.chats,
+  dmsOrGroups: state.app.dmsOrGroups
 });
 
 const mapDispatchToProps = {

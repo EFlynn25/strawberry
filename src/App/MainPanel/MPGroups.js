@@ -6,25 +6,24 @@ import Loader from "react-loader-spinner";
 
 import './MPGroups.css';
 import {
-  setOpenedDM,
-  // addMessage,
+  setOpenedThread,
   addSendingMessage,
   setTempMessageInput,
   setLastRead,
   setLoadingMessages
-} from '../../redux/dmsReducer';
+} from '../../redux/groupsReducer';
 import {
   setCurrentPage
 } from '../../redux/appReducer';
 import {
-  dms_get_messages,
-  dms_send_message,
-  dms_in_chat,
-  dms_typing,
-  dms_last_read
+  groups_get_messages,
+  groups_send_message,
+  groups_in_thread,
+  groups_typing,
+  groups_last_read
 } from '../../socket.js';
-// import GroupsMessage from './MPGroups/GroupsMessage';
-// import GroupsDefaultMessage from './MPGroups/GroupsMessage/GroupsDefaultMessage';
+import GroupsMessage from './MPGroups/GroupsMessage';
+import GroupsDefaultMessage from './MPGroups/GroupsMessage/GroupsDefaultMessage';
 
 class MPGroups extends React.Component {
   constructor(props) {
@@ -78,67 +77,74 @@ class MPGroups extends React.Component {
   }
 
   loadMoreMessages() {
-    const openedDM = this.props.openedDM;
-    const thisChat = this.props.chats[openedDM];
+    const openedThread = this.props.openedThread;
+    const thisThread = this.props.threads[openedThread];
 
-    if (thisChat != null && thisChat.loadingMessages != null && thisChat.loadingMessages.length == 0) {
-      this.isLoadingMessages[openedDM] = false;
-      if (this.heightBeforeLoading[openedDM] != 0) {
-        this.messagesRef.current.scrollTop += this.messagesRef.current.scrollHeight - this.heightBeforeLoading[openedDM];
-        this.heightBeforeLoading[openedDM] = 0;
-      }
-    }
+    if (thisThread != null) {
 
-    if (thisChat.messages != null && !this.isLoadingMessages[openedDM] && this.messagesRef != null && this.messagesRef.current != null && this.messagesRef.current.scrollTop == 0) {
-      const myFirstID = thisChat.messages[0].id;
-      if (myFirstID != 0) {
-        let ids = [];
-        for (var i = myFirstID - 20; i <= myFirstID - 1; i++) {
-          if (i >= 0) {
-            ids.push(i);
-          }
+      if (thisThread.loadingMessages != null && thisThread.loadingMessages.length == 0) {
+        this.isLoadingMessages[openedThread] = false;
+        if (this.heightBeforeLoading[openedThread] != 0) {
+          this.messagesRef.current.scrollTop += this.messagesRef.current.scrollHeight - this.heightBeforeLoading[openedThread];
+          this.heightBeforeLoading[openedThread] = 0;
         }
-
-
-        this.props.setLoadingMessages({"chat": this.props.openedDM, "data": ids});
-        this.isLoadingMessages[openedDM] = true;
-        this.heightBeforeLoading[openedDM] = this.messagesRef.current.scrollHeight;
-
-
-        dms_get_messages(this.props.openedDM, myFirstID - 1, 20);
       }
+
+      if (thisThread.messages != null && !this.isLoadingMessages[openedThread] && this.messagesRef != null && this.messagesRef.current != null && this.messagesRef.current.scrollTop == 0) {
+        const myFirstID = thisThread.messages[0].id;
+        if (myFirstID != 0) {
+          let ids = [];
+          for (var i = myFirstID - 20; i <= myFirstID - 1; i++) {
+            if (i >= 0) {
+              ids.push(i);
+            }
+          }
+
+
+          this.props.setLoadingMessages({"thread": this.props.openedThread, "data": ids});
+          this.isLoadingMessages[openedThread] = true;
+          this.heightBeforeLoading[openedThread] = this.messagesRef.current.scrollHeight;
+
+
+          groups_get_messages(this.props.openedThread, myFirstID - 1, 20);
+        }
+      }
+
     }
+
   }
 
   handleWindowFocus() {
     console.log("window focused.");
-    dms_in_chat(this.props.openedDM, true);
+    if (this.props.openedThread in this.props.threads) {
+      groups_in_thread(this.props.openedThread, true);
+    }
   }
 
   handleWindowBlur() {
     console.log("window blurred.");
-    dms_in_chat(this.props.openedDM, false);
+    if (this.props.openedThread in this.props.threads) {
+      groups_in_thread(this.props.openedThread, false);
+    }
   }
 
 
 
   componentDidMount() {
-    this.props.setOpenedDM(this.props.match.params.chatEmail);
+    this.props.setOpenedThread(this.props.match.params.threadID);
 
-    console.log("[MPGroups]: componentDidMount with thread ID " + this.props.openedDM);
-    //this.messagesRef.current.scrollTop = this.messagesRef.current.scrollHeight;
-    // this.messagesRef.current.scrollTop = this.messagesRef.current.scrollHeight - this.messagesRef.current.clientHeight;
+    console.log("[MPGroups]: componentDidMount with thread ID " + this.props.openedThread);
 
-    const propsOpenedDM = this.props.openedDM;
-    const thisChat = this.props.chats[propsOpenedDM];
-    if (propsOpenedDM in this.props.chats) {
+    const propsOpenedThread = this.props.openedThread;
+    const thisThread = this.props.threads[propsOpenedThread];
+    if (propsOpenedThread in this.props.threads) {
       this.reloadMessages(null);
-      dms_in_chat(propsOpenedDM, true);
-      dms_in_chat(propsOpenedDM, "get_in_chat");
-      dms_typing(propsOpenedDM, "get_typing");
-      dms_last_read(propsOpenedDM);
+      groups_in_thread(propsOpenedThread, true);
+      groups_in_thread(propsOpenedThread, "get_in_thread");
+      groups_typing(propsOpenedThread, "get_typing");
+      groups_last_read(propsOpenedThread);
 
-      const tmi = thisChat.tempMessageInput;
+      const tmi = thisThread.tempMessageInput;
       console.log(tmi);
       if (tmi != "") {
         this.setState({
@@ -147,7 +153,7 @@ class MPGroups extends React.Component {
       }
 
       if (tmi == "" || tmi == null) {
-        dms_typing(propsOpenedDM, false);
+        groups_typing(propsOpenedThread, false);
       }
 
       if (this.messagesRef.current != null) {
@@ -156,66 +162,55 @@ class MPGroups extends React.Component {
     }
 
     let title = "404";
-    if (this.props.openedDM in this.props.chats && this.props.openedDM in this.props.getknownPeople) {
-      title = this.props.getknownPeople[this.props.openedDM].name;
+    if (this.props.openedThread in this.props.threads) {
+      title = this.props.threads[this.props.openedThread].name;
     }
 
     this.props.setCurrentPage(title);
 
-    // const myFirstID = thisChat.messages[thisChat.messages.length - 1].id;
-    // dms_get_messages(propsOpenedDM, myFirstID - 1, 20);
-
     window.addEventListener("focus", this.handleWindowFocus);
     window.addEventListener("blur", this.handleWindowBlur);
-    // window.onblur = this.handleWindowBlur.bind(this);
-    // window.addEventListener("focus", this.handleWindowBlur.bind(this));
   }
 
   componentDidUpdate(prevProps, prevState) {
-    console.log("[MPGroups]: componentDidUpdate with thread ID " + this.props.openedDM);
+    console.log("[MPGroups]: componentDidUpdate with thread ID " + this.props.openedThread);
 
-    const propsOpenedDM = this.props.openedDM;
+    const propsOpenedThread = this.props.openedThread;
 
-    if (prevState.loaded != this.state.loaded) {
-      // this.messagesRef.current.scrollTop = this.messagesRef.current.scrollHeight - this.messagesRef.current.clientHeight;
-    }
-
-    // this.scrollToBottom();
-
-    if (prevProps.openedDM == propsOpenedDM) {
-      if (prevProps.chats[propsOpenedDM] != this.props.chats[propsOpenedDM]) {
+    if (prevProps.openedThread == propsOpenedThread) {
+      if (prevProps.threads[propsOpenedThread] != this.props.threads[propsOpenedThread]) {
         this.reloadMessages(prevProps);
       }
     } else {
       this.setState({inputValue: '', loaded: false});
-      if (propsOpenedDM in this.props.chats) {
+      if (propsOpenedThread in this.props.threads) {
         this.reloadMessages(prevProps);
-        if (prevProps.openedDM in this.props.chats) {
-          dms_in_chat(prevProps.openedDM, false);
-          dms_typing(this.props.openedDM, false);
+        if (prevProps.openedThread in this.props.threads) {
+          groups_in_thread(prevProps.openedThread, false);
+          groups_typing(this.props.openedThread, false);
         }
-        dms_in_chat(propsOpenedDM, true);
-        dms_in_chat(propsOpenedDM, "get_in_chat");
-        dms_typing(propsOpenedDM, "get_typing");
-        dms_last_read(propsOpenedDM);
+        groups_in_thread(propsOpenedThread, true);
+        groups_in_thread(propsOpenedThread, "get_in_thread");
+        groups_typing(propsOpenedThread, "get_typing");
+        groups_last_read(propsOpenedThread);
       }
     }
 
-    if (!(propsOpenedDM in prevProps.chats) && propsOpenedDM in this.props.chats) {
-      dms_in_chat(propsOpenedDM, true);
-      dms_in_chat(propsOpenedDM, "get_in_chat");
-      dms_typing(propsOpenedDM, "get_typing");
-      dms_last_read(propsOpenedDM);
+    if (!(propsOpenedThread in prevProps.threads) && propsOpenedThread in this.props.threads) {
+      groups_in_thread(propsOpenedThread, true);
+      groups_in_thread(propsOpenedThread, "get_in_thread");
+      groups_typing(propsOpenedThread, "get_typing");
+      groups_last_read(propsOpenedThread);
     }
 
-    const thisChat = this.props.chats[propsOpenedDM];
-    if (thisChat != null) {
-      const tmi = thisChat.tempMessageInput
+    const thisThread = this.props.threads[propsOpenedThread];
+    if (thisThread != null) {
+      const tmi = thisThread.tempMessageInput
       const iv = this.state.inputValue
-      if (this.props.openedDM != "" && prevProps.openedDM != propsOpenedDM) {
-        if (prevProps.openedDM in this.props.chats) {
+      if (this.props.openedThread != "" && prevProps.openedThread != propsOpenedThread) {
+        if (prevProps.openedThread in this.props.threads) {
           this.props.setTempMessageInput({
-            chat: prevProps.openedDM,
+            thread: prevProps.openedThread,
             input: iv
           });
         }
@@ -229,20 +224,20 @@ class MPGroups extends React.Component {
         }
 
         if (tmi == "" || tmi == null) {
-          dms_typing(propsOpenedDM, false);
+          groups_typing(propsOpenedThread, false);
         }
       }
     }
 
-    if (this.state.loaded && prevProps.currentPage != this.props.currentPage && propsOpenedDM in this.props.chats) {
+    if (this.state.loaded && prevProps.currentPage != this.props.currentPage && propsOpenedThread in this.props.threads) {
       this.inputRef.current.focus();
     }
 
     this.loadMoreMessages();
 
     let title = "404";
-    if (this.props.openedDM in this.props.chats && this.props.openedDM in this.props.getknownPeople) {
-      title = this.props.getknownPeople[this.props.openedDM].name;
+    if (this.props.openedThread in this.props.threads) {
+      title = this.props.threads[this.props.openedThread].name;
     }
 
     this.props.setCurrentPage(title);
@@ -250,12 +245,12 @@ class MPGroups extends React.Component {
 
   componentWillUnmount() {
     const iv = this.state.inputValue
-    if (this.props.openedDM in this.props.chats) {
+    if (this.props.openedThread in this.props.threads) {
       this.props.setTempMessageInput({
-        chat: this.props.openedDM,
+        thread: this.props.openedThread,
         input: iv
       });
-      dms_in_chat(this.props.openedDM, false);
+      groups_in_thread(this.props.openedThread, false);
     }
 
     window.removeEventListener("focus", this.handleWindowFocus);
@@ -263,53 +258,58 @@ class MPGroups extends React.Component {
   }
 
   reloadMessages(prevProps) {
-    if (!(this.props.openedDM in this.props.chats)) {
+    if (!(this.props.openedThread in this.props.threads)) {
       this.setState({
         messages: []
       });
       return false;
     }
 
-    const thisChatReference = this.props.chats[this.props.openedDM];
-    const thisChat = JSON.parse(JSON.stringify(thisChatReference));
+    const thisThreadReference = this.props.threads[this.props.openedThread];
+    const thisThread = JSON.parse(JSON.stringify(thisThreadReference));
 
-    if (thisChat == null || thisChat["messages"] == null || thisChat["messages"].length <= 0) {
-      this.setState({
-        messages: [],
-        loaded: true
-      });
-      return false;
+    if (thisThread == null || thisThread["messages"] == null || thisThread["messages"].length <= 0) {
+      if (thisThread["sendingMessages"] == null || thisThread["sendingMessages"].length <= 0) {
+        this.setState({
+          messages: [],
+          loaded: true
+        });
+        return false;
+      }
     }
 
     let hasSending = false;
     let handledSending = false;
 
-    if ("sendingMessages" in thisChat && thisChat["sendingMessages"].length > 0) {
+    if ("sendingMessages" in thisThread && thisThread["sendingMessages"].length > 0) {
       hasSending = true;
-      let myID = thisChat.messages[thisChat.messages.length - 1].id + 1;
-      thisChat["sendingMessages"].map(item => {
+      let myID = 0;
+      if (thisThread.messages != null && thisThread.messages.length > 0) {
+        myID = thisThread.messages[thisThread.messages.length - 1].id + 1;
+      }
+      thisThread["sendingMessages"].map(item => {
         const myMessage = {message: item, sending: true, id: myID};
-        thisChat["messages"].push(myMessage);
+        thisThread["messages"].push(myMessage);
         myID++;
       });
     }
 
-    let lastRead;
-    if (thisChat.inChat != null) {
-      lastRead = thisChat.lastRead.them;
-    }
+    // let lastRead;
+    // if (thisThread.inThread != null) {
+    //   lastRead = thisThread.lastRead.them;
+    // }
 
-    let inChat = false;
-    if (thisChat.inChat != null) {
-      inChat = thisChat.inChat;
-      if (prevProps != null && this.props.openedDM in prevProps.chats && prevProps.chats[this.props.openedDM].inChat != null && prevProps.chats[this.props.openedDM].inChat && !inChat) {
-        lastRead = thisChat["messages"][thisChat["messages"].length - 1].id;
-      }
-    }
+    // let inThread = false;
+    // if (thisThread.inThread != null) {
+    //   inThread = thisThread.inThread;
+    //   if (prevProps != null && this.props.openedThread in prevProps.threads && prevProps.threads[this.props.openedThread].inThread != null && prevProps.threads[this.props.openedThread].inThread && !inThread) {
+    //     lastRead = thisThread["messages"][thisThread["messages"].length - 1].id;
+    //   }
+    // }
 
-    let nextID = thisChat["messages"][0]["id"];
+    let nextID = thisThread["messages"][0].id;
     let tempMessages = [];
-    thisChat["messages"].map((message, i) => {
+    thisThread["messages"].map((message, i) => {
 
       if (message["id"] >= nextID && !("sending" in message)) {
         let messageIDs = [message["id"]];
@@ -317,13 +317,13 @@ class MPGroups extends React.Component {
 
         while (true) {
           const localNextID = messageIDs[messageIDs.length - 1] + 1;
-          const findNextID = thisChat["messages"].find( ({ id }) => id === localNextID );
+          const findNextID = thisThread["messages"].find( ({ id }) => id === localNextID );
 
           if (findNextID == null) {
             break;
           }
 
-          if ("sending" in findNextID && messageFrom == "me") {
+          if ("sending" in findNextID && messageFrom == this.props.email) {
             handledSending = true;
           }
 
@@ -335,14 +335,7 @@ class MPGroups extends React.Component {
           }
         }
 
-
-
-
-
-
-
-
-        const newMessage = (<GroupsMessage inChat={inChat} typing={thisChat.typing} id={messageIDs[0]} key={messageIDs[0]} onUpdate={this.scrollToBottom} />);
+        const newMessage = (<GroupsMessage inThread={/*inThread*/null} typing={/*thisThread.typing*/null} id={messageIDs[0]} key={messageIDs[0]} onUpdate={this.scrollToBottom} />);
         // console.debug(newMessage);
         tempMessages.push(newMessage);
       }
@@ -352,8 +345,8 @@ class MPGroups extends React.Component {
     if (hasSending && !handledSending) {
 
       let mySendingMessages = [];
-      thisChat["sendingMessages"].map(item => {
-        const messageObject = {message: item, lastRead: false, noTransition: true, sending: true, id: "sending" + mySendingMessages.length};
+      thisThread["sendingMessages"].map(item => {
+        const messageObject = {message: item, /*lastRead: false,*/ noTransition: true, sending: true, id: "sending" + mySendingMessages.length};
         mySendingMessages.push(messageObject);
       });
 
@@ -362,7 +355,7 @@ class MPGroups extends React.Component {
         MessageType = GroupsDefaultMessage;
       }
 
-      const newMessage = <MessageType email={this.props.myEmail} name={this.props.myName} picture={this.props.myPicture} messages={mySendingMessages} inChat={["no", true]} inChatTyping={false} onUpdate={this.props.onUpdate} />;
+      const newMessage = <MessageType email={this.props.myEmail} name={this.props.myName} picture={this.props.myPicture} messages={mySendingMessages} inThread={/*["no", true]*/null} inThreadTyping={/*false*/null} onUpdate={this.props.onUpdate} />;
       // console.debug(newMessage);
       tempMessages.push(newMessage);
 
@@ -397,9 +390,9 @@ class MPGroups extends React.Component {
     var nowEmpty = val == "" || val == null;
     var pastEmpty = iv == "" || iv == null;
     if (pastEmpty && !nowEmpty) {
-      dms_typing(this.props.openedDM, true);
+      groups_typing(this.props.openedThread, true);
     } else if (!pastEmpty && nowEmpty) {
-      dms_typing(this.props.openedDM, false);
+      groups_typing(this.props.openedThread, false);
     }
 
     this.setState({
@@ -415,12 +408,12 @@ class MPGroups extends React.Component {
 
       const iv = this.state.inputValue;
       if (iv != null && iv != "") {
-        const oc = this.props.openedDM;
+        const oc = this.props.openedThread;
         setTimeout(function() {
-          // dms_send_message(oc, iv);
+          // groups_send_message(oc, iv);
         }, 3000);
-        dms_send_message(oc, iv);
-        dms_typing(this.props.openedDM, false);
+        groups_send_message(oc, iv);
+        groups_typing(this.props.openedThread, false);
         this.props.addSendingMessage({message: iv});
         this.setState({inputValue: ''});
       }
@@ -428,23 +421,28 @@ class MPGroups extends React.Component {
   }
 
   render() {
-    let otherName = "";
-    if (this.props.getknownPeople[this.props.openedDM] != null) {
-      otherName = this.props.getknownPeople[this.props.openedDM].name;
+    let amountOfPeopleText = "";
+    if (this.props.threads[this.props.openedThread] != null) {
+      const amountOfPeople = this.props.threads[this.props.openedThread].people.length;
+      if (amountOfPeople == 1) {
+        amountOfPeopleText = "with 1 person";
+      } else {
+        amountOfPeopleText = "with " + amountOfPeople + " people";
+      }
     }
 
-    let children = (<h1 className="dmsCenterText">Loading...</h1>);
+    let children = (<h1 className="groupsCenterText">Loading...</h1>);
     if (this.state.loaded) {
       children = (
         <Fragment>
-          <div className="dmsMessages" ref={this.messagesRef} onScroll={this.handleScroll}>
+          <div className="groupsMessages" ref={this.messagesRef} onScroll={this.handleScroll}>
             {
-              (this.props.chats[this.props.openedDM].messages == null)
-              || (this.props.openedDM != "" && this.props.openedDM in this.props.chats && this.props.chats[this.props.openedDM].messages.length > 0 && this.props.chats[this.props.openedDM].messages[0].id == 0)
-              || (this.props.openedDM != "" && this.props.openedDM in this.props.chats && this.props.chats[this.props.openedDM].messages.length <= 0) ?
+              (this.props.threads[this.props.openedThread].messages == null)
+              || (this.props.openedThread != "" && this.props.openedThread in this.props.threads && this.props.threads[this.props.openedThread].messages.length > 0 && this.props.threads[this.props.openedThread].messages[0].id == 0)
+              || (this.props.openedThread != "" && this.props.openedThread in this.props.threads && this.props.threads[this.props.openedThread].messages.length <= 0) ?
 
-              <div className="dmsTopTextDiv">
-                <h1 className="dmsStartConversationText">This is the start of your conversation with {otherName}</h1>
+              <div className="groupsTopTextDiv">
+                <h1 className="groupsStartConversationText">This is the start of your thread {amountOfPeopleText}</h1>
               </div>
 
               :
@@ -452,11 +450,11 @@ class MPGroups extends React.Component {
               null
             }
             {
-              this.isLoadingMessages[this.props.openedDM] ?
+              this.isLoadingMessages[this.props.openedThread] ?
 
-              <div className="dmsTopTextDiv">
-                <h1 className="dmsLoadingMessagesText">Loading...</h1>
-                <Loader className="dmsLoadingMessagesSpinner" type="Oval" color="var(--accent-color)" height={30} width={30} />
+              <div className="groupsTopTextDiv">
+                <h1 className="groupsLoadingMessagesText">Loading...</h1>
+                <Loader className="groupsLoadingMessagesSpinner" type="Oval" color="var(--accent-color)" height={30} width={30} />
               </div>
 
               :
@@ -465,13 +463,13 @@ class MPGroups extends React.Component {
             }
             {this.state.messages}
           </div>
-          {this.state.messages.length > 0 ? null : <h1 className="dmsNoMessageText">No messages.<br/>Try sending one!</h1>}
-          <TextareaAutosize value={this.state.inputValue} onChange={this.handleInputChange} onKeyPress={this.inputEnterPressed} placeholder="Type message here" className="dmsMessagesInput" maxLength="2000" ref={this.inputRef} />
+          {this.state.messages.length > 0 ? null : <h1 className="groupsNoMessageText">No messages.<br/>Try sending one!</h1>}
+          <TextareaAutosize value={this.state.inputValue} onChange={this.handleInputChange} onKeyPress={this.inputEnterPressed} placeholder="Type message here" className="groupsMessagesInput" maxLength="2000" ref={this.inputRef} />
         </Fragment>
       );
     }
-    if (!(this.props.openedDM in this.props.chats)) {
-      children = (<h1 className="dmsCenterText">That chat doesn't exist...</h1>);
+    if (!(this.props.openedThread in this.props.threads)) {
+      children = (<h1 className="groupsCenterText">That thread doesn't exist...</h1>);
     }
 
     return (
@@ -483,8 +481,8 @@ class MPGroups extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  openedDM: state.dms.openedDM,
-  chats: state.dms.chats,
+  openedThread: state.groups.openedThread,
+  threads: state.groups.threads,
   myName: state.app.name,
   myEmail: state.app.email,
   myPicture: state.app.picture,
@@ -494,7 +492,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
-  setOpenedDM,
+  setOpenedThread,
   // addMessage,
   addSendingMessage,
   setTempMessageInput,

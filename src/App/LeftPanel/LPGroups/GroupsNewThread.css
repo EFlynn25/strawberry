@@ -85,22 +85,26 @@
 
 .ntdIcon {
   position: absolute;
-  width: 40px;
-  height: 40px;
-  top: 17.5px;
+  width: 25px;
+  height: 25px;
+  top: 22.5px;
   left: 20px;
   user-select: none;
+
+  fill: var(--accent-color);
 }
 
 .ntdTitle {
   position: absolute;
-  left: 20px;
+  height: 30px;
+  left: 55px;
   top: 20px;
   margin: 0;
 
   font-style: normal;
   font-weight: 500;
   font-size: 22px;
+  line-height: 30px;
 
   user-select: none;
 
@@ -126,6 +130,7 @@
 
 .ntdInput {
   position: absolute;
+  width: calc(100% - 82px);
   height: 25px;
   left: 20px;
   top: 85px;
@@ -147,7 +152,7 @@
   resize: none;
 }
 
-.ntdStatus {
+/* .ntdStatus {
   position: absolute;
   height: 50px;
   left: 30px;
@@ -158,9 +163,19 @@
   font-style: normal;
   font-weight: 400;
   font-size: 14px;
-  white-space: pre-wrap;
+} */
 
-  user-select: none;
+.ntdStatus {
+  position: absolute;
+  height: 60px;
+  left: 30px;
+  right: 30px;
+  top: 135px;
+  margin: 0;
 
-  color: #BBB;
+  font-size: 14px;
+  color: #bbb;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

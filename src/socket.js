@@ -4,6 +4,10 @@ import { setdmsLoaded, setpeopleLoaded, setSocket, setAnnouncement, setAnnouncem
 import { addChat, addMessage, addLoadedMessages, removeSendingMessage, setCreated, setLastRead, setTyping, setInChat, setLoadingMessages, addRequest, removeRequest
   // removeRequesting, addRequested, addRequestedMe
  } from './redux/dmsReducer.js'
+import {
+  addThread,
+  removeThreadCreating, addThreadCreated
+} from './redux/groupsReducer.js'
 import { addPerson } from './redux/peopleReducer.js'
 import mainStore from './redux/mainStore.js';
 
@@ -91,6 +95,7 @@ export function startSocket() {
       /* Set functions */
 
       // there are none
+
 
     } else if (product == "dms") {
 
@@ -209,7 +214,38 @@ export function startSocket() {
         mainStore.dispatch(setLastRead({"who": "me", "chat": jsonData.chat, "lastRead": jsonData.me}));
         mainStore.dispatch(setLastRead({"who": "them", "chat": jsonData.chat, "lastRead": jsonData.them}));
       }
+
+
+    } else if (product == "groups") {
+
+
+      /* Get functions */
+      if (false) { // edit this one when adding first get function
+
+      }
+
+
+      /* Set functions */
+      else if (com == "create_thread") {
+        if (jsonData.response == true) {
+          mainStore.dispatch(removeThreadCreating(jsonData.name));
+          mainStore.dispatch(addThreadCreated(jsonData.name));
+          mainStore.dispatch(addThread(jsonData.thread));
+          console.log("Worked!");
+          console.log(jsonData.name);
+          console.log(jsonData.thread);
+        }
+      }
+
+
+      /* Hybrid functions */
+
+      // there are none
+
+
     }
+
+
   }
 
   socket.onopen = function(event) {
@@ -371,22 +407,10 @@ export function dms_last_read(chat) {
 
 // Groups Functions
 
-export function groups_add_user(idToken) {
-  var jsonObj = {"product": "groups", "command": "add_user", "idToken": idToken}
-  var jsonString = JSON.stringify(jsonObj);
-  console.log("WebSocket message sending: " + jsonString);
-  socket.send(jsonString);
-}
+// Get functions
 
 export function groups_get_threads() {
   var jsonObj = {"product": "groups", "command": "get_threads"}
-  var jsonString = JSON.stringify(jsonObj);
-  console.log("WebSocket message sending: " + jsonString);
-  socket.send(jsonString);
-}
-
-export function groups_get_messages(thread_id, id, amount) {
-  var jsonObj = {"product": "groups", "command": "get_messages", "thread_id": thread_id, "id": id, "amount": amount}
   var jsonString = JSON.stringify(jsonObj);
   console.log("WebSocket message sending: " + jsonString);
   socket.send(jsonString);
@@ -399,15 +423,29 @@ export function groups_get_thread_info(thread_id) {
   socket.send(jsonString);
 }
 
-export function groups_create_thread(name, people) {
-  var jsonObj = {"product": "groups", "command": "create_thread", "name": name, "people": people}
+export function groups_get_messages(thread_id, id, amount) {
+  var jsonObj = {"product": "groups", "command": "get_messages", "thread_id": thread_id, "id": id, "amount": amount}
   var jsonString = JSON.stringify(jsonObj);
   console.log("WebSocket message sending: " + jsonString);
   socket.send(jsonString);
 }
 
-export function groups_send_message(message, thread_id) {
-  var jsonObj = {"product": "groups", "command": "send_message", "message": message, "thread_id": thread_id}
+
+
+
+
+
+// Set functions
+
+export function groups_add_user(idToken) {
+  var jsonObj = {"product": "groups", "command": "add_user", "idToken": idToken}
+  var jsonString = JSON.stringify(jsonObj);
+  console.log("WebSocket message sending: " + jsonString);
+  socket.send(jsonString);
+}
+
+export function groups_create_thread(name, people) {
+  var jsonObj = {"product": "groups", "command": "create_thread", "name": name, "people": people}
   var jsonString = JSON.stringify(jsonObj);
   console.log("WebSocket message sending: " + jsonString);
   socket.send(jsonString);
@@ -448,6 +486,13 @@ export function groups_deny_request(thread_id) {
   socket.send(jsonString);
 }
 
+export function groups_send_message(message, thread_id) {
+  var jsonObj = {"product": "groups", "command": "send_message", "message": message, "thread_id": thread_id}
+  var jsonString = JSON.stringify(jsonObj);
+  console.log("WebSocket message sending: " + jsonString);
+  socket.send(jsonString);
+}
+
 export function groups_rename_thread(thread_id, name) {
   var jsonObj = {"product": "groups", "command": "rename_thread", "thread_id": thread_id, "name": name}
   var jsonString = JSON.stringify(jsonObj);
@@ -455,19 +500,19 @@ export function groups_rename_thread(thread_id, name) {
   socket.send(jsonString);
 }
 
-export function groups_get_user_info(email) {
-  var jsonObj = {"product": "groups", "command": "get_user_info", "requested": email}
-  var jsonString = JSON.stringify(jsonObj);
-  console.log("WebSocket message sending: " + jsonString);
-  socket.send(jsonString);
-}
+// export function groups_get_user_info(email) {
+//   var jsonObj = {"product": "groups", "command": "get_user_info", "requested": email}
+//   var jsonString = JSON.stringify(jsonObj);
+//   console.log("WebSocket message sending: " + jsonString);
+//   socket.send(jsonString);
+// }
 
-export function groups_get_known_people() {
-  var jsonObj = {"product": "groups", "command": "get_known_people"}
-  var jsonString = JSON.stringify(jsonObj);
-  console.log("WebSocket message sending: " + jsonString);
-  socket.send(jsonString);
-}
+// export function groups_get_known_people() {
+//   var jsonObj = {"product": "groups", "command": "get_known_people"}
+//   var jsonString = JSON.stringify(jsonObj);
+//   console.log("WebSocket message sending: " + jsonString);
+//   socket.send(jsonString);
+// }
 
 export function groups_in_thread(thread_id, data) {
   var jsonObj = {"product": "groups", "command": "in_thread", "thread_id": thread_id, "data": data}
@@ -478,6 +523,13 @@ export function groups_in_thread(thread_id, data) {
 
 export function groups_typing(thread_id, data) {
   var jsonObj = {"product": "groups", "command": "typing", "thread_id": thread_id, "data": data}
+  var jsonString = JSON.stringify(jsonObj);
+  console.log("WebSocket message sending: " + jsonString);
+  socket.send(jsonString);
+}
+
+export function groups_last_read(chat) {
+  var jsonObj = {"product": "groups", "command": "last_read", "chat": chat}
   var jsonString = JSON.stringify(jsonObj);
   console.log("WebSocket message sending: " + jsonString);
   socket.send(jsonString);

@@ -4,7 +4,7 @@
   height: 100%;
 }
 
-.dmsMessages {
+.groupsMessages {
   position: relative;
   width: calc(100% - 80px);
   height: calc(100% - 290px);
@@ -12,7 +12,7 @@
   overflow-y: auto;
 }
 
-.dmsMessagesInput {
+.groupsMessagesInput {
   position: absolute;
   width: calc(100% - 78px);
   min-height: 20px;
@@ -33,7 +33,7 @@
   resize: none;
 }
 
-.dmsTopTextDiv {
+.groupsTopTextDiv {
   position: absolute;
   width: 60%;
   height: 200px;
@@ -46,25 +46,25 @@
   justify-content: center;
 }
 
-.dmsStartConversationText {
+.groupsStartConversationText {
   font-size: 24px;
   text-align: center;
 
   color: #FFF8;
 }
 
-.dmsLoadingMessagesText {
+.groupsLoadingMessagesText {
   font-size: 20px;
   text-align: center;
 
   color: #FFF6;
 }
 
-.dmsLoadingMessagesSpinner {
+.groupsLoadingMessagesSpinner {
   margin-left: 20px;
 }
 
-.dmsNoMessageText {
+.groupsNoMessageText {
   position: absolute;
   width: 100%;
   bottom: 100px;
@@ -75,11 +75,12 @@
   color: #FFF4;
 }
 
-.dmsCenterText {
+.groupsCenterText {
   position: absolute;
   width: 100%;
   height: 50px;
   top: calc(50% - 25px);
+  margin: 0;
 
   font-size: 20px;
   text-align: center;
@@ -92,23 +93,23 @@
 
 /* Scrollbar */
 
-.dmsMessages::-webkit-scrollbar {
+.groupsMessages::-webkit-scrollbar {
   width: 10px;
 }
 
-.dmsMessages::-webkit-scrollbar-track {
+.groupsMessages::-webkit-scrollbar-track {
   background: #f1f1f1;
   background: #333;
 }
 
-.dmsMessages::-webkit-scrollbar-thumb {
+.groupsMessages::-webkit-scrollbar-thumb {
   background: #4c4c4c;
 }
 
-.dmsMessages::-webkit-scrollbar-thumb:hover {
+.groupsMessages::-webkit-scrollbar-thumb:hover {
   background: #585858;
 }
 
-.dmsMessages::-webkit-scrollbar-thumb:active {
+.groupsMessages::-webkit-scrollbar-thumb:active {
   background: #444;
 }
