@@ -3,9 +3,8 @@ import { withRouter } from "react-router-dom";
 import { connect } from 'react-redux';
 
 import './LPHome.css';
-import {
-  setOpenedDM
-} from '../../redux/dmsReducer';
+import { setOpenedDM } from '../../redux/dmsReducer';
+import { setOpenedThread } from '../../redux/groupsReducer';
 
 class LPHome extends React.Component {
   constructor(props) {
@@ -32,6 +31,7 @@ class LPHome extends React.Component {
         opened: true
       });
       this.props.setOpenedDM("");
+      this.props.setOpenedThread(null);
     } else if (this.props.history.location.pathname != "/home" && this.state.opened) {
       this.setState({
         opened: false
@@ -65,7 +65,8 @@ class LPHome extends React.Component {
 }
 
 const mapDispatchToProps = {
-    setOpenedDM
+  setOpenedDM,
+  setOpenedThread
 }
 
 export default connect(null, mapDispatchToProps)(withRouter(LPHome));

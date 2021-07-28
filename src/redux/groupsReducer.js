@@ -58,7 +58,7 @@ export const groupsSlice = createSlice({
           "asher.molzer@gmail.com"
         ],
         lastRead: {
-          "everettflynn25@gmail.com": -1
+          "everettflynn25@gmail.com": 0
         }
       },
       1234567890: {

@@ -146,7 +146,7 @@ class GroupsThread extends React.Component {
 
     let read = true;
     if (myThreadMessages != null && myThreadMessages.length > 0) {
-      if (myThread.lastRead.me < myThreadMessages[myThreadMessages.length - 1].id || myThread.lastRead.me == null) {
+      if (myThread.lastRead[this.props.email] < myThreadMessages[myThreadMessages.length - 1].id || myThread.lastRead[this.props.email] == null) {
         read = false;
       }
     } else {
