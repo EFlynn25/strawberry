@@ -156,7 +156,7 @@ class GroupsNewThread extends React.Component {
           <AddGroup className="ntdIcon" />
           <h1 className="ntdTitle">Create Thread</h1>
           <h1 className="ntdText">Name:</h1>
-          <input value={this.state.inputValue} onChange={this.handleInputChange} onKeyPress={this.inputEnterPressed} className="ntdInput" placeholder="Type name here" ref={this.inputRef} disabled={this.state.threadCreating == "" ? "" : "disabled"} maxlength="48" />
+          <input value={this.state.inputValue} onChange={this.handleInputChange} onKeyPress={this.inputEnterPressed} className="ntdInput" placeholder="Type name here" ref={this.inputRef} disabled={this.state.threadCreating == "" ? "" : "disabled"} maxLength="48" />
           <p className="ntdStatus">{this.state.status}</p>
         </div>
       </Fragment>

@@ -7,10 +7,10 @@ import Loader from "react-loader-spinner";
 import './MPDMs.css';
 import {
   setOpenedDM,
-  // addMessage,
-  addSendingMessage,
+  // addChatMessage,
+  addSendingChatMessage,
   setTempMessageInput,
-  setLastRead,
+  setChatLastRead,
   setLoadingMessages
 } from '../../redux/dmsReducer';
 import {
@@ -148,7 +148,6 @@ class MPDMs extends React.Component {
       dms_last_read(propsOpenedDM);
 
       const tmi = thisChat.tempMessageInput;
-      console.log(tmi);
       if (tmi != "") {
         this.setState({
           inputValue: tmi
@@ -542,7 +541,7 @@ class MPDMs extends React.Component {
         }, 3000);
         dms_send_message(oc, iv);
         dms_typing(this.props.openedDM, false);
-        this.props.addSendingMessage({message: iv});
+        this.props.addSendingChatMessage({message: iv});
         this.setState({inputValue: ''});
       }
     }
@@ -616,10 +615,10 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
   setOpenedDM,
-  // addMessage,
-  addSendingMessage,
+  // addChatMessage,
+  addSendingChatMessage,
   setTempMessageInput,
-  setLastRead,
+  setChatLastRead,
   setLoadingMessages,
   setCurrentPage,
 }

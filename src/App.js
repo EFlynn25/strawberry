@@ -37,7 +37,8 @@ class App extends React.Component {
         this.props.setUserEmail(user.email);
         let picture = user.photoURL
         if (picture == null) {
-          picture = "https://drive.google.com/uc?id=1Veh7wpXzbjuHHXPBafyWQfSNZr3zUsf-";
+          // picture = "https://drive.google.com/uc?id=1Veh7wpXzbjuHHXPBafyWQfSNZr3zUsf-";
+          picture = "/assets/images/default_profile_pic.png";
         }
         this.props.setUserPicture(picture);
       }
@@ -45,7 +46,7 @@ class App extends React.Component {
   }
 
   componentDidUpdate() {
-    if (!this.state.pageLoaded && this.props.dmsLoaded && this.props.peopleLoaded && this.props.socket == true) {
+    if (!this.state.pageLoaded && this.props.dmsLoaded && this.props.groupsLoaded && this.props.peopleLoaded && this.props.socket == true) {
       if (this.props.history.location.pathname == "/") {
         this.props.history.push("/home");
       }
@@ -104,7 +105,7 @@ class App extends React.Component {
               null
             }
 
-            <Overlay type="loading" hide={this.state.pageLoaded} socket={this.props.socket} dmsLoaded={this.props.dmsLoaded} peopleLoaded={this.props.peopleLoaded} />
+            <Overlay type="loading" hide={this.state.pageLoaded} socket={this.props.socket} dmsLoaded={this.props.dmsLoaded} groupsLoaded={this.props.groupsLoaded} peopleLoaded={this.props.peopleLoaded} />
           </Route>
         </Switch>
       </div>
@@ -117,9 +118,12 @@ const mapStateToProps = (state) => ({
   email: state.app.email,
   picture: state.app.picture,
   hideRightPanel: state.app.hideRightPanel,
+
   dmsLoaded: state.app.dmsLoaded,
+  groupsLoaded: state.app.groupsLoaded,
   peopleLoaded: state.app.peopleLoaded,
   socket: state.app.socket,
+
   currentPage: state.app.currentPage,
   notificationCount: state.app.notificationCount
 });

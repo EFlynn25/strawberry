@@ -46,7 +46,9 @@ class MPHome extends React.Component {
 
   componentDidMount() {
     this.props.setCurrentPage("Home");
-    get_announcements();
+    if (!this.props.announcements || Object.keys(this.props.announcements).length <= 0) {
+      get_announcements();
+    }
   }
 
   componentDidUpdate(prevState) {
@@ -144,6 +146,7 @@ class MPHome extends React.Component {
 const mapStateToProps = (state) => ({
   picture: state.app.picture,
   name: state.app.name,
+  announcements: state.app.announcements
 });
 
 const mapDispatchToProps = {

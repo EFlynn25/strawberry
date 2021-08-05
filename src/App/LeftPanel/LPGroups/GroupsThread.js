@@ -5,7 +5,7 @@ import { withRouter } from "react-router-dom";
 import './GroupsThread.css';
 import {
   setOpenedThread,
-  // setLastRead
+  setThreadLastRead
 } from "../../../redux/groupsReducer"
 
 class GroupsThread extends React.Component {
@@ -28,7 +28,9 @@ class GroupsThread extends React.Component {
     const myThreadMessages = myThread.messages;
 
     if (this.props.threadID == this.props.openedThread && myThreadMessages != null && myThreadMessages.length > 0) {
-      // this.props.setLastRead({"who": "me", "thread": this.props.threadID, "lastRead": myThreadMessages[myThreadMessages.length - 1].id});
+      let myDict = {};
+      myDict[this.props.email] = myThreadMessages[myThreadMessages.length - 1].id;
+      this.props.setThreadLastRead({"thread_id": this.props.threadID, "last_read": myDict});
     }
   }
 
@@ -178,7 +180,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
   setOpenedThread,
-  // setLastRead
+  setThreadLastRead
 }
 
 

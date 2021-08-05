@@ -180,11 +180,12 @@ class GroupsMessage extends React.Component {
 
     const message = thisThread.messages.find( ({ id }) => id === this.state.myIDs[0] );
     if (message.from == this.props.myEmail && this.state.myIDs.includes(thisThread.messages[thisThread.messages.length - 1].id) && thisThread.sendingMessages != null) {
-      thisThread.sendingMessages.map(item => {
+      thisThread.sendingMessages.forEach((item, i) => {
         console.log(item);
-        let messageElement;
-        messageElement = <p key={"key" + item} className="defaultMessageText defaultMessageSending">{item}</p>;
-        //newMessages.push(messageElement);
+        // let messageElement = (<p key={"key" + item} className="defaultMessageText defaultMessageSending">{item}</p>);
+        const sendingMessageObject = {"message": item, "id": "sending" + i, "sending": true};
+        newMessageObjects.push(sendingMessageObject);
+        console.log(message);
       });
     }
 

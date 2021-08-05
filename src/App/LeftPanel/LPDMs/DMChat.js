@@ -5,7 +5,7 @@ import { withRouter } from "react-router-dom";
 import './DMChat.css';
 import {
   setOpenedDM,
-  setLastRead
+  setChatLastRead
 } from "../../../redux/dmsReducer"
 
 class DMChat extends React.Component {
@@ -25,7 +25,13 @@ class DMChat extends React.Component {
 
     const thisChat = this.props.chats[this.props.chatEmail];
     const nextChat = nextProps.chats[this.props.chatEmail];
-    const thisChatChanged = thisChat.lastRead.me != nextChat.lastRead.me || thisChat.messages[thisChat.messages.length - 1].id != nextChat.messages[nextChat.messages.length - 1].id;
+    let thisChatChanged = false;
+    if (thisChat.messages && nextChat.messages) {
+      thisChatChanged = thisChat.messages[thisChat.messages.length - 1].id != nextChat.messages[nextChat.messages.length - 1].id;
+    }
+    if (thisChat.lastRead.me != nextChat.lastRead.me) {
+      thisChatChanged = true;
+    }
 
     // console.groupCollapsed(this.props.chatEmail);
     // console.log(thisChat);
@@ -50,7 +56,7 @@ class DMChat extends React.Component {
     const myChatMessages = myChat.messages;
 
     if (this.props.chatEmail == this.props.openedDM && myChatMessages != null && myChatMessages.length > 0) {
-      this.props.setLastRead({"who": "me", "chat": this.props.chatEmail, "lastRead": myChatMessages[myChatMessages.length - 1].id});
+      this.props.setChatLastRead({"who": "me", "chat": this.props.chatEmail, "lastRead": myChatMessages[myChatMessages.length - 1].id});
     }
   }
 
@@ -145,7 +151,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
     setOpenedDM,
-    setLastRead
+    setChatLastRead
 }
 
 

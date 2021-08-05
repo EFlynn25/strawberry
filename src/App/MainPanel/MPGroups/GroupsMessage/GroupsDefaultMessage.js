@@ -42,7 +42,7 @@ class GroupsDefaultMessage extends React.Component {
     // }
 
     let parentStyles = null;
-    if (this.props.messages.length > 0 && this.props.messages[this.props.messages.length - 1].sending) {
+    if (this.props.messages.length > 0 && this.props.messages[this.props.messages.length - 1].sending && this.props.messages[0].sending) {
       parentStyles = {marginTop: "40px"};
     }
 

@@ -1,12 +1,13 @@
 import firebase from 'firebase/app';
 import { useDispatch } from 'react-redux'
-import { setdmsLoaded, setpeopleLoaded, setSocket, setAnnouncement, setAnnouncementRead } from './redux/appReducer.js'
-import { addChat, addMessage, addLoadedMessages, removeSendingMessage, setCreated, setLastRead, setTyping, setInChat, setLoadingMessages, addRequest, removeRequest
+import { setdmsLoaded, setgroupsLoaded, setpeopleLoaded, setSocket, setAnnouncement, setAnnouncementRead } from './redux/appReducer.js'
+import { addChat, addChatMessage, addLoadedChatMessages, removeSendingChatMessage, setCreated, setChatLastRead, setTyping, setInChat, setLoadingMessages, addRequest, removeRequest
   // removeRequesting, addRequested, addRequestedMe
  } from './redux/dmsReducer.js'
 import {
-  addThread,
-  removeThreadCreating, addThreadCreated
+  addThread, setThreadName, addThreadPeople, addThreadMessage, addLoadedThreadMessages, removeSendingThreadMessage,
+  removeThreadCreating, addThreadCreated,
+  setInThread, setThreadLastRead
 } from './redux/groupsReducer.js'
 import { addPerson } from './redux/peopleReducer.js'
 import mainStore from './redux/mainStore.js';
@@ -54,10 +55,26 @@ export function startSocket() {
 
         if (!mainStore.getState().app.peopleLoaded) {
           let missingPerson = false;
-          const chats = Object.keys(mainStore.getState().dms.chats);
+          const chatKeys = Object.keys(mainStore.getState().dms.chats);
+          const threads = mainStore.getState().groups.threads;
           const people = Object.keys(mainStore.getState().people.knownPeople);
-          chats.map(item => {
+          chatKeys.forEach(item => {
             if (!people.includes(item)) {
+              missingPerson = true;
+            }
+          });
+          console.log(people);
+          Object.keys(threads).forEach(item => {
+            console.log(item);
+            if (threads[item].people) {
+              threads[item].people.forEach(item => {
+                console.log(item);
+                if (!people.includes(item)) {
+                  console.log("missing");
+                  missingPerson = true;
+                }
+              });
+            } else {
               missingPerson = true;
             }
           });
@@ -111,7 +128,7 @@ export function startSocket() {
           const item = jsonData.chat;
           get_chat_info(item);
         } else if (jsonData.response == "no_chats") {
-          mainStore.dispatch(setpeopleLoaded(true));
+          // mainStore.dispatch(setpeopleLoaded(true));
           mainStore.dispatch(setdmsLoaded(true));
         }
       } else if (com == "get_messages") {
@@ -120,7 +137,6 @@ export function startSocket() {
           const myEmail = mainStore.getState().app.email;
           // let myMessages = jsonData.messages.reverse();
           let myMessages = jsonData.messages;
-          console.log(myMessages);
           myMessages.forEach((item, i) => {
             if (item.email == myEmail) {
               item.from = "me";
@@ -129,13 +145,12 @@ export function startSocket() {
             }
             delete item.email;
           });
-          console.log(myMessages);
-          mainStore.dispatch(addLoadedMessages({"chat": jsonData.chat, "messages": myMessages}));
+          mainStore.dispatch(addLoadedChatMessages({"chat": jsonData.chat, "messages": myMessages}));
 
         } else if (jsonData.response == "receive_message") {
             let myFrom = "them";
             const item = jsonData.message;
-            mainStore.dispatch(addMessage({chat: jsonData.chat, message: item.message, from: myFrom, id: item.id, timestamp: item.timestamp}));
+            mainStore.dispatch(addChatMessage({chat: jsonData.chat, message: item.message, from: myFrom, id: item.id, timestamp: item.timestamp}));
 
             const openedDM = mainStore.getState().dms.openedDM;
             const dmsOrGroups = mainStore.getState().app.dmsOrGroups;
@@ -182,8 +197,8 @@ export function startSocket() {
         }
       } else if (com == "send_message") {
         const myMessage = jsonData.message;
-        mainStore.dispatch(removeSendingMessage({"chat": jsonData.chat, "message": jsonData.message.message}));
-        mainStore.dispatch(addMessage({chat: jsonData.chat, message: myMessage.message, from: "me", id: myMessage.id, timestamp: myMessage.timestamp}));
+        mainStore.dispatch(removeSendingChatMessage({"chat": jsonData.chat, "message": jsonData.message.message}));
+        mainStore.dispatch(addChatMessage({chat: jsonData.chat, message: myMessage.message, from: "me", id: myMessage.id, timestamp: myMessage.timestamp}));
       }
 
 
@@ -194,25 +209,25 @@ export function startSocket() {
         }
         if ("lastRead" in jsonData) {
           if (mainStore.getState().app.email != jsonData.email) {
-            mainStore.dispatch(setLastRead({"who": "them", "chat": jsonData.chat, "lastRead": jsonData.lastRead}));
+            mainStore.dispatch(setChatLastRead({"who": "them", "chat": jsonData.chat, "lastRead": jsonData.lastRead}));
           } else if (mainStore.getState().app.email == jsonData.email) {
-            mainStore.dispatch(setLastRead({"who": "me", "chat": jsonData.chat, "lastRead": jsonData.lastRead}));
+            mainStore.dispatch(setChatLastRead({"who": "me", "chat": jsonData.chat, "lastRead": jsonData.lastRead}));
           }
         } else if (!("lastRead" in jsonData) && !jsonData.data && jsonData.response != "get_in_chat") {
           const myMessages = mainStore.getState().dms.chats[jsonData.chat].messages;
           if (myMessages != null && myMessages.length > 0) {
-            mainStore.dispatch(setLastRead({"who": "them", "chat": jsonData.chat, "lastRead": myMessages[myMessages.length - 1].id}));
+            mainStore.dispatch(setChatLastRead({"who": "them", "chat": jsonData.chat, "lastRead": myMessages[myMessages.length - 1].id}));
           }
         }
       } else if (com == "typing") {
-        // mainStore.dispatch(setLastRead({"who": "me", "chat": jsonData.chat, "lastRead": jsonData.me}));
-        // mainStore.dispatch(setLastRead({"who": "them", "chat": jsonData.chat, "lastRead": jsonData.them}));
+        // mainStore.dispatch(setChatLastRead({"who": "me", "chat": jsonData.chat, "lastRead": jsonData.me}));
+        // mainStore.dispatch(setChatLastRead({"who": "them", "chat": jsonData.chat, "lastRead": jsonData.them}));
         if (mainStore.getState().app.email != jsonData.email) {
           mainStore.dispatch(setTyping({"chat": jsonData.chat, "data": jsonData.data}));
         }
       } else if (com == "last_read") {
-        mainStore.dispatch(setLastRead({"who": "me", "chat": jsonData.chat, "lastRead": jsonData.me}));
-        mainStore.dispatch(setLastRead({"who": "them", "chat": jsonData.chat, "lastRead": jsonData.them}));
+        mainStore.dispatch(setChatLastRead({"who": "me", "chat": jsonData.chat, "lastRead": jsonData.me}));
+        mainStore.dispatch(setChatLastRead({"who": "them", "chat": jsonData.chat, "lastRead": jsonData.them}));
       }
 
 
@@ -220,27 +235,109 @@ export function startSocket() {
 
 
       /* Get functions */
-      if (false) { // edit this one when adding first get function
+      if (com == "get_threads") {
+        if (jsonData.response == true) {
+          const threadsList = jsonData.threads;
+          threadsList.map(item => {
+            get_thread_info(item);
+          });
+        } else if (jsonData.response == "no_threads") {
+          mainStore.dispatch(setgroupsLoaded(true));
+        }
+      } else if (com == "get_thread_info") {
+        if (jsonData.response == true) {
+          mainStore.dispatch(setThreadName({"thread_id": jsonData.thread_id, "name": jsonData.name}));
+          if (jsonData.people != null) {
+            mainStore.dispatch(addThreadPeople({"thread_id": jsonData.thread_id, "people": jsonData.people}));
+            const people = Object.keys(mainStore.getState().people.knownPeople);
+            jsonData.people.forEach(item => {
+              if (!people.includes(item)) {
+                get_user_info(item);
+              }
+            });
+            console.log(people);
+            // get_user_info();
+          }
+        }
+      } else if (com == "get_messages") {
+        if (jsonData.response == true) {
+
+          const myEmail = mainStore.getState().app.email;
+          // let myMessages = jsonData.messages.reverse();
+          let myMessages = jsonData.messages;
+          myMessages.forEach((item, i) => {
+            item.from = item.email;
+            delete item.email;
+          });
+          mainStore.dispatch(addLoadedThreadMessages({"thread_id": jsonData.thread_id, "messages": myMessages}));
+
+        } else if (jsonData.response == "receive_message") {
+            const item = jsonData.message;
+            mainStore.dispatch(addThreadMessage({thread_id: jsonData.thread_id, message: item.message, from: item.email, id: item.id, timestamp: item.timestamp}));
+
+            const openedThread = mainStore.getState().groups.openedThread;
+            const dmsOrGroups = mainStore.getState().app.dmsOrGroups;
+            if (openedThread != jsonData.thread_id || dmsOrGroups != "groups") {
+              textTone.play();
+            }
+        } else if (jsonData.response == "no_messages") {
+          // dms_get_chat_created(jsonData.chat);
+        }
+
+        if (!mainStore.getState().app.groupsLoaded) {
+          let missingMessages = false;
+          const threads = mainStore.getState().groups.threads;
+          const threadKeys = Object.keys(threads);
+          threadKeys.map(item => {
+            const myMessages = threads[item].messages;
+            if (myMessages == null) {
+              missingMessages = true;
+            }
+          });
+          if (!missingMessages || jsonData.response == "no_messages") {
+            mainStore.dispatch(setgroupsLoaded(true));
+          }
+        }
 
       }
 
 
       /* Set functions */
+      else if (com == "add_user") {
+        groups_get_threads();
+      }
       else if (com == "create_thread") {
         if (jsonData.response == true) {
           mainStore.dispatch(removeThreadCreating(jsonData.name));
           mainStore.dispatch(addThreadCreated(jsonData.name));
-          mainStore.dispatch(addThread(jsonData.thread));
-          console.log("Worked!");
-          console.log(jsonData.name);
-          console.log(jsonData.thread);
+          // mainStore.dispatch(addThread(jsonData.thread));
+          get_thread_info(jsonData.thread);
         }
+      } else if (com == "send_message") {
+        const myMessage = jsonData.message;
+        mainStore.dispatch(removeSendingThreadMessage({"thread_id": jsonData.thread_id, "message": jsonData.message.message}));
+        mainStore.dispatch(addThreadMessage({thread_id: jsonData.thread_id, message: myMessage.message, from: myMessage.email, id: myMessage.id, timestamp: myMessage.timestamp}));
       }
 
 
       /* Hybrid functions */
 
-      // there are none
+      else if (com == "in_thread") {
+        if (jsonData.response == true) {
+          // do nothing
+        } else if (jsonData.response == "receive_in_thread") {
+          mainStore.dispatch(setInThread({"thread_id": jsonData.thread_id, "people": jsonData.in_thread, "data": jsonData.data}));
+          if (jsonData.data === false) {
+            let myLastReadDict = {};
+            myLastReadDict[jsonData.in_thread] = jsonData.lastRead;
+            mainStore.dispatch(setThreadLastRead({"thread_id": jsonData.thread_id, "last_read": myLastReadDict}));
+          }
+        } else if (jsonData.response == "get_in_thread") {
+          mainStore.dispatch(setInThread({"thread_id": jsonData.thread_id, "people": jsonData.in_thread, "data": jsonData.data}));
+        }
+      } else if (com == "last_read") {
+        mainStore.dispatch(setThreadLastRead({"thread_id": jsonData.thread_id, "last_read": jsonData.last_read}));
+      }
 
 
     }
@@ -254,7 +351,6 @@ export function startSocket() {
       add_user(idToken);
       dms_add_user(idToken);
       groups_add_user(idToken);
-      groups_get_thread_info(336529271202);
     }).catch(function(error) {
       // Handle error
     });
@@ -285,6 +381,14 @@ function get_chat_info(chat) {
   dms_get_messages(chat, "latest", 5);
   dms_in_chat(chat, "get_in_chat");
   dms_last_read(chat);
+}
+
+function get_thread_info(thread_id) {
+  groups_get_thread_info(thread_id);
+  mainStore.dispatch(addThread(thread_id));
+  groups_get_messages(thread_id, "latest", 5);
+  groups_in_thread(thread_id, "get_in_thread");
+  groups_last_read(thread_id);
 }
 
 
@@ -486,7 +590,7 @@ export function groups_deny_request(thread_id) {
   socket.send(jsonString);
 }
 
-export function groups_send_message(message, thread_id) {
+export function groups_send_message(thread_id, message) {
   var jsonObj = {"product": "groups", "command": "send_message", "message": message, "thread_id": thread_id}
   var jsonString = JSON.stringify(jsonObj);
   console.log("WebSocket message sending: " + jsonString);
@@ -528,8 +632,8 @@ export function groups_typing(thread_id, data) {
   socket.send(jsonString);
 }
 
-export function groups_last_read(chat) {
-  var jsonObj = {"product": "groups", "command": "last_read", "chat": chat}
+export function groups_last_read(thread_id) {
+  var jsonObj = {"product": "groups", "command": "last_read", "thread_id": thread_id}
   var jsonString = JSON.stringify(jsonObj);
   console.log("WebSocket message sending: " + jsonString);
   socket.send(jsonString);

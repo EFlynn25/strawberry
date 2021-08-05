@@ -11,6 +11,7 @@ export const appSlice = createSlice({
     hideRightPanel: true,
 
     dmsLoaded: false,
+    groupsLoaded: false,
     peopleLoaded: false,
 
     socket: null,
@@ -42,6 +43,9 @@ export const appSlice = createSlice({
     setdmsLoaded: (state, action) => {
       state.dmsLoaded = action.payload;
     },
+    setgroupsLoaded: (state, action) => {
+      state.groupsLoaded = action.payload;
+    },
     setpeopleLoaded: (state, action) => {
       state.peopleLoaded = action.payload;
     },
@@ -68,7 +72,7 @@ export const appSlice = createSlice({
 
 export const { setUserName, setUserEmail, setUserPicture,
   setdmsOrGroups, sethideRightPanel,
-  setdmsLoaded, setpeopleLoaded,
+  setdmsLoaded, setgroupsLoaded, setpeopleLoaded,
   setSocket,
   setCurrentPage, setNotificationCount,
   setMessageStyle,

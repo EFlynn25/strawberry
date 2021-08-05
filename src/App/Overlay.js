@@ -48,11 +48,14 @@ function Overlay(props) {
       } else if (props.dmsLoaded == false) {
         step = 1;
         myProgress = "Loading DMs...";
-      } else if (props.peopleLoaded == false) {
+      } else if (props.groupsLoaded == false) {
         step = 2;
+        myProgress = "Loading Groups...";
+      } else if (props.peopleLoaded == false) {
+        step = 3;
         myProgress = "Loading people...";
       } else {
-        step = 3;
+        step = 4;
       }
       if (props.socket == false) {
         myProgress = "Connecting to server...";
@@ -61,14 +64,17 @@ function Overlay(props) {
       var percent = 0;
       var color = "#FAA";
       if (step == 1) {
-        percent = 33;
+        percent = 25;
         color = "#D88";
       } else if (step == 2) {
-        percent = 66;
+        percent = 50;
         color = "#A55";
       } else if (step == 3) {
-        percent = 100;
+        percent = 75;
         color = "#833";
+      } else if (step == 4) {
+        percent = 100;
+        color = "#611";
       }
 
       overlayContent = (

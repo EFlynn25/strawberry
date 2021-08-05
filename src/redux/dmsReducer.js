@@ -21,7 +21,7 @@ export const dmsSlice = createSlice({
     addChat: (state, action) => {
       state.chats[action.payload] = {messages: null, lastRead: {me: null, them: null}};
     },
-    addMessage: (state, action) => {
+    addChatMessage: (state, action) => {
       let myChatEmail = state.openedDM;
       if ("chat" in action.payload) {
         myChatEmail = action.payload["chat"];
@@ -104,7 +104,7 @@ export const dmsSlice = createSlice({
 
 
     },
-    addLoadedMessages: (state, action) => {
+    addLoadedChatMessages: (state, action) => {
       console.log("payload... ", action.payload);
 
       let myChatEmail = action.payload.chat;
@@ -126,7 +126,7 @@ export const dmsSlice = createSlice({
         });
       }
     },
-    addSendingMessage: (state, action) => {
+    addSendingChatMessage: (state, action) => {
       let myChatEmail = state.openedDM;
       if ("chat" in action.payload) {
         myChatEmail = action.payload["chat"];
@@ -140,7 +140,7 @@ export const dmsSlice = createSlice({
         state.chats[myChatEmail]["sendingMessages"] = [action.payload["message"]];
       }
     },
-    removeSendingMessage: (state, action) => {
+    removeSendingChatMessage: (state, action) => {
       let myChatEmail = state.openedDM;
       if ("chat" in action.payload) {
         myChatEmail = action.payload["chat"];
@@ -165,7 +165,7 @@ export const dmsSlice = createSlice({
     setTempMessageInput: (state, action) => {
       state.chats[action.payload["chat"]].tempMessageInput = action.payload["input"];
     },
-    setLastRead: (state, action) => {
+    setChatLastRead: (state, action) => {
       if (action.payload["who"] == "me") {
         state.chats[action.payload["chat"]].lastRead.me = action.payload["lastRead"];
       } else if (action.payload["who"] == "them") {
@@ -196,8 +196,8 @@ export const dmsSlice = createSlice({
   },
 });
 
-export const { setOpenedDM, addChat, addMessage, addLoadedMessages, addSendingMessage, removeSendingMessage,
-  setCreated, setTempMessageInput, setLastRead, setTyping, setInChat, setLoadingMessages,
+export const { setOpenedDM, addChat, addChatMessage, addLoadedChatMessages, addSendingChatMessage, removeSendingChatMessage,
+  setCreated, setTempMessageInput, setChatLastRead, setTyping, setInChat, setLoadingMessages,
   addRequest, removeRequest
  } = dmsSlice.actions;
 
