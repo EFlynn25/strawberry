@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import './DMsDefaultMessage.css';
+import '../../MessageStyles/DefaultMessage.css';
 
 class DMsDefaultMessage extends React.Component {
   constructor(props) {

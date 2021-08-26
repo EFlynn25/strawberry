@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import './GroupsDefaultMessage.css';
+import '../../MessageStyles/DefaultMessage.css';
 
 class GroupsDefaultMessage extends React.Component {
   constructor(props) {
@@ -55,7 +56,7 @@ class GroupsDefaultMessage extends React.Component {
           {this.props.name}
           {this.props.messages.length > 0 && this.props.messages[this.props.messages.length - 1].sending ? <h1 className="defaultMessageSendingText">Sending...</h1> : null}
         </div>
-        <div className="defaultMessageGroup">
+        <div className="defaultMessageGroup gDefaultMessageGroup">
           { this.props.messages == null ? null :
             this.props.messages.map(item => {
               // let lrClasses = "defaultLastRead defaultIndicatorHide"
