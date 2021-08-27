@@ -6,3 +6,27 @@
 .gDefaultMessageGroup {
   width: calc(100% - 150px);
 }
+
+.gDefaultLastRead {
+  width: 20px;
+  height: 20px;
+  top: calc(50% - 10px);
+  right: -30px;
+
+  box-shadow: 0px 0px 8px 0px #0004;
+}
+
+.gExtraLastRead {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  top: calc(50% - 10px);
+  right: -30px;
+  margin: 0;
+
+  font-size: 10px;
+  line-height: 20px;
+  text-align: center;
+  color: #888;
+  user-select: none;
+}

@@ -19,6 +19,8 @@ class GroupsMessage extends React.Component {
       inThreadNoTransition: true,
       inThreadTyping: false,
     };
+
+    this.myLastRead = {};
   }
 
   componentDidMount() {
@@ -35,7 +37,8 @@ class GroupsMessage extends React.Component {
     const openedThreadChanged = prevProps.openedThread != propsOpenedThread;
 
     const idsChanged = prevState.myIDs != this.state.myIDs;
-    const themLastReadChanged = prevCurrentChat.lastRead.them != thisThread.lastRead.them;
+    const themLastReadChanged = JSON.stringify(prevCurrentChat.lastRead) != JSON.stringify(thisThread.lastRead);
+
     const otherUserStateChanged = prevProps.inThread != this.props.inThread || prevProps.typing != this.props.typing;
     // const newSentMessage = prevCurrentChat.sendingMessages != null && thisThread.sendingMessages != null && prevCurrentChat.sendingMessages != thisThread.sendingMessages;
     const newSentMessage = prevCurrentChat.sendingMessages != thisThread.sendingMessages;
@@ -52,26 +55,26 @@ class GroupsMessage extends React.Component {
   reloadData() {
     const propsOpenedThread = this.props.openedThread;
 
-    const myChat = this.props.threads[propsOpenedThread];
-    const myChatMessages = this.props.threads[propsOpenedThread].messages;
+    const thisThread = this.props.threads[propsOpenedThread];
+    const thisThreadMessages = thisThread.messages;
 
-    const firstMessageID = myChatMessages[0].id;
+    const firstMessageID = thisThreadMessages[0].id;
     const myID = this.props.id;
     var ids = [];
     var from = "";
 
     for (var i = myID - firstMessageID; true; i++) {
       if (from.length == 0) {
-        from = myChatMessages[i].from;
+        from = thisThreadMessages[i].from;
       }
       // console.log("i: " + i);
       // console.log("current id: " + (i + firstMessageID));
       // console.log("current message: ", myChatMessages[i]);
-      if (myChatMessages[i].from != from) {
+      if (thisThreadMessages[i].from != from) {
         break;
       }
       ids.push(i + firstMessageID);
-      if (myChatMessages[i + 1] == null) {
+      if (thisThreadMessages[i + 1] == null) {
         break;
       }
     }
@@ -102,6 +105,22 @@ class GroupsMessage extends React.Component {
     }
     let newMessageObjects = [];
     const thisThread = this.props.threads[this.props.openedThread];
+
+    if (thisThread.lastRead != null) {
+      this.myLastRead = {};
+      Object.keys(thisThread.lastRead).forEach(item => {
+        if (item != this.props.myEmail) {
+          if (this.myLastRead[thisThread.lastRead[item]] == null) {
+            this.myLastRead[thisThread.lastRead[item]] = [];
+          }
+          if (!this.myLastRead[thisThread.lastRead[item]].includes(item)) {
+            this.myLastRead[thisThread.lastRead[item]].push(item);
+          }
+        }
+      });
+      console.log(this.myLastRead);
+    }
+
     // const lastRead = thisThread.lastRead.them;
     this.state.myIDs.filter(item => {
       const message = thisThread.messages.find( ({ id }) => id === item );
@@ -124,8 +143,27 @@ class GroupsMessage extends React.Component {
       //   nt = false;
       // }
 
+      let lr = this.myLastRead[message.id];
+      // if (message.id == 41) {
+      //   lr = ["fireno656@yahoo.com"];
+      // } else if (message.id == 42) {
+      //   lr = ["fireno656@yahoo.com", "ethan.flynn2007@gmail.com"];
+      // } else if (message.id == 43) {
+      //   lr = ["fireno656@yahoo.com", "ethan.flynn2007@gmail.com", "asher.molzer@gmail.com"];
+      // } else if (message.id == 44) {
+      //   lr = ["fireno656@yahoo.com", "ethan.flynn2007@gmail.com", "asher.molzer@gmail.com", "isaiahroman25@gmail.com"];
+      // } else if (message.id == 45) {
+      //   lr = ["fireno656@yahoo.com", "ethan.flynn2007@gmail.com", "asher.molzer@gmail.com", "isaiahroman25@gmail.com", "appleandroidtechmaker@gmail.com"];
+      // } else if (message.id == 46) {
+      //   lr = ["fireno656@yahoo.com", "ethan.flynn2007@gmail.com", "asher.molzer@gmail.com", "isaiahroman25@gmail.com", "appleandroidtechmaker@gmail.com", "katrinaflynn79@gmail.com"];
+      // } else if (message.id == 47) {
+      //   lr = ["fireno656@yahoo.com", "ethan.flynn2007@gmail.com", "asher.molzer@gmail.com", "isaiahroman25@gmail.com", "appleandroidtechmaker@gmail.com", "katrinaflynn79@gmail.com", "flynneverett@logoscharter.com"];
+      // } else if (message.id == 48) {
+      //   lr = ["fireno656@yahoo.com", "ethan.flynn2007@gmail.com", "asher.molzer@gmail.com", "isaiahroman25@gmail.com", "appleandroidtechmaker@gmail.com", "katrinaflynn79@gmail.com", "flynneverett@logoscharter.com", "cherryman656@gmail.com"];
+      // }
+
       let messageObject;
-      messageObject = {message: message.message, timestamp: this.parseDate(message.timestamp), lastRead: /*lr*/null, noTransition: /*nt*/null, id: item};
+      messageObject = {message: message.message, timestamp: this.parseDate(message.timestamp), lastRead: lr, noTransition: /*nt*/null, id: item};
 
       newMessageObjects.push(messageObject);
     });

@@ -59,21 +59,51 @@ class GroupsDefaultMessage extends React.Component {
         <div className="defaultMessageGroup gDefaultMessageGroup">
           { this.props.messages == null ? null :
             this.props.messages.map(item => {
-              // let lrClasses = "defaultLastRead defaultIndicatorHide"
-              // if (item.lastRead) {
-              //   lrClasses = "defaultLastRead";
-              // }
-              // if (item.noTransition) {
-              //   lrClasses += " noTransition";
-              // }
-              //
+              let lrClasses = "defaultLastRead gDefaultLastRead defaultIndicatorHide"
+              if (item.lastRead) {
+                lrClasses = "defaultLastRead gDefaultLastRead";
+              }
+              if (item.noTransition) {
+                lrClasses += " noTransition";
+              }
+
               let messageClass = "defaultMessageText";
               if (item.sending) {
                 messageClass = "defaultMessageText defaultMessageSending";
               }
-              //
-              // const lastReadElement = <img src={this.props.knownPeople[this.props.openedThread].picture} className={lrClasses} alt={this.props.knownPeople[this.props.openedThread].name} />;
-              return (<p key={"id" + item.id} title={item.timestamp} className={messageClass}>{item.message}{/*lastReadElement*/}</p>);
+
+              let lastReadElementPictures = [];
+              if (item.lastRead != null) {
+                let transformPX = 0;
+                let tpxIncrement = 12;
+                let peopleToShow = item.lastRead.length;
+                if (item.lastRead.length <= 4) {
+                  tpxIncrement = 20;
+                } else if (item.lastRead.length > 3 && item.lastRead.length <= 6) {
+                  tpxIncrement = 60 / (item.lastRead.length - 1);
+                } else {
+                  peopleToShow = 6;
+                }
+
+                for (let i = 0; i < peopleToShow; i++) {
+                  if (item.lastRead[i] != null && item.lastRead[i] != this.props.email) {
+                    console.log("YAY, ", item.lastRead[i]);
+                    const name = this.props.knownPeople[item.lastRead[i]].name;
+                    const picture = this.props.knownPeople[item.lastRead[i]].picture;
+                    lastReadElementPictures.push(<img style={ i == 0 ? null : {transform: "translateX(" + transformPX + "px)"}} src={picture} className={lrClasses} alt={name} title={name + " (" + item.lastRead[i] + ")"} />);
+                    transformPX += tpxIncrement;
+                  }
+                }
+
+                if (item.lastRead.length > peopleToShow) {
+                  const additionalPeopleStr = "+" + (item.lastRead.length - peopleToShow).toString();
+                  lastReadElementPictures.push(<h1 style={{transform: "translateX(" + (transformPX + (20 - tpxIncrement)) + "px)"}} className="gExtraLastRead" title={item.lastRead.length - peopleToShow == 1 ? additionalPeopleStr + " person" : additionalPeopleStr + " people"}>•••</h1>);
+                }
+              }
+
+              const lastReadElement = <div>{lastReadElementPictures}</div>;
+              return (<p key={"id" + item.id} title={item.timestamp} className={messageClass}>{item.message}{lastReadElement}</p>);
+
             })
           }
         </div>
@@ -92,6 +122,7 @@ class GroupsDefaultMessage extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
+  email: state.app.email,
   openedThread: state.groups.openedThread,
   threads: state.groups.threads,
   knownPeople: state.people.knownPeople
