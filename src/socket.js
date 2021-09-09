@@ -14,7 +14,7 @@ let socket = null;
 
 export function startSocket() {
   // socket = new WebSocket('ws://localhost:5000');
-  socket = new WebSocket('wss://strawberry.neonblacknetwork.com:5000');
+  socket = new WebSocket('wss://strawberry.neonblacknetwork.com:2096');
   // socket = new WebSocket('wss://strawberry.neonblacknetwork.com:5001');
 
   setTimeout(function() {
