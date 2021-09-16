@@ -22,7 +22,7 @@ const textTone = new Audio(textToneAudio);
 export function startSocket() {
   // socket = new WebSocket('ws://localhost:5000');
   // socket = new WebSocket('wss://strawberry.neonblacknetwork.com:5000');
-  socket = new WebSocket('wss://strawberry.neonblacknetwork.com:5001');
+  socket = new WebSocket('wss://strawberry.neonblacknetwork.com:2087');
 
   setTimeout(function() {
     if (socket.readyState == 0) {
@@ -333,7 +333,9 @@ export function startSocket() {
             mainStore.dispatch(setThreadLastRead({"thread_id": jsonData.thread_id, "last_read": myLastReadDict}));
           }
         } else if (jsonData.response == "get_in_thread") {
-          mainStore.dispatch(setInThread({"thread_id": jsonData.thread_id, "people": jsonData.in_thread, "data": jsonData.data}));
+          if (jsonData.in_thread != null) {
+            mainStore.dispatch(setInThread({"thread_id": jsonData.thread_id, "people": jsonData.in_thread, "data": jsonData.data}));
+          }
         }
       } else if (com == "last_read") {
         mainStore.dispatch(setThreadLastRead({"thread_id": jsonData.thread_id, "last_read": jsonData.last_read}));

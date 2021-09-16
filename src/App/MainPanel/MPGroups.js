@@ -357,7 +357,7 @@ class MPGroups extends React.Component {
         MessageType = GroupsDefaultMessage;
       }
 
-      const newMessage = <MessageType key={mySendingMessages[0].id} email={this.props.myEmail} name={this.props.myName} picture={this.props.myPicture} messages={mySendingMessages} inThread={/*["no", true]*/null} inThreadTyping={/*false*/null} onUpdate={this.props.onUpdate} />;
+      const newMessage = <MessageType key={mySendingMessages[0].id} email={this.props.myEmail} name={this.props.myName} picture={this.props.myPicture} messages={mySendingMessages} /*inThread={["no", true]null}*/ inThreadTyping={/*false*/null} onUpdate={this.props.onUpdate} />;
       // console.debug(newMessage);
       tempMessages.push(newMessage);
 

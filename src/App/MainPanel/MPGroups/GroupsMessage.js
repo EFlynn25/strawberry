@@ -15,7 +15,7 @@ class GroupsMessage extends React.Component {
       messagePicture: "",
       messageList: [],
       messageElements: [],
-      inThread: "no",
+      inThread: {},
       inThreadNoTransition: true,
       inThreadTyping: false,
     };
@@ -30,18 +30,18 @@ class GroupsMessage extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     const propsOpenedThread = this.props.openedThread;
     const thisThread = this.props.threads[propsOpenedThread];
-    const prevCurrentChat = prevProps.threads[propsOpenedThread];
+    const prevCurrentThread = prevProps.threads[propsOpenedThread];
 
     const messagesExist = thisThread.messages != null && thisThread.messages.length > 0;
-    const sentNewMessage = prevCurrentChat.messages != thisThread.messages && prevCurrentChat.messages[prevCurrentChat.messages.length - 1].id == this.state.myIDs[this.state.myIDs.length - 1];
+    const sentNewMessage = prevCurrentThread.messages != thisThread.messages && prevCurrentThread.messages[prevCurrentThread.messages.length - 1].id == this.state.myIDs[this.state.myIDs.length - 1];
     const openedThreadChanged = prevProps.openedThread != propsOpenedThread;
 
     const idsChanged = prevState.myIDs != this.state.myIDs;
-    const themLastReadChanged = JSON.stringify(prevCurrentChat.lastRead) != JSON.stringify(thisThread.lastRead);
+    const themLastReadChanged = JSON.stringify(prevCurrentThread.lastRead) != JSON.stringify(thisThread.lastRead);
 
-    const otherUserStateChanged = prevProps.inThread != this.props.inThread || prevProps.typing != this.props.typing;
-    // const newSentMessage = prevCurrentChat.sendingMessages != null && thisThread.sendingMessages != null && prevCurrentChat.sendingMessages != thisThread.sendingMessages;
-    const newSentMessage = prevCurrentChat.sendingMessages != thisThread.sendingMessages;
+    const otherUserStateChanged = prevCurrentThread.inThread != thisThread.inThread || prevProps.typing != this.props.typing;
+    // const newSentMessage = prevCurrentThread.sendingMessages != null && thisThread.sendingMessages != null && prevCurrentThread.sendingMessages != thisThread.sendingMessages;
+    const newSentMessage = prevCurrentThread.sendingMessages != thisThread.sendingMessages;
     if (messagesExist && (sentNewMessage || openedThreadChanged)) {
       this.reloadData();
       this.reloadMessage(prevProps);
@@ -69,7 +69,7 @@ class GroupsMessage extends React.Component {
       }
       // console.log("i: " + i);
       // console.log("current id: " + (i + firstMessageID));
-      // console.log("current message: ", myChatMessages[i]);
+      // console.log("current message: ", myThreadMessages[i]);
       if (thisThreadMessages[i].from != from) {
         break;
       }
@@ -118,7 +118,6 @@ class GroupsMessage extends React.Component {
           }
         }
       });
-      console.log(this.myLastRead);
     }
 
     // const lastRead = thisThread.lastRead.them;
@@ -143,7 +142,17 @@ class GroupsMessage extends React.Component {
       //   nt = false;
       // }
 
-      let lr = this.myLastRead[message.id];
+      const unrefinedLR = this.myLastRead[message.id];
+      let lr = [];
+      // console.log("me, ", thisThread);
+      if (unrefinedLR != null) {
+        unrefinedLR.forEach((item, i) => {
+          // if (!this.props.inThread && lastRead != thisThread.messages[thisThread.messages.length - 1].id) {
+          if (!thisThread.inThread.includes(item) && message.id != thisThread.messages[thisThread.messages.length - 1].id) {
+            lr.push(item);
+          }
+        });
+      }
       // if (message.id == 41) {
       //   lr = ["fireno656@yahoo.com"];
       // } else if (message.id == 42) {
@@ -169,8 +178,8 @@ class GroupsMessage extends React.Component {
     });
 
     // let newInThread = "no";
-    // let icnt = true;
-    // let newICT = false;
+    // let itnt = true;
+    // let newITT = false;
     // const lastMessageID = thisThread.messages[thisThread.messages.length - 1].id;
     // if (newMessageObjects[newMessageObjects.length - 1].id == lastMessageID/* && prevProps.openedThread == this.props.openedThread*/) {
     //   if (this.props.inThread) {
@@ -184,22 +193,22 @@ class GroupsMessage extends React.Component {
     //   // if (lastMessageID == newMessageObjects[newMessageObjects.length - 1].id) {
     //     if (this.state.inThread == "here" && !this.props.inThread) {
     //       newInThread = "gone";
-    //       icnt = false;
+    //       itnt = false;
     //     }
     //     if (this.state.inThread == "gone" && newInThread == "here") {
-    //       icnt = false;
+    //       itnt = false;
     //     }
     //     // console.log(prevProps.openedThread);
     //     // console.log(this.props.openedThread);
     //     if (this.state.inThread == "no" && newInThread == "here" /*&& lastRead < lastMessageID*/) {
-    //       icnt = false;
+    //       itnt = false;
     //     }
     //   }
     //
     //
     //
     //   if (newInThread == "here" && this.props.typing) {
-    //     newICT = true;
+    //     newITT = true;
     //   }
     //
     //
@@ -214,6 +223,37 @@ class GroupsMessage extends React.Component {
     //   }
     // }
 
+    let newInThread = {};
+    const lastMessageID = thisThread.messages[thisThread.messages.length - 1].id;
+    if (newMessageObjects[newMessageObjects.length - 1].id == lastMessageID/* && prevProps.openedThread == this.props.openedThread*/) {
+      // newInThread = {
+      //   "fireno656@yahoo.com": "gone",
+      //   "katrinaflynn79@gmail.com": "gone",
+      //   "cherryman656@gmail.com": "gone",
+      //   "ethan.flynn2007@gmail.com": "gone",
+      //   "elijah.flynn2009@gmail.com": "gone",
+      //   "asher.molzer@gmail.com": "here",
+      //   "appleandroidtechmaker@gmail.com": "here",
+      //   "flynneverett@logoscharter.com": "here",
+      //   "isaiahroman25@gmail.com": "here",
+      // }
+      let myLR = this.myLastRead[lastMessageID];
+      if (myLR != null) {
+        myLR.forEach((item, i) => {
+          if (!thisThread.inThread.includes(item)) {
+            newInThread[item] = "gone";
+          }
+          console.log(newInThread);
+        });
+      }
+
+      thisThread.inThread.forEach((item, i) => {
+        newInThread[item] = "here";
+        console.log(newInThread);
+      });
+      console.log(newInThread);
+    }
+
 
 
     const message = thisThread.messages.find( ({ id }) => id === this.state.myIDs[0] );
@@ -227,7 +267,7 @@ class GroupsMessage extends React.Component {
       });
     }
 
-    this.setState({messageList: newMessageObjects, inThread: /*newInThread*/null, inThreadNoTransition: /*icnt*/null, inThreadTyping: /*newICT*/null});
+    this.setState({messageList: newMessageObjects, inThread: newInThread, inThreadNoTransition: /*itnt*/null, inThreadTyping: /*newITT*/null});
   }
 
   parseDate(timestamp) {
@@ -249,9 +289,14 @@ class GroupsMessage extends React.Component {
 
   render() {
     let MessageType;
-    if (this.props.messageStyle == "default") {
-      MessageType = GroupsDefaultMessage;
+    switch(this.props.messageStyle) {
+      case "default":
+        MessageType = GroupsDefaultMessage;
+        break;
     }
+    // if (this.props.messageStyle == "default") {
+    //   MessageType = GroupsDefaultMessage;
+    // }
 
     return (
       <div className="GroupsMessage">

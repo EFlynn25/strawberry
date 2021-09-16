@@ -250,7 +250,6 @@ export const groupsSlice = createSlice({
     },
     setInThread: (state, action) => {
       let myInThread = state.threads[action.payload["thread_id"]].inThread;
-      // myInThread.push("HA IT WORKS LOSER");
       if (Array.isArray(action.payload["people"])) {
         action.payload["people"].forEach(item => {
           if (!myInThread.includes(item)) {
