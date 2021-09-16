@@ -19,9 +19,7 @@ class GroupsDefaultMessage extends React.Component {
   }
 
   componentDidMount() {
-    if (Object.keys(this.props.inThread[0]).length > 0) {
-      this.reloadInThread();
-    }
+    this.reloadInThread();
   }
 
   componentDidUpdate() {
@@ -29,9 +27,7 @@ class GroupsDefaultMessage extends React.Component {
       this.props.onUpdate();
     }
 
-    if (Object.keys(this.props.inThread[0]).length > 0) {
-      this.reloadInThread();
-    }
+    this.reloadInThread();
   }
 
   reloadInThread() {
@@ -41,8 +37,8 @@ class GroupsDefaultMessage extends React.Component {
     let gonePeople = [];
     let myExtraHere = 0;
     let myExtraGone = 0;
-    console.log(this.props.inThread[0]);
-    Object.keys(this.props.inThread[0]).map(item => {
+    let conditionalInThread = this.props.inThread == null ? [] : Object.keys(this.props.inThread[0]);
+    conditionalInThread.map(item => {
       console.log(item);
       if (this.props.inThread[0][item] == "here") {
         herePeople.push(item);
