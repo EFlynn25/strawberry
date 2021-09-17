@@ -73,12 +73,11 @@ class GroupsThread extends React.Component {
     if (myThread.name != null && myThread.name != "") {
       threadName = myThread.name;
     } else {
-      if (myThread.people.length > 0) {
-
+      if (myThread.people != null && myThread.people.length > 0) {
+        // set thread name to something default
       } else {
         threadName = <i style={{color: "#FFFD"}}>No people</i>;
       }
-      // set thread name to something default
     }
 
     let profilesDiv = null;
@@ -163,7 +162,7 @@ class GroupsThread extends React.Component {
           <h1 className={read ? "gtTitle" : "gtTitle gtTitleUnread"}>{threadName}</h1>
           <h1 className={read ? "gtTime" : "gtTime gtUnread"}>{threadTime}</h1>
         </div>
-        <p className={read ? "gtMessage" : "gtMessage gtUnread"} title={threadMessage}>{threadMessage}</p>
+        <p className={read ? "gtMessage" : "gtMessage gtUnread"} title={myThreadMessages != null && myThreadMessages.length > 0 ? threadMessage : null}>{threadMessage}</p>
         <div className="gtSelected" style={{transform: opened ? "none" : ""}} />
         {read ? null : <div className="gtUnreadNotify" />}
       </div>

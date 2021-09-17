@@ -548,6 +548,11 @@ export function groups_deny_request(thread_id) {
   send_websocket_message(jsonObj);
 }
 
+export function groups_remove_person(thread_id, person) {
+  var jsonObj = {"product": "groups", "command": "remove_person", "thread_id": thread_id, "person": person}
+  send_websocket_message(jsonObj);
+}
+
 export function groups_send_message(thread_id, message) {
   var jsonObj = {"product": "groups", "command": "send_message", "message": message, "thread_id": thread_id}
   send_websocket_message(jsonObj);

@@ -93,18 +93,24 @@ export const groupsSlice = createSlice({
       state.threads[action.payload.thread_id].name = action.payload.name;
     },
     addThreadPeople: (state, action) => {
-      console.log("myt ", action.payload);
       const threadPeople = state.threads[action.payload.thread_id].people;
       if (threadPeople) {
         action.payload.people.forEach(item => {
           if (!threadPeople.includes(item)) {
-            state.threads[action.payload.thread_id].people.push(item);
+            // state.threads[action.payload.thread_id].people.push(item);
+            threadPeople.push(item);
           }
         });
       } else {
         state.threads[action.payload.thread_id].people = action.payload.people;
       }
-      // state.threads[action.payload.thread_id].people.push(action.payload.people);
+    },
+    removeThreadPerson: (state, action) => {
+      const threadPeople = state.threads[action.payload.thread_id].people;
+      if (threadPeople.includes(action.payload.person)) {
+        // threadPeople.remove(action.payload.person);
+        threadPeople.splice(threadPeople.indexOf(action.payload.person), 1);
+      }
     },
     addThreadMessage: (state, action) => {
       let myThreadID = state.openedThread;
@@ -238,11 +244,13 @@ export const groupsSlice = createSlice({
     },
     setThreadLastRead: (state, action) => {
       console.log("payload: ", action.payload);
-      Object.keys(action.payload["last_read"]).forEach(item => {
-        console.log(item);
-        state.threads[action.payload["thread_id"]].lastRead[item] = action.payload["last_read"][item];
-        // state.threads[action.payload["thread_id"]].lastRead[item] = null;
-      });
+      if (action.payload["last_read"] != null) {
+        Object.keys(action.payload["last_read"]).forEach(item => {
+          console.log(item);
+          state.threads[action.payload["thread_id"]].lastRead[item] = action.payload["last_read"][item];
+          // state.threads[action.payload["thread_id"]].lastRead[item] = null;
+        });
+      }
       // state.threads[action.payload["thread_id"]].lastRead[action.payload["who"]] = action.payload["lastRead"];
     },
     setTyping: (state, action) => {
@@ -304,7 +312,7 @@ export const groupsSlice = createSlice({
   },
 });
 
-export const { setOpenedThread, addThread, setThreadName, addThreadPeople, addThreadMessage, addLoadedThreadMessages, addSendingThreadMessage, removeSendingThreadMessage,
+export const { setOpenedThread, addThread, setThreadName, addThreadPeople, removeThreadPerson, addThreadMessage, addLoadedThreadMessages, addSendingThreadMessage, removeSendingThreadMessage,
   setTempMessageInput, setThreadLastRead, setTyping, setInThread, setLoadingMessages,
   addThreadCreating, removeThreadCreating, addThreadCreated, removeThreadCreated
 } = groupsSlice.actions;

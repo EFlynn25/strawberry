@@ -1,103 +1,10 @@
-.GroupSettings {
+.GSPeople {
   width: 100%;
   height: 100%;
-  /* background: black; */
-
-  /* background: #0004; */
-}
-
-
-/* Tabs */
-
-.gsTabs {
-  width: calc(100% - 40px);
-  height: 50px;
-  padding: 30px;
-  padding-bottom: 0;
-  background: #0004;
-
-  display: flex;
-}
-
-.gsTab {
-  width: 50px;
-  height: 50px;
-  background: #ffffff06;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-}
-
-.gsTabSelected {
-  background: #2A2B2D;
-}
-
-.gsTab svg {
-  width: 30px;
-  height: 30px;
-  padding: 10px;
-
-  font-size: 24px;
-  line-height: 60px;
-  text-align: center;
-
-  fill: #aaa;
-}
-
-.gsTabSelected svg {
-  fill: white;
-}
-
-/* ...hover */
-
-.gsTab:hover {
-  cursor: pointer;
-  background: #ffffff08;
-}
-
-.gsTab:active {
-  background: #ffffff04;
-}
-
-.gsTabSelected:hover, .gsTabSelected:active {
-  background: #2A2B2D;
 }
 
 
 /* Content */
-
-.gsContent {
-  position: absolute;
-  width: calc(100% - 80px);
-  height: calc(100% - 160px);
-  padding: 40px;
-  background: #2A2B2D;
-
-  transition: transform .2s cubic-bezier(0.65, 0, 0.35, 1),
-              opacity .2s cubic-bezier(0.65, 0, 0.35, 1);
-  opacity: 1;
-  visibility: visible;
-}
-
-.gsPeopleHide {
-  transition: transform .2s cubic-bezier(0.65, 0, 0.35, 1),
-              opacity .2s cubic-bezier(0.65, 0, 0.35, 1),
-              visibility 0s .2s;
-  transform: translateX(-40px);
-  opacity: 0;
-  visibility: hidden;
-}
-
-.gsSettingsHide {
-  transition: transform .2s cubic-bezier(0.65, 0, 0.35, 1),
-              opacity .2s cubic-bezier(0.65, 0, 0.35, 1),
-              visibility 0s .2s;
-  transform: translateX(40px);
-  opacity: 0;
-  visibility: hidden;
-}
-
-
-/* People */
 
 .gspTitle {
   height: 40px;
