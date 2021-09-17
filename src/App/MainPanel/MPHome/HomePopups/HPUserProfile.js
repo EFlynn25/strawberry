@@ -9,18 +9,21 @@ class HPUserProfile extends React.Component {
   }
 
   render() {
-    const name = this.props.knownPeople[this.props.email].name;
-    const picture = this.props.knownPeople[this.props.email].picture;
+    const item = this.props.email;
+    const name = this.props.knownPeople[item].name;
+    const picture = this.props.knownPeople[item].picture;
     let status = "hi im " + name + " and this is my status";
 
-    if (this.props.email == "everettflynn25@gmail.com") {
-      status = "officially done with school, coding time.";
-    } else if (this.props.email == "cherryman656@gmail.com") {
+    if (item == "everettflynn25@gmail.com") {
+      status = "bogos binted?";
+    } else if (item == "cherryman656@gmail.com") {
       status = "Use my other account: everettflynn25@gmail.com";
-    } else if (this.props.email == "appleandroidtechmaker@gmail.com") {
+    } else if (item == "appleandroidtechmaker@gmail.com") {
       status = "This is my chat account.";
-    } else if (this.props.email == "flynneverett@logoscharter.com") {
+    } else if (item == "flynneverett@logoscharter.com") {
       status = "Me gusta el español.";
+    } else if (item == "toastmaster9804@gmail.com") {
+      status = "EverettPlayz is Gucciiii";
     }
 
     return (

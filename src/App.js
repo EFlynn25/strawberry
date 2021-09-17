@@ -16,7 +16,6 @@ import Overlay from './App/Overlay';
 import TopBar from './App/TopBar';
 import LeftPanel from './App/LeftPanel';
 import MainPanel from './App/MainPanel';
-import RightPanel from './App/RightPanel';
 import { startSocket, add_user } from './socket.js';
 
 class App extends React.Component {
@@ -97,7 +96,6 @@ class App extends React.Component {
                 <TopBar />
                 <LeftPanel />
                 <MainPanel />
-                {this.props.hideRightPanel ? null : <RightPanel />}
               </Fragment>
 
               :
@@ -117,7 +115,6 @@ const mapStateToProps = (state) => ({
   name: state.app.name,
   email: state.app.email,
   picture: state.app.picture,
-  hideRightPanel: state.app.hideRightPanel,
 
   dmsLoaded: state.app.dmsLoaded,
   groupsLoaded: state.app.groupsLoaded,

@@ -33,19 +33,21 @@ class HomePeople extends React.Component {
           return x[0];
       });
 
-      newPeople.map((item) => {
+      newPeople.forEach((item) => {
         const personName = this.props.knownPeople[item].name;
         const personPicture = this.props.knownPeople[item].picture;
         let status = "hi im " + personName + " and this is my status";
 
         if (item == "everettflynn25@gmail.com") {
-          status = "officially done with school, coding time.";
+          status = "bogos binted?";
         } else if (item == "cherryman656@gmail.com") {
           status = "Use my other account: everettflynn25@gmail.com";
         } else if (item == "appleandroidtechmaker@gmail.com") {
           status = "This is my chat account.";
         } else if (item == "flynneverett@logoscharter.com") {
           status = "Me gusta el español.";
+        } else if (item == "toastmaster9804@gmail.com") {
+          status = "EverettPlayz is Gucciiii";
         }
 
         people.push(

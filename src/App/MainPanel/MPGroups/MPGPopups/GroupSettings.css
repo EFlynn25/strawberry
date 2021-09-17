@@ -1,0 +1,214 @@
+.GroupSettings {
+  width: 100%;
+  height: 100%;
+  /* background: black; */
+
+  background: #0004;
+}
+
+
+/* Tabs */
+
+.gsTabs {
+  width: calc(100% - 40px);
+  height: 50px;
+  padding: 30px;
+  padding-bottom: 0;
+
+  display: flex;
+
+  border-radius: 20px;
+}
+
+.gsTab {
+  width: 50px;
+  height: 50px;
+  background: #ffffff06;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.gsTabSelected {
+  background: #2A2B2D;
+}
+
+.gsTab svg {
+  width: 30px;
+  height: 30px;
+  padding: 10px;
+  /* margin: 0; */
+
+  font-size: 24px;
+  line-height: 60px;
+  text-align: center;
+
+  fill: #aaa;
+}
+
+.gsTabSelected svg {
+  fill: white;
+}
+
+/* ...hover */
+
+.gsTab:hover {
+  cursor: pointer;
+  background: #ffffff08;
+}
+
+.gsTab:active {
+  background: #ffffff04;
+}
+
+.gsTabSelected:hover, .gsTabSelected:active {
+  background: #2A2B2D;
+}
+
+
+/* Content */
+
+.gsContent {
+  position: absolute;
+  width: calc(100% - 80px);
+  height: calc(100% - 160px);
+  padding: 40px;
+  background: #2A2B2D;
+}
+
+.gsContentHide {
+  visibility: hidden;
+}
+
+
+/* People */
+
+.gspTitle {
+  height: 40px;
+  color: white;
+  margin: 0;
+  line-height: 40px;
+}
+
+.gsPeopleList {
+  position: absolute;
+  width: calc(100% - 100px);
+  height: calc(100% - 140px);
+  bottom: 40px;
+  padding-right: 20px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+}
+
+.gspPerson {
+  position: relative;
+  height: 40px;
+  border-radius: 20px;
+  overflow: hidden;
+  transition: transform .1s ease-out;
+  min-height: 40px;
+}
+
+.gspPFP {
+  width: 40px;
+  height: 40px;
+  border-radius: 50px;
+  user-select: none;
+}
+
+.gspName {
+  position: absolute;
+  width: calc(100% - 210px);
+  height: 40px;
+  left: 50px;
+  bottom: 0;
+  margin: 0;
+
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 40px;
+  color: white;
+
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.gspRemove {
+  position: absolute;
+  width: 25px;
+  height: 40px;
+  right: 10px;
+
+  fill: #fffb;
+  visibility: hidden;
+  transition: transform .1s;
+  transform: none;
+}
+
+/* ...hover/active */
+
+.gspPerson:hover {
+  background: #fff1;
+  background: #1D954522;
+}
+
+.gspPerson:hover .gspRemove {
+  visibility: visible;
+}
+
+.gspRemove:hover {
+  transform: scale(1.05);
+  cursor: pointer;
+  fill: white;
+}
+
+.gspRemove:active {
+  transform: scale(.95);
+  fill: #fff8;
+}
+
+/* ...add person */
+
+.gsAddPersonDiv {
+  position: absolute;
+  height: 40px;
+  top: 40px;
+  right: 40px;
+
+  display: flex;
+  gap: 5px;
+  /* align-items: center; */
+  transition: transform .1s, filter .1s;
+}
+
+.gsAddPersonDiv:hover {
+  cursor: pointer;
+  filter: brightness(.8);
+}
+
+.gsAddPersonDiv:active {
+  transform: scale(.97);
+}
+
+.gsAddPersonIcon {
+  height: 40px;
+  fill: #1D9545;
+}
+
+.gsAddPersonText {
+  height: 40px;
+  margin: 0;
+
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 40px;
+  color: #1D9545;
+
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  user-select: none;
+}

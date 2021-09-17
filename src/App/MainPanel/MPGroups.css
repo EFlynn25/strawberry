@@ -4,6 +4,61 @@
   height: 100%;
 }
 
+
+/* Header */
+
+.groupsHeader {
+  position: absolute;
+  height: 25px;
+  top: 0;
+  right: 0;
+  padding: 7px;
+
+  background: #2A2B2DBB;
+  backdrop-filter: blur(6px);
+  border-bottom-left-radius: 10px;
+  border-bottom: 1px solid;
+  border-left: 1px solid;
+  border-color: #37383A;
+
+  display: flex;
+  gap: 10px;
+  z-index: 1;
+}
+
+.ghName {
+  height: 25px;
+  margin: 0;
+
+  font-size: 16px;
+  line-height: 25px;
+  color: #DDD;
+}
+
+.ghSettingsIcon {
+  width: 25px;
+  height: 25px;
+
+  fill: #DDD;
+
+  transition: transform .1s;
+  transform: none;
+}
+
+.ghSettingsIcon:hover {
+  transform: scale(1.05);
+  cursor: pointer;
+  fill: white;
+}
+
+.ghSettingsIcon:active {
+  transform: scale(.95);
+  fill: #fff8;
+}
+
+
+/* Other */
+
 .groupsMessages {
   position: relative;
   width: calc(100% - 80px);

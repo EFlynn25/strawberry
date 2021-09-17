@@ -24,6 +24,8 @@ import {
 import GroupsMessage from './MPGroups/GroupsMessage';
 import GroupsDefaultMessage from './MPGroups/GroupsMessage/GroupsDefaultMessage';
 
+import { ReactComponent as Settings } from '../../assets/icons/settings.svg';
+
 class MPGroups extends React.Component {
   constructor(props) {
     super(props);
@@ -439,6 +441,11 @@ class MPGroups extends React.Component {
     if (this.state.loaded) {
       children = (
         <Fragment>
+          <div className="groupsHeader">
+            <h1 className="ghName">{this.props.threads[this.props.openedThread].name}</h1>
+            <Settings className="ghSettingsIcon" onClick={() => this.props.opendialog("groupSettings", this.props.openedThread, false)} />
+          </div>
+
           <div className="groupsMessages" ref={this.messagesRef} onScroll={this.handleScroll}>
             {
               (this.props.threads[this.props.openedThread].messages == null)

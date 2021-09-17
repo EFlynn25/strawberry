@@ -20,7 +20,6 @@ import { get_announcements } from '../../socket.js';
 import HomePeople from './MPHome/HomePeople';
 import HomeNotifications from './MPHome/HomeNotifications';
 import HomeProfile from './MPHome/HomeProfile';
-import HomePanel from './MPHome/HomePanel';
 
 class MPHome extends React.Component {
   constructor(props) {
@@ -31,17 +30,12 @@ class MPHome extends React.Component {
       specialEasing: true,
       tab: 1,
       notifyClasses: "HomeNotifications hnHideRight",
-      showAnnouncementsPanel: false,
+      // showAnnouncementsPanel: false,
       panelType: "",
       panelData: ""
     };
 
     this.transitionCheck = this.transitionCheck.bind(this);
-    this.enableShrink = this.enableShrink.bind(this);
-    this.disableShrink = this.disableShrink.bind(this);
-
-    this.openPanel = this.openPanel.bind(this);
-    this.closePanel = this.closePanel.bind(this);
   }
 
   componentDidMount() {
@@ -73,36 +67,6 @@ class MPHome extends React.Component {
     }
   }
 
-  enableShrink() {
-    this.setState({ specialEasing: false });
-    if (this.state.homeClass != "MPHome MPHomeTransition MPHomeShrink") {
-      this.setState({ homeClass: "MPHome MPHomeTransition MPHomeShrink" });
-    }
-  }
-
-  disableShrink() {
-    if (this.state.homeClass == "MPHome MPHomeTransition MPHomeShrink") {
-      this.setState({ homeClass: "MPHome MPHomeTransition" });
-    }
-  }
-
-  openPanel(newType, newData) {
-    this.enableShrink();
-    if (this.state.panelType != newType || this.state.panelData != newData) {
-      this.setState({
-        panelType: newType,
-        panelData: newData
-      });
-    }
-  }
-
-  closePanel() {
-    this.disableShrink();
-    this.setState({
-      panelType: ""
-    });
-  }
-
   render() {
     return (
       <VisibilitySensor onChange={this.transitionCheck}>
@@ -110,8 +74,8 @@ class MPHome extends React.Component {
           <div className="homeWelcome">
             <img src={this.props.picture} className="hwPFP" alt={this.props.name} />
             <h1 className="hwName">Hey, {this.props.name}!</h1>
-            <Settings className="hwSettingsIcon hwTopRightIcon" onClick={() => this.openPanel("settings", "")} />
-            <Announcements className="hwAnnouncementsIcon hwTopRightIcon" onClick={() => this.openPanel("announcements", "")} />
+            <Settings className="hwSettingsIcon hwTopRightIcon" onClick={() => this.props.opendialog("settings", "")} />
+            <Announcements className="hwAnnouncementsIcon hwTopRightIcon" onClick={() => this.props.opendialog("announcements", "")} />
           </div>
 
           <div className="homeTabs">
@@ -130,13 +94,10 @@ class MPHome extends React.Component {
           </div>
 
           <div className="homeContent">
-            <HomePeople classes={this.state.tab == 1 ? "HomePeople" : "HomePeople HomePeopleHide"} opendialog={this.openPanel} closedialog={this.disableShrink} />
+            <HomePeople classes={this.state.tab == 1 ? "HomePeople" : "HomePeople HomePeopleHide"} opendialog={this.props.opendialog} />
             <HomeNotifications classes={this.state.notifyClasses} />
             <HomeProfile classes={this.state.tab == 3 ? "HomeProfile" : "HomeProfile HomeProfileHide"} />
           </div>
-
-          <HomePanel type={this.state.panelType} data={this.state.panelData} onclose={this.closePanel} />
-
         </div>
       </VisibilitySensor>
     );

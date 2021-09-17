@@ -1,4 +1,4 @@
-.HomePanel {
+.MPPopup {
   position: absolute;
 
   width: 100%;
@@ -9,12 +9,18 @@
   transition: background .3s, transform .3s;
   background: #0006;
   transform: scale(calc(1 / .9));
+
+  z-index: 1;
 }
 
-.HomePanelHide {
+.MPPopupHide {
   transition: background .3s, transform .3s, visibility 0s .3s;
   visibility: hidden;
   background: none;
+}
+
+.MPPopupNoShrink {
+  transform: none;
 }
 
 
@@ -37,6 +43,8 @@
 
   transition: opacity .3s, transform .3s;
   opacity: 1;
+
+  overflow: hidden;
 }
 
 .mainPanelHide {

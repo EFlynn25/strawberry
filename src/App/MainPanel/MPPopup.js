@@ -1,17 +1,18 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import './HomePanel.css';
-import HPUserProfile from './HomePanel/HPUserProfile';
-import HPAnnouncements from './HomePanel/HPAnnouncements';
-import HPSettings from './HomePanel/HPSettings';
+import './MPPopup.css';
+import HPUserProfile from './MPHome/HomePopups/HPUserProfile';
+import HPAnnouncements from './MPHome/HomePopups/HPAnnouncements';
+import HPSettings from './MPHome/HomePopups/HPSettings';
+import GroupSettings from './MPGroups/MPGPopups/GroupSettings';
 
-class HomePanel extends React.Component {
+class MPPopup extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      mainClasses: "HomePanel HomePanelHide",
+      mainClasses: "MPPopup MPPopupHide",
       type: "",
       data: ""
     };
@@ -21,7 +22,7 @@ class HomePanel extends React.Component {
     this.setWrapperRef = this.setWrapperRef.bind(this);
     this.handleClickOutside = this.handleClickOutside.bind(this);
 
-    this.noTypeTimeout = null;
+    // this.noTypeTimeout = null;
     this.mousePressedDown = false;
   }
 
@@ -45,7 +46,7 @@ class HomePanel extends React.Component {
     let newType = this.state.type;
     let newData = this.state.data;
     if (this.props.type == "") {
-      newClasses = "HomePanel HomePanelHide";
+      newClasses = "MPPopup MPPopupHide";
       if (this.state.type != "") {
         setTimeout(function() {
           if (this.updater.isMounted(this)) {
@@ -54,7 +55,7 @@ class HomePanel extends React.Component {
         }.bind(this), 300);
       }
     } else {
-      newClasses = "HomePanel";
+      newClasses = "MPPopup";
       newType = this.props.type;
       newData = this.props.data;
     }
@@ -94,6 +95,8 @@ class HomePanel extends React.Component {
       child = <HPAnnouncements />;
     } else if (this.state.type == "settings") {
       child = <HPSettings />;
+    } else if (this.state.type == "groupSettings") {
+      child = <GroupSettings myThreadID={this.state.data} />;
     } else {
       child = (
         <div style={{display: "flex", width: "100%", height: "100%", flexDirection: "column", justifyContent: "center", alignItems: "center"}}>
@@ -101,14 +104,14 @@ class HomePanel extends React.Component {
             {this.state.type}
             {/*this.state.data != "" ? this.state.data : null*/}
           </h1>
-          {this.state.data != "" ? <h1 style={{margin: "0", marginTop: "10px", color: "#fff3", fontSize: "18px"}}>({this.state.data})</h1> : null}
+          {/*this.state.data != "" ? <h1 style={{margin: "0", marginTop: "10px", color: "#fff3", fontSize: "18px"}}>({this.state.data})</h1> : null*/}
         </div>
       );
     }
 
     return (
-      <div className={this.state.mainClasses}>
-        <div className={this.state.mainClasses == "HomePanel" ? "mainPanel" : "mainPanel mainPanelHide"} ref={this.setWrapperRef}>
+      <div className={this.props.shrink ? this.state.mainClasses : this.state.mainClasses + " MPPopupNoShrink"}>
+        <div className={this.state.mainClasses == "MPPopup" ? "mainPanel" : "mainPanel mainPanelHide"} ref={this.setWrapperRef}>
           { child }
         </div>
       </div>
@@ -121,4 +124,4 @@ const mapStateToProps = (state) => ({
   announcementsRead: state.app.announcementsRead
 });
 
-export default connect(mapStateToProps, null)(HomePanel);
+export default connect(mapStateToProps, null)(MPPopup);
