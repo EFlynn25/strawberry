@@ -65,7 +65,7 @@ class GroupSettings extends React.Component {
           <div className={this.state.tab == 0 ? "gsTab gsTabSelected" : "gsTab"} onClick={this.state.tab == 0 ? null : this.toggleTab}><People /></div>
           <div className={this.state.tab == 1 ? "gsTab gsTabSelected" : "gsTab"} onClick={this.state.tab == 1 ? null : this.toggleTab}><Settings /></div>
         </div>
-        <div className={this.state.tab == 0 ? "gsContent" : "gsContent gsContentHide"}>
+        <div className={this.state.tab == 0 ? "gsContent" : "gsContent gsPeopleHide"}>
           <h1 className="gspTitle">People</h1>
           <div className="gsAddPersonDiv">
             <AddPerson className="gsAddPersonIcon" />
@@ -76,7 +76,7 @@ class GroupSettings extends React.Component {
           </div>
         </div>
 
-        <div className={this.state.tab == 1 ? "gsContent" : "gsContent gsContentHide"}>
+        <div className={this.state.tab == 1 ? "gsContent" : "gsContent gsSettingsHide"}>
 
           <div style={{display: "flex", width: "100%", height: "100%", flexDirection: "column", justifyContent: "center", alignItems: "center"}}>
             <h1 style={{margin: "0", color: "#fff5", fontSize: "18px"}}>No settings</h1>
