@@ -16,6 +16,7 @@ import {
 } from '../../redux/appReducer';
 import {
   groups_get_messages,
+  groups_join_thread,
   groups_send_message,
   groups_in_thread,
   groups_typing,
@@ -50,6 +51,8 @@ class MPGroups extends React.Component {
     this.scrollsToIgnore = 0;
     this.isLoadingMessages = {};
     this.heightBeforeLoading = {};
+
+    this.acceptedRequest = false;
   }
 
   handleScroll() {
@@ -425,8 +428,21 @@ class MPGroups extends React.Component {
   }
 
   render() {
+    if (this.props.threads[this.props.openedThread] == null) {
+      if (this.props.openedThread != null && !this.acceptedRequest) {
+        console.log("reload no thread");
+        this.acceptedRequest = true;
+        groups_join_thread(this.props.openedThread);
+      }
+      return (
+        <div className="MPGroups">
+          <h1 className="groupsCenterText">That thread doesn't exist...</h1>
+        </div>
+      )
+    }
+
     let amountOfPeopleText = "";
-    if (this.props.threads[this.props.openedThread] != null) {
+    if (this.props.threads[this.props.openedThread].people != null) {
       const amountOfPeople = this.props.threads[this.props.openedThread].people.length;
       if (amountOfPeople == 0) {
         amountOfPeopleText = "with nobody";
@@ -479,9 +495,14 @@ class MPGroups extends React.Component {
         </Fragment>
       );
     }
-    if (!(this.props.openedThread in this.props.threads)) {
-      children = (<h1 className="groupsCenterText">That thread doesn't exist...</h1>);
-    }
+    // if (!(this.props.openedThread in this.props.threads)) {
+    //   children = (<h1 className="groupsCenterText">That thread doesn't exist...</h1>);
+    //   if (this.props.openedThread != null && !this.acceptedRequest) {
+    //     console.log("reload no thread");
+    //     this.acceptedRequest = true;
+    //     groups_join_thread(this.props.openedThread);
+    //   }
+    // }
 
     return (
       <div className="MPGroups">

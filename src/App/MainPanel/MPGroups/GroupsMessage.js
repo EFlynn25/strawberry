@@ -42,6 +42,8 @@ class GroupsMessage extends React.Component {
     const otherUserStateChanged = prevCurrentThread.inThread != thisThread.inThread || prevProps.typing != this.props.typing;
     // const newSentMessage = prevCurrentThread.sendingMessages != null && thisThread.sendingMessages != null && prevCurrentThread.sendingMessages != thisThread.sendingMessages;
     const newSentMessage = prevCurrentThread.sendingMessages != thisThread.sendingMessages;
+
+    const newKnownPeople = Object.keys(prevProps.knownPeople) != Object.keys(this.props.knownPeople);
     if (messagesExist && (sentNewMessage || openedThreadChanged)) {
       this.reloadData();
       this.reloadMessage(prevProps);
@@ -89,11 +91,12 @@ class GroupsMessage extends React.Component {
         messagePicture: this.props.myPicture,
       });
     } else {
+      const myPerson = this.props.knownPeople[from];
       this.setState({
         myIDs: ids,
         messageEmail: from,
-        messageName: this.props.knownPeople[from].name,
-        messagePicture: this.props.knownPeople[from].picture,
+        messageName: myPerson != null ? myPerson.name : "Unknown person",
+        messagePicture: myPerson != null ? myPerson.picture : "/assets/images/default_profile_pic.png",
       });
     }
   }

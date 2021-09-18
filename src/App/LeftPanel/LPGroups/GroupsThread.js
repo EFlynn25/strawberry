@@ -86,20 +86,21 @@ class GroupsThread extends React.Component {
       const person2 = this.props.getknownPeople[myThread.people[1]];
       const person3 = this.props.getknownPeople[myThread.people[2]];
       const person4 = this.props.getknownPeople[myThread.people[3]];
-      if (myThread.people.length == 1) {
+
+      if (myThread.people.length == 1 && person1 != null) {
         profilesDiv = (
           <div className="gtProfilesDiv">
             <img src={person1.picture} className="gtpdPFP" alt={person1.name} />
           </div>
         );
-      } else if (myThread.people.length == 2) {
+      } else if (myThread.people.length == 2 && ![person1, person2].includes(undefined)) {
         profilesDiv = (
           <div className="gtProfilesDiv">
             <img src={person1.picture} className="gtpdPFP gtpd2people1" alt={person1.name} />
             <img src={person2.picture} className="gtpdPFP gtpd2people2" alt={person2.name} />
           </div>
         );
-      } else if (myThread.people.length == 3) {
+      } else if (myThread.people.length == 3 && ![person1, person2, person3].includes(undefined)) {
         profilesDiv = (
           <div className="gtProfilesDiv">
             <img src={person1.picture} className="gtpdPFP gtpd3people1" alt={person1.name} />
@@ -107,7 +108,7 @@ class GroupsThread extends React.Component {
             <img src={person3.picture} className="gtpdPFP gtpd3people3" alt={person3.name} />
           </div>
         );
-      } else if (myThread.people.length == 4) {
+      } else if (myThread.people.length == 4 && ![person1, person2, person3, person4].includes(undefined)) {
         profilesDiv = (
           <div className="gtProfilesDiv">
             <img src={person1.picture} className="gtpdPFP gtpd4people1" alt={person1.name} />
@@ -116,7 +117,7 @@ class GroupsThread extends React.Component {
             <img src={person4.picture} className="gtpdPFP gtpd4people4" alt={person4.name} />
           </div>
         );
-      } else if (myThread.people.length > 4) {
+      } else if (myThread.people.length > 4 && ![person1, person2, person3, person4].includes(undefined)) {
         let numberOfExtra = myThread.people.length - 3;
         profilesDiv = (
           <div className="gtProfilesDiv">

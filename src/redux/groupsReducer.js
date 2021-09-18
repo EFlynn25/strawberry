@@ -89,6 +89,12 @@ export const groupsSlice = createSlice({
     addThread: (state, action) => {
       state.threads[action.payload] = {name: "", messages: null, people: null, lastRead: {}, inThread: [], typing: []};
     },
+    removeThread: (state, action) => {
+      if (Object.keys(state.threads).includes(action.payload.toString())) {
+        delete state.threads[action.payload]
+      }
+      // state.threads[action.payload]
+    },
     setThreadName: (state, action) => {
       state.threads[action.payload.thread_id].name = action.payload.name;
     },
@@ -312,7 +318,7 @@ export const groupsSlice = createSlice({
   },
 });
 
-export const { setOpenedThread, addThread, setThreadName, addThreadPeople, removeThreadPerson, addThreadMessage, addLoadedThreadMessages, addSendingThreadMessage, removeSendingThreadMessage,
+export const { setOpenedThread, addThread, removeThread, setThreadName, addThreadPeople, removeThreadPerson, addThreadMessage, addLoadedThreadMessages, addSendingThreadMessage, removeSendingThreadMessage,
   setTempMessageInput, setThreadLastRead, setTyping, setInThread, setLoadingMessages,
   addThreadCreating, removeThreadCreating, addThreadCreated, removeThreadCreated
 } = groupsSlice.actions;

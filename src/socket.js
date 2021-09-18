@@ -5,12 +5,13 @@ import { addChat, addChatMessage, addLoadedChatMessages, removeSendingChatMessag
   // removeRequesting, addRequested, addRequestedMe
  } from './redux/dmsReducer.js'
 import {
-  addThread, setThreadName, addThreadPeople, addThreadMessage, addLoadedThreadMessages, removeSendingThreadMessage,
+  setOpenedThread, addThread, removeThread, setThreadName, addThreadPeople, removeThreadPerson, addThreadMessage, addLoadedThreadMessages, removeSendingThreadMessage,
   removeThreadCreating, addThreadCreated,
   setInThread, setThreadLastRead
 } from './redux/groupsReducer.js'
 import { addPerson } from './redux/peopleReducer.js'
 import mainStore from './redux/mainStore.js';
+import history from "./history";
 
 import textToneAudio from './assets/audio/text-tone.mp3';
 
@@ -35,6 +36,7 @@ export function startSocket() {
     var jsonData = JSON.parse(event.data);
     var product = jsonData.product;
     var com = jsonData.command;
+    const myEmail = mainStore.getState().app.email;
     if (product == "app") {
 
 
@@ -134,7 +136,7 @@ export function startSocket() {
       } else if (com == "get_messages") {
         if (jsonData.response == true) {
 
-          const myEmail = mainStore.getState().app.email;
+          // const myEmail = mainStore.getState().app.email;
           // let myMessages = jsonData.messages.reverse();
           let myMessages = jsonData.messages;
           myMessages.forEach((item, i) => {
@@ -204,13 +206,13 @@ export function startSocket() {
 
       /* Hybrid Functions */
       else if (com == "in_chat") {
-        if (mainStore.getState().app.email != jsonData.email) {
+        if (myEmail != jsonData.email) {
           mainStore.dispatch(setInChat({"chat": jsonData.chat, "data": jsonData.data}));
         }
         if ("lastRead" in jsonData) {
-          if (mainStore.getState().app.email != jsonData.email) {
+          if (myEmail != jsonData.email) {
             mainStore.dispatch(setChatLastRead({"who": "them", "chat": jsonData.chat, "lastRead": jsonData.lastRead}));
-          } else if (mainStore.getState().app.email == jsonData.email) {
+          } else if (myEmail == jsonData.email) {
             mainStore.dispatch(setChatLastRead({"who": "me", "chat": jsonData.chat, "lastRead": jsonData.lastRead}));
           }
         } else if (!("lastRead" in jsonData) && !jsonData.data && jsonData.response != "get_in_chat") {
@@ -222,7 +224,7 @@ export function startSocket() {
       } else if (com == "typing") {
         // mainStore.dispatch(setChatLastRead({"who": "me", "chat": jsonData.chat, "lastRead": jsonData.me}));
         // mainStore.dispatch(setChatLastRead({"who": "them", "chat": jsonData.chat, "lastRead": jsonData.them}));
-        if (mainStore.getState().app.email != jsonData.email) {
+        if (myEmail != jsonData.email) {
           mainStore.dispatch(setTyping({"chat": jsonData.chat, "data": jsonData.data}));
         }
       } else if (com == "last_read") {
@@ -262,7 +264,7 @@ export function startSocket() {
       } else if (com == "get_messages") {
         if (jsonData.response == true) {
 
-          const myEmail = mainStore.getState().app.email;
+          // const myEmail = mainStore.getState().app.email;
           // let myMessages = jsonData.messages.reverse();
           let myMessages = jsonData.messages;
           myMessages.forEach((item, i) => {
@@ -317,6 +319,25 @@ export function startSocket() {
         const myMessage = jsonData.message;
         mainStore.dispatch(removeSendingThreadMessage({"thread_id": jsonData.thread_id, "message": jsonData.message.message}));
         mainStore.dispatch(addThreadMessage({thread_id: jsonData.thread_id, message: myMessage.message, from: myMessage.email, id: myMessage.id, timestamp: myMessage.timestamp}));
+      } else if (com == "join_thread") {
+        if (jsonData.response == true) {
+          get_thread_info(jsonData.thread_id)
+        } else if (jsonData.response == "receive_joined_person") {
+          mainStore.dispatch(addThreadPeople({thread_id: jsonData.thread_id, people: [jsonData.person]}))
+          if (!Object.keys(mainStore.getState().people.knownPeople).includes(jsonData.person)) {
+            get_user_info(jsonData.persons)
+          }
+        }
+      } else if (com == "remove_person") {
+        if (jsonData.response == true || jsonData.response == "receive_removed_person") {
+          if (jsonData.person == myEmail) {
+            // mainStore.dispatch(setOpenedThread(""));
+            // history.push("/groups");
+            mainStore.dispatch(removeThread(jsonData.thread_id));
+          } else {
+            mainStore.dispatch(removeThreadPerson({thread_id: jsonData.thread_id, person: jsonData.person}));
+          }
+        }
       }
 
 

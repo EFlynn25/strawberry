@@ -39,7 +39,6 @@ class GroupsDefaultMessage extends React.Component {
     let myExtraGone = 0;
     let conditionalInThread = this.props.inThread == null ? [] : Object.keys(this.props.inThread[0]);
     conditionalInThread.map(item => {
-      console.log(item);
       if (this.props.inThread[0][item] == "here") {
         herePeople.push(item);
       } else if (this.props.inThread[0][item] == "gone") {
@@ -86,22 +85,6 @@ class GroupsDefaultMessage extends React.Component {
       myGone[gonePeople[i]] = transformPX;
       transformPX -= tpxIncrement;
     }
-
-    let groupName = "my";
-    if (Object.keys(myHere).length == 0 && Object.keys(myGone).length == 0 &&
-        herePeople.length == 0 && gonePeople.length == 0) {
-      groupName += " (nada)"
-    } else if (Object.keys(myHere).length == 0 || Object.keys(myGone).length == 0 ||
-        herePeople.length == 0 || gonePeople.length == 0) {
-      groupName += " (nada?)"
-    }
-
-    console.groupCollapsed(groupName);
-    console.log(herePeople);
-    console.log(gonePeople);
-    console.log(myHere);
-    console.log(myGone);
-    console.groupEnd();
 
     if (JSON.stringify(this.state.hereTransforms) !== JSON.stringify(myHere) ||
         JSON.stringify(this.state.goneTransforms) !== JSON.stringify(myGone) ||
@@ -246,8 +229,9 @@ class GroupsDefaultMessage extends React.Component {
                 for (let i = 0; i < peopleToShow; i++) {
                   if (item.lastRead[i] != null && item.lastRead[i] != this.props.email) {
                     console.log("YAY, ", item.lastRead[i]);
-                    const name = this.props.knownPeople[item.lastRead[i]].name;
-                    const picture = this.props.knownPeople[item.lastRead[i]].picture;
+                    const myPerson = this.props.knownPeople[item.lastRead[i]];
+                    const name = myPerson != null ? myPerson.name : "Unknown person";
+                    const picture = myPerson != null ? myPerson.picture : "/assets/images/default_profile_pic.png";
                     lastReadElementPictures.push(<img style={ i == 0 ? null : {transform: "translateX(" + transformPX + "px)"}} src={picture} className={lrClasses} alt={name} title={name + " (" + item.lastRead[i] + ")"} />);
                     transformPX += tpxIncrement;
                   }

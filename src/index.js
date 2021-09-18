@@ -8,9 +8,11 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import store from './redux/mainStore';
 
+import history from "./history";
+
 ReactDOM.render(
   <React.StrictMode>
-    <Router>
+    <Router history={history}>
       <Provider store={store}>
         <App />
       </Provider>

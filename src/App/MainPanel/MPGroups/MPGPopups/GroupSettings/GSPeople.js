@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import "./GSPeople.css"
-import { groups_remove_person } from '../../../../../socket.js';
+import { groups_request_to_thread, groups_remove_person } from '../../../../../socket.js';
 import { addThreadPeople, removeThreadPerson } from '../../../../../redux/groupsReducer.js';
 import PersonPicker from '../../../../../GlobalComponents/PersonPicker.js';
 
@@ -67,11 +67,13 @@ class GSPeople extends React.Component {
   }
 
   addPerson(email) {
-    this.props.addThreadPeople({thread_id: this.props.myThreadID, people: [email]})
+    groups_request_to_thread(email, this.props.myThreadID);
+    // this.props.addThreadPeople({thread_id: this.props.myThreadID, people: [email]})
   }
 
   removePerson(email) {
-    this.props.removeThreadPerson({thread_id: this.props.myThreadID, person: email})
+    groups_remove_person(this.props.myThreadID, email);
+    // this.props.removeThreadPerson({thread_id: this.props.myThreadID, person: email})
   }
 
   render() {
