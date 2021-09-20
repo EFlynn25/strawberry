@@ -7,7 +7,8 @@ import { addChat, addChatMessage, addLoadedChatMessages, removeSendingChatMessag
 import {
   setOpenedThread, addThread, removeThread, setThreadName, addThreadPeople, removeThreadPerson, addThreadMessage, addLoadedThreadMessages, removeSendingThreadMessage,
   removeThreadCreating, addThreadCreated,
-  setInThread, setThreadLastRead
+  setInThread, setThreadLastRead,
+  addRequested, removeRequested
 } from './redux/groupsReducer.js'
 import { addPerson } from './redux/peopleReducer.js'
 import mainStore from './redux/mainStore.js';
@@ -53,37 +54,42 @@ export function startSocket() {
         //     });
         //   }
         // }
+
+        // if (Object.keys(mainStore.getState().people.knownPeople).includes(jsonData.email)) {
+        //   mainStore.dispatch(setpersonName({"email": jsonData.email, "name": jsonData.name}))
+        // } else {
+        // }
         mainStore.dispatch(addPerson({"email": jsonData.email, "name": jsonData.name, "picture": jsonData.picture}));
 
-        if (!mainStore.getState().app.peopleLoaded) {
-          let missingPerson = false;
-          const chatKeys = Object.keys(mainStore.getState().dms.chats);
-          const threads = mainStore.getState().groups.threads;
-          const people = Object.keys(mainStore.getState().people.knownPeople);
-          chatKeys.forEach(item => {
-            if (!people.includes(item)) {
-              missingPerson = true;
-            }
-          });
-          console.log(people);
-          Object.keys(threads).forEach(item => {
-            console.log(item);
-            if (threads[item].people) {
-              threads[item].people.forEach(item => {
-                console.log(item);
-                if (!people.includes(item)) {
-                  console.log("missing");
-                  missingPerson = true;
-                }
-              });
-            } else {
-              missingPerson = true;
-            }
-          });
-          if (!missingPerson) {
-            mainStore.dispatch(setpeopleLoaded(true));
-          }
-        }
+        // if (!mainStore.getState().app.peopleLoaded) {
+        //   let missingPerson = false;
+        //   const chatKeys = Object.keys(mainStore.getState().dms.chats);
+        //   const threads = mainStore.getState().groups.threads;
+        //   const people = Object.keys(mainStore.getState().people.knownPeople);
+        //   chatKeys.forEach(item => {
+        //     if (!people.includes(item)) {
+        //       missingPerson = true;
+        //     }
+        //   });
+        //   console.log(people);
+        //   Object.keys(threads).forEach(item => {
+        //     console.log(item);
+        //     if (threads[item].people) {
+        //       threads[item].people.forEach(item => {
+        //         console.log(item);
+        //         if (!people.includes(item)) {
+        //           console.log("missing");
+        //           missingPerson = true;
+        //         }
+        //       });
+        //     } else {
+        //       missingPerson = true;
+        //     }
+        //   });
+        //   if (!missingPerson) {
+        //     mainStore.dispatch(setpeopleLoaded(true));
+        //   }
+        // }
       } else if (com == "get_announcements") {
         if (jsonData.response == true || jsonData.response == "receive_new_announcement") {
           jsonData.announcements.forEach((announcement) => {
@@ -249,11 +255,13 @@ export function startSocket() {
       } else if (com == "get_thread_info") {
         if (jsonData.response == true) {
           mainStore.dispatch(setThreadName({"thread_id": jsonData.thread_id, "name": jsonData.name}));
+          mainStore.dispatch(addRequested({"thread_id": jsonData.thread_id, "people": jsonData.requested}));
           if (jsonData.people != null) {
             mainStore.dispatch(addThreadPeople({"thread_id": jsonData.thread_id, "people": jsonData.people}));
             const people = Object.keys(mainStore.getState().people.knownPeople);
             jsonData.people.forEach(item => {
               if (!people.includes(item)) {
+                // mainStore.dispatch(addPerson({"email": item, "name": item, "picture": "/assets/images/default_profile_pic.png"}));
                 get_user_info(item);
               }
             });
@@ -319,14 +327,24 @@ export function startSocket() {
         const myMessage = jsonData.message;
         mainStore.dispatch(removeSendingThreadMessage({"thread_id": jsonData.thread_id, "message": jsonData.message.message}));
         mainStore.dispatch(addThreadMessage({thread_id: jsonData.thread_id, message: myMessage.message, from: myMessage.email, id: myMessage.id, timestamp: myMessage.timestamp}));
+      } else if (com == "request_to_thread") {
+        if (jsonData.response == true || jsonData.response == "receive_requested_person") {
+          mainStore.dispatch(addRequested({thread_id: jsonData.thread_id, people: [jsonData.person]}))
+        }
       } else if (com == "join_thread") {
         if (jsonData.response == true) {
           get_thread_info(jsonData.thread_id)
         } else if (jsonData.response == "receive_joined_person") {
           mainStore.dispatch(addThreadPeople({thread_id: jsonData.thread_id, people: [jsonData.person]}))
+          mainStore.dispatch(removeRequested({thread_id: jsonData.thread_id, people: [jsonData.person]}))
           if (!Object.keys(mainStore.getState().people.knownPeople).includes(jsonData.person)) {
-            get_user_info(jsonData.persons)
+            // mainStore.dispatch(addPerson({"email": jsonData.person, "name": jsonData.person, "picture": "/assets/images/default_profile_pic.png"}));
+            get_user_info(jsonData.person)
           }
+        }
+      } else if (com == "deny_request") {
+        if (jsonData.response == true || jsonData.response == "receive_denied_request") {
+          mainStore.dispatch(removeRequested({thread_id: jsonData.thread_id, people: [jsonData.person]}))
         }
       } else if (com == "remove_person") {
         if (jsonData.response == true || jsonData.response == "receive_removed_person") {
@@ -564,8 +582,11 @@ export function groups_leave_thread(thread_id) {
   send_websocket_message(jsonObj);
 }
 
-export function groups_deny_request(thread_id) {
+export function groups_deny_request(thread_id, unrequesting = null) {
   var jsonObj = {"product": "groups", "command": "deny_request", "thread_id": thread_id}
+  if (unrequesting != null) {
+    jsonObj["unrequesting"] = unrequesting;
+  }
   send_websocket_message(jsonObj);
 }
 

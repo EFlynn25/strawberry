@@ -87,7 +87,7 @@ export const groupsSlice = createSlice({
       state.openedThread = action.payload;
     },
     addThread: (state, action) => {
-      state.threads[action.payload] = {name: "", messages: null, people: null, lastRead: {}, inThread: [], typing: []};
+      state.threads[action.payload] = {name: "", messages: null, people: null, lastRead: {}, inThread: [], typing: [], requested: []};
     },
     removeThread: (state, action) => {
       if (Object.keys(state.threads).includes(action.payload.toString())) {
@@ -315,12 +315,38 @@ export const groupsSlice = createSlice({
         state.threadsCreated.splice(index, 1);
       }
     },
+    addRequested: (state, action) => {
+      let myThread = state.threads[action.payload.thread_id];
+      if (myThread.requested == null) {
+        myThread.requested = [];
+      }
+
+      action.payload.people.forEach(item => {
+        if (!myThread.requested.includes(item)) {
+          myThread.requested.push(item)
+        }
+      });
+    },
+    removeRequested: (state, action) => {
+      let myThread = state.threads[action.payload.thread_id];
+      if (myThread.requested != null) {
+        action.payload.people.forEach(item => {
+          if (myThread.requested.includes(item)) {
+            const index = myThread.requested.indexOf(item);
+            if (index > -1) {
+              myThread.requested.splice(index, 1);
+            }
+          }
+        });
+      }
+    }
   },
 });
 
 export const { setOpenedThread, addThread, removeThread, setThreadName, addThreadPeople, removeThreadPerson, addThreadMessage, addLoadedThreadMessages, addSendingThreadMessage, removeSendingThreadMessage,
   setTempMessageInput, setThreadLastRead, setTyping, setInThread, setLoadingMessages,
-  addThreadCreating, removeThreadCreating, addThreadCreated, removeThreadCreated
+  addThreadCreating, removeThreadCreating, addThreadCreated, removeThreadCreated,
+  addRequested, removeRequested
 } = groupsSlice.actions;
 
 // The function below is called a selector and allows us to select a value from

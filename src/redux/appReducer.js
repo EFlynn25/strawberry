@@ -12,7 +12,7 @@ export const appSlice = createSlice({
 
     dmsLoaded: false,
     groupsLoaded: false,
-    peopleLoaded: false,
+    peopleLoaded: true,
 
     socket: null,
 

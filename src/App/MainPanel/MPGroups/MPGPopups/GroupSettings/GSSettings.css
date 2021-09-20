@@ -1,0 +1,179 @@
+.GSSettings {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+
+/* Content */
+
+.gssThreadID {
+  position: absolute;
+  height: 40px;
+  bottom: 0;
+  margin: 0;
+
+  line-height: 40px;
+  color: #888;
+}
+
+
+/* Leave group */
+
+.gssLeaveGroupDiv {
+  position: absolute;
+  height: 40px;
+  bottom: 0;
+  right: 0;
+
+  display: flex;
+  gap: 5px;
+  transition: transform .1s, filter .1s;
+  filter: brightness(1.3);
+}
+
+.gssLeaveGroupDiv:hover {
+  cursor: pointer;
+  filter: brightness(.8);
+  filter: none;
+}
+
+.gssLeaveGroupDiv:active {
+  filter: brightness(.8);
+  filter: none;
+  transform: scale(.97);
+}
+
+.gssLeaveGroupIcon {
+  height: 40px;
+  fill: var(--darker-accent-color);
+}
+
+.gssLeaveGroupText {
+  height: 40px;
+  margin: 0;
+
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 40px;
+  color: var(--darker-accent-color);
+
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  user-select: none;
+}
+
+/* ...leaving group */
+
+.gssLeavingGroupDiv {
+  position: absolute;
+  width: calc(100% + 80px);
+  height: calc(100% + 80px);
+  top: -40px;
+  left: -40px;
+  background: #0006;
+
+  transition: transform .15s cubic-bezier(0.65, 0, 0.35, 1),
+              opacity .15s cubic-bezier(0.65, 0, 0.35, 1);
+  opacity: 1;
+  visibility: visible;
+}
+
+.gssLeavingGroupDivHide {
+  transition: transform .15s cubic-bezier(0.65, 0, 0.35, 1),
+              opacity .15s cubic-bezier(0.65, 0, 0.35, 1),
+              visibility 0s .15s;
+  /* transform: translateX(10px); */
+  transform: scale(1.1);
+  opacity: 0;
+  visibility: hidden;
+}
+
+.gssLeavingGroup {
+  position: absolute;
+  width: 200px;
+  height: 110px;
+  top: calc(50% - 55px);
+  left: calc(50% - 100px);
+  padding: 10px;
+
+  border-radius: 15px;
+  background: #37383A;
+  /* z-index: 1; */
+}
+
+.gssLeavingGroup h1 {
+  height: 24px;
+  margin: 0;
+  margin-left: 25px;
+
+  line-height: 24px;
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--darker-accent-color);
+  filter: brightness(1.3);
+}
+
+.gssLeavingGroup div {
+  height: 51px;
+  margin: 5px 0;
+
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.gssLeavingGroup p {
+  margin: 0;
+
+  font-size: 14px;
+  font-weight: 500;
+  color: #aaa;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+
+  flex-shrink: 1;
+}
+
+.gssLeavingGroup svg:first-child {
+  top: 10px;
+  left: 10px;
+  fill: var(--darker-accent-color);
+  filter: brightness(1.3);
+}
+
+.gssLeavingGroup svg {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+
+  fill: #fffb;
+  transition: transform .1s;
+  transform: none;
+}
+
+.gssLeavingGroup svg:last-child {
+  right: 35px;
+}
+
+.gssLeavingGroup svg:hover {
+  transform: scale(1.05);
+  cursor: pointer;
+  fill: white;
+}
+
+.gssLeavingGroup svg:active {
+  transform: scale(.95);
+  fill: #fff8;
+}
+
+.gssLeavingGroup:hover svg:first-child {
+  transform: none;
+  cursor: auto;
+  fill: var(--darker-accent-color);
+}

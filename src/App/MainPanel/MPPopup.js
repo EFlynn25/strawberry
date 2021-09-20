@@ -96,7 +96,7 @@ class MPPopup extends React.Component {
     } else if (this.state.type == "settings") {
       child = <HPSettings />;
     } else if (this.state.type == "groupSettings") {
-      child = <GroupSettings myThreadID={this.state.data} />;
+      child = <GroupSettings myThreadID={this.state.data} closedialog={this.props.onclose} />;
     } else {
       child = (
         <div style={{display: "flex", width: "100%", height: "100%", flexDirection: "column", justifyContent: "center", alignItems: "center"}}>

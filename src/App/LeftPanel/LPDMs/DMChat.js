@@ -7,6 +7,7 @@ import {
   setOpenedDM,
   setChatLastRead
 } from "../../../redux/dmsReducer"
+import { getUser } from '../../../GlobalComponents/getUser.js';
 
 class DMChat extends React.Component {
   constructor(props) {
@@ -97,7 +98,8 @@ class DMChat extends React.Component {
 
     let chatName = "";
     let chatPicture = "";
-    const myPerson = this.props.getknownPeople[this.props.chatEmail];
+    // const myPerson = this.props.getknownPeople[this.props.chatEmail];
+    const myPerson = getUser(this.props.chatEmail);
     if (myPerson != null) {
       chatName = myPerson.name;
       chatPicture = myPerson.picture;

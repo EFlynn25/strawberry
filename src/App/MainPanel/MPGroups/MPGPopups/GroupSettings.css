@@ -71,6 +71,7 @@
   height: calc(100% - 160px);
   padding: 40px;
   background: #2A2B2D;
+  overflow: hidden;
 
   transition: transform .2s cubic-bezier(0.65, 0, 0.35, 1),
               opacity .2s cubic-bezier(0.65, 0, 0.35, 1);

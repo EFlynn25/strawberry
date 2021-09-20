@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import './GroupsDefaultMessage.css';
 import '../../MessageStyles/DefaultMessage.css';
+import { getUser } from '../../../../GlobalComponents/getUser.js';
 
 class GroupsDefaultMessage extends React.Component {
   constructor(props) {
@@ -171,8 +172,9 @@ class GroupsDefaultMessage extends React.Component {
       } else {
         const item = gone[goneIndex];
         const hereIndicatorCompensate = Object.keys(this.state.hereTransforms).length == 0 ? 0 : this.state.hereTransforms[here[0]] + 45 + (hereTimes == here.length + 1 ? 20 : 0);
+        const thisUser = getUser(item);
         if (goneIndex < gone.length) {
-          const myElement = <img src={this.props.knownPeople[item].picture} className={"defaultInChat defaultInChatGone"} alt={this.props.knownPeople[item].name} style={this.props.messages.length > 0 && this.props.messages[this.props.messages.length - 1].sending ? {bottom: "-15px"} : {"transform": `translateX(${this.state.goneTransforms[item] + hereIndicatorCompensate}px)`}} />;
+          const myElement = <img src={thisUser.picture} className={"defaultInChat defaultInChatGone"} alt={thisUser.name} style={this.props.messages.length > 0 && this.props.messages[this.props.messages.length - 1].sending ? {bottom: "-15px"} : {"transform": `translateX(${this.state.goneTransforms[item] + hereIndicatorCompensate}px)`}} />;
           inThreadElements.push(myElement);
         } else {
           const additionalPeopleStr = "+" + this.state.extraGone.toString();
@@ -229,10 +231,11 @@ class GroupsDefaultMessage extends React.Component {
                 for (let i = 0; i < peopleToShow; i++) {
                   if (item.lastRead[i] != null && item.lastRead[i] != this.props.email) {
                     console.log("YAY, ", item.lastRead[i]);
-                    const myPerson = this.props.knownPeople[item.lastRead[i]];
-                    const name = myPerson != null ? myPerson.name : "Unknown person";
-                    const picture = myPerson != null ? myPerson.picture : "/assets/images/default_profile_pic.png";
-                    lastReadElementPictures.push(<img style={ i == 0 ? null : {transform: "translateX(" + transformPX + "px)"}} src={picture} className={lrClasses} alt={name} title={name + " (" + item.lastRead[i] + ")"} />);
+                    // const myPerson = this.props.knownPeople[item.lastRead[i]];
+                    const myPerson = getUser(item.lastRead[i]);
+                    // const name = myPerson != null ? myPerson.name : "Unknown person";
+                    // const picture = myPerson != null ? myPerson.picture : "/assets/images/default_profile_pic.png";
+                    lastReadElementPictures.push(<img style={ i == 0 ? null : {transform: "translateX(" + transformPX + "px)"}} src={myPerson.picture} className={lrClasses} alt={myPerson.name} title={myPerson.name + " (" + item.lastRead[i] + ")"} />);
                     transformPX += tpxIncrement;
                   }
                 }

@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import './GroupsMessage.css';
+import { getUser } from '../../../GlobalComponents/getUser.js';
 import GroupsDefaultMessage from './GroupsMessage/GroupsDefaultMessage';
 
 class GroupsMessage extends React.Component {
@@ -43,8 +44,8 @@ class GroupsMessage extends React.Component {
     // const newSentMessage = prevCurrentThread.sendingMessages != null && thisThread.sendingMessages != null && prevCurrentThread.sendingMessages != thisThread.sendingMessages;
     const newSentMessage = prevCurrentThread.sendingMessages != thisThread.sendingMessages;
 
-    const newKnownPeople = Object.keys(prevProps.knownPeople) != Object.keys(this.props.knownPeople);
-    if (messagesExist && (sentNewMessage || openedThreadChanged)) {
+    const newKnownPeople = JSON.stringify(prevProps.knownPeople) != JSON.stringify(this.props.knownPeople);
+    if (messagesExist && (sentNewMessage || openedThreadChanged || newKnownPeople)) {
       this.reloadData();
       this.reloadMessage(prevProps);
     } else {
@@ -91,12 +92,12 @@ class GroupsMessage extends React.Component {
         messagePicture: this.props.myPicture,
       });
     } else {
-      const myPerson = this.props.knownPeople[from];
+      const myPerson = getUser(from);
       this.setState({
         myIDs: ids,
         messageEmail: from,
-        messageName: myPerson != null ? myPerson.name : "Unknown person",
-        messagePicture: myPerson != null ? myPerson.picture : "/assets/images/default_profile_pic.png",
+        messageName: myPerson.name,
+        messagePicture: myPerson.picture,
       });
     }
   }
@@ -246,15 +247,12 @@ class GroupsMessage extends React.Component {
           if (!thisThread.inThread.includes(item)) {
             newInThread[item] = "gone";
           }
-          console.log(newInThread);
         });
       }
 
       thisThread.inThread.forEach((item, i) => {
         newInThread[item] = "here";
-        console.log(newInThread);
       });
-      console.log(newInThread);
     }
 
 

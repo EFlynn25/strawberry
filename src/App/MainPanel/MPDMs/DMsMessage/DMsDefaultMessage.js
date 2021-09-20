@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import './DMsDefaultMessage.css';
 import '../../MessageStyles/DefaultMessage.css';
+import { getUser } from '../../../../GlobalComponents/getUser.js';
 
 class DMsDefaultMessage extends React.Component {
   constructor(props) {
@@ -153,6 +154,8 @@ class DMsDefaultMessage extends React.Component {
       parentStyles = {marginTop: "40px"};
     }
 
+    const thisUser = getUser(this.props.openedDM);
+
     return (
       <div className="DMsDefaultMessage" style={parentStyles}>
 
@@ -178,13 +181,13 @@ class DMsDefaultMessage extends React.Component {
                 messageClass = "defaultMessageText defaultMessageSending";
               }
 
-              const lastReadElement = <img src={this.props.knownPeople[this.props.openedDM].picture} className={lrClasses} alt={this.props.knownPeople[this.props.openedDM].name} />;
+              const lastReadElement = <img src={thisUser.picture} className={lrClasses} alt={thisUser.name} />;
               return (<p key={"id" + item.id} title={item.timestamp} className={messageClass}>{item.message}{lastReadElement}</p>);
             })
           }
         </div>
         <h1 className="defaultMessageTimestamp">{this.props.messages == null || this.props.messages.length == 0 ? "" : this.props.messages[this.props.messages.length - 1].timestamp/*"time lol"*/}</h1>
-        <img src={this.props.knownPeople[this.props.openedDM].picture} className={inChatClasses} alt={this.props.knownPeople[this.props.openedDM].name} style={this.props.messages.length > 0 && this.props.messages[this.props.messages.length - 1].sending ? {bottom: "-15px"} : null} />
+        <img src={thisUser.picture} className={inChatClasses} alt={thisUser.name} style={this.props.messages.length > 0 && this.props.messages[this.props.messages.length - 1].sending ? {bottom: "-15px"} : null} />
         <div style={this.props.messages.length > 0 && this.props.messages[this.props.messages.length - 1].sending ? {bottom: "-15px"} : null} className={inChatTypingClasses}>
           <div className="defaultInChatTypingDot"></div>
           <div className="defaultInChatTypingDot" style={{left: "15px", animationDelay: ".25s"}}></div>

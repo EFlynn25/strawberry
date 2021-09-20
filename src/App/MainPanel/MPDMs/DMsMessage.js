@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import './DMsMessage.css';
+import { getUser } from '../../../GlobalComponents/getUser.js';
 import DMsDefaultMessage from './DMsMessage/DMsDefaultMessage';
 
 class DMsMessage extends React.Component {
@@ -86,11 +87,14 @@ class DMsMessage extends React.Component {
         messagePicture: this.props.myPicture,
       });
     } else if (from == "them") {
+      const thisUser = getUser(propsOpenedDM);
       this.setState({
         myIDs: ids,
         messageEmail: propsOpenedDM,
-        messageName: this.props.knownPeople[propsOpenedDM].name,
-        messagePicture: this.props.knownPeople[propsOpenedDM].picture,
+        // messageName: this.props.knownPeople[propsOpenedDM].name,
+        // messagePicture: this.props.knownPeople[propsOpenedDM].picture,
+        messageName: thisUser.name,
+        messagePicture: thisUser.picture,
       });
     }
   }

@@ -2,9 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import "./GSPeople.css"
-import { groups_request_to_thread, groups_remove_person } from '../../../../../socket.js';
+import { groups_request_to_thread, groups_remove_person, groups_deny_request } from '../../../../../socket.js';
 import { addThreadPeople, removeThreadPerson } from '../../../../../redux/groupsReducer.js';
 import PersonPicker from '../../../../../GlobalComponents/PersonPicker.js';
+import { getUser } from '../../../../../GlobalComponents/getUser.js';
 
 import { ReactComponent as People } from '../../../../../assets/icons/people.svg';
 import { ReactComponent as Settings } from '../../../../../assets/icons/settings.svg';
@@ -28,6 +29,7 @@ class GSPeople extends React.Component {
 
     this.addPerson = this.addPerson.bind(this);
     this.removePerson = this.removePerson.bind(this);
+    this.removeRequested = this.removeRequested.bind(this);
   }
 
   componentDidMount() {
@@ -68,59 +70,94 @@ class GSPeople extends React.Component {
 
   addPerson(email) {
     groups_request_to_thread(email, this.props.myThreadID);
-    // this.props.addThreadPeople({thread_id: this.props.myThreadID, people: [email]})
   }
 
   removePerson(email) {
     groups_remove_person(this.props.myThreadID, email);
-    // this.props.removeThreadPerson({thread_id: this.props.myThreadID, person: email})
+  }
+
+  removeRequested(email) {
+    groups_deny_request(this.props.myThreadID, email)
   }
 
   render() {
     let peopleElements = [];
 
     let alphabeticalPeople = [];
-    const localKnownPeople = this.props.knownPeople;
-    if (localKnownPeople != null && Object.keys(localKnownPeople).length > 0) {
-      this.props.threads[this.props.myThreadID].people.forEach(function (item, index) {
-        alphabeticalPeople.push([item, localKnownPeople[item].name]);
-      });
-      alphabeticalPeople.sort((a,b) => a[1].toUpperCase().localeCompare(b[1].toUpperCase()));
-      const newPeople = alphabeticalPeople.map(function(x) {
-          return x[0];
-      });
+    let alphabeticalRequested = [];
+    const myThread = this.props.threads[this.props.myThreadID];
 
-      newPeople.forEach((item, i) => {
-        const personName = this.props.knownPeople[item].name;
-        const personPicture = this.props.knownPeople[item].picture;
+    myThread.people.forEach(function (item, index) {
+      alphabeticalPeople.push([item, getUser(item).name]);
+    });
+    alphabeticalPeople.sort((a,b) => a[1].toUpperCase().localeCompare(b[1].toUpperCase()));
+    const newPeople = alphabeticalPeople.map(function(x) {
+        return x[0];
+    });
 
-        peopleElements.push(
-          <div className="gspPerson" key={item} style={this.state.personRemoving == item ? {background: "#1D954522"} : null}>
-            <img src={personPicture} className="gspPFP" alt={personName} />
-            <h1 className="gspName" style={this.state.personRemoving == item ? {width: "calc(100% - 85px)"} : null}>{personName}</h1>
-            <Close className="gspRemove" onClick={() => {this.setState({personRemoving: item})}} style={this.state.personRemoving == item ? {visibility: "visible"} : null} />
-            <div className={this.state.personRemoving == item ? "gspRemovingPerson" : "gspRemovingPerson gspRemovingPersonHide"}>
-              <h1>Are you sure?</h1>
-              <div><p>Do you want to remove <i style={{color: "#ddd"}}>{personName}</i> from this group?</p></div>
-              <Done onClick={() => {this.setState({personRemoving: ""}); this.removePerson(item)}} />
-              <Close onClick={() => {this.setState({personRemoving: ""})}} />
-            </div>
+    myThread.requested.forEach(function (item, index) {
+      alphabeticalRequested.push([item, getUser(item).name]);
+    });
+    alphabeticalRequested.sort((a,b) => a[1].toUpperCase().localeCompare(b[1].toUpperCase()));
+    const newRequested = alphabeticalRequested.map(function(x) {
+        return x[0];
+    });
+
+    const personRemoving = this.state.personRemoving;
+    newPeople.forEach((item, i) => {
+      const thisUser = getUser(item);
+
+      peopleElements.push(
+        <div className="gspPerson" key={item} style={this.state.personRemoving == item ? {background: "#1D954522"} : null}>
+          <img src={thisUser.picture} className="gspPFP" alt={thisUser.name} />
+          <h1 className="gspName" style={personRemoving == item ? {width: "calc(100% - 85px)"} : null}>{thisUser.name}</h1>
+          { !newRequested.includes(item) ? null :
+            null // <p className="gspPending">Pending request...</p>
+          }
+          <Close className="gspRemove" onClick={() => {this.setState({personRemoving: item})}} style={this.state.personRemoving == item ? {visibility: "visible"} : null} />
+          <div className={this.state.personRemoving == item ? "gspRemovingPerson" : "gspRemovingPerson gspRemovingPersonHide"}>
+            <h1>Are you sure?</h1>
+            <div><p>Do you want to remove <i style={{color: "#ddd"}}>{thisUser.name}</i> from this group?</p></div>
+            <Done onClick={() => {this.setState({personRemoving: ""}); this.removePerson(item)}} />
+            <Close onClick={() => {this.setState({personRemoving: ""})}} />
           </div>
-        );
-      });
-    }
+        </div>
+      );
+    });
+
+    newRequested.forEach((item, i) => {
+      const thisUser = getUser(item);
+      // const personName = getUser(item).name;
+      // const personPicture = getUser(item).picture;
+
+      peopleElements.push(
+        <div className="gspPerson" key={item} style={this.state.personRemoving == item ? {background: "#1D954522"} : null}>
+          <img src={thisUser.picture} className="gspPFP" alt={thisUser.name} />
+          <h1 className="gspName" style={{height: "20px", lineHeight: "20px", color: "#ddd"}}>{thisUser.name}</h1>
+          <p className="gspPending">Pending request...</p>
+          <Close className="gspRemove" onClick={() => {this.setState({personRemoving: item})}} style={this.state.personRemoving == item ? {visibility: "visible"} : null} />
+          <div className={this.state.personRemoving == item ? "gspRemovingPerson" : "gspRemovingPerson gspRemovingPersonHide"}>
+            <h1>Are you sure?</h1>
+            <div><p>Do you want to remove <i style={{color: "#ddd"}}>{thisUser.name}</i> from this group?</p></div>
+            <Done onClick={() => {this.setState({personRemoving: ""}); this.removeRequested(item)}} />
+            <Close onClick={() => {this.setState({personRemoving: ""})}} />
+          </div>
+        </div>
+      );
+    });
+
 
     return(
       <div className="GSPeople">
         <h1 className="gspTitle">People</h1>
-        <div className="gsAddPersonDiv" onClick={() => {this.setState({personPickerOpen: true})}}>
-          <AddPerson className="gsAddPersonIcon" />
-          <h1 className="gsAddPersonText">Add person</h1>
+        <div className="gspAddPersonDiv" onClick={() => {this.setState({personPickerOpen: true})}}>
+          <AddPerson className="gspAddPersonIcon" />
+          <h1 className="gspAddPersonText">Add person</h1>
         </div>
         <div className={this.state.personPickerOpen ? "gsapPicker" : "gsapPicker gsapPickerHide"} ref={this.setWrapperRef}>
           <PersonPicker callback={this.addPerson} />
         </div>
-        <div className="gsPeopleList">
+        <div className="gspPeopleList">
           {peopleElements}
         </div>
       </div>

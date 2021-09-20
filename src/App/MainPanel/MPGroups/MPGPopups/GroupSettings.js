@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import "./GroupSettings.css"
 import GSPeople from './GroupSettings/GSPeople.js';
+import GSSettings from './GroupSettings/GSSettings.js';
 
 import { ReactComponent as People } from '../../../../assets/icons/people.svg';
 import { ReactComponent as Settings } from '../../../../assets/icons/settings.svg';
@@ -42,6 +43,10 @@ class GroupSettings extends React.Component {
   }
 
   render() {
+    if (this.props.threads[this.props.myThreadID] == null) {
+      this.props.closedialog();
+    }
+
     return(
       <div className="GroupSettings">
         <div className="gsTabs">
@@ -54,9 +59,11 @@ class GroupSettings extends React.Component {
 
         <div className={this.state.tab == 1 ? "gsContent" : "gsContent gsSettingsHide"}>
 
-          <div style={{display: "flex", width: "100%", height: "100%", flexDirection: "column", justifyContent: "center", alignItems: "center"}}>
+          <GSSettings myThreadID={this.props.myThreadID} tabOpen={this.state.tab == 1} />
+
+          {/*<div style={{display: "flex", width: "100%", height: "100%", flexDirection: "column", justifyContent: "center", alignItems: "center"}}>
             <h1 style={{margin: "0", color: "#fff5", fontSize: "18px"}}>No settings</h1>
-          </div>
+          </div>*/}
 
         </div>
 
@@ -65,4 +72,8 @@ class GroupSettings extends React.Component {
   }
 }
 
-export default GroupSettings;
+const mapStateToProps = (state) => ({
+  threads: state.groups.threads,
+});
+
+export default connect(mapStateToProps, null)(GroupSettings);

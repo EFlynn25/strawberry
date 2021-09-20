@@ -7,6 +7,7 @@ import {
   setOpenedThread,
   setThreadLastRead
 } from "../../../redux/groupsReducer"
+import { getUser } from '../../../GlobalComponents/getUser.js';
 
 class GroupsThread extends React.Component {
   constructor(props) {
@@ -82,25 +83,29 @@ class GroupsThread extends React.Component {
 
     let profilesDiv = null;
     if (myThread.people != null && myThread.people.length > 0) {
-      const person1 = this.props.getknownPeople[myThread.people[0]];
-      const person2 = this.props.getknownPeople[myThread.people[1]];
-      const person3 = this.props.getknownPeople[myThread.people[2]];
-      const person4 = this.props.getknownPeople[myThread.people[3]];
+      // const person1 = this.props.getknownPeople[myThread.people[0]];
+      // const person2 = this.props.getknownPeople[myThread.people[1]];
+      // const person3 = this.props.getknownPeople[myThread.people[2]];
+      // const person4 = this.props.getknownPeople[myThread.people[3]];
+      const person1 = getUser(myThread.people[0]);
+      const person2 = getUser(myThread.people[1]);
+      const person3 = getUser(myThread.people[2]);
+      const person4 = getUser(myThread.people[3]);
 
-      if (myThread.people.length == 1 && person1 != null) {
+      if (myThread.people.length == 1) {
         profilesDiv = (
           <div className="gtProfilesDiv">
             <img src={person1.picture} className="gtpdPFP" alt={person1.name} />
           </div>
         );
-      } else if (myThread.people.length == 2 && ![person1, person2].includes(undefined)) {
+      } else if (myThread.people.length == 2) {
         profilesDiv = (
           <div className="gtProfilesDiv">
             <img src={person1.picture} className="gtpdPFP gtpd2people1" alt={person1.name} />
             <img src={person2.picture} className="gtpdPFP gtpd2people2" alt={person2.name} />
           </div>
         );
-      } else if (myThread.people.length == 3 && ![person1, person2, person3].includes(undefined)) {
+      } else if (myThread.people.length == 3) {
         profilesDiv = (
           <div className="gtProfilesDiv">
             <img src={person1.picture} className="gtpdPFP gtpd3people1" alt={person1.name} />
@@ -108,7 +113,7 @@ class GroupsThread extends React.Component {
             <img src={person3.picture} className="gtpdPFP gtpd3people3" alt={person3.name} />
           </div>
         );
-      } else if (myThread.people.length == 4 && ![person1, person2, person3, person4].includes(undefined)) {
+      } else if (myThread.people.length == 4) {
         profilesDiv = (
           <div className="gtProfilesDiv">
             <img src={person1.picture} className="gtpdPFP gtpd4people1" alt={person1.name} />
@@ -117,7 +122,7 @@ class GroupsThread extends React.Component {
             <img src={person4.picture} className="gtpdPFP gtpd4people4" alt={person4.name} />
           </div>
         );
-      } else if (myThread.people.length > 4 && ![person1, person2, person3, person4].includes(undefined)) {
+      } else if (myThread.people.length > 4) {
         let numberOfExtra = myThread.people.length - 3;
         profilesDiv = (
           <div className="gtProfilesDiv">
