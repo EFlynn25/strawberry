@@ -17,6 +17,92 @@
   color: #888;
 }
 
+/* Rename group */
+
+.gssRenameText {
+  position: absolute;
+  height: 20px;
+  left: 8px;
+  /* left: 75px;
+  top: 17.5px; */
+  margin: 0;
+
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 20px;
+
+  user-select: none;
+
+  color: white;
+}
+
+.gssRenameInput {
+  position: absolute;
+  width: 40%;
+  min-width: 200px;
+  height: 25px;
+  top: 25px;
+
+  padding: 0 10px;
+  border: 0;
+
+  color: #DDD;
+  background: #2A2B2DBB;
+  background: #0002;
+  border-radius: 20px;
+  border: 1px solid;
+  border-color: #37383A;
+  font-size: 14px;
+  font-family: "IBM Plex Sans";
+
+  outline: none;
+
+  resize: none;
+}
+
+.gssRenameButton {
+  position: absolute;
+  width: 40px;
+  height: 25px;
+  top: 25px;
+  left: calc(40% + 30px);
+  background: #1D9545;
+  border-radius: 8px;
+
+  display: flex;
+  justify-content: center;
+  /* align-items: center; */
+  gap: 4px;
+
+  transition: transform .15s cubic-bezier(0.65, 0, 0.35, 1),
+              opacity .15s cubic-bezier(0.65, 0, 0.35, 1),
+              filter .1s;
+  transform: none;
+  opacity: 1;
+}
+
+.gssRenameButtonHide {
+  transform: translateX(-5px);
+  opacity: 0;
+}
+
+@media all and (max-width: 1266px) {
+  .gssRenameButton {
+    left: 230px;
+  }
+}
+
+.gssRenameButton:hover {
+  cursor: pointer;
+  filter: brightness(.9);
+}
+
+.gssRenameButton:active {
+  /* filter: brightness(.8); */
+  transform: scale(.9);
+}
+
 
 /* Leave group */
 

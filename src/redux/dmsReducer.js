@@ -154,7 +154,7 @@ export const dmsSlice = createSlice({
       state.chats[myChatEmail]["sendingMessages"] = mySendingMessages;
     },
 
-    setCreated: (state, action) => {
+    setChatCreated: (state, action) => {
       let myChatEmail = state.openedDM;
       if ("chat" in action.payload) {
         myChatEmail = action.payload["chat"];
@@ -172,7 +172,7 @@ export const dmsSlice = createSlice({
         state.chats[action.payload["chat"]].lastRead.them = action.payload["lastRead"];
       }
     },
-    setTyping: (state, action) => {
+    setChatTyping: (state, action) => {
       state.chats[action.payload["chat"]].typing = action.payload["data"];
     },
     setInChat: (state, action) => {
@@ -197,7 +197,7 @@ export const dmsSlice = createSlice({
 });
 
 export const { setOpenedDM, addChat, addChatMessage, addLoadedChatMessages, addSendingChatMessage, removeSendingChatMessage,
-  setCreated, setTempMessageInput, setChatLastRead, setTyping, setInChat, setLoadingMessages,
+  setChatCreated, setTempMessageInput, setChatLastRead, setChatTyping, setInChat, setLoadingMessages,
   addRequest, removeRequest
  } = dmsSlice.actions;
 

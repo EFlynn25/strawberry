@@ -85,7 +85,11 @@ class GSPeople extends React.Component {
 
     let alphabeticalPeople = [];
     let alphabeticalRequested = [];
+    
     const myThread = this.props.threads[this.props.myThreadID];
+    if (myThread == null) {
+      return null
+    }
 
     myThread.people.forEach(function (item, index) {
       alphabeticalPeople.push([item, getUser(item).name]);
@@ -133,7 +137,7 @@ class GSPeople extends React.Component {
       peopleElements.push(
         <div className="gspPerson" key={item} style={this.state.personRemoving == item ? {background: "#1D954522"} : null}>
           <img src={thisUser.picture} className="gspPFP" alt={thisUser.name} />
-          <h1 className="gspName" style={{height: "20px", lineHeight: "20px", color: "#ddd"}}>{thisUser.name}</h1>
+          <h1 className="gspName" style={{height: "20px", lineHeight: "20px", color: "#ddd", fontSize: "16px"}}>{thisUser.name}</h1>
           <p className="gspPending">Pending request...</p>
           <Close className="gspRemove" onClick={() => {this.setState({personRemoving: item})}} style={this.state.personRemoving == item ? {visibility: "visible"} : null} />
           <div className={this.state.personRemoving == item ? "gspRemovingPerson" : "gspRemovingPerson gspRemovingPersonHide"}>

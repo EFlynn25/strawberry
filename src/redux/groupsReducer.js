@@ -96,7 +96,7 @@ export const groupsSlice = createSlice({
       // state.threads[action.payload]
     },
     setThreadName: (state, action) => {
-      state.threads[action.payload.thread_id].name = action.payload.name;
+      state.threads[action.payload.thread_id].name = action.payload.new_name;
     },
     addThreadPeople: (state, action) => {
       const threadPeople = state.threads[action.payload.thread_id].people;
@@ -119,11 +119,13 @@ export const groupsSlice = createSlice({
       }
     },
     addThreadMessage: (state, action) => {
+      console.log("atm payload... ", action.payload)
       let myThreadID = state.openedThread;
       if ("thread_id" in action.payload) {
         myThreadID = action.payload["thread_id"];
       }
 
+      console.log(myThreadID);
       let myMessages = state.threads[myThreadID].messages;
       if (myMessages == null) {
         myMessages = [];
@@ -243,8 +245,12 @@ export const groupsSlice = createSlice({
       }
       state.threads[myThreadID]["sendingMessages"] = mySendingMessages;
     },
+
+    setThreadCreated: (state, action) => {
+      state.threads[action.payload.thread].created = action.payload.created;
+    },
     setTempMessageInput: (state, action) => {
-      console.log("state: ", JSON.stringify(state));
+      // console.log("state: ", JSON.stringify(state));
       console.log("payload: ", action.payload);
       state.threads[action.payload["thread_id"]].tempMessageInput = action.payload["input"];
     },
@@ -259,8 +265,38 @@ export const groupsSlice = createSlice({
       }
       // state.threads[action.payload["thread_id"]].lastRead[action.payload["who"]] = action.payload["lastRead"];
     },
-    setTyping: (state, action) => {
-      state.threads[action.payload["thread_id"]].typing[action.payload["who"]] = action.payload["data"];
+    setThreadTyping: (state, action) => {
+      // state.threads[action.payload["thread_id"]].typing[action.payload["who"]] = action.payload["data"];
+
+      let myTyping = state.threads[action.payload["thread_id"]].typing;
+      if (Array.isArray(action.payload["people"])) {
+        action.payload["people"].forEach(item => {
+          if (!myTyping.includes(item)) {
+            myTyping.push(item);
+          }
+        });
+        myTyping.forEach(item => {
+          if (!action.payload["people"].includes(item)) {
+            const index = myTyping.indexOf(item);
+            if (index > -1) {
+              myTyping.splice(index, 1);
+            }
+          }
+        });
+      } else {
+        if (action.payload["data"]) {
+          if (!myTyping.includes(action.payload["people"])) {
+            myTyping.push(action.payload["people"]);
+          }
+        } else {
+          if (myTyping.includes(action.payload["people"])) {
+            const index = myTyping.indexOf(action.payload["people"]);
+            if (index > -1) {
+              myTyping.splice(index, 1);
+            }
+          }
+        }
+      }
     },
     setInThread: (state, action) => {
       let myInThread = state.threads[action.payload["thread_id"]].inThread;
@@ -344,7 +380,7 @@ export const groupsSlice = createSlice({
 });
 
 export const { setOpenedThread, addThread, removeThread, setThreadName, addThreadPeople, removeThreadPerson, addThreadMessage, addLoadedThreadMessages, addSendingThreadMessage, removeSendingThreadMessage,
-  setTempMessageInput, setThreadLastRead, setTyping, setInThread, setLoadingMessages,
+  setThreadCreated, setTempMessageInput, setThreadLastRead, setThreadTyping, setInThread, setLoadingMessages,
   addThreadCreating, removeThreadCreating, addThreadCreated, removeThreadCreated,
   addRequested, removeRequested
 } = groupsSlice.actions;

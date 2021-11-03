@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 
 import './GroupsDefaultMessage.css';
@@ -159,8 +159,19 @@ class GroupsDefaultMessage extends React.Component {
       if (hereIndex < hereTimes) {
         if (hereIndex < here.length) {
           const item = here[hereIndex];
-          const myElement = <img src={this.props.knownPeople[item].picture} className={"defaultInChat"} alt={this.props.knownPeople[item].name} style={this.props.messages.length > 0 && this.props.messages[this.props.messages.length - 1].sending ? {bottom: "-15px"} : {"transform": `translateX(${this.state.hereTransforms[item]}px)`}} />;
+          const thisUser = getUser(item);
+          const myElement = <img src={thisUser.picture} className={"defaultInChat"} alt={thisUser.name} style={this.props.messages.length > 0 && this.props.messages[this.props.messages.length - 1].sending ? {bottom: "-15px"} : {"transform": `translateX(${this.state.hereTransforms[item]}px)`}} />;
           inThreadElements.push(myElement);
+          const typingElement = (
+            <div className={this.props.inThreadTyping.includes(item) ? "gdefaultInChatTyping" : "gdefaultInChatTyping gdefaultInChatTypingHide"} style={{"transform": `translateX(${this.state.hereTransforms[item]}px)`}}>
+              <div className="gdefaultInChatTypingInner">
+                <div className="defaultInChatTypingDot" style={{left: "3px", top: "11.75px"}}></div>
+                <div className="defaultInChatTypingDot" style={{left: "12px", top: "11.75px", animationDelay: ".25s"}}></div>
+                <div className="defaultInChatTypingDot" style={{left: "21px", top: "11.75px", animationDelay: ".5s"}}></div>
+              </div>
+            </div>
+          )
+          inThreadElements.push(typingElement);
         } else {
           const additionalPeopleStr = "+" + this.state.extraHere.toString();
           inThreadElements.push(<h1 style={{transform: "translateX(" + (this.state.hereTransforms[here[0]] + 30) + "px)"}} className="gExtraInThread" title={this.state.extraHere == 1 ? "+1 person" : additionalPeopleStr + " people"}>•••</h1>);
@@ -193,13 +204,17 @@ class GroupsDefaultMessage extends React.Component {
     return (
       <div className="GroupsDefaultMessage" style={parentStyles}>
 
+        { this.props.email == "system" ? null :
+          <Fragment>
+            <img src={this.props.picture} className="defaultMessagePFP" alt={this.props.name} />
+            <div className="defaultMessageName">
+            {this.props.name}
+            {this.props.messages.length > 0 && this.props.messages[this.props.messages.length - 1].sending ? <h1 className="defaultMessageSendingText">Sending...</h1> : null}
+            </div>
+          </Fragment>
+        }
 
-        <img src={this.props.picture} className="defaultMessagePFP" alt={this.props.name} />
-        <div className="defaultMessageName">
-          {this.props.name}
-          {this.props.messages.length > 0 && this.props.messages[this.props.messages.length - 1].sending ? <h1 className="defaultMessageSendingText">Sending...</h1> : null}
-        </div>
-        <div className="defaultMessageGroup gDefaultMessageGroup">
+        <div className={this.props.email == "system" ? "defaultMessageGroup gDefaultMessageGroup defaultSystemMessage" : "defaultMessageGroup gDefaultMessageGroup"}>
           { this.props.messages == null ? null :
             this.props.messages.map(item => {
               let lrClasses = "defaultLastRead gDefaultLastRead defaultIndicatorHide"
@@ -229,7 +244,7 @@ class GroupsDefaultMessage extends React.Component {
                 }
 
                 for (let i = 0; i < peopleToShow; i++) {
-                  if (item.lastRead[i] != null && item.lastRead[i] != this.props.email) {
+                  if (item.lastRead[i] != null && item.lastRead[i] != this.props.myEmail) {
                     console.log("YAY, ", item.lastRead[i]);
                     // const myPerson = this.props.knownPeople[item.lastRead[i]];
                     const myPerson = getUser(item.lastRead[i]);
@@ -252,7 +267,10 @@ class GroupsDefaultMessage extends React.Component {
             })
           }
         </div>
-        <h1 className="defaultMessageTimestamp">{this.props.messages == null || this.props.messages.length == 0 ? "" : this.props.messages[this.props.messages.length - 1].timestamp/*"time lol"*/}</h1>
+
+        { this.props.email == "system" ? null :
+          <h1 className="defaultMessageTimestamp">{this.props.messages == null || this.props.messages.length == 0 ? "" : this.props.messages[this.props.messages.length - 1].timestamp/*"time lol"*/}</h1>
+        }
         { inThreadElements }
 
         {/*<img src={this.props.knownPeople[this.props.openedThread].picture} className={inThreadClasses} alt={this.props.knownPeople[this.props.openedThread].name} style={this.props.messages.length > 0 && this.props.messages[this.props.messages.length - 1].sending ? {bottom: "-15px"} : null} />
@@ -269,7 +287,7 @@ class GroupsDefaultMessage extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  email: state.app.email,
+  myEmail: state.app.email,
   openedThread: state.groups.openedThread,
   threads: state.groups.threads,
   knownPeople: state.people.knownPeople

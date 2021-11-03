@@ -40,7 +40,7 @@ class GroupsMessage extends React.Component {
     const idsChanged = prevState.myIDs != this.state.myIDs;
     const themLastReadChanged = JSON.stringify(prevCurrentThread.lastRead) != JSON.stringify(thisThread.lastRead);
 
-    const otherUserStateChanged = prevCurrentThread.inThread != thisThread.inThread || prevProps.typing != this.props.typing;
+    const otherUserStateChanged = prevCurrentThread.inThread != thisThread.inThread || prevCurrentThread.typing != thisThread.typing;
     // const newSentMessage = prevCurrentThread.sendingMessages != null && thisThread.sendingMessages != null && prevCurrentThread.sendingMessages != thisThread.sendingMessages;
     const newSentMessage = prevCurrentThread.sendingMessages != thisThread.sendingMessages;
 
@@ -228,7 +228,9 @@ class GroupsMessage extends React.Component {
     // }
 
     let newInThread = {};
+    let newTyping = [];
     const lastMessageID = thisThread.messages[thisThread.messages.length - 1].id;
+    console.log(newMessageObjects);
     if (newMessageObjects[newMessageObjects.length - 1].id == lastMessageID/* && prevProps.openedThread == this.props.openedThread*/) {
       // newInThread = {
       //   "fireno656@yahoo.com": "gone",
@@ -253,6 +255,10 @@ class GroupsMessage extends React.Component {
       thisThread.inThread.forEach((item, i) => {
         newInThread[item] = "here";
       });
+
+      thisThread.typing.forEach((item, i) => {
+        newTyping.push(item);
+      });
     }
 
 
@@ -268,7 +274,7 @@ class GroupsMessage extends React.Component {
       });
     }
 
-    this.setState({messageList: newMessageObjects, inThread: newInThread, inThreadNoTransition: /*itnt*/null, inThreadTyping: /*newITT*/null});
+    this.setState({messageList: newMessageObjects, inThread: newInThread, inThreadNoTransition: /*itnt*/null, inThreadTyping: newTyping});
   }
 
   parseDate(timestamp) {

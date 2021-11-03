@@ -139,6 +139,7 @@ class GroupsThread extends React.Component {
 
     let threadMessage = "";
     let threadTime = "";
+    let systemMessage = false;
     if (Array.isArray(myThreadMessages) && myThreadMessages.length) {
       const lastMessage = myThreadMessages[myThreadMessages.length - 1];
       let you = "";
@@ -147,6 +148,10 @@ class GroupsThread extends React.Component {
         you = "You: "
       }
       threadMessage = you + lastMessage["message"];
+
+      if (lastMessage.from == "system") {
+        systemMessage = true;
+      }
 
       threadTime = this.parseDate(lastMessage.timestamp);
     }
@@ -168,7 +173,7 @@ class GroupsThread extends React.Component {
           <h1 className={read ? "gtTitle" : "gtTitle gtTitleUnread"}>{threadName}</h1>
           <h1 className={read ? "gtTime" : "gtTime gtUnread"}>{threadTime}</h1>
         </div>
-        <p className={read ? "gtMessage" : "gtMessage gtUnread"} title={myThreadMessages != null && myThreadMessages.length > 0 ? threadMessage : null}>{threadMessage}</p>
+        <p className={read ? "gtMessage" : "gtMessage gtUnread"} title={myThreadMessages != null && myThreadMessages.length > 0 ? threadMessage : null} style={systemMessage ? {fontStyle: "italic"} : null}>{threadMessage}</p>
         <div className="gtSelected" style={{transform: opened ? "none" : ""}} />
         {read ? null : <div className="gtUnreadNotify" />}
       </div>

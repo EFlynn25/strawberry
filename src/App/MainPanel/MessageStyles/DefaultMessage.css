@@ -181,3 +181,18 @@
   transform: translateX(-10px);
   opacity: 0 !important;
 }
+
+.defaultSystemMessage {
+  top: 0;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.defaultSystemMessage p {
+  color: #999;
+  font-size: 12px;
+}
+
+.defaultSystemMessage p:hover {
+  background: transparent;
+}

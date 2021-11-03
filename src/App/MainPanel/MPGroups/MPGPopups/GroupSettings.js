@@ -42,9 +42,15 @@ class GroupSettings extends React.Component {
     }
   }
 
-  render() {
+  componentDidUpdate() {
     if (this.props.threads[this.props.myThreadID] == null) {
       this.props.closedialog();
+    }
+  }
+
+  render() {
+    if (this.props.threads[this.props.myThreadID] == null) {
+      return null
     }
 
     return(
