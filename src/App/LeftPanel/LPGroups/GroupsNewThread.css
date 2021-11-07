@@ -61,7 +61,7 @@
 /* New dropdown */
 
 .ntDropdown {
-  position: absolute;
+  position: fixed;
   width: 284px;
   height: 200px;
   left: 8px;

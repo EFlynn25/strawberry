@@ -15,6 +15,7 @@ export const appSlice = createSlice({
     peopleLoaded: true,
 
     socket: null,
+    multipleTabs: false,
 
     currentPage: "",
     notificationCount: {},
@@ -52,6 +53,9 @@ export const appSlice = createSlice({
     setSocket: (state, action) => {
       state.socket = action.payload;
     },
+    setMultipleTabs: (state, action) => {
+      state.multipleTabs = action.payload;
+    },
     setCurrentPage: (state, action) => {
       state.currentPage = action.payload;
     },
@@ -73,7 +77,7 @@ export const appSlice = createSlice({
 export const { setUserName, setUserEmail, setUserPicture,
   setdmsOrGroups, sethideRightPanel,
   setdmsLoaded, setgroupsLoaded, setpeopleLoaded,
-  setSocket,
+  setSocket, setMultipleTabs,
   setCurrentPage, setNotificationCount,
   setMessageStyle,
   setAnnouncement, setAnnouncementRead

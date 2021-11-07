@@ -21,6 +21,8 @@ class TopBar extends React.Component {
 
   componentDidUpdate() {
     this.reloadClasses();
+
+    console.log(window.location.href.startsWith("http://localhost"))
   }
 
   reloadClasses() {
@@ -51,6 +53,9 @@ class TopBar extends React.Component {
         </div>
         <div className={this.state.tbLogoDivClass}>
           <SLogo className="tbLogoLeft" />
+          { window.location.href.startsWith("https://strawberry.neonblacknetwork.com") ? null :
+            <h1 className="tbDev">dev</h1>
+          }
         </div>
       </div>
     );

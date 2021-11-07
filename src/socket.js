@@ -1,9 +1,10 @@
 import firebase from 'firebase/app';
 import { useDispatch } from 'react-redux'
 import { setdmsLoaded, setgroupsLoaded, setpeopleLoaded, setSocket, setAnnouncement, setAnnouncementRead } from './redux/appReducer.js'
+import { setMultipleTabs } from './redux/appReducer.js'
 import { addChat, addChatMessage, addLoadedChatMessages, removeSendingChatMessage, setChatCreated, setChatLastRead, setChatTyping, setInChat, setLoadingMessages, addRequest, removeRequest
   // removeRequesting, addRequested, addRequestedMe
- } from './redux/dmsReducer.js'
+} from './redux/dmsReducer.js'
 import {
   setOpenedThread, addThread, removeThread, setThreadName, addThreadPeople, removeThreadPerson, addThreadMessage, addLoadedThreadMessages, removeSendingThreadMessage,
   removeThreadCreating, addThreadCreated,
@@ -41,8 +42,14 @@ export function startSocket() {
     if (product == "app") {
 
 
+      if (com == "multiple_tabs") {
+        mainStore.dispatch(setMultipleTabs(jsonData["data"]));
+        console.log("multiple");
+      }
+
+
       /* Get functions */
-      if (com == "get_user_info") {
+      else if (com == "get_user_info") {
 
         // if ("chats" in jsonData) {
         //   const chatsList = jsonData.chats;

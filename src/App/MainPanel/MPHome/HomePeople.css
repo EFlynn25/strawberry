@@ -49,7 +49,8 @@
   top: 32px;
   right: 20px;
 
-  color: #131416;
+  /* color: #131416; */
+  color: transparent;
   font-size: 16px;
 }
 

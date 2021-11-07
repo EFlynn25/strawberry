@@ -61,6 +61,9 @@ function Overlay(props) {
         myProgress = "Connecting to server...";
         hideProgress = true;
       }
+      if (props.multipleTabs == true) {
+        hideProgress = true;
+      }
       var percent = 0;
       var color = "#FAA";
       if (step == 1) {
@@ -80,8 +83,9 @@ function Overlay(props) {
       overlayContent = (
         <div className="overlayLoading">
           <SLogo className="oLoadingIcon" />
+          <h1 className={props.multipleTabs == true && props.socket == true ? "oLoadingText" : "oLoadingText oLoadingHide"} style={{width: "80%", padding: "0 10%", fontSize: "24px", color: "#F66"}}>You can only have one tab open at a time</h1>
           <h1 className={props.socket == false ? "oLoadingText" : "oLoadingText oLoadingHide"}>An error occurred<br/>(server connection closed)</h1>
-          <h1 className={props.socket == false ? "oLoadingText oltLoading oLoadingHide" : "oLoadingText oltLoading"}>Loading...</h1>
+          <h1 className={hideProgress ? "oLoadingText oltLoading oLoadingHide" : "oLoadingText oltLoading"}>Loading...</h1>
           <Line className={hideProgress ? "olProgressBar oLoadingHide" : "olProgressBar"} percent={percent} strokeWidth="1" strokeColor={color} />
           <h1 className={hideProgress ? "oLoadingText oltProgress oLoadingHide" : "oLoadingText oltProgress"}>{myProgress}</h1>
         </div>

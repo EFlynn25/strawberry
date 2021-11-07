@@ -12,7 +12,8 @@ class HPUserProfile extends React.Component {
     const item = this.props.email;
     const name = this.props.knownPeople[item].name;
     const picture = this.props.knownPeople[item].picture;
-    let status = "hi im " + name + " and this is my status";
+    // let status = "hi im " + name + " and this is my status";
+    let status = "";
 
     if (item == "everettflynn25@gmail.com") {
       status = "bogos binted?";

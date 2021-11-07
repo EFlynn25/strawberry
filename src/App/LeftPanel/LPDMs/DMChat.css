@@ -4,7 +4,8 @@
   cursor: pointer;
 
   background: linear-gradient(90deg, #282A2D 0%, transparent 50%, transparent 100%);
-  background-size: 200% auto;
+  /* background-size: 200% auto; */
+  background-size: 600px auto;
   background-position-x: -300px;
   transition: background-position-x .3s;
 }

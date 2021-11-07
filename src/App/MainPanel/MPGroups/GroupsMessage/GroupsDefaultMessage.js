@@ -4,6 +4,9 @@ import { connect } from 'react-redux';
 import './GroupsDefaultMessage.css';
 import '../../MessageStyles/DefaultMessage.css';
 import { getUser } from '../../../../GlobalComponents/getUser.js';
+import { ReactComponent as Edit } from '../../../../assets/icons/edit.svg';
+import { ReactComponent as Leave } from '../../../../assets/icons/leave.svg';
+import { ReactComponent as Join } from '../../../../assets/icons/join.svg';
 
 class GroupsDefaultMessage extends React.Component {
   constructor(props) {
@@ -262,7 +265,26 @@ class GroupsDefaultMessage extends React.Component {
               }
 
               const lastReadElement = <div>{lastReadElementPictures}</div>;
-              return (<p key={"id" + item.id} title={item.timestamp} className={messageClass}>{item.message}{lastReadElement}</p>);
+              let MyIcon = null;
+              let top = "0";
+              if (this.props.email == "system") {
+                if (item.message.includes("renamed")) {
+                  MyIcon = Edit;
+                } else if (item.message.includes("removed") || item.message.includes("left")) {
+                  MyIcon = Leave;
+                  top = "1px";
+                } else if (item.message.includes("joined")) {
+                  MyIcon = Join;
+                  top = "1px";
+                }
+              }
+              return (
+                <p key={"id" + item.id} title={item.timestamp} className={messageClass}>
+                  {MyIcon != null ? <MyIcon style={{position: "absolute", width: "15px", height: "15px", marginLeft: "-20px", fill: "#999", top: top}} /> : null}
+                  {item.message}
+                  {lastReadElement}
+                </p>
+              );
 
             })
           }

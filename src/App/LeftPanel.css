@@ -15,4 +15,5 @@
   height: calc(100% - 90px);
   background: #18191B;
   /* z-index: -2; */
+  overflow: hidden;
 }

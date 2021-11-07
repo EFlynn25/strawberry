@@ -103,7 +103,7 @@ class App extends React.Component {
               null
             }
 
-            <Overlay type="loading" hide={this.state.pageLoaded} socket={this.props.socket} dmsLoaded={this.props.dmsLoaded} groupsLoaded={this.props.groupsLoaded} peopleLoaded={this.props.peopleLoaded} />
+            <Overlay type="loading" hide={this.state.pageLoaded} socket={this.props.socket} multipleTabs={this.props.multipleTabs} dmsLoaded={this.props.dmsLoaded} groupsLoaded={this.props.groupsLoaded} peopleLoaded={this.props.peopleLoaded} />
           </Route>
         </Switch>
       </div>
@@ -120,6 +120,7 @@ const mapStateToProps = (state) => ({
   groupsLoaded: state.app.groupsLoaded,
   peopleLoaded: state.app.peopleLoaded,
   socket: state.app.socket,
+  multipleTabs: state.app.multipleTabs,
 
   currentPage: state.app.currentPage,
   notificationCount: state.app.notificationCount
