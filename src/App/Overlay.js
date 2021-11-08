@@ -30,7 +30,9 @@ function Overlay(props) {
     overlayContent =
       <div className="overlayPanel">
         <SLogo className="oWelcomeLogo" />
-        <h1 className="oWelcomeText">Looks like you're not signed in.</h1>
+        <div className="oWelcomeTextDiv">
+          <h1 className="oWelcomeText">Looks like you're not signed in.</h1>
+        </div>
         <div className="oWelcomeFirebaseDiv">
           <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />
         </div>
