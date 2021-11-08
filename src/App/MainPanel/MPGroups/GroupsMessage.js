@@ -57,32 +57,33 @@ class GroupsMessage extends React.Component {
 
   reloadData() {
     const propsOpenedThread = this.props.openedThread;
+    const myID = this.props.id;
 
     const thisThread = this.props.threads[propsOpenedThread];
     const thisThreadMessages = thisThread.messages;
-
     const firstMessageID = thisThreadMessages[0].id;
-    const myID = this.props.id;
+
     var ids = [];
     var from = "";
 
-    for (var i = myID - firstMessageID; true; i++) {
-      if (from.length == 0) {
-        from = thisThreadMessages[i].from;
-      }
-      // console.log("i: " + i);
-      // console.log("current id: " + (i + firstMessageID));
-      // console.log("current message: ", myThreadMessages[i]);
-      if (thisThreadMessages[i].from != from) {
-        break;
-      }
-      ids.push(i + firstMessageID);
-      if (thisThreadMessages[i + 1] == null) {
-        break;
-      }
-    }
+    if (!Array.isArray(myID)) {
+      for (var i = myID - firstMessageID; true; i++) {
+        if (from.length == 0) {
+          from = thisThreadMessages[i].from;
+        }
 
-    // console.log(ids);
+        if (thisThreadMessages[i].from != from) {
+          break;
+        }
+        ids.push(i + firstMessageID);
+        if (thisThreadMessages[i + 1] == null) {
+          break;
+        }
+      }
+    } else {
+      from = thisThreadMessages[myID[0] - firstMessageID].from;
+      ids = myID;
+    }
 
     if (from == this.props.myEmail) {
       this.setState({

@@ -324,7 +324,8 @@ class MPGroups extends React.Component {
 
         while (true) {
           const localNextID = messageIDs[messageIDs.length - 1] + 1;
-          const findNextID = thisThread["messages"].find( ({ id }) => id === localNextID );
+          // const findNextID = thisThread["messages"].find( ({ id }) => id === localNextID );
+          const findNextID = thisThread.messages[localNextID - thisThread.messages[0].id];
 
           if (findNextID == null) {
             break;
@@ -335,6 +336,14 @@ class MPGroups extends React.Component {
           }
 
           if (findNextID["from"] == messageFrom || handledSending) {
+            const currentID = localNextID - thisThread.messages[0].id - 1;
+            if (currentID >= 0 && findNextID["from"] != "system") {
+              const minsBetween = 15;
+              const currentIDObject = thisThread.messages[currentID];
+              if (findNextID.timestamp - currentIDObject.timestamp > minsBetween * 60) {
+                break;
+              }
+            }
             messageIDs.push(localNextID);
             nextID = localNextID + 1;
           } else {
@@ -342,7 +351,7 @@ class MPGroups extends React.Component {
           }
         }
 
-        const newMessage = (<GroupsMessage inThread={/*inThread*/null} typing={/*thisThread.typing*/null} id={messageIDs[0]} key={messageIDs[0]} onUpdate={this.scrollToBottom} />);
+        const newMessage = (<GroupsMessage inThread={/*inThread*/null} typing={/*thisThread.typing*/null} id={messageIDs} key={messageIDs[0]} onUpdate={this.scrollToBottom} />);
         // console.debug(newMessage);
         tempMessages.push(newMessage);
       }

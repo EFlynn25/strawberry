@@ -52,32 +52,33 @@ class DMsMessage extends React.Component {
 
   reloadData() {
     const propsOpenedDM = this.props.openedDM;
+    const myID = this.props.id;
 
     const myChat = this.props.chats[propsOpenedDM];
-    const myChatMessages = this.props.chats[propsOpenedDM].messages;
-
+    const myChatMessages = myChat.messages;
     const firstMessageID = myChatMessages[0].id;
-    const myID = this.props.id;
+
     var ids = [];
     var from = "";
 
-    for (var i = myID - firstMessageID; true; i++) {
-      if (from.length == 0) {
-        from = myChatMessages[i].from;
-      }
-      // console.log("i: " + i);
-      // console.log("current id: " + (i + firstMessageID));
-      // console.log("current message: ", myChatMessages[i]);
-      if (myChatMessages[i].from != from) {
-        break;
-      }
-      ids.push(i + firstMessageID);
-      if (myChatMessages[i + 1] == null) {
-        break;
-      }
-    }
+    if (!Array.isArray(myID)) {
+      for (var i = myID - firstMessageID; true; i++) {
+        if (from.length == 0) {
+          from = myChatMessages[i].from;
+        }
 
-    // console.log(ids);
+        if (myChatMessages[i].from != from) {
+          break;
+        }
+        ids.push(i + firstMessageID);
+        if (myChatMessages[i + 1] == null) {
+          break;
+        }
+      }
+    } else {
+      from = myChatMessages[myID[0] - firstMessageID].from;
+      ids = myID;
+    }
 
     if (from == "me") {
       this.setState({

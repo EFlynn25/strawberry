@@ -312,166 +312,44 @@ class MPDMs extends React.Component {
     let nextID = thisChat["messages"][0]["id"];
     let tempMessages = [];
     thisChat["messages"].map((message, i) => {
-      // console.debug(message);
 
       if (message["id"] >= nextID && !("sending" in message)) {
         let messageIDs = [message["id"]];
         const messageFrom = message["from"];
-        // console.debug("before while");
         while (true) {
           const localNextID = messageIDs[messageIDs.length - 1] + 1;
-          const findNextID = thisChat["messages"].find( ({ id }) => id === localNextID );
-
-          // console.debug("findNextID: " + JSON.stringify(findNextID));
-          // console.debug(findNextID);
+          // const findNextID = thisChat["messages"].find( ({ id }) => id === localNextID );
+          const findNextID = thisChat.messages[localNextID - thisChat.messages[0].id];
 
           if (findNextID == null) {
-            // console.debug("breaking, due to null");
             break;
           }
 
           if ("sending" in findNextID && messageFrom == "me") {
-            // console.log("HANDLED SENDING");
             handledSending = true;
           }
 
           if (findNextID["from"] == messageFrom || handledSending) {
+            const currentID = localNextID - thisChat.messages[0].id - 1;
+            if (currentID >= 0) {
+              const minsBetween = 15;
+              const currentIDObject = thisChat.messages[currentID];
+              if (findNextID.timestamp - currentIDObject.timestamp > minsBetween * 60) {
+                break;
+              }
+            }
             messageIDs.push(localNextID);
             nextID = localNextID + 1;
           } else {
-            // console.debug("breaking, due to new sender");
             break;
           }
         }
-        // console.debug("after while... " + messageIDs);
-
-        // const myPerson = this.props.getknownPeople[this.props.openedDM];
-        // let newMessageName = "";
-        // let newMessagePicture = "";
-        // if (myPerson != null) {
-        //   newMessageName = messageFrom == "me" ? this.props.myName : myPerson.name;
-        //   newMessagePicture = messageFrom == "me" ? this.props.myPicture : myPerson.picture;
-        // }
-        //
-        // const lastMessage = thisChat.messages[thisChat.messages.length - 1];
-        // let sendingElement;
-        // if (lastMessage.id == messageIDs[messageIDs.length - 1] && "sending" in lastMessage) {
-        //   sendingElement = <h1 className="defaultMessageSendingText">Sending...</h1>;
-        // }
-        //
-        // const lastID = messageIDs[messageIDs.length - 1];
-        // const lastReadyMessage = thisChat["messages"].find( ({ id }) => id === lastID );
-        // let timestampElement;
-        // if (!("sending" in lastReadyMessage)) {
-        //   timestampElement = this.parseDate(lastReadyMessage.timestamp);
-        // }
-        //
-        // let inChatClasses = "dmsInChat dmsIndicatorHide";
-        // let inChatTypingClasses = "dmsInChatTyping dmsInChatTypingHide";
-        // if ((messageIDs[messageIDs.length - 1] == lastRead || inChat) && messageIDs[messageIDs.length - 1] == thisChat.messages[thisChat.messages.length - 1].id && (!("sending" in thisChat.messages[thisChat.messages.length - 1]) || inChat)) {
-        //   if (inChat) {
-        //     inChatClasses = "dmsInChat";
-        //     if (thisChat.typing != null && thisChat.typing == true) {
-        //       inChatTypingClasses = "dmsInChatTyping";
-        //     }
-        //   } else {
-        //     inChatClasses = "dmsInChat dmsInChatGone";
-        //   }
-        // }
-        //
-        // let noTransition = false;
-        // let myOldMessages = null;
-        // if (prevProps != null) {
-        //   myOldMessages = prevProps.chats[this.props.openedDM].messages;
-        //   var firstCondition = myOldMessages != null && myOldMessages[myOldMessages.length - 1].id + 1 == thisChat.messages[thisChat.messages.length - 1].id;
-        //   if (firstCondition || prevProps.openedDM != this.props.openedDM) {
-        //     noTransition = true;
-        //     inChatTypingClasses += " noTransition";
-        //   }
-        // }
-        // if ("sending" in thisChat.messages[thisChat.messages.length - 1]) {
-        //   noTransition = true;
-        // }
-        // if (noTransition) {
-        //   inChatClasses += " noTransition";
-        // }
-        // const oldMessage = (
-        //   <div className="defaultMessage" key={"group" + i}>
-        //     <img src={newMessagePicture} className="defaultMessagePFP" alt={newMessageName} />
-        //     <div className="defaultMessageName">
-        //       {newMessageName}
-        //       {sendingElement}
-        //     </div>
-        //     <div className="defaultMessageGroup">
-        //       {
-        //         messageIDs.map(item => {
-        //           const message = thisChat["messages"].find( ({ id }) => id === item );
-        //           const messageKey = "id" + item;
-        //           console.debug("messageKey: " + messageKey);
-        //           let lastReadElement;
-        //           // if (!inChat && lastRead != null && item == lastRead && lastRead != thisChat.messages[thisChat.messages.length - 1].id) {
-        //           if (lastRead != null && item == lastRead) {
-        //             let myClasses = "dmsLastRead dmsIndicatorHide";
-        //             if (!inChat && lastRead != thisChat.messages[thisChat.messages.length - 1].id) {
-        //               myClasses = "dmsLastRead";
-        //             }
-        //             if (myOldMessages != null && myOldMessages[myOldMessages.length - 1].id + 1 == thisChat.messages[thisChat.messages.length - 1].id) {
-        //               myClasses += " noTransition";
-        //             }
-        //             lastReadElement = <img src={myPerson.picture} className={myClasses} alt={myPerson.name} />;
-        //           }
-        //           let messageElement;
-        //           if ("sending" in message) {
-        //             messageElement = <p key={messageKey} className="defaultMessageText defaultMessageSending">{message.message}</p>;
-        //           } else {
-        //             messageElement = <p key={messageKey} title={this.parseDate(message.timestamp)} className="defaultMessageText">{message.message}{lastReadElement}</p>;
-        //           }
-        //
-        //           return messageElement;
-        //         })
-        //       }
-        //     </div>
-        //     <h1 className="defaultMessageTimestamp">{timestampElement}</h1>
-        //     <img src={myPerson.picture} className={inChatClasses} alt={myPerson.name} />
-        //     <div className={inChatTypingClasses}>
-        //       <div className="dmsInChatTypingDot" style={{left: "15px", animationDelay: ".25s"}}></div>
-        //       <div className="dmsInChatTypingDot" style={{left: "24px", animationDelay: ".5s"}}></div>
-        //       <div className="dmsInChatTypingDot"></div>
-        //     </div>
-        //   </div>
-        // );
-        const newMessage = (<DMsMessage inChat={inChat} typing={thisChat.typing} id={messageIDs[0]} key={messageIDs[0]} onUpdate={this.scrollToBottom} />);
-        // console.debug(newMessage);
+        const newMessage = (<DMsMessage inChat={inChat} typing={thisChat.typing} id={messageIDs} key={messageIDs[0]} onUpdate={this.scrollToBottom} />);
         tempMessages.push(newMessage);
       }
     });
 
-    // console.debug("COMPLETE, HERES SENDING:");
-    // console.debug(hasSending);
-    // console.debug(handledSending);
     if (hasSending && !handledSending) {
-      // let myName = this.props.myName;
-      // let myPicture = this.props.myPicture;
-      // const newMessage = (
-      //   <div className="DMsMessage" key={"sendinggroup"}>
-      //   <img src={myPicture} className="defaultMessagePFP" alt={myName} />
-      //     <div className="defaultMessageName">
-      //       {myName}
-      //       <h1 className="defaultMessageSendingText">Sending...</h1>
-      //     </div>
-      //     <div className="defaultMessageGroup">
-      //       {
-      //         thisChat["sendingMessages"].map(item => {
-      //           console.debug(item);
-      //           const messageKey = "id" + item;
-      //           const messageElement = <p key={messageKey} className="defaultMessageText defaultMessageSending">{item}</p>;
-      //           return messageElement;
-      //         })
-      //       }
-      //     </div>
-      //   </div>
-      // );
-
       let mySendingMessages = [];
       thisChat["sendingMessages"].map(item => {
         const messageObject = {message: item, lastRead: false, noTransition: true, sending: true, id: "sending" + mySendingMessages.length};
