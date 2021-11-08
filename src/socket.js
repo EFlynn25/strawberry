@@ -15,7 +15,7 @@ import { addPerson } from './redux/peopleReducer.js'
 import mainStore from './redux/mainStore.js';
 import history from "./history";
 
-import textToneAudio from './assets/audio/text-tone.mp3';
+// import textToneAudio from './assets/audio/text-tone.mp3';
 
 // Socket start
 
@@ -173,7 +173,7 @@ export function startSocket() {
             console.log(dmsOrGroups);
             if (openedDM != jsonData.chat || dmsOrGroups != "dms") {
               console.log("NOTIFY NOW!!");
-              textTone.play();
+              // textTone.play();
             }
         } else if (jsonData.response == "no_messages") {
           dms_get_chat_created(jsonData.chat);
@@ -295,7 +295,7 @@ export function startSocket() {
             const openedThread = mainStore.getState().groups.openedThread;
             const dmsOrGroups = mainStore.getState().app.dmsOrGroups;
             if (openedThread != jsonData.thread_id || dmsOrGroups != "groups") {
-              textTone.play();
+              // textTone.play();
             }
         } else if (jsonData.response == "no_messages") {
           dms_get_thread_created(jsonData.thread_id);

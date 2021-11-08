@@ -386,8 +386,11 @@
   background: #0002;
   border-color: #fff2;
 
-
   overflow-y: auto;
+}
+
+.aapDiv > * {
+  margin: 16px 0;
 }
 
 .aaTabContentHide {
