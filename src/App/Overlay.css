@@ -53,7 +53,7 @@
   position: absolute;
   width: 800px;
   height: 135px;
-  margin: 0;
+  
 
   /* font-family: inherit; */
   font-style: normal;
@@ -152,7 +152,7 @@
 .oLoadingText {
   position: absolute;
   width: 100%;
-  margin: 0;
+  
   top: calc(50% + 60px);
 
   font-style: normal;
@@ -269,7 +269,7 @@ div.mdl-progress::after {
   content: "Authenticating...";
   /* font-family: inherit; */
   font-style: italic;
-  color: white;
+  
   margin: 20px auto;
   text-align: center;
 }

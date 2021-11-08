@@ -9,8 +9,8 @@
 
 .gspTitle {
   height: 40px;
-  color: white;
-  margin: 0;
+  
+  
   line-height: 40px;
 }
 
@@ -52,12 +52,12 @@
   height: 40px;
   left: 50px;
   top: 0;
-  margin: 0;
+  
 
   font-size: 18px;
   font-weight: 500;
   line-height: 40px;
-  color: white;
+  
 
   text-overflow: ellipsis;
   overflow: hidden;
@@ -70,7 +70,7 @@
   height: 20px;
   left: 50px;
   bottom: 0;
-  margin: 0;
+  
 
   font-size: 16px;
   font-weight: 400;
@@ -125,11 +125,11 @@
 }
 
 .gspRemovingPerson h1 {
-  margin: 0;
+  
 
   font-size: 18px;
   font-weight: 500;
-  color: white;
+  
 }
 
 .gspRemovingPerson div {
@@ -142,7 +142,7 @@
 }
 
 .gspRemovingPerson p {
-  margin: 0;
+  
 
   font-size: 14px;
   font-weight: 500;
@@ -246,7 +246,7 @@
 
 .gspAddPersonText {
   height: 40px;
-  margin: 0;
+  
 
   font-size: 18px;
   font-weight: 600;

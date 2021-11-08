@@ -54,14 +54,14 @@
   height: 20px;
   left: 75px;
   top: 17.5px;
-  margin: 0;
+
 
   display: flex;
   justify-content: space-between;
 }
 
 .dmChatTitle {
-  margin: 0;
+
 
   font-style: normal;
   font-weight: 400;
@@ -85,7 +85,7 @@
   left: 75px;
   right: 20px;
   top: 37.5px;
-  margin: 0;
+
 
   /* font-family: inherit; */
   font-style: normal;
@@ -102,7 +102,7 @@
 }
 
 .dmChatTime {
-  margin: 0;
+
   margin-left: 5px;
 
   font-style: normal;

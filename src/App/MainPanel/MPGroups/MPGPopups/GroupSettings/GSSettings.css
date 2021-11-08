@@ -11,7 +11,7 @@
   position: absolute;
   height: 40px;
   bottom: 0;
-  margin: 0;
+  
 
   line-height: 40px;
   color: #888;
@@ -25,7 +25,7 @@
   left: 8px;
   /* left: 75px;
   top: 17.5px; */
-  margin: 0;
+  
 
   font-style: normal;
   font-weight: 500;
@@ -34,7 +34,7 @@
 
   user-select: none;
 
-  color: white;
+  
 }
 
 .gssRenameInput {
@@ -137,7 +137,7 @@
 
 .gssLeaveGroupText {
   height: 40px;
-  margin: 0;
+  
 
   font-size: 18px;
   font-weight: 600;
@@ -191,7 +191,7 @@
 
 .gssLeavingGroup h1 {
   height: 24px;
-  margin: 0;
+  
   margin-left: 25px;
 
   line-height: 24px;
@@ -211,7 +211,7 @@
 }
 
 .gssLeavingGroup p {
-  margin: 0;
+  
 
   font-size: 14px;
   font-weight: 500;

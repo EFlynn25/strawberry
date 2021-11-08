@@ -61,12 +61,12 @@
   height: 30px;
   left: 40px;
   bottom: 0;
-  margin: 0;
+  
 
   font-size: 15px;
   font-weight: 400;
   line-height: 30px;
-  color: white;
+  
 
   text-overflow: ellipsis;
   overflow: hidden;
