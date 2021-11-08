@@ -20,7 +20,7 @@ import history from "./history";
 // Socket start
 
 let socket = null;
-const textTone = new Audio(textToneAudio);
+// const textTone = new Audio(textToneAudio);
 
 export function startSocket() {
   // socket = new WebSocket('ws://localhost:5000');
