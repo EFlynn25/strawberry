@@ -24,112 +24,6 @@ class DMsDefaultMessage extends React.Component {
     }
   }
 
-  // reloadMessages(prevProps) {
-  //   let myOldMessages;
-  //   if (prevProps != null) {
-  //     myOldMessages = prevProps.chats[this.props.openedDM].messages;
-  //   }
-  //   let newMessages = [];
-  //   const thisChat = this.props.chats[this.props.openedDM];
-  //   this.state.myIDs.filter(item => {
-  //     const message = thisChat.messages.find( ({ id }) => id === item );
-  //     if (message == null) {
-  //       return false;
-  //     }
-  //     return true;
-  //   }).map(item => {
-  //     const message = thisChat.messages.find( ({ id }) => id === item );
-  //     const messageKey = "id" + item;
-  //
-  //     const lastRead = thisChat.lastRead.them;
-  //
-  //
-  //
-  //     let lastReadElement;
-  //     if (lastRead != null && item == lastRead) {
-  //       let myClasses = "dmsLastRead dmsIndicatorHide";
-  //       if (!this.props.inChat && lastRead != thisChat.messages[thisChat.messages.length - 1].id) {
-  //         myClasses = "dmsLastRead";
-  //       }
-  //       if (prevProps.openedDM != this.props.openedDM || (myOldMessages != null && myOldMessages[myOldMessages.length - 1].id + 1 == thisChat.messages[thisChat.messages.length - 1].id)) {
-  //         myClasses += " noTransition";
-  //       }
-  //       lastReadElement = <img src={this.props.knownPeople[this.props.openedDM].picture} className={myClasses} alt={this.props.knownPeople[this.props.openedDM].name} />;
-  //     }
-  //
-  //     let messageElement;
-  //     messageElement = <p key={messageKey} title={this.parseDate(message.timestamp)} className="defaultMessageText">{message.message}{lastReadElement}</p>;
-  //     // if ("sending" in message) {
-  //     //   messageElement = <p key={messageKey} className="defaultMessageText defaultMessageSending">{message.message}</p>;
-  //     // } else {
-  //     // }
-  //
-  //     newMessages.push(messageElement);
-  //   });
-  //
-  //   const message = thisChat.messages.find( ({ id }) => id === this.state.myIDs[0] );
-  //   if (message.from == "me" && this.state.myIDs.includes(thisChat.messages[thisChat.messages.length - 1].id) && thisChat.sendingMessages != null) {
-  //     thisChat.sendingMessages.map(item => {
-  //       console.log(item);
-  //       let messageElement;
-  //       messageElement = <p key={"key" + item} className="defaultMessageText defaultMessageSending">{item}</p>;
-  //       newMessages.push(messageElement);
-  //     });
-  //   }
-  //
-  //   this.setState({messageElements: newMessages});
-  //
-  //   this.reloadIndicators(prevProps);
-  // }
-  //
-  // reloadIndicators(prevProps) {
-  //   const thisChat = this.props.chats[this.props.openedDM];
-  //   const myIDs = this.state.myIDs;
-  //
-  //
-  //   const lastRead = thisChat.lastRead.them;
-  //   const inChat = this.props.inChat;
-  //   const typing = this.props.typing;
-  //
-  //   let inChatClasses = "dmsInChat dmsIndicatorHide";
-  //   let inChatTypingClasses = "dmsInChatTyping dmsInChatTypingHide";
-  //   if ((myIDs[myIDs.length - 1] == lastRead || inChat) && myIDs[myIDs.length - 1] == thisChat.messages[thisChat.messages.length - 1].id && (!("sending" in thisChat.messages[thisChat.messages.length - 1]) || inChat)) {
-  //     if (inChat) {
-  //       inChatClasses = "dmsInChat";
-  //       if (typing != null && typing == true) {
-  //         inChatTypingClasses = "dmsInChatTyping";
-  //       }
-  //     } else {
-  //       inChatClasses = "dmsInChat dmsInChatGone";
-  //     }
-  //   }
-  //
-  //   let noTransition = false;
-  //   let myOldMessages = null;
-  //   if (prevProps != null) {
-  //     myOldMessages = prevProps.chats[this.props.openedDM].messages;
-  //     var sentNewMessage = myOldMessages != null && myOldMessages[myOldMessages.length - 1].id + 1 == thisChat.messages[thisChat.messages.length - 1].id;
-  //     // console.log(thisChat.messages[thisChat.messages.length - 1].id);
-  //     // console.log(myIDs);
-  //     // console.log(thisChat.messages[thisChat.messages.length - 1].id != myIDs[myIDs.length - 1]);
-  //     if (sentNewMessage || this.state.messageElements.length == 0 || thisChat.messages[thisChat.messages.length - 1].id != myIDs[myIDs.length - 1]) {
-  //       noTransition = true;
-  //       inChatTypingClasses += " noTransition";
-  //     }
-  //   }
-  //   if ("sending" in thisChat.messages[thisChat.messages.length - 1]) {
-  //     noTransition = true;
-  //   }
-  //   if (noTransition) {
-  //     inChatClasses += " noTransition";
-  //   }
-  //
-  //   this.setState({
-  //     inChatClasses: inChatClasses,
-  //     inChatTypingClasses: inChatTypingClasses
-  //   });
-  // }
-
   render() {
     const thisChat = this.props.chats[this.props.openedDM];
 
@@ -182,7 +76,7 @@ class DMsDefaultMessage extends React.Component {
               }
 
               const lastReadElement = <img src={thisUser.picture} className={lrClasses} alt={thisUser.name} />;
-              return (<p key={"id" + item.id} title={item.timestamp} className={messageClass}>{item.message}{lastReadElement}</p>);
+              return (<p key={"id" + item.id} title={item.basicTimestamp} className={messageClass}>{item.message}{lastReadElement}</p>);
             })
           }
         </div>

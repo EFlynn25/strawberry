@@ -8,6 +8,7 @@ import {
   setChatLastRead
 } from "../../../redux/dmsReducer"
 import { getUser } from '../../../GlobalComponents/getUser.js';
+import { parseDate } from '../../../GlobalComponents/parseDate.js';
 
 class DMChat extends React.Component {
   constructor(props) {
@@ -69,24 +70,6 @@ class DMChat extends React.Component {
     this.props.history.push("/dms/" + this.props.chatEmail);
   }
 
-  parseDate(timestamp) {
-    const shortMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const date = new Date(timestamp * 1000);
-
-    let month = shortMonths[date.getMonth()];
-    let hours = date.getHours();
-    let minutes = date.getMinutes();
-    let ampm = hours >= 12 ? 'PM' : 'AM';
-    hours = hours % 12;
-    hours = hours ? hours : 12; // the hour '0' should be '12'
-    minutes = minutes < 10 ? '0' + minutes : minutes;
-
-    const timeString = hours + ':' + minutes + ' ' + ampm;
-    const fullString = month + ' ' + date.getDate() + ', ' + date.getFullYear() + ' • ' + hours + ':' + minutes + ' ' + ampm;
-
-    return(timeString);
-  }
-
   render() {
     const myChat =  this.props.chats[this.props.chatEmail];
     const myChatMessages = myChat.messages;
@@ -116,7 +99,7 @@ class DMChat extends React.Component {
       }
       chatMessage = you + lastMessage["message"];
 
-      chatTime = this.parseDate(lastMessage.timestamp);
+      chatTime = parseDate(lastMessage.timestamp, "time");
     }
 
     let read = true;

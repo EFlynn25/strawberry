@@ -6,6 +6,7 @@ import './HPAnnouncements.css';
 import { ReactComponent as Close } from '../../../../assets/icons/close.svg';
 import { ReactComponent as Add } from '../../../../assets/icons/add.svg';
 import { add_announcement, set_announcement_read } from '../../../../socket.js';
+import { parseDate } from '../../../../GlobalComponents/parseDate.js';
 
 class HPAnnouncements extends React.Component {
   constructor(props) {
@@ -28,23 +29,6 @@ class HPAnnouncements extends React.Component {
     this.aaIDHandleChange = this.aaIDHandleChange.bind(this);
     this.aapbHandleClick = this.aapbHandleClick.bind(this);
     this.aapbMouseLeave = this.aapbMouseLeave.bind(this);
-  }
-
-  parseDate(timestamp) {
-    const shortMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const date = new Date(timestamp * 1000);
-
-    let month = shortMonths[date.getMonth()];
-    let hours = date.getHours();
-    let minutes = date.getMinutes();
-    let ampm = hours >= 12 ? 'PM' : 'AM';
-    hours = hours % 12;
-    hours = hours ? hours : 12; // the hour '0' should be '12'
-    minutes = minutes < 10 ? '0' + minutes : minutes;
-
-    const fullString = month + ' ' + date.getDate() + ', ' + date.getFullYear() + ' • ' + hours + ':' + minutes + ' ' + ampm;
-
-    return(fullString);
   }
 
   markAllHandleClick() {
@@ -105,7 +89,7 @@ class HPAnnouncements extends React.Component {
         <div key={item} className="aliDiv" onClick={() => {this.setState({showAnnouncement: true, openedAnnouncement: item}); if (!this.props.announcementsRead.includes(item)) set_announcement_read([item]);}}>
           <h1 style={this.props.announcementsRead.includes(item) ? null : {color: "var(--accent-color)", marginLeft: "20px"}} className="aliTitle">{title}</h1>
           <ReactMarkdown className="aliPreview">{content}</ReactMarkdown>
-          <p className="aliTimestamp">{this.parseDate(this.props.announcements[item].timestamp)}</p>
+          <p className="aliTimestamp">{parseDate(this.props.announcements[item].timestamp)}</p>
           {this.props.announcementsRead.includes(item) ? null : <div style={{position: "absolute", background: "white", width: "10px", height: "10px", borderRadius: "15px", top: "20px"}}></div>}
         </div>
       );
@@ -120,7 +104,7 @@ class HPAnnouncements extends React.Component {
             <h1 className="announcementTitle">{this.props.announcements[oa].title}</h1>
           </div>
           <ReactMarkdown className="announcementContent">{this.props.announcements[oa].content}</ReactMarkdown>
-          <p className="announcementTimestamp">{this.parseDate(this.props.announcements[oa].timestamp)}</p>
+          <p className="announcementTimestamp">{parseDate(this.props.announcements[oa].timestamp)}</p>
         </Fragment>
       );
     }

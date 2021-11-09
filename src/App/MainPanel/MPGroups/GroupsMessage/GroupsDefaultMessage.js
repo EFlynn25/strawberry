@@ -104,53 +104,9 @@ class GroupsDefaultMessage extends React.Component {
   }
 
   render() {
-    // const thisThread = this.props.threads[this.props.openedThread];
-
-    // let inThreadClasses = "defaultInThread defaultIndicatorHide noTransition";
-    // let nt = true;
-    // if (this.props.inThread[0] == "here") {
-    //   inThreadClasses = "defaultInThread";
-    // } else if (this.props.inThread[0] == "gone") {
-    //   inThreadClasses = "defaultInThread defaultInThreadGone";
-    // }
-    // if (this.props.inThread[1]) {
-    //   inThreadClasses += " noTransition";
-    // }
-    //
-    // let inThreadTypingClasses = "defaultInThreadTyping defaultInThreadTypingHide";
-    // if (this.props.inThreadTyping) {
-    //   inThreadTypingClasses = "defaultInThreadTyping";
-    // }
-
     let inThreadElements = [];
     let here = Object.keys(this.state.hereTransforms);
     let gone = Object.keys(this.state.goneTransforms);
-
-    // let inThreadLength = here.length + gone.length;
-    // let tpxIncrement = 12;
-    // let peopleToShow = inThreadLength;
-    // if (inThreadLength <= 3) {
-    //   tpxIncrement = 30;
-    // } else if (inThreadLength > 3/* && inThreadLength <= 6*/) {
-    //   tpxIncrement = 90 / (inThreadLength - 1);
-    // } else {
-    //   peopleToShow = 6;
-    // }
-    // let transformPX = tpxIncrement * (peopleToShow - 1);
-    // const stateHereKeys = Object.keys(this.state.hereTransforms);
-
-    // inThreadElements.push(gone.map(item => {
-    //   console.log(`translateX(${transformPX}px)`);
-    //   let myTransform = this.state.goneTransforms[item] + this.state.hereTransforms[stateHereKeys[0]] + 45;
-    //   let myElement = <img src={this.props.knownPeople[item].picture} className={"defaultInChat defaultInChatGone"} alt={this.props.knownPeople[item].name} style={this.props.messages.length > 0 && this.props.messages[this.props.messages.length - 1].sending ? {bottom: "-15px"} : {"transform": `translateX(${myTransform}px)`}} />;
-    //   return myElement;
-    // }));
-    // // inThreadElements.push(<h1 style={{position: "absolute", left: "50px", width: "15px", textAlign: "center", fontSize: "14px", transform: `translateX(${this.state.hereTransforms[stateHereKeys[0]] + 30}px)`, color: "#555", margin: 0, marginTop: "6px"}}>|</h1>)
-    // inThreadElements.push(here.map(item => {
-    //   console.log(`translateX(${transformPX}px)`);
-    //   let myElement = <img src={this.props.knownPeople[item].picture} className={"defaultInChat"} alt={this.props.knownPeople[item].name} style={this.props.messages.length > 0 && this.props.messages[this.props.messages.length - 1].sending ? {bottom: "-15px"} : {"transform": `translateX(${this.state.hereTransforms[item]}px)`}} />;
-    //   return myElement;
-    // }));
 
     let hereIndex = 0;
     const hereTimes = here.length + (this.state.extraHere > 0 ? 1 : 0);
@@ -249,10 +205,7 @@ class GroupsDefaultMessage extends React.Component {
                 for (let i = 0; i < peopleToShow; i++) {
                   if (item.lastRead[i] != null && item.lastRead[i] != this.props.myEmail) {
                     console.log("YAY, ", item.lastRead[i]);
-                    // const myPerson = this.props.knownPeople[item.lastRead[i]];
                     const myPerson = getUser(item.lastRead[i]);
-                    // const name = myPerson != null ? myPerson.name : "Unknown person";
-                    // const picture = myPerson != null ? myPerson.picture : "/assets/images/default_profile_pic.png";
                     lastReadElementPictures.push(<img style={ i == 0 ? null : {transform: "translateX(" + transformPX + "px)"}} src={myPerson.picture} className={lrClasses} alt={myPerson.name} title={myPerson.name + " (" + item.lastRead[i] + ")"} />);
                     transformPX += tpxIncrement;
                   }
@@ -279,7 +232,7 @@ class GroupsDefaultMessage extends React.Component {
                 }
               }
               return (
-                <p key={"id" + item.id} title={item.timestamp} className={messageClass}>
+                <p key={"id" + item.id} title={item.basicTimestamp} className={messageClass}>
                   {MyIcon != null ? <MyIcon style={{position: "absolute", width: "15px", height: "15px", marginLeft: "-20px", fill: "#999", top: top}} /> : null}
                   {item.message}
                   {lastReadElement}
@@ -294,13 +247,6 @@ class GroupsDefaultMessage extends React.Component {
           <h1 className="defaultMessageTimestamp">{this.props.messages == null || this.props.messages.length == 0 ? "" : this.props.messages[this.props.messages.length - 1].timestamp/*"time lol"*/}</h1>
         }
         { inThreadElements }
-
-        {/*<img src={this.props.knownPeople[this.props.openedThread].picture} className={inThreadClasses} alt={this.props.knownPeople[this.props.openedThread].name} style={this.props.messages.length > 0 && this.props.messages[this.props.messages.length - 1].sending ? {bottom: "-15px"} : null} />
-        <div style={this.props.messages.length > 0 && this.props.messages[this.props.messages.length - 1].sending ? {bottom: "-15px"} : null} className={inThreadTypingClasses}>
-          <div className="defaultInThreadTypingDot"></div>
-          <div className="defaultInThreadTypingDot" style={{left: "15px", animationDelay: ".25s"}}></div>
-          <div className="defaultInThreadTypingDot" style={{left: "24px", animationDelay: ".5s"}}></div>
-        </div>*/}
 
 
       </div>

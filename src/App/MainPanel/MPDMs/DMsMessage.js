@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import './DMsMessage.css';
 import { getUser } from '../../../GlobalComponents/getUser.js';
+import { parseDate } from '../../../GlobalComponents/parseDate.js';
 import DMsDefaultMessage from './DMsMessage/DMsDefaultMessage';
 
 class DMsMessage extends React.Component {
@@ -130,7 +131,7 @@ class DMsMessage extends React.Component {
       }
 
       let messageObject;
-      messageObject = {message: message.message, timestamp: this.parseDate(message.timestamp), lastRead: lr, noTransition: nt, id: item};
+      messageObject = {message: message.message, timestamp: parseDate(message.timestamp), basicTimestamp: parseDate(message.timestamp, "basic"), lastRead: lr, noTransition: nt, id: item};
 
       newMessageObjects.push(messageObject);
     });
@@ -182,28 +183,6 @@ class DMsMessage extends React.Component {
     }
 
 
-    // console.log("start in chat test");
-    // console.log("lastMessageID: " + lastMessageID);
-    // console.log("lastRead: " + lastRead);
-    // console.log("last of myIDs: " + this.state.myIDs[this.state.myIDs.length - 1]);
-    // const wasHere = this.state.inChat == "here";
-    // const noNewMessage = myOldMessages != null && myOldMessages.length > 0 && myOldMessages[myOldMessages.length - 1].id == thisChat.messages[thisChat.messages.length - 1].id;
-    // const wasHereNoNewMessage = wasHere && noNewMessage;
-    // if (this.props.inChat) {
-    //   newInChat = "here";
-    // } else if (wasHereNoNewMessage || (lastRead == lastMessageID && this.state.myIDs[this.state.myIDs.length - 1] == lastMessageID)) {
-    //   newInChat = "gone";
-    // }
-    // const wasLastRead = this.state.inChat == "no" && this.props.inChat;
-    // const wasGoneNowHere = this.state.inChat == "gone" && newInChat == "here";
-    // console.log("was: " + this.state.inChat);
-    // console.log("now: " + newInChat);
-    // console.log("messages the same?: " + noNewMessage);
-    // if ((wasLastRead || wasGoneNowHere || wasHere) && noNewMessage) {
-    //   icnt = false;
-    // }
-
-
 
     const message = thisChat.messages.find( ({ id }) => id === this.state.myIDs[0] );
     if (message.from == "me" && this.state.myIDs.includes(thisChat.messages[thisChat.messages.length - 1].id) && thisChat.sendingMessages != null) {
@@ -218,29 +197,7 @@ class DMsMessage extends React.Component {
     this.setState({messageList: newMessageObjects, inChat: newInChat, inChatNoTransition: icnt, inChatTyping: newICT});
   }
 
-  parseDate(timestamp) {
-    const shortMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const date = new Date(timestamp * 1000);
-
-    let month = shortMonths[date.getMonth()];
-    let hours = date.getHours();
-    let minutes = date.getMinutes();
-    let ampm = hours >= 12 ? 'PM' : 'AM';
-    hours = hours % 12;
-    hours = hours ? hours : 12; // the hour '0' should be '12'
-    minutes = minutes < 10 ? '0' + minutes : minutes;
-
-    const fullString = month + ' ' + date.getDate() + ', ' + date.getFullYear() + ' • ' + hours + ':' + minutes + ' ' + ampm;
-
-    return(fullString);
-  }
-
   render() {
-    // let timestampElement = "";
-    // if (this.state.messageElements != null && this.state.messageElements.length > 0) {
-    //   timestampElement = this.state.messageElements[this.state.messageElements.length - 1].props.title;
-    // }
-
     let MessageType;
     if (this.props.messageStyle == "default") {
       MessageType = DMsDefaultMessage;
@@ -251,33 +208,6 @@ class DMsMessage extends React.Component {
         <MessageType email={this.state.messageEmail} name={this.state.messageName} picture={this.state.messagePicture} messages={this.state.messageList} inChat={[this.state.inChat, this.state.inChatNoTransition]} inChatTyping={this.state.inChatTyping} onUpdate={this.props.onUpdate} />
       </div>
     );
-
-    /*
-    return (
-      <div className="DMsMessage">
-
-
-        <img src={this.state.messagePicture} className="defaultMessagePFP" alt={this.state.messageName} />
-        <div className="defaultMessageName">
-          {this.state.messageName}
-          {/*sendingElement*}
-          {this.state.messageElements.length > 0 && this.state.messageElements[this.state.messageElements.length - 1].props.className.includes("defaultMessageSending") ? <h1 className="defaultMessageSendingText">Sending...</h1> : null}
-        </div>
-        <div className="defaultMessageGroup">
-          {this.state.messageElements}
-        </div>
-        <h1 className="defaultMessageTimestamp">{timestampElement}</h1>
-        <img src={this.props.knownPeople[this.props.openedDM].picture} className={this.state.inChatClasses} alt={this.props.knownPeople[this.props.openedDM].name} style={this.state.messageElements.length > 0 && this.state.messageElements[this.state.messageElements.length - 1].props.className.includes("defaultMessageSending") ? {bottom: "-15px"} : null} />
-        <div style={this.state.messageElements.length > 0 && this.state.messageElements[this.state.messageElements.length - 1].props.className.includes("defaultMessageSending") ? {bottom: "-15px"} : null} className={this.state.inChatTypingClasses}>
-          <div className="dmsInChatTypingDot"></div>
-          <div className="dmsInChatTypingDot" style={{left: "15px", animationDelay: ".25s"}}></div>
-          <div className="dmsInChatTypingDot" style={{left: "24px", animationDelay: ".5s"}}></div>
-        </div>
-
-
-      </div>
-    );
-    */
   }
 }
 
