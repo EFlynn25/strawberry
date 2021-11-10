@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import "./PersonPicker.css"
+import { getUser } from "./getUser.js"
 
 class PersonPicker extends React.Component {
   constructor(props) {
@@ -51,7 +52,7 @@ class PersonPicker extends React.Component {
         // } else {
         //   myName = localKnownPeople[item].name;
         // }
-        alphabeticalPeople.push([item, localKnownPeople[item].name]);
+        alphabeticalPeople.push([item, getUser(item).name]);
       });
       alphabeticalPeople.sort((a,b) => a[1].toUpperCase().localeCompare(b[1].toUpperCase()));
       const newPeople = alphabeticalPeople.map(function(x) {
@@ -59,8 +60,9 @@ class PersonPicker extends React.Component {
       });
 
       newPeople.forEach((item) => {
-        const personName = this.props.knownPeople[item].name;
-        const personPicture = this.props.knownPeople[item].picture;
+        const myPerson = getUser(item);
+        const personName = myPerson.name;
+        const personPicture = myPerson.picture;
 
         const myElement = (
           <div className="ppPerson" key={item} onClick={() => this.props.callback(item)}>
