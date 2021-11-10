@@ -21,6 +21,10 @@
   background: #1540C264;
 }
 
+.dmTab:active .dmHovering {
+  opacity: .5;
+}
+
 .dmTabInner {
   position: absolute;
   width: 90px;
@@ -41,7 +45,7 @@
   float: right;
   height: 35px;
   width: 45px;
-  margin: 0;
+
 
   /* font-family: inherit; */
   font-style: normal;
@@ -75,7 +79,7 @@
 
   background: transparent;
 
-  transition: background .1s;
+  transition: background .1s, opacity .1s;
 }
 
 
@@ -95,6 +99,10 @@
 
 .groupsTab:hover .groupsHovering {
   background: #1D954564;
+}
+
+.groupsTab:active .groupsHovering {
+  opacity: .5;
 }
 
 .groupsTabInner {
@@ -117,7 +125,7 @@
   float: right;
   height: 35px;
   width: 70px;
-  margin: 0;
+
 
   /* font-family: inherit; */
   font-style: normal;
@@ -151,5 +159,5 @@
 
   background: transparent;
 
-  transition: background .1s;
+  transition: background .1s, opacity .1s;
 }

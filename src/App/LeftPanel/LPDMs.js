@@ -7,7 +7,7 @@ import {
   setNotificationCount
 } from '../../redux/appReducer';
 import {
-  setopenedChat
+  setOpenedDM
 } from "../../redux/dmsReducer"
 import DMChat from './LPDMs/DMChat'
 import DMNewChat from './LPDMs/DMNewChat'
@@ -27,8 +27,8 @@ class LPDMs extends React.Component {
   }
 
   componentDidMount() {
-    if (this.props.openedChat != "") {
-      this.props.history.push("/dms/" + this.props.openedChat);
+    if (this.props.openedDM != "") {
+      this.props.history.push("/dms/" + this.props.openedDM);
     }
 
     this.reloadChats();
@@ -55,7 +55,7 @@ class LPDMs extends React.Component {
     var chatTimestampList = Object.keys(chats).filter(function(key) {
       const thisChat = chats[key];
       const thisChatMessages = thisChat.messages;
-      if (thisChatMessages == null) {
+      if (thisChatMessages == null || thisChatMessages.length == 0) {
         noMessageChats.push(key);
         return false;
       } else {
@@ -102,21 +102,25 @@ class LPDMs extends React.Component {
   }
 
   handleKeyDown(e) {
+    if (this.props.dmsOrGroups != "dms") {
+      return false;
+    }
+
     if (e.ctrlKey && e.which === 38) {
       e.preventDefault();
       e.stopPropagation();
 
       if (!this.props.history.location.pathname.startsWith("/home")) {
         // const listOfChildrenEmails = this.state.children.map(child => child.props.chatEmail);
-        // const myIndex = listOfChildrenEmails.indexOf(this.props.openedChat);
+        // const myIndex = listOfChildrenEmails.indexOf(this.props.openedDM);
 
-        const myIndex = this.listOfEmails.indexOf(this.props.openedChat);
+        const myIndex = this.listOfEmails.indexOf(this.props.openedDM);
 
         if (myIndex != 0) {
           // const newChat = listOfChildrenEmails[myIndex - 1];
 
           const newChat = this.listOfEmails[myIndex - 1];
-          this.props.setopenedChat(newChat);
+          this.props.setOpenedDM(newChat);
           this.props.history.push("/dms/" + newChat);
         } else {
           this.props.history.push("/home");
@@ -131,19 +135,19 @@ class LPDMs extends React.Component {
       if (this.props.history.location.pathname.startsWith("/home")) {
         // const newChat = listOfChildrenEmails[0];
         const newChat = this.listOfEmails[0];
-        this.props.setopenedChat(newChat);
+        this.props.setOpenedDM(newChat);
         this.props.history.push("/dms/" + newChat);
       } else {
-        // const myIndex = listOfChildrenEmails.indexOf(this.props.openedChat);
+        // const myIndex = listOfChildrenEmails.indexOf(this.props.openedDM);
 
-        const myIndex = this.listOfEmails.indexOf(this.props.openedChat);
+        const myIndex = this.listOfEmails.indexOf(this.props.openedDM);
 
         if (myIndex != this.listOfEmails.length - 1) {
         // if (myIndex != listOfChildrenEmails.length - 1) {
           // const newChat = listOfChildrenEmails[myIndex + 1];
 
           const newChat = this.listOfEmails[myIndex + 1];
-          this.props.setopenedChat(newChat);
+          this.props.setOpenedDM(newChat);
           this.props.history.push("/dms/" + newChat);
         }
       }
@@ -164,13 +168,14 @@ class LPDMs extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  openedChat: state.dms.openedChat,
-  chats: state.dms.chats
+  openedDM: state.dms.openedDM,
+  chats: state.dms.chats,
+  dmsOrGroups: state.app.dmsOrGroups
 });
 
 const mapDispatchToProps = {
   setNotificationCount,
-  setopenedChat
+  setOpenedDM
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(LPDMs));

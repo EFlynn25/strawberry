@@ -44,7 +44,7 @@
   height: 40px;
   left: 75px;
   top: 17.5px;
-  margin: 0;
+  
 
   font-style: normal;
   font-weight: 500;
@@ -53,7 +53,7 @@
 
   user-select: none;
 
-  color: white;
+  
 }
 
 
@@ -61,7 +61,7 @@
 /* New dropdown */
 
 .ncDropdown {
-  position: absolute;
+  position: fixed;
   width: 284px;
   height: 200px;
   left: 8px;
@@ -85,26 +85,30 @@
 
 .ncdIcon {
   position: absolute;
-  width: 40px;
-  height: 40px;
-  top: 17.5px;
+  width: 25px;
+  height: 25px;
+  top: 22.5px;
   left: 20px;
   user-select: none;
+
+  fill: var(--accent-color);
 }
 
 .ncdTitle {
   position: absolute;
-  left: 20px;
+  height: 30px;
+  left: 55px;
   top: 20px;
-  margin: 0;
+  
 
   font-style: normal;
   font-weight: 500;
   font-size: 22px;
+  line-height: 30px;
 
   user-select: none;
 
-  color: white;
+  
 }
 
 .ncdText {
@@ -112,7 +116,7 @@
   height: 25px;
   left: 28px;
   top: 60px;
-  margin: 0;
+  
 
   font-style: normal;
   font-weight: 400;
@@ -126,6 +130,7 @@
 
 .ncdInput {
   position: absolute;
+  width: calc(100% - 82px);
   height: 25px;
   left: 20px;
   top: 85px;
@@ -153,7 +158,7 @@
   left: 30px;
   right: 30px;
   top: 135px;
-  margin: 0;
+  
 
   font-style: normal;
   font-weight: 400;

@@ -11,11 +11,6 @@ import { ReactComponent as SLogo } from '../assets/icons/strawberry.svg';
 import './Overlay.css';
 import { uiConfig, signedIn } from '../StartFirebase'
 
-import OTopBar from './Overlay/OTopBar';
-import OLeftPanel from './Overlay/OLeftPanel';
-import OMainPanel from './Overlay/OMainPanel';
-import ORightPanel from './Overlay/ORightPanel';
-
 function Overlay(props) {
   const history = useHistory();
   const dispatch = useDispatch();
@@ -35,7 +30,9 @@ function Overlay(props) {
     overlayContent =
       <div className="overlayPanel">
         <SLogo className="oWelcomeLogo" />
-        <h1 className="oWelcomeText">Looks like you're not signed in.</h1>
+        <div className="oWelcomeTextDiv">
+          <h1 className="oWelcomeText">Looks like you're not signed in.</h1>
+        </div>
         <div className="oWelcomeFirebaseDiv">
           <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />
         </div>
@@ -53,34 +50,44 @@ function Overlay(props) {
       } else if (props.dmsLoaded == false) {
         step = 1;
         myProgress = "Loading DMs...";
-      } else if (props.peopleLoaded == false) {
+      } else if (props.groupsLoaded == false) {
         step = 2;
+        myProgress = "Loading Groups...";
+      } else if (props.peopleLoaded == false) {
+        step = 3;
         myProgress = "Loading people...";
       } else {
-        step = 3;
+        step = 4;
       }
       if (props.socket == false) {
         myProgress = "Connecting to server...";
         hideProgress = true;
       }
+      if (props.multipleTabs == true) {
+        hideProgress = true;
+      }
       var percent = 0;
       var color = "#FAA";
       if (step == 1) {
-        percent = 33;
+        percent = 25;
         color = "#D88";
       } else if (step == 2) {
-        percent = 66;
+        percent = 50;
         color = "#A55";
       } else if (step == 3) {
-        percent = 100;
+        percent = 75;
         color = "#833";
+      } else if (step == 4) {
+        percent = 100;
+        color = "#611";
       }
 
       overlayContent = (
         <div className="overlayLoading">
           <SLogo className="oLoadingIcon" />
+          <h1 className={props.multipleTabs == true && props.socket == true ? "oLoadingText" : "oLoadingText oLoadingHide"} style={{width: "80%", padding: "0 10%", fontSize: "24px", color: "#F66"}}>You can only have one tab open at a time</h1>
           <h1 className={props.socket == false ? "oLoadingText" : "oLoadingText oLoadingHide"}>An error occurred<br/>(server connection closed)</h1>
-          <h1 className={props.socket == false ? "oLoadingText oltLoading oLoadingHide" : "oLoadingText oltLoading"}>Loading...</h1>
+          <h1 className={hideProgress ? "oLoadingText oltLoading oLoadingHide" : "oLoadingText oltLoading"}>Loading...</h1>
           <Line className={hideProgress ? "olProgressBar oLoadingHide" : "olProgressBar"} percent={percent} strokeWidth="1" strokeColor={color} />
           <h1 className={hideProgress ? "oLoadingText oltProgress oLoadingHide" : "oLoadingText oltProgress"}>{myProgress}</h1>
         </div>
@@ -99,10 +106,10 @@ function Overlay(props) {
         showBg ?
 
         <Fragment>
-          <OTopBar />
-          <OLeftPanel />
-          <OMainPanel />
-          <ORightPanel />
+          <div className="OTopBar"></div>
+          <div className="OLeftPanel"></div>
+          <div className="OMainPanel"></div>
+          {/*<div className="ORightPanel"></div>*/}
         </Fragment>
 
         :

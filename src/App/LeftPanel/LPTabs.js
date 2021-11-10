@@ -19,7 +19,11 @@ class LPTabs extends React.Component {
   dmsHandleClick(e) {
     e.preventDefault();
     if (this.props.history.location.pathname != "/home") {
-      this.props.history.push("/dms/" + this.props.openedChat);
+      if (this.props.openedDM != "") {
+        this.props.history.push("/dms/" + this.props.openedDM);
+      } else {
+        this.props.history.push("/dms");
+      }
     }
     this.props.setdmsOrGroups("dms");
   }
@@ -27,7 +31,11 @@ class LPTabs extends React.Component {
   groupsHandleClick(e) {
     e.preventDefault();
     if (this.props.history.location.pathname != "/home") {
-      this.props.history.push("/groups"); // When you create groupsReducer, make sure to add openedThread to the end
+      if (this.props.openedThread != null) {
+        this.props.history.push("/groups/" + this.props.openedThread);
+      } else {
+        this.props.history.push("/groups");
+      }
     }
     this.props.setdmsOrGroups("groups");
   }
@@ -86,7 +94,8 @@ class LPTabs extends React.Component {
 
 const mapStateToProps = (state) => ({
   dmsOrGroups: state.app.dmsOrGroups,
-  openedChat: state.dms.openedChat
+  openedDM: state.dms.openedDM,
+  openedThread: state.groups.openedThread
 });
 
 const mapDispatchToProps = {

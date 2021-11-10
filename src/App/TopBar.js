@@ -5,8 +5,6 @@ import { withRouter } from "react-router-dom";
 import { ReactComponent as SLogo } from '../assets/icons/strawberry.svg';
 import './TopBar.css';
 
-import TBProfilePicture from './TopBar/TBProfilePicture';
-
 class TopBar extends React.Component {
   constructor(props) {
     super(props);
@@ -23,6 +21,8 @@ class TopBar extends React.Component {
 
   componentDidUpdate() {
     this.reloadClasses();
+
+    console.log(window.location.href.startsWith("http://localhost"))
   }
 
   reloadClasses() {
@@ -47,13 +47,15 @@ class TopBar extends React.Component {
     return (
       <div className="TopBar">
         <div className={this.state.tbWelcomeDivClass}>
-          {/*<TBProfilePicture src={this.props.picture} />*/}
           <img src={this.props.picture} className="tbPFP" alt="Profile picture" />
           <h1 className="tbWelcomeText">Hey, {this.props.name}!</h1>
           <SLogo className="tbLogoRight" />
         </div>
         <div className={this.state.tbLogoDivClass}>
           <SLogo className="tbLogoLeft" />
+          { window.location.href.startsWith("https://strawberry.neonblacknetwork.com") ? null :
+            <h1 className="tbDev">dev</h1>
+          }
         </div>
       </div>
     );

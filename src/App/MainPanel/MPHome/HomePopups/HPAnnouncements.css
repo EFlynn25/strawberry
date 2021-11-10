@@ -1,0 +1,426 @@
+.HPAnnouncements {
+  position: relative;
+
+  width: calc(100% - 40px);
+  height: calc(100% - 40px);
+  padding: 20px;
+
+  /* overflow: hidden; */
+}
+
+
+
+/* List */
+
+.AAnnouncementsList {
+  position: absolute;
+  width: calc(100% - 40px);
+  height: calc(100% - 40px);
+  top: 20px;
+  left: 20px;
+
+  transition: transform .2s cubic-bezier(0.65, 0, 0.35, 1),
+              opacity .2s cubic-bezier(0.65, 0, 0.35, 1);
+  opacity: 1;
+  visibility: visible;
+}
+
+.AAnnouncementsListHide {
+  transition: transform .2s cubic-bezier(0.65, 0, 0.35, 1),
+              opacity .2s cubic-bezier(0.65, 0, 0.35, 1),
+              visibility 0s .2s;
+  transform: translateX(-40px);
+  opacity: 0;
+  visibility: hidden;
+}
+
+.announcementsTitle {
+  margin-top: 10px;
+}
+
+.alActions {
+  position: absolute;
+  height: 39px;
+  top: 10px;
+  right: 0;
+
+  display: flex;
+  align-items: center;
+}
+
+.alMarkAll {
+  margin-right: 10px;
+  color: #63b4cf;
+  font-size: 18px;
+  transition: transform .1s, color .1s;
+  user-select: none;
+}
+
+.alMarkAll:hover {
+  cursor: pointer;
+  color: #3ca1c3;
+}
+
+.alMarkAll:active {
+  transform: scale(.95);
+  color: #3691b0;
+}
+
+.alAdd {
+  width: 35px;
+  height: 35px;
+  /* margin-left: 20px; */
+  transition: transform .2s, fill .2s;
+}
+
+.alAdd:hover {
+  cursor: pointer;
+  transform: scale(1.1);
+}
+
+.alAdd:active {
+  transform: scale(.9);
+  fill: #ddd;
+}
+
+.announcements {
+  position: absolute;
+  width: calc(100% - 20px);
+  height: calc(100% - 70px);
+  bottom: 0;
+  padding: 0 10px;
+  overflow-y: auto;
+}
+
+
+
+/* List Item */
+
+.aliDiv {
+  position: relative;
+  padding: 10px;
+  margin-bottom: 20px;
+
+  border-radius: 15px;
+  background: #0002;
+
+  transition: transform .1s, background .1s;
+}
+
+.aliDiv:hover {
+  background: #0003;
+  cursor: pointer;
+}
+
+.aliDiv:active {
+  background: #0005;
+  transform: scale(.985);
+}
+
+.aliTitle {
+  font-size: 24px;
+}
+
+.aliPreview {
+  height: 40px;
+  margin-top: 10px;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+
+  color: #bbb;
+}
+
+.aliPreview p {
+  font-size: 16px;
+}
+
+.aliTimestamp {
+  margin-top: 10px;
+
+  font-size: 14px;
+  text-align: right;
+
+  color: #bbb;
+}
+
+
+
+/* Announcement */
+
+.AAnnouncement {
+  position: absolute;
+  width: calc(100% - 80px);
+  height: calc(100% - 80px);
+  top: 40px;
+  left: 40px;
+
+  transition: transform .2s cubic-bezier(0.65, 0, 0.35, 1),
+              opacity .2s cubic-bezier(0.65, 0, 0.35, 1);
+  opacity: 1;
+  visibility: visible;
+}
+
+.AAnnouncementHide {
+  transition: transform .2s cubic-bezier(0.65, 0, 0.35, 1),
+              opacity .2s cubic-bezier(0.65, 0, 0.35, 1),
+              visibility 0s .2s;
+  transform: translateX(40px);
+  opacity: 0;
+  visibility: hidden;
+}
+
+.announcementTopDiv {
+  width: 100%;
+  height: 50px;
+
+  display: flex;
+  align-items: center;
+}
+
+.announcementCloseIcon {
+  width: 30px;
+  height: 30px;
+  transition: transform .2s, fill .2s;
+}
+
+.announcementCloseIcon:hover {
+  cursor: pointer;
+  transform: scale(1.1);
+}
+
+.announcementCloseIcon:active {
+  transform: scale(.9);
+  fill: #ddd;
+}
+
+.announcementTitle {
+  width: 100%;
+  margin-left: 10px;
+  font-size: 28px;
+}
+
+.announcementContent {
+  width: 100%;
+  height: calc(100% - 90px);
+
+  padding-right: 10px;
+
+  font-size: 16px;
+  /* color: #bbb; */
+
+  overflow-y: auto;
+}
+
+.announcementContent > * {
+  margin: 16px 0;
+}
+
+.announcementTimestamp {
+  width: 100%;
+  height: 20px;
+
+  margin-top: 20px;
+
+  font-size: 14px;
+
+  color: #bbb;
+}
+
+
+
+/* Add Announcement */
+
+.AAddAnnouncement {
+  position: absolute;
+  width: calc(100% - 40px);
+  height: calc(100% - 40px);
+  top: 20px;
+  left: 20px;
+
+  transition: transform .2s cubic-bezier(0.65, 0, 0.35, 1),
+              opacity .2s cubic-bezier(0.65, 0, 0.35, 1);
+  opacity: 1;
+  visibility: visible;
+}
+
+.AAddAnnouncementHide {
+  transition: transform .2s cubic-bezier(0.65, 0, 0.35, 1),
+              opacity .2s cubic-bezier(0.65, 0, 0.35, 1),
+              visibility 0s .2s;
+  transform: translateX(40px);
+  opacity: 0;
+  visibility: hidden;
+}
+
+
+/* ...header */
+
+.addAnnouncementCloseIcon {
+  width: 30px;
+  height: 30px;
+  transition: transform .2s, fill .2s;
+}
+
+.addAnnouncementCloseIcon:hover {
+  cursor: pointer;
+  transform: scale(1.1);
+}
+
+.addAnnouncementCloseIcon:active {
+  transform: scale(.9);
+  fill: #ddd;
+}
+
+.aaTitle {
+  width: 100%;
+
+  margin-left: 10px;
+
+  font-size: 28px;
+
+}
+
+
+/* ...post header inputs */
+
+.aaPostHeaderInput {
+  width: 120px;
+  height: 20px;
+  margin-left: 35px;
+  padding: 5px;
+
+  border: 1px solid #fff2;
+  font-family: Inter;
+
+  resize: none;
+  outline: none;
+
+  background: #0002;
+
+}
+
+
+/* ...tabs */
+
+.aaTabs {
+  display: flex;
+  margin-left: 35px;
+  margin-top: 20px;
+}
+
+.aaTab {
+  width: fit-content;
+  height: fit-content;
+  padding: 10px;
+
+  border: 1px solid #fff1;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+
+  color: #bbb;
+}
+
+.aaTab:hover {
+  cursor: pointer;
+  color: #fff;
+}
+
+.aaTab:active {
+  color: #999;
+}
+
+.aaTab h1 {
+
+
+  font-size: 18px;
+}
+
+.aaTabSelected {
+  width: fit-content;
+  height: fit-content;
+  padding: 10px;
+
+  border: 1px solid #fff2;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.aaTabSelected h1 {
+
+
+  font-size: 18px;
+
+
+}
+
+
+/* ...tab content */
+
+.aawInput {
+  position: absolute;
+  width: calc(100% - 115px);
+  height: calc(100% - 265px);
+  margin-left: 35px;
+  padding: 20px;
+
+  font-size: 14px;
+
+  resize: none;
+  outline: none;
+
+  background: #0002;
+  border-color: #fff2;
+
+}
+
+.aapDiv {
+  width: calc(100% - 115px);
+  height: calc(100% - 265px);
+  margin-left: 35px;
+  padding: 20px;
+
+  background: #0002;
+  border-color: #fff2;
+
+  overflow-y: auto;
+}
+
+.aapDiv > * {
+  margin: 16px 0;
+}
+
+.aaTabContentHide {
+  visibility: hidden;
+}
+
+
+/* ...post button */
+
+.aaPostButton {
+  padding: 10px;
+  margin-top: 20px;
+  margin-right: 35px;
+
+  font-size: 16px;
+  background: var(--darker-accent-color);
+  border: 1px solid var(--accent-color);
+  border-radius: 20px;
+  font-family: Inter;
+
+
+  float: right;
+}
+
+.aaPostButton:hover {
+  cursor: pointer;
+  filter: brightness(.9);
+}
+
+.aaPostButton:active {
+  cursor: pointer;
+  filter: brightness(.8);
+}

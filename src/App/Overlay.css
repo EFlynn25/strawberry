@@ -49,31 +49,84 @@
   top: 60px;
 }
 
-.oWelcomeText {
+.oWelcomeTextDiv {
   position: absolute;
-  width: 800px;
+  width: 80%;
   height: 135px;
-  margin: 0;
+  top: 125px;
+  padding: 0 10%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.oWelcomeText {
+  /* position: absolute;
+  width: 100%;
+  height: 135px; */
+
 
   /* font-family: inherit; */
   font-style: normal;
   /*font-weight: 700;*/
   font-size: 28px;
-  line-height: 135px;
+  /* line-height: 135px; */
   text-align: center;
 
   user-select: none;
 
   color: #FFF;
 
-  top: 125px;
 }
 
 .oWelcomeFirebaseDiv {
   position: absolute;
-  width: 800px;
+  width: 100%;
   height: 200px;
   top: 250px;
+}
+
+/* ...top bar */
+.OTopBar {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 50px;
+  background: #1D1E20;
+  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.25);
+  z-index: 1;
+}
+
+.logo {
+  position: absolute;
+  width: 35px;
+  height: 35px;
+  right: 6px;
+  top: 6px;
+
+  user-select: none;
+}
+
+/* ...left panel */
+.OLeftPanel {
+  position: absolute;
+  left: 0px;
+  top: 50px;
+  width: 300px;
+  height: calc(100% - 50px);
+  background: #18191B;
+}
+
+/* ...main panel */
+.OMainPanel {
+  position: absolute;
+  left: 300px;
+  top: 50px;
+  width: calc(100% - 300px);
+  height: calc(100% - 50px);
+  background: #131416;
 }
 
 
@@ -110,7 +163,7 @@
 .oLoadingText {
   position: absolute;
   width: 100%;
-  margin: 0;
+
   top: calc(50% + 60px);
 
   font-style: normal;
@@ -223,15 +276,27 @@
 
 div.mdl-progress::after {
   display: block;
-  color: black;
   content: "Authenticating...";
-  /* font-family: inherit; */
   font-style: italic;
-  color: white;
+
   margin: 20px auto;
   text-align: center;
 }
 
 .mdl-progress {
   height: 5px;
+}
+
+
+
+
+
+/* Responsive Design */
+
+@media all and (max-width: 840px) {
+  .overlayPanel {
+    width: 100%;
+    left: 0;
+    border-radius: 0;
+  }
 }

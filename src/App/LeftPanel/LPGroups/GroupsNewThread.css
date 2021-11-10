@@ -1,0 +1,181 @@
+.GroupsNewThread {
+  position: absolute;
+  width: calc(100% - 40px);
+  height: 75px;
+  bottom: 20px;
+  margin: 0 20px;
+
+  border-radius: 20px;
+  background: var(--darker-accent-color);
+
+  transition: filter .1s, opacity .1s, transform .1s;
+}
+
+.GroupsNewThread:hover {
+  cursor: pointer;
+  filter: brightness(1.1);
+}
+
+.GroupsNewThread:active {
+  filter: brightness(.9);
+  transform: scale(.95);
+}
+
+.GroupsNewThreadHide {
+  transform: scale(.8);
+  opacity: 0 !important;
+}
+
+
+
+/* Content */
+
+.ntAddIcon {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  top: calc(50% - 20px);
+  left: 20px;
+  user-select: none;
+}
+
+.ntText {
+  position: absolute;
+  height: 40px;
+  left: 75px;
+  top: 17.5px;
+  
+
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 40px;
+
+  user-select: none;
+
+  
+}
+
+
+
+/* New dropdown */
+
+.ntDropdown {
+  position: fixed;
+  width: 284px;
+  height: 200px;
+  left: 8px;
+  bottom: 8px;
+
+  background: #2A2B2D;
+  border-radius: 20px;
+
+  z-index: 2;
+
+  transition: opacity .1s, transform .1s;
+  opacity: 1;
+}
+
+.ntDropdownHide {
+  transition: opacity .1s, transform .1s, visibility 0s .1s;
+  visibility: hidden;
+  transform: scale(1.2);
+  opacity: 0 !important;
+}
+
+.ntdIcon {
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  top: 22.5px;
+  left: 20px;
+  user-select: none;
+
+  fill: var(--accent-color);
+}
+
+.ntdTitle {
+  position: absolute;
+  height: 30px;
+  left: 55px;
+  top: 20px;
+  
+
+  font-style: normal;
+  font-weight: 500;
+  font-size: 22px;
+  line-height: 30px;
+
+  user-select: none;
+
+  
+}
+
+.ntdText {
+  position: absolute;
+  height: 25px;
+  left: 28px;
+  top: 60px;
+  
+
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 25px;
+
+  user-select: none;
+
+  color: #DDD;
+}
+
+.ntdInput {
+  position: absolute;
+  width: calc(100% - 82px);
+  height: 25px;
+  left: 20px;
+  top: 85px;
+
+  padding: 0 10px;
+  border: 0;
+
+  color: #DDD;
+  background: #2A2B2DBB;
+  background: #0002;
+  border-radius: 20px;
+  border: 1px solid;
+  border-color: #37383A;
+  font-size: 14px;
+  font-family: "IBM Plex Sans";
+
+  outline: none;
+
+  resize: none;
+}
+
+/* .ntdStatus {
+  position: absolute;
+  height: 50px;
+  left: 30px;
+  right: 30px;
+  top: 135px;
+  
+
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+} */
+
+.ntdStatus {
+  position: absolute;
+  height: 60px;
+  left: 30px;
+  right: 30px;
+  top: 135px;
+  
+
+  font-size: 14px;
+  color: #bbb;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

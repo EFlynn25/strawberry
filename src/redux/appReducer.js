@@ -11,9 +11,11 @@ export const appSlice = createSlice({
     hideRightPanel: true,
 
     dmsLoaded: false,
-    peopleLoaded: false,
+    groupsLoaded: false,
+    peopleLoaded: true,
 
     socket: null,
+    multipleTabs: false,
 
     currentPage: "",
     notificationCount: {},
@@ -42,11 +44,17 @@ export const appSlice = createSlice({
     setdmsLoaded: (state, action) => {
       state.dmsLoaded = action.payload;
     },
+    setgroupsLoaded: (state, action) => {
+      state.groupsLoaded = action.payload;
+    },
     setpeopleLoaded: (state, action) => {
       state.peopleLoaded = action.payload;
     },
     setSocket: (state, action) => {
       state.socket = action.payload;
+    },
+    setMultipleTabs: (state, action) => {
+      state.multipleTabs = action.payload;
     },
     setCurrentPage: (state, action) => {
       state.currentPage = action.payload;
@@ -68,8 +76,8 @@ export const appSlice = createSlice({
 
 export const { setUserName, setUserEmail, setUserPicture,
   setdmsOrGroups, sethideRightPanel,
-  setdmsLoaded, setpeopleLoaded,
-  setSocket,
+  setdmsLoaded, setgroupsLoaded, setpeopleLoaded,
+  setSocket, setMultipleTabs,
   setCurrentPage, setNotificationCount,
   setMessageStyle,
   setAnnouncement, setAnnouncementRead

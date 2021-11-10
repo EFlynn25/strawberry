@@ -6,11 +6,11 @@ import Loader from "react-loader-spinner";
 
 import './MPDMs.css';
 import {
-  setopenedChat,
-  // addMessage,
-  addSendingMessage,
+  setOpenedDM,
+  // addChatMessage,
+  addSendingChatMessage,
   setTempMessageInput,
-  setLastRead,
+  setChatLastRead,
   setLoadingMessages
 } from '../../redux/dmsReducer';
 import {
@@ -78,68 +78,76 @@ class MPDMs extends React.Component {
   }
 
   loadMoreMessages() {
-    const openedChat = this.props.openedChat;
-    const thisChat = this.props.chats[openedChat];
+    const openedDM = this.props.openedDM;
+    const thisChat = this.props.chats[openedDM];
 
-    if (thisChat != null && thisChat.loadingMessages != null && thisChat.loadingMessages.length == 0) {
-      this.isLoadingMessages[openedChat] = false;
-      if (this.heightBeforeLoading[openedChat] != 0) {
-        this.messagesRef.current.scrollTop += this.messagesRef.current.scrollHeight - this.heightBeforeLoading[openedChat];
-        this.heightBeforeLoading[openedChat] = 0;
-      }
-    }
+    if (thisChat != null) {
 
-    if (thisChat.messages != null && !this.isLoadingMessages[openedChat] && this.messagesRef != null && this.messagesRef.current != null && this.messagesRef.current.scrollTop == 0) {
-      const myFirstID = thisChat.messages[0].id;
-      if (myFirstID != 0) {
-        let ids = [];
-        for (var i = myFirstID - 20; i <= myFirstID - 1; i++) {
-          if (i >= 0) {
-            ids.push(i);
-          }
+      if (thisChat.loadingMessages != null && thisChat.loadingMessages.length == 0) {
+        this.isLoadingMessages[openedDM] = false;
+        if (this.heightBeforeLoading[openedDM] != 0) {
+          this.messagesRef.current.scrollTop += this.messagesRef.current.scrollHeight - this.heightBeforeLoading[openedDM];
+          this.heightBeforeLoading[openedDM] = 0;
         }
-
-
-        this.props.setLoadingMessages({"chat": this.props.openedChat, "data": ids});
-        this.isLoadingMessages[openedChat] = true;
-        this.heightBeforeLoading[openedChat] = this.messagesRef.current.scrollHeight;
-
-
-        dms_get_messages(this.props.openedChat, myFirstID - 1, 20);
       }
+
+      if (thisChat.messages != null && !this.isLoadingMessages[openedDM] && this.messagesRef != null && this.messagesRef.current != null && this.messagesRef.current.scrollTop == 0) {
+        const myFirstID = thisChat.messages[0].id;
+        if (myFirstID != 0) {
+          let ids = [];
+          for (var i = myFirstID - 20; i <= myFirstID - 1; i++) {
+            if (i >= 0) {
+              ids.push(i);
+            }
+          }
+
+
+          this.props.setLoadingMessages({"chat": this.props.openedDM, "data": ids});
+          this.isLoadingMessages[openedDM] = true;
+          this.heightBeforeLoading[openedDM] = this.messagesRef.current.scrollHeight;
+
+
+          dms_get_messages(this.props.openedDM, myFirstID - 1, 20);
+        }
+      }
+
     }
+
   }
 
   handleWindowFocus() {
     console.log("window focused.");
-    dms_in_chat(this.props.openedChat, true);
+    if (this.props.openedDM in this.props.chats) {
+      dms_in_chat(this.props.openedDM, true);
+    }
   }
 
   handleWindowBlur() {
     console.log("window blurred.");
-    dms_in_chat(this.props.openedChat, false);
+    if (this.props.openedDM in this.props.chats) {
+      dms_in_chat(this.props.openedDM, false);
+    }
   }
 
 
 
   componentDidMount() {
-    this.props.setopenedChat(this.props.match.params.chatEmail);
+    this.props.setOpenedDM(this.props.match.params.chatEmail);
 
-    console.log("[MPDMs]: componentDidMount with thread ID " + this.props.openedChat);
+    console.log("[MPDMs]: componentDidMount with thread ID " + this.props.openedDM);
     //this.messagesRef.current.scrollTop = this.messagesRef.current.scrollHeight;
     // this.messagesRef.current.scrollTop = this.messagesRef.current.scrollHeight - this.messagesRef.current.clientHeight;
 
-    const propsOpenedChat = this.props.openedChat;
-    const thisChat = this.props.chats[propsOpenedChat];
-    if (propsOpenedChat in this.props.chats) {
+    const propsOpenedDM = this.props.openedDM;
+    const thisChat = this.props.chats[propsOpenedDM];
+    if (propsOpenedDM in this.props.chats) {
       this.reloadMessages(null);
-      dms_in_chat(propsOpenedChat, true);
-      dms_in_chat(propsOpenedChat, "get_in_chat");
-      dms_typing(propsOpenedChat, "get_typing");
-      dms_last_read(propsOpenedChat);
+      dms_in_chat(propsOpenedDM, true);
+      dms_in_chat(propsOpenedDM, "get_in_chat");
+      dms_typing(propsOpenedDM, "get_typing");
+      dms_last_read(propsOpenedDM);
 
       const tmi = thisChat.tempMessageInput;
-      console.log(tmi);
       if (tmi != "") {
         this.setState({
           inputValue: tmi
@@ -147,7 +155,7 @@ class MPDMs extends React.Component {
       }
 
       if (tmi == "" || tmi == null) {
-        dms_typing(propsOpenedChat, false);
+        dms_typing(propsOpenedDM, false);
       }
 
       if (this.messagesRef.current != null) {
@@ -156,14 +164,14 @@ class MPDMs extends React.Component {
     }
 
     let title = "404";
-    if (this.props.openedChat in this.props.chats && this.props.openedChat in this.props.getknownPeople) {
-      title = this.props.getknownPeople[this.props.openedChat].name;
+    if (this.props.openedDM in this.props.chats && this.props.openedDM in this.props.getknownPeople) {
+      title = this.props.getknownPeople[this.props.openedDM].name;
     }
 
     this.props.setCurrentPage(title);
 
     // const myFirstID = thisChat.messages[thisChat.messages.length - 1].id;
-    // dms_get_messages(propsOpenedChat, myFirstID - 1, 20);
+    // dms_get_messages(propsOpenedDM, myFirstID - 1, 20);
 
     window.addEventListener("focus", this.handleWindowFocus);
     window.addEventListener("blur", this.handleWindowBlur);
@@ -172,50 +180,44 @@ class MPDMs extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    console.log("[MPDMs]: componentDidUpdate with thread ID " + this.props.openedChat);
+    console.log("[MPDMs]: componentDidUpdate with thread ID " + this.props.openedDM);
 
-    const propsOpenedChat = this.props.openedChat;
+    const propsOpenedDM = this.props.openedDM;
 
-    if (prevState.loaded != this.state.loaded) {
-      // this.messagesRef.current.scrollTop = this.messagesRef.current.scrollHeight - this.messagesRef.current.clientHeight;
-    }
-
-    // this.scrollToBottom();
-
-    if (prevProps.openedChat == propsOpenedChat) {
-      if (prevProps.chats[propsOpenedChat] != this.props.chats[propsOpenedChat]) {
+    if (prevProps.openedDM == propsOpenedDM) {
+      if (prevProps.chats[propsOpenedDM] != this.props.chats[propsOpenedDM]) {
         this.reloadMessages(prevProps);
       }
     } else {
       this.setState({inputValue: '', loaded: false});
-      if (propsOpenedChat in this.props.chats) {
+      if (propsOpenedDM in this.props.chats) {
         this.reloadMessages(prevProps);
-        if (prevProps.openedChat in this.props.chats) {
-          dms_in_chat(prevProps.openedChat, false);
-          dms_typing(this.props.openedChat, false);
+        if (prevProps.openedDM in this.props.chats) {
+          dms_in_chat(prevProps.openedDM, false);
+          dms_typing(this.props.openedDM, false);
         }
-        dms_in_chat(propsOpenedChat, true);
-        dms_in_chat(propsOpenedChat, "get_in_chat");
-        dms_typing(propsOpenedChat, "get_typing");
-        dms_last_read(propsOpenedChat);
+        dms_in_chat(propsOpenedDM, true);
+        dms_in_chat(propsOpenedDM, "get_in_chat");
+        dms_typing(propsOpenedDM, "get_typing");
+        dms_last_read(propsOpenedDM);
       }
     }
 
-    if (!(propsOpenedChat in prevProps.chats) && propsOpenedChat in this.props.chats) {
-      dms_in_chat(propsOpenedChat, true);
-      dms_in_chat(propsOpenedChat, "get_in_chat");
-      dms_typing(propsOpenedChat, "get_typing");
-      dms_last_read(propsOpenedChat);
+    if (!(propsOpenedDM in prevProps.chats) && propsOpenedDM in this.props.chats) {
+      dms_in_chat(propsOpenedDM, true);
+      dms_in_chat(propsOpenedDM, "get_in_chat");
+      dms_typing(propsOpenedDM, "get_typing");
+      dms_last_read(propsOpenedDM);
     }
 
-    const thisChat = this.props.chats[propsOpenedChat];
+    const thisChat = this.props.chats[propsOpenedDM];
     if (thisChat != null) {
       const tmi = thisChat.tempMessageInput
       const iv = this.state.inputValue
-      if (this.props.openedChat != "" && prevProps.openedChat != propsOpenedChat) {
-        if (prevProps.openedChat in this.props.chats) {
+      if (this.props.openedDM != "" && prevProps.openedDM != propsOpenedDM) {
+        if (prevProps.openedDM in this.props.chats) {
           this.props.setTempMessageInput({
-            chat: prevProps.openedChat,
+            chat: prevProps.openedDM,
             input: iv
           });
         }
@@ -229,20 +231,20 @@ class MPDMs extends React.Component {
         }
 
         if (tmi == "" || tmi == null) {
-          dms_typing(propsOpenedChat, false);
+          dms_typing(propsOpenedDM, false);
         }
       }
     }
 
-    if (this.state.loaded && prevProps.currentPage != this.props.currentPage && propsOpenedChat in this.props.chats) {
+    if (this.state.loaded && prevProps.currentPage != this.props.currentPage && propsOpenedDM in this.props.chats) {
       this.inputRef.current.focus();
     }
 
     this.loadMoreMessages();
 
     let title = "404";
-    if (this.props.openedChat in this.props.chats && this.props.openedChat in this.props.getknownPeople) {
-      title = this.props.getknownPeople[this.props.openedChat].name;
+    if (this.props.openedDM in this.props.chats && this.props.openedDM in this.props.getknownPeople) {
+      title = this.props.getknownPeople[this.props.openedDM].name;
     }
 
     this.props.setCurrentPage(title);
@@ -250,12 +252,12 @@ class MPDMs extends React.Component {
 
   componentWillUnmount() {
     const iv = this.state.inputValue
-    if (this.props.openedChat in this.props.chats) {
+    if (this.props.openedDM in this.props.chats) {
       this.props.setTempMessageInput({
-        chat: this.props.openedChat,
+        chat: this.props.openedDM,
         input: iv
       });
-      dms_in_chat(this.props.openedChat, false);
+      dms_in_chat(this.props.openedDM, false);
     }
 
     window.removeEventListener("focus", this.handleWindowFocus);
@@ -263,14 +265,14 @@ class MPDMs extends React.Component {
   }
 
   reloadMessages(prevProps) {
-    if (!(this.props.openedChat in this.props.chats)) {
+    if (!(this.props.openedDM in this.props.chats)) {
       this.setState({
         messages: []
       });
       return false;
     }
 
-    const thisChatReference = this.props.chats[this.props.openedChat];
+    const thisChatReference = this.props.chats[this.props.openedDM];
     const thisChat = JSON.parse(JSON.stringify(thisChatReference));
 
     if (thisChat == null || thisChat["messages"] == null || thisChat["messages"].length <= 0) {
@@ -302,7 +304,7 @@ class MPDMs extends React.Component {
     let inChat = false;
     if (thisChat.inChat != null) {
       inChat = thisChat.inChat;
-      if (prevProps != null && this.props.openedChat in prevProps.chats && prevProps.chats[this.props.openedChat].inChat != null && prevProps.chats[this.props.openedChat].inChat && !inChat) {
+      if (prevProps != null && this.props.openedDM in prevProps.chats && prevProps.chats[this.props.openedDM].inChat != null && prevProps.chats[this.props.openedDM].inChat && !inChat) {
         lastRead = thisChat["messages"][thisChat["messages"].length - 1].id;
       }
     }
@@ -310,166 +312,44 @@ class MPDMs extends React.Component {
     let nextID = thisChat["messages"][0]["id"];
     let tempMessages = [];
     thisChat["messages"].map((message, i) => {
-      // console.debug(message);
 
       if (message["id"] >= nextID && !("sending" in message)) {
         let messageIDs = [message["id"]];
         const messageFrom = message["from"];
-        // console.debug("before while");
         while (true) {
           const localNextID = messageIDs[messageIDs.length - 1] + 1;
-          const findNextID = thisChat["messages"].find( ({ id }) => id === localNextID );
-
-          // console.debug("findNextID: " + JSON.stringify(findNextID));
-          // console.debug(findNextID);
+          // const findNextID = thisChat["messages"].find( ({ id }) => id === localNextID );
+          const findNextID = thisChat.messages[localNextID - thisChat.messages[0].id];
 
           if (findNextID == null) {
-            // console.debug("breaking, due to null");
             break;
           }
 
           if ("sending" in findNextID && messageFrom == "me") {
-            // console.log("HANDLED SENDING");
             handledSending = true;
           }
 
           if (findNextID["from"] == messageFrom || handledSending) {
+            const currentID = localNextID - thisChat.messages[0].id - 1;
+            if (currentID >= 0) {
+              const minsBetween = 15;
+              const currentIDObject = thisChat.messages[currentID];
+              if (findNextID.timestamp - currentIDObject.timestamp > minsBetween * 60) {
+                break;
+              }
+            }
             messageIDs.push(localNextID);
             nextID = localNextID + 1;
           } else {
-            // console.debug("breaking, due to new sender");
             break;
           }
         }
-        // console.debug("after while... " + messageIDs);
-
-        // const myPerson = this.props.getknownPeople[this.props.openedChat];
-        // let newMessageName = "";
-        // let newMessagePicture = "";
-        // if (myPerson != null) {
-        //   newMessageName = messageFrom == "me" ? this.props.myName : myPerson.name;
-        //   newMessagePicture = messageFrom == "me" ? this.props.myPicture : myPerson.picture;
-        // }
-        //
-        // const lastMessage = thisChat.messages[thisChat.messages.length - 1];
-        // let sendingElement;
-        // if (lastMessage.id == messageIDs[messageIDs.length - 1] && "sending" in lastMessage) {
-        //   sendingElement = <h1 className="defaultMessageSendingText">Sending...</h1>;
-        // }
-        //
-        // const lastID = messageIDs[messageIDs.length - 1];
-        // const lastReadyMessage = thisChat["messages"].find( ({ id }) => id === lastID );
-        // let timestampElement;
-        // if (!("sending" in lastReadyMessage)) {
-        //   timestampElement = this.parseDate(lastReadyMessage.timestamp);
-        // }
-        //
-        // let inChatClasses = "dmsInChat dmsIndicatorHide";
-        // let inChatTypingClasses = "dmsInChatTyping dmsInChatTypingHide";
-        // if ((messageIDs[messageIDs.length - 1] == lastRead || inChat) && messageIDs[messageIDs.length - 1] == thisChat.messages[thisChat.messages.length - 1].id && (!("sending" in thisChat.messages[thisChat.messages.length - 1]) || inChat)) {
-        //   if (inChat) {
-        //     inChatClasses = "dmsInChat";
-        //     if (thisChat.typing != null && thisChat.typing == true) {
-        //       inChatTypingClasses = "dmsInChatTyping";
-        //     }
-        //   } else {
-        //     inChatClasses = "dmsInChat dmsInChatGone";
-        //   }
-        // }
-        //
-        // let noTransition = false;
-        // let myOldMessages = null;
-        // if (prevProps != null) {
-        //   myOldMessages = prevProps.chats[this.props.openedChat].messages;
-        //   var firstCondition = myOldMessages != null && myOldMessages[myOldMessages.length - 1].id + 1 == thisChat.messages[thisChat.messages.length - 1].id;
-        //   if (firstCondition || prevProps.openedChat != this.props.openedChat) {
-        //     noTransition = true;
-        //     inChatTypingClasses += " noTransition";
-        //   }
-        // }
-        // if ("sending" in thisChat.messages[thisChat.messages.length - 1]) {
-        //   noTransition = true;
-        // }
-        // if (noTransition) {
-        //   inChatClasses += " noTransition";
-        // }
-        // const oldMessage = (
-        //   <div className="defaultMessage" key={"group" + i}>
-        //     <img src={newMessagePicture} className="defaultMessagePFP" alt={newMessageName} />
-        //     <div className="defaultMessageName">
-        //       {newMessageName}
-        //       {sendingElement}
-        //     </div>
-        //     <div className="defaultMessageGroup">
-        //       {
-        //         messageIDs.map(item => {
-        //           const message = thisChat["messages"].find( ({ id }) => id === item );
-        //           const messageKey = "id" + item;
-        //           console.debug("messageKey: " + messageKey);
-        //           let lastReadElement;
-        //           // if (!inChat && lastRead != null && item == lastRead && lastRead != thisChat.messages[thisChat.messages.length - 1].id) {
-        //           if (lastRead != null && item == lastRead) {
-        //             let myClasses = "dmsLastRead dmsIndicatorHide";
-        //             if (!inChat && lastRead != thisChat.messages[thisChat.messages.length - 1].id) {
-        //               myClasses = "dmsLastRead";
-        //             }
-        //             if (myOldMessages != null && myOldMessages[myOldMessages.length - 1].id + 1 == thisChat.messages[thisChat.messages.length - 1].id) {
-        //               myClasses += " noTransition";
-        //             }
-        //             lastReadElement = <img src={myPerson.picture} className={myClasses} alt={myPerson.name} />;
-        //           }
-        //           let messageElement;
-        //           if ("sending" in message) {
-        //             messageElement = <p key={messageKey} className="defaultMessageText defaultMessageSending">{message.message}</p>;
-        //           } else {
-        //             messageElement = <p key={messageKey} title={this.parseDate(message.timestamp)} className="defaultMessageText">{message.message}{lastReadElement}</p>;
-        //           }
-        //
-        //           return messageElement;
-        //         })
-        //       }
-        //     </div>
-        //     <h1 className="defaultMessageTimestamp">{timestampElement}</h1>
-        //     <img src={myPerson.picture} className={inChatClasses} alt={myPerson.name} />
-        //     <div className={inChatTypingClasses}>
-        //       <div className="dmsInChatTypingDot" style={{left: "15px", animationDelay: ".25s"}}></div>
-        //       <div className="dmsInChatTypingDot" style={{left: "24px", animationDelay: ".5s"}}></div>
-        //       <div className="dmsInChatTypingDot"></div>
-        //     </div>
-        //   </div>
-        // );
-        const newMessage = (<DMsMessage inChat={inChat} typing={thisChat.typing} id={messageIDs[0]} key={messageIDs[0]} onUpdate={this.scrollToBottom} />);
-        // console.debug(newMessage);
+        const newMessage = (<DMsMessage inChat={inChat} typing={thisChat.typing} id={messageIDs} key={messageIDs[0]} onUpdate={this.scrollToBottom} />);
         tempMessages.push(newMessage);
       }
     });
 
-    // console.debug("COMPLETE, HERES SENDING:");
-    // console.debug(hasSending);
-    // console.debug(handledSending);
     if (hasSending && !handledSending) {
-      // let myName = this.props.myName;
-      // let myPicture = this.props.myPicture;
-      // const newMessage = (
-      //   <div className="DMsMessage" key={"sendinggroup"}>
-      //   <img src={myPicture} className="defaultMessagePFP" alt={myName} />
-      //     <div className="defaultMessageName">
-      //       {myName}
-      //       <h1 className="defaultMessageSendingText">Sending...</h1>
-      //     </div>
-      //     <div className="defaultMessageGroup">
-      //       {
-      //         thisChat["sendingMessages"].map(item => {
-      //           console.debug(item);
-      //           const messageKey = "id" + item;
-      //           const messageElement = <p key={messageKey} className="defaultMessageText defaultMessageSending">{item}</p>;
-      //           return messageElement;
-      //         })
-      //       }
-      //     </div>
-      //   </div>
-      // );
-
       let mySendingMessages = [];
       thisChat["sendingMessages"].map(item => {
         const messageObject = {message: item, lastRead: false, noTransition: true, sending: true, id: "sending" + mySendingMessages.length};
@@ -492,32 +372,15 @@ class MPDMs extends React.Component {
     }
   }
 
-  parseDate(timestamp) {
-    const shortMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const date = new Date(timestamp * 1000);
-
-    let month = shortMonths[date.getMonth()];
-    let hours = date.getHours();
-    let minutes = date.getMinutes();
-    let ampm = hours >= 12 ? 'PM' : 'AM';
-    hours = hours % 12;
-    hours = hours ? hours : 12; // the hour '0' should be '12'
-    minutes = minutes < 10 ? '0' + minutes : minutes;
-
-    const fullString = month + ' ' + date.getDate() + ', ' + date.getFullYear() + ' • ' + hours + ':' + minutes + ' ' + ampm;
-
-    return(fullString);
-  }
-
   handleInputChange(event) {
     var val = event.target.value;
     var iv = this.state.inputValue;
     var nowEmpty = val == "" || val == null;
     var pastEmpty = iv == "" || iv == null;
     if (pastEmpty && !nowEmpty) {
-      dms_typing(this.props.openedChat, true);
+      dms_typing(this.props.openedDM, true);
     } else if (!pastEmpty && nowEmpty) {
-      dms_typing(this.props.openedChat, false);
+      dms_typing(this.props.openedDM, false);
     }
 
     this.setState({
@@ -533,13 +396,13 @@ class MPDMs extends React.Component {
 
       const iv = this.state.inputValue;
       if (iv != null && iv != "") {
-        const oc = this.props.openedChat;
+        const oc = this.props.openedDM;
         setTimeout(function() {
           // dms_send_message(oc, iv);
         }, 3000);
         dms_send_message(oc, iv);
-        dms_typing(this.props.openedChat, false);
-        this.props.addSendingMessage({message: iv});
+        dms_typing(this.props.openedDM, false);
+        this.props.addSendingChatMessage({message: iv});
         this.setState({inputValue: ''});
       }
     }
@@ -547,8 +410,8 @@ class MPDMs extends React.Component {
 
   render() {
     let otherName = "";
-    if (this.props.getknownPeople[this.props.openedChat] != null) {
-      otherName = this.props.getknownPeople[this.props.openedChat].name;
+    if (this.props.getknownPeople[this.props.openedDM] != null) {
+      otherName = this.props.getknownPeople[this.props.openedDM].name;
     }
 
     let children = (<h1 className="dmsCenterText">Loading...</h1>);
@@ -557,9 +420,9 @@ class MPDMs extends React.Component {
         <Fragment>
           <div className="dmsMessages" ref={this.messagesRef} onScroll={this.handleScroll}>
             {
-              (this.props.chats[this.props.openedChat].messages == null)
-              || (this.props.openedChat != "" && this.props.openedChat in this.props.chats && this.props.chats[this.props.openedChat].messages.length > 0 && this.props.chats[this.props.openedChat].messages[0].id == 0)
-              || (this.props.openedChat != "" && this.props.openedChat in this.props.chats && this.props.chats[this.props.openedChat].messages.length <= 0) ?
+              (this.props.chats[this.props.openedDM].messages == null)
+              || (this.props.openedDM != "" && this.props.openedDM in this.props.chats && this.props.chats[this.props.openedDM].messages.length > 0 && this.props.chats[this.props.openedDM].messages[0].id == 0)
+              || (this.props.openedDM != "" && this.props.openedDM in this.props.chats && this.props.chats[this.props.openedDM].messages.length <= 0) ?
 
               <div className="dmsTopTextDiv">
                 <h1 className="dmsStartConversationText">This is the start of your conversation with {otherName}</h1>
@@ -570,7 +433,7 @@ class MPDMs extends React.Component {
               null
             }
             {
-              this.isLoadingMessages[this.props.openedChat] ?
+              this.isLoadingMessages[this.props.openedDM] ?
 
               <div className="dmsTopTextDiv">
                 <h1 className="dmsLoadingMessagesText">Loading...</h1>
@@ -588,7 +451,7 @@ class MPDMs extends React.Component {
         </Fragment>
       );
     }
-    if (!(this.props.openedChat in this.props.chats)) {
+    if (!(this.props.openedDM in this.props.chats)) {
       children = (<h1 className="dmsCenterText">That chat doesn't exist...</h1>);
     }
 
@@ -601,7 +464,7 @@ class MPDMs extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  openedChat: state.dms.openedChat,
+  openedDM: state.dms.openedDM,
   chats: state.dms.chats,
   myName: state.app.name,
   myEmail: state.app.email,
@@ -612,11 +475,11 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
-  setopenedChat,
-  // addMessage,
-  addSendingMessage,
+  setOpenedDM,
+  // addChatMessage,
+  addSendingChatMessage,
   setTempMessageInput,
-  setLastRead,
+  setChatLastRead,
   setLoadingMessages,
   setCurrentPage,
 }

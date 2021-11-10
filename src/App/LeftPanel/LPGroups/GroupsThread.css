@@ -1,0 +1,227 @@
+.GroupsThread {
+  position: relative;
+  height: 75px;
+  cursor: pointer;
+
+  background: linear-gradient(90deg, #282A2D 0%, transparent 50%, transparent 100%);
+  background-size: 200% auto;
+  background-position-x: -300px;
+  transition: background-position-x .3s;
+}
+
+.GroupsThread:hover {
+  background-position-x: -100px;
+}
+
+.GroupsThread:active {
+  background-position-x: -200px;
+}
+
+
+
+/* Profiles Div */
+
+.gtpdPFP {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  left: 20px;
+  top: 17.5px;
+
+  border-radius: 25px;
+
+  user-select: none;
+}
+
+/* ...2 people */
+.gtpd2people1 {
+  width: 25px;
+  height: 25px;
+  top: 25px;
+}
+
+.gtpd2people2 {
+  width: 25px;
+  height: 25px;
+  top: 25px;
+  left: 35px;
+}
+
+/* ...3 people */
+.gtpd3people1 {
+  width: 20px;
+  height: 20px;
+  top: 18.75px;
+}
+
+.gtpd3people2 {
+  width: 20px;
+  height: 20px;
+  top: 18.75px;
+  left: 40px;
+}
+
+.gtpd3people3 {
+  width: 20px;
+  height: 20px;
+  top: 36.25px;
+  left: 30px;
+}
+
+/* ...4 people */
+.gtpd4people1 {
+  width: 20px;
+  height: 20px;
+  top: 17.5px;
+}
+
+.gtpd4people2 {
+  width: 20px;
+  height: 20px;
+  top: 17.5px;
+  left: 40px;
+}
+
+.gtpd4people3 {
+  width: 20px;
+  height: 20px;
+  top: 37.5px;
+  left: 20px;
+}
+
+.gtpd4people4 {
+  width: 20px;
+  height: 20px;
+  top: 37.5px;
+  left: 40px;
+}
+
+/* ...extra */
+.gtpdExtraDiv {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #121314;
+}
+
+.gtpdExtraText {
+  
+  font-size: 9px;
+  
+}
+
+
+
+/* Text */
+
+.gtTitleTimeFlexbox {
+  position: absolute;
+  width: calc(100% - 95px);
+  height: 20px;
+  left: 75px;
+  top: 17.5px;
+  
+
+  display: flex;
+  justify-content: space-between;
+}
+
+.gtTitle {
+  
+
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 20px;
+
+  user-select: none;
+
+  color: #FFFFFF;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  flex-grow: 1;
+}
+
+.gtMessage {
+  position: absolute;
+  height: 20px;
+  left: 75px;
+  right: 20px;
+  top: 37.5px;
+  
+
+  /* font-family: inherit; */
+  font-style: normal;
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 20px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  user-select: none;
+
+  color: #FFFB;
+}
+
+.gtTime {
+  
+  margin-left: 5px;
+
+  font-style: normal;
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 20px;
+  text-align: right;
+
+  user-select: none;
+
+  color: #FFFFFF;
+
+  flex-shrink: 0;
+}
+
+
+
+/* Unread */
+
+.gtTitleUnread {
+  font-weight: 600;
+}
+
+.gtUnread {
+  font-weight: 500;
+  color: #FFF;
+}
+
+.gtUnreadNotify {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  left: 6px;
+  top: 33.5px;
+
+  border-radius: 10px;
+  background: white;
+}
+
+
+
+/* Extras */
+
+.gtSelected {
+  position: absolute;
+  width: 4px;
+  height: 40px;
+  left: 0px;
+  top: 17px;
+
+  background: #FFFFFF;
+
+  transform: translateX(-4px);
+  transition: transform .1s;
+}

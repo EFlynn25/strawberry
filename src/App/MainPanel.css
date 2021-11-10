@@ -5,9 +5,19 @@
   top: 50px;
   width: 60%;
   /* width: calc(100% - 600px); */
+  width: calc(100% - 300px);
   height: calc(100% - 50px);
   background: #18191B;
   background: #131416;
 
-  overflow: hidden;
+  transition: transform .3s;
+}
+
+.MainPanelTransition {
+  opacity: 1;
+  transform: none;
+}
+
+.MainPanelShrink {
+  transform: scale(.9);
 }

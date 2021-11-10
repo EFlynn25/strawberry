@@ -2,14 +2,28 @@
   position: relative;
   height: 75px;
   cursor: pointer;
+
+  background: linear-gradient(90deg, #282A2D 0%, transparent 50%, transparent 100%);
+  /* background-size: 200% auto; */
+  background-size: 600px auto;
+  background-position-x: -300px;
+  transition: background-position-x .3s;
 }
 
 .DMChat:hover {
-  background: linear-gradient(90deg, rgba(40, 42, 45, .5) 0%, transparent 50%, transparent 100%);
+  background-position-x: -100px;
 }
 
 .DMChat:active {
-  background: linear-gradient(90deg, rgba(40, 42, 45, .3) 0%, transparent 50%, transparent 100%);
+  background-position-x: -200px;
+}
+
+.DMChat:hover .dmChatPFP {
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.DMChat:active .dmChatPFP {
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 
@@ -26,6 +40,8 @@
   border-radius: 25px;
 
   user-select: none;
+
+  transition: box-shadow .1s;
 }
 
 
@@ -37,15 +53,15 @@
   width: calc(100% - 95px);
   height: 20px;
   left: 75px;
-  top: 20px;
-  margin: 0;
+  top: 17.5px;
+
 
   display: flex;
   justify-content: space-between;
 }
 
 .dmChatTitle {
-  margin: 0;
+
 
   font-style: normal;
   font-weight: 400;
@@ -59,6 +75,8 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+
+  flex-grow: 1;
 }
 
 .dmChatMessage {
@@ -66,8 +84,8 @@
   height: 20px;
   left: 75px;
   right: 20px;
-  top: 40px;
-  margin: 0;
+  top: 37.5px;
+
 
   /* font-family: inherit; */
   font-style: normal;
@@ -84,7 +102,7 @@
 }
 
 .dmChatTime {
-  margin: 0;
+
   margin-left: 5px;
 
   font-style: normal;
@@ -135,5 +153,8 @@
   left: 0px;
   top: 17px;
 
-  background: #FFFFFF;
+  background: #FFF;
+
+  transform: translateX(-4px);
+  transition: transform .1s;
 }

@@ -12,3 +12,17 @@
   opacity: 0;
   visibility: hidden;
 }
+
+
+
+/* Threads */
+
+.lpgThreads {
+  position: absolute;
+  width: 100%;
+  height: calc(100% - 75px);
+  overflow-y: auto;
+
+  height: calc(100% - 115px);
+  padding-bottom: 115px;
+}
