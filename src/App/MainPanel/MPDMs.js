@@ -25,6 +25,7 @@ import {
 } from '../../socket.js';
 import DMsMessage from './MPDMs/DMsMessage';
 import DMsDefaultMessage from './MPDMs/DMsMessage/DMsDefaultMessage';
+import { getUser } from '../../GlobalComponents/getUser.js';
 
 class MPDMs extends React.Component {
   constructor(props) {
@@ -165,7 +166,8 @@ class MPDMs extends React.Component {
 
     let title = "404";
     if (this.props.openedDM in this.props.chats && this.props.openedDM in this.props.getknownPeople) {
-      title = this.props.getknownPeople[this.props.openedDM].name;
+      // title = this.props.getknownPeople[this.props.openedDM].name;
+      title = getUser(this.props.openedDM).name;
     }
 
     this.props.setCurrentPage(title);
@@ -243,8 +245,9 @@ class MPDMs extends React.Component {
     this.loadMoreMessages();
 
     let title = "404";
-    if (this.props.openedDM in this.props.chats && this.props.openedDM in this.props.getknownPeople) {
-      title = this.props.getknownPeople[this.props.openedDM].name;
+    if (this.props.openedDM in this.props.chats) {
+      // title = this.props.getknownPeople[this.props.openedDM].name;
+      title = getUser(this.props.openedDM).name;
     }
 
     this.props.setCurrentPage(title);
@@ -409,10 +412,7 @@ class MPDMs extends React.Component {
   }
 
   render() {
-    let otherName = "";
-    if (this.props.getknownPeople[this.props.openedDM] != null) {
-      otherName = this.props.getknownPeople[this.props.openedDM].name;
-    }
+    const otherName = getUser(this.props.openedDM).name;
 
     let children = (<h1 className="dmsCenterText">Loading...</h1>);
     if (this.state.loaded) {

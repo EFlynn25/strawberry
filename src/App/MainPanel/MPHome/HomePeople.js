@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import './HomePeople.css';
+import { getUser } from '../../../GlobalComponents/getUser.js';
 
 class HomePeople extends React.Component {
   constructor(props) {
@@ -19,14 +20,16 @@ class HomePeople extends React.Component {
     let alphabeticalPeople = [];
     const localKnownPeople = this.props.knownPeople;
     if (localKnownPeople != null && Object.keys(localKnownPeople).length > 0) {
-      Object.keys(this.props.chats).forEach(function (item, index) {
-        let myName;
-        if (localKnownPeople[item] == null) {
-          myName = item;
-        } else {
-          myName = localKnownPeople[item].name;
-        }
-        alphabeticalPeople.push([item, localKnownPeople[item].name]);
+      // Object.keys(this.props.chats).forEach(function (item, index) {
+      Object.keys(localKnownPeople).forEach(function (item, index) {
+        // let myName;
+        // if (localKnownPeople[item] == null) {
+        //   myName = item;
+        // } else {
+        //   myName = localKnownPeople[item].name;
+        // }
+
+        alphabeticalPeople.push([item, getUser(item).name]);
       });
       alphabeticalPeople.sort((a,b) => a[1].toUpperCase().localeCompare(b[1].toUpperCase()));
       const newPeople = alphabeticalPeople.map(function(x) {
@@ -34,8 +37,9 @@ class HomePeople extends React.Component {
       });
 
       newPeople.forEach((item) => {
-        const personName = this.props.knownPeople[item].name;
-        const personPicture = this.props.knownPeople[item].picture;
+        const myPerson = getUser(item);
+        const personName = myPerson.name;
+        const personPicture = myPerson.picture;
         // let status = "hi im " + personName + " and this is my status";
         let status = null;
 

@@ -2,6 +2,7 @@ import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 
 import './HPUserProfile.css';
+import { getUser } from '../../../../GlobalComponents/getUser.js';
 
 class HPUserProfile extends React.Component {
   constructor(props) {
@@ -10,8 +11,9 @@ class HPUserProfile extends React.Component {
 
   render() {
     const item = this.props.email;
-    const name = this.props.knownPeople[item].name;
-    const picture = this.props.knownPeople[item].picture;
+    const myPerson = getUser(item);
+    const name = myPerson.name;
+    const picture = myPerson.picture;
     // let status = "hi im " + name + " and this is my status";
     let status = "";
 
