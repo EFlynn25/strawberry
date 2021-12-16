@@ -34,3 +34,99 @@
   transform: translateX(40px);
   opacity: 0;
 }
+
+
+
+/* Category */
+
+.hnCategory {
+  margin: 10px;
+  margin-bottom: 30px;
+}
+
+.hnCategoryHeader {
+  margin-bottom: 10px;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.hnCategoryTitle {
+  height: 25px;
+
+  font-size: 18px;
+  line-height: 25px;
+
+  color: #FFF6;
+}
+
+.hnCategoryLine {
+  flex: 1;
+  height: 1px;
+  background: #FFF6;
+}
+
+.hnCategoryContentDiv {
+  position: relative;
+  width: calc(100% - 20px);
+  padding: 10px;
+  margin-bottom: 10px;
+
+  border-radius: 20px;
+  background: #0002;
+}
+
+
+
+/* Requests */
+
+.hnRequestDiv {
+  height: 50px;
+}
+
+.hnRequestDiv img {
+  width: 50px;
+  height: 50px;
+  border-radius: 25px;
+}
+
+.hnRequestDiv h1 {
+  position: absolute;
+  left: 70px;
+  bottom: 34px;
+  font-size: 22px;
+}
+
+.hnRequestDiv p {
+  position: absolute;
+  left: 70px;
+  top: 34px;
+
+  font-size: 16px;
+  color: #888;
+}
+
+.hnRequestDiv svg {
+  right: 20px;
+}
+
+.hnRequestDiv svg:first-of-type {
+  right: 55px;
+}
+
+.hnRequestDiv svg:first-of-type:hover {
+  fill: #afa;
+}
+
+.hnRequestDiv svg:first-of-type:active {
+  fill: #afa8;
+}
+
+.hnRequestDiv svg:hover {
+  fill: #faa;
+}
+
+.hnRequestDiv svg:active {
+  fill: #faa8;
+}

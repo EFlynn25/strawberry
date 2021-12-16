@@ -48,7 +48,7 @@
   height: 35px;
   left: 51px;
   top: 8px;
-  
+
 
   font-style: normal;
   font-weight: 700;
@@ -107,8 +107,8 @@
   position: absolute;
   top: 26px;
   left: 38px;
-  
 
   color: #888;
   font-size: 14px;
+  user-select: none;
 }

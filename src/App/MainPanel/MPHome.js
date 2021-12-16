@@ -76,6 +76,11 @@ class MPHome extends React.Component {
             <h1 className="hwName">Hey, {this.props.name}!</h1>
             <Settings className="hwSettingsIcon hwTopRightIcon" onClick={() => this.props.opendialog("settings", "")} />
             <Announcements className="hwAnnouncementsIcon hwTopRightIcon" onClick={() => this.props.opendialog("announcements", "")} />
+            { this.props.announcementsRead.length >= Object.keys(this.props.announcements).length ? null :
+              <div className="hwAnnouncementsUnread hwTopRightIcon">
+                <div className="hwUnreadDot" style={{top: "-2.5px", right: "-2.5px"}}></div>
+              </div>
+            }
           </div>
 
           <div className="homeTabs">
@@ -86,6 +91,12 @@ class MPHome extends React.Component {
             <div className={this.state.tab == 2 ? "homeTab htSelected" : "homeTab"} onClick={() => this.setState({tab: 2})}>
               <Notify className={this.state.tab == 2 ? "homeTabIcon htiNotify htiSelected" : "homeTabIcon htiNotify"} />
               <h1 className={this.state.tab == 2 ? "homeTitle httSelected" : "homeTitle"}>NOTIFICATIONS</h1>
+              { this.state.tab != 2 && (this.props.dms_requests.length > 0 || this.props.groups_requests.length > 0) ?
+                <div className="hwNotificationsUnread">
+                  <div className="hwUnreadDot"></div>
+                </div>
+                : null
+              }
             </div>
             <div className={this.state.tab == 3 ? "homeTab htSelected" : "homeTab"} onClick={() => this.setState({tab: 3})}>
               <Profile className={this.state.tab == 3 ? "homeTabIcon htiNotify htiSelected" : "homeTabIcon htiNotify"} />
@@ -107,7 +118,10 @@ class MPHome extends React.Component {
 const mapStateToProps = (state) => ({
   picture: state.app.picture,
   name: state.app.name,
-  announcements: state.app.announcements
+  announcements: state.app.announcements,
+  announcementsRead: state.app.announcementsRead,
+  dms_requests: state.dms.requests,
+  groups_requests: state.groups.requests,
 });
 
 const mapDispatchToProps = {

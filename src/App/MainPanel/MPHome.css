@@ -24,6 +24,16 @@
   height: calc(100% - 271px);
 }
 
+.hwUnreadDot {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+
+  background: var(--darker-accent-color);
+  border-radius: 10px;
+  z-index: 2;
+}
+
 
 
 /* Welcome */
@@ -48,7 +58,7 @@
   width: 100%;
   height: 40px;
   top: 140px;
-  
+
 
   /* font-family: inherit; */
   font-style: normal;
@@ -62,30 +72,29 @@
   color: #FFF;
 }
 
-.hwSettingsIcon {
+.hwTopRightIcon {
   position: absolute;
+  top: 20px;
   width: 30px;
   height: 30px;
-  top: 20px;
-  right: 20px;
 
   fill: #fffb;
 
-  transition: transform .1s;
+  transition: transform .1s, fill .1s;
   transform: none;
 }
 
+.hwSettingsIcon {
+  right: 20px;
+}
+
 .hwAnnouncementsIcon {
-  position: absolute;
-  width: 30px;
-  height: 30px;
-  top: 20px;
   right: 60px;
+  z-index: 1;
+}
 
-  fill: #fffb;
-
-  transition: transform .1s;
-  transform: none;
+.hwAnnouncementsUnread {
+  right: 60px;
 }
 
 .hwTopRightIcon:hover {
@@ -99,6 +108,15 @@
   fill: #fff8;
 }
 
+.hwAnnouncementsIcon:hover ~ .hwAnnouncementsUnread {
+  transform: scale(1.05);
+  cursor: pointer;
+}
+
+.hwAnnouncementsIcon:active ~ .hwAnnouncementsUnread {
+  transform: scale(.95);
+}
+
 
 
 /* Text */
@@ -106,7 +124,7 @@
 .homeCenterText {
   position: relative;
   display: table-cell;
-  
+
   text-align: center;
   vertical-align: middle;
   color: #fff5;
@@ -128,6 +146,7 @@
 }
 
 .homeTab {
+  position: relative;
   height: 25px;
   margin: 0 25px;
   padding-bottom: 4px;
@@ -142,13 +161,19 @@
   float: left;
 }
 
+.hwNotificationsUnread {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
 .homeTabIcon {
   fill: #FFFB;
 }
 
 .homeTitle {
   height: 25px;
-  
+
   margin-left: 4px;
   margin-right: -10px;
   float: right;
@@ -163,7 +188,7 @@
 
 .homeTab:hover .homeTitle, .homeTab:hover .homeTabIcon {
   fill: white;
-  
+  color: white;
 }
 
 .homeTab:hover {

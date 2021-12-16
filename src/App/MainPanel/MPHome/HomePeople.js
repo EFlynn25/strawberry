@@ -85,8 +85,6 @@ class HomePeople extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  picture: state.app.picture,
-  name: state.app.name,
   knownPeople: state.people.knownPeople,
   chats: state.dms.chats,
 });

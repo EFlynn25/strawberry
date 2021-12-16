@@ -2,13 +2,14 @@ import firebase from 'firebase/app';
 import { useDispatch } from 'react-redux'
 import { setdmsLoaded, setgroupsLoaded, setpeopleLoaded, setSocket, setAnnouncement, setAnnouncementRead } from './redux/appReducer.js'
 import { setMultipleTabs } from './redux/appReducer.js'
-import { addChat, addChatMessage, addLoadedChatMessages, removeSendingChatMessage, setChatCreated, setChatLastRead, setChatTyping, setInChat, setLoadingMessages, addRequest, removeRequest
+import { addChat, addChatMessage, addLoadedChatMessages, removeSendingChatMessage, setChatCreated, setChatLastRead, setChatTyping, setInChat, setLoadingMessages, addChatRequest, removeChatRequest
   // removeRequesting, addRequested, addRequestedMe
 } from './redux/dmsReducer.js'
 import {
   setOpenedThread, addThread, removeThread, setThreadName, addThreadPeople, removeThreadPerson, addThreadMessage, addLoadedThreadMessages, removeSendingThreadMessage,
   removeThreadCreating, addThreadCreated,
   setThreadCreated, setThreadTyping, setInThread, setThreadLastRead,
+  addThreadRequest, removeThreadRequest,
   addRequested, removeRequested
 } from './redux/groupsReducer.js'
 import { addPerson } from './redux/peopleReducer.js'
@@ -23,7 +24,8 @@ let socket = null;
 // const textTone = new Audio(textToneAudio);
 
 export function startSocket() {
-  socket = new WebSocket('wss://strawberry.neonblacknetwork.com:2096');
+  // socket = new WebSocket('wss://strawberry.neonblacknetwork.com:2096');
+  socket = new WebSocket('wss://strawberry.neonblacknetwork.com:2053');
 
   setTimeout(function() {
     if (socket.readyState == 0) {
@@ -201,12 +203,26 @@ export function startSocket() {
       /* Set Functions */
       else if (com == "add_user") {
         dms_get_chats();
+        dms_request_to_chat("get_requests");
       } else if (com == "request_to_chat") {
-        mainStore.dispatch(addRequest({"type": jsonData.response, "email": jsonData.requested}));
-        mainStore.dispatch(removeRequest({"type": "requesting", "email": jsonData.requested}));
-        if (jsonData.response == "requested_me") {
-          const item = jsonData.chat;
-          get_chat_info(item);
+        if (jsonData.response === "receive_request") {
+          mainStore.dispatch(addChatRequest({"type": "requests", "email": jsonData.requested}));
+        } else {
+          if (jsonData.response !== "no_requests") {
+            mainStore.dispatch(addChatRequest({"type": jsonData.response, "email": jsonData.requested}));
+            mainStore.dispatch(removeChatRequest({"type": "requesting", "email": jsonData.requested}));
+            if (jsonData.response == "requested_me") {
+              mainStore.dispatch(removeChatRequest({"type": "requests", "email": jsonData.requested}));
+              const item = jsonData.chat;
+              get_chat_info(item);
+            }
+          }
+        }
+      } else if (com == "deny_request") {
+        if (jsonData.response == true) {
+          mainStore.dispatch(removeChatRequest({"type": "requests", "email": jsonData.requested}));
+        } else if (jsonData.response == "receive_denied_request") {
+          mainStore.dispatch(removeChatRequest({"type": "requested", "email": jsonData.requested}));
         }
       } else if (com == "send_message") {
         const myMessage = jsonData.message;
@@ -523,6 +539,11 @@ export function dms_add_user(idToken) {
 
 export function dms_request_to_chat(email) {
   var jsonObj = {"product": "dms", "command": "request_to_chat", "requested": email}
+  send_websocket_message(jsonObj);
+}
+
+export function dms_deny_request(email) {
+  var jsonObj = {"product": "dms", "command": "deny_request", "requested": email}
   send_websocket_message(jsonObj);
 }
 

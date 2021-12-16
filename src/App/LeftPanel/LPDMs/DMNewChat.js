@@ -6,7 +6,7 @@ import { ReactComponent as Add } from '../../../assets/icons/add.svg';
 import { ReactComponent as AddPerson } from '../../../assets/icons/add_person.svg';
 import './DMNewChat.css';
 import { dms_request_to_chat } from '../../../socket.js';
-import { addRequest } from '../../../redux/dmsReducer.js'
+import { addChatRequest } from '../../../redux/dmsReducer.js'
 
 class DMNewChat extends React.Component {
   constructor(props) {
@@ -152,7 +152,7 @@ class DMNewChat extends React.Component {
             emailRequested: this.state.inputValue,
           });
           const iv = this.state.inputValue;
-          this.props.addRequest({type: "requesting", email: iv})
+          this.props.addChatRequest({type: "requesting", email: iv})
           dms_request_to_chat(iv);
         }
       } else {
@@ -202,7 +202,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
-  addRequest
+  addChatRequest
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(DMNewChat);

@@ -12,7 +12,9 @@ export const dmsSlice = createSlice({
     requested: [],
     requested_me: [],
     already_requested: [],
-    chat_exists: []
+    chat_exists: [],
+
+    requests: []
   },
   reducers: {
     setOpenedDM: (state, action) => {
@@ -182,12 +184,16 @@ export const dmsSlice = createSlice({
       state.chats[action.payload["chat"]].loadingMessages = action.payload["data"];
     },
 
-    addRequest: (state, action) => {
+    addChatRequest: (state, action) => {
       if (!state[action.payload["type"]].includes(action.payload)) {
-        state[action.payload["type"]].push(action.payload["email"]);
+        if (Array.isArray(action.payload["email"])) {
+          state[action.payload["type"]] = state[action.payload["type"]].concat(action.payload["email"])
+        } else {
+          state[action.payload["type"]].push(action.payload["email"]);
+        }
       }
     },
-    removeRequest: (state, action) => {
+    removeChatRequest: (state, action) => {
       let index = state[action.payload["type"]].indexOf(action.payload["email"]);
       if (index > -1) {
         state[action.payload["type"]].splice(index, 1);
@@ -198,7 +204,7 @@ export const dmsSlice = createSlice({
 
 export const { setOpenedDM, addChat, addChatMessage, addLoadedChatMessages, addSendingChatMessage, removeSendingChatMessage,
   setChatCreated, setTempMessageInput, setChatLastRead, setChatTyping, setInChat, setLoadingMessages,
-  addRequest, removeRequest
+  addChatRequest, removeChatRequest
  } = dmsSlice.actions;
 
 // The function below is called a selector and allows us to select a value from
