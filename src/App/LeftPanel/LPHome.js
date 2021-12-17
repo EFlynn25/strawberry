@@ -57,7 +57,7 @@ class LPHome extends React.Component {
           <path d="M0 0h24v24H0z" fill="none"/>
           <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
         </svg>
-        { this.props.dms_requests.length > 0 || this.props.groups_requests.length > 0 ?
+        { this.props.dms_requests.length > 0 || Object.keys(this.props.groups_requests).length > 0 ?
           <div className="hwUnreadDot" style={{top: "32.5px", right: "20px"}}></div>
           : null
         }

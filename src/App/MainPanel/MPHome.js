@@ -91,7 +91,7 @@ class MPHome extends React.Component {
             <div className={this.state.tab == 2 ? "homeTab htSelected" : "homeTab"} onClick={() => this.setState({tab: 2})}>
               <Notify className={this.state.tab == 2 ? "homeTabIcon htiNotify htiSelected" : "homeTabIcon htiNotify"} />
               <h1 className={this.state.tab == 2 ? "homeTitle httSelected" : "homeTitle"}>NOTIFICATIONS</h1>
-              { this.state.tab != 2 && (this.props.dms_requests.length > 0 || this.props.groups_requests.length > 0) ?
+              { this.state.tab != 2 && (this.props.dms_requests.length > 0 || Object.keys(this.props.groups_requests).length > 0) ?
                 <div className="hwNotificationsUnread">
                   <div className="hwUnreadDot"></div>
                 </div>

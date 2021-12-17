@@ -274,7 +274,9 @@ export function startSocket() {
           mainStore.dispatch(setgroupsLoaded(true));
         }
       } else if (com == "get_thread_info") {
-        if (jsonData.response == true) {
+        if (jsonData.response == true && jsonData.requested.includes(myEmail)) {
+          mainStore.dispatch(addThreadRequest({[jsonData.thread_id]: {"name": jsonData.name, "people": jsonData.people}}));
+        } else if (jsonData.response == true) {
           mainStore.dispatch(setThreadName({"thread_id": jsonData.thread_id, "new_name": jsonData.name}));
           mainStore.dispatch(addRequested({"thread_id": jsonData.thread_id, "people": jsonData.requested}));
           if (jsonData.people != null) {
@@ -340,6 +342,7 @@ export function startSocket() {
       /* Set functions */
       else if (com == "add_user") {
         groups_get_threads();
+        groups_request_to_thread("get_requests", 0);
       }
       else if (com == "create_thread") {
         if (jsonData.response == true) {
@@ -356,11 +359,18 @@ export function startSocket() {
         mainStore.dispatch(removeSendingThreadMessage({"thread_id": jsonData.thread_id, "message": jsonData.message.message}));
         mainStore.dispatch(addThreadMessage({thread_id: jsonData.thread_id, message: myMessage.message, from: myMessage.email, id: myMessage.id, timestamp: myMessage.timestamp}));
       } else if (com == "request_to_thread") {
-        if (jsonData.response == true || jsonData.response == "receive_requested_person") {
+        if (jsonData.response === "receive_request") {
+          jsonData.thread_id.forEach((item, i) => {
+            groups_get_thread_info(item);
+          });
+        } else if (jsonData.response == true || jsonData.response == "receive_requested_person") {
           mainStore.dispatch(addRequested({thread_id: jsonData.thread_id, people: [jsonData.person]}))
         }
       } else if (com == "join_thread") {
         if (jsonData.response == true) {
+          if (Object.keys(mainStore.getState().groups.requests).includes(jsonData.thread_id.toString())) {
+            mainStore.dispatch(removeThreadRequest(jsonData.thread_id));
+          }
           get_thread_info(jsonData.thread_id)
         } else if (jsonData.response == "receive_joined_person") {
           mainStore.dispatch(addThreadPeople({thread_id: jsonData.thread_id, people: [jsonData.person]}))
@@ -371,7 +381,11 @@ export function startSocket() {
           }
         }
       } else if (com == "deny_request") {
-        if (jsonData.response == true || jsonData.response == "receive_denied_request") {
+        // console.log(Object.keys(mainStore.getState().groups.requests));
+        // console.log(jsonData.thread_id);
+        if (Object.keys(mainStore.getState().groups.requests).includes(jsonData.thread_id.toString())) {
+          mainStore.dispatch(removeThreadRequest(jsonData.thread_id));
+        } else if (jsonData.response == true || jsonData.response == "receive_denied_request") {
           mainStore.dispatch(removeRequested({thread_id: jsonData.thread_id, people: [jsonData.person]}))
         }
       } else if (com == "remove_person") {
@@ -638,10 +652,11 @@ export function groups_leave_thread(thread_id) {
 }
 
 export function groups_deny_request(thread_id, unrequesting = null) {
-  var jsonObj = {"product": "groups", "command": "deny_request", "thread_id": thread_id}
-  if (unrequesting != null) {
-    jsonObj["unrequesting"] = unrequesting;
-  }
+  // var jsonObj = {"product": "groups", "command": "deny_request", "thread_id": thread_id}
+  // if (unrequesting != null) {
+  //   jsonObj["unrequesting"] = unrequesting;
+  // }
+  var jsonObj = {"product": "groups", "command": "deny_request", "thread_id": thread_id, "unrequesting": unrequesting}
   send_websocket_message(jsonObj);
 }
 

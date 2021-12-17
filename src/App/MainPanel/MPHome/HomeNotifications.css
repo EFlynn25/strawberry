@@ -82,51 +82,64 @@
 /* Requests */
 
 .hnRequestDiv {
-  height: 50px;
+  width: calc(100% - 60px);
+  height: 55px;
+  margin-left: 40px;
 }
 
-.hnRequestDiv img {
+.hnRequestTypeIcon {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  top: 22.5px;
+  left: -40px;
+}
+
+.hnRequestDiv > img {
   width: 50px;
   height: 50px;
+  margin: 2.5px;
   border-radius: 25px;
 }
 
 .hnRequestDiv h1 {
   position: absolute;
-  left: 70px;
-  bottom: 34px;
+  left: 72.5px;
+  bottom: 36.5px;
   font-size: 22px;
 }
 
 .hnRequestDiv p {
   position: absolute;
-  left: 70px;
-  top: 34px;
+  left: 72.5px;
+  top: 36.5px;
 
   font-size: 16px;
   color: #888;
 }
 
-.hnRequestDiv svg {
+.hnDeclineIcon {
   right: 20px;
+  top: 22.5px;
 }
 
-.hnRequestDiv svg:first-of-type {
+.hnAcceptIcon {
   right: 55px;
+  top: 22.5px;
 }
 
-.hnRequestDiv svg:first-of-type:hover {
+.hnAcceptIcon:hover {
   fill: #afa;
 }
 
-.hnRequestDiv svg:first-of-type:active {
+.hnAcceptIcon:active {
   fill: #afa8;
 }
 
-.hnRequestDiv svg:hover {
+.hnDeclineIcon:hover {
   fill: #faa;
 }
 
-.hnRequestDiv svg:active {
+.hnDeclineIcon:active {
   fill: #faa8;
 }

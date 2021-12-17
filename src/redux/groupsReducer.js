@@ -11,7 +11,7 @@ export const groupsSlice = createSlice({
     threadsCreating: [],
     threadsCreated: [],
 
-    requests: []
+    requests: {}
   },
   reducers: {
     setOpenedThread: (state, action) => {
@@ -308,13 +308,19 @@ export const groupsSlice = createSlice({
       }
     },
     addThreadRequest: (state, action) => {
-      state.requests.push(action.payload["thread_id"]);
+      // if (Array.isArray(action.payload)) {
+      //   state.requests = state.requests.concat(action.payload)
+      // } else {
+      //   state.requests.push(action.payload);
+      // }
+      Object.assign(state.requests, action.payload)
     },
     removeThreadRequest: (state, action) => {
-      let index = state.requests.indexOf(action.payload["thread_id"]);
-      if (index > -1) {
-        state.requests.splice(index, 1);
-      }
+      delete state.requests[action.payload]
+      // let index = state.requests.indexOf(action.payload);
+      // if (index > -1) {
+      //   state.requests.splice(index, 1);
+      // }
     },
   },
 });
