@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 
 import './HomeProfile.css';
 import { ReactComponent as Edit } from '../../../assets/icons/edit.svg';
+import { ReactComponent as Close } from '../../../assets/icons/close.svg';
 import { set_status } from '../../../socket.js';
 
 class HomeProfile extends React.Component {
@@ -47,11 +48,13 @@ class HomeProfile extends React.Component {
 
         <div className="HPUserProfile">
           <div className="ppLeft">
-            <img src={this.props.picture} className="pplPFP" alt={this.props.name} />
+            <img src={this.props.picture.split("=")[0]} className="pplPFP" alt={this.props.name} />
             <h1 className="pplName">{this.props.name}{/*<Edit className="hpEditIcon hpeiName" />*/}</h1>
-            <p className="pplStatus" title={this.props.status} style={this.state.editingStatus ? {display: "none"} : null}>{this.props.status}<Edit className="hpEditIcon hpeiStatus" onClick={() => {this.setState({editingStatus: true}); this.statusInputRef.current.focus(); this.statusInputRef.current.setSelectionRange(this.state.statusInputVal.length, this.state.statusInputVal.length);}} /></p>
-            {/*<input value={this.state.statusInputVal} className="hpStatusInput" />*/}
-            <TextareaAutosize value={this.state.statusInputVal} className={this.state.editingStatus ? "hpStatusInput" : "hpStatusInput hpStatusInputHidden"} style={{width: (this.state.statusInputVal.length + 1) + "ch"}} onChange={this.handleStatusInputChange} onKeyPress={this.statusInputEnterPressed} ref={this.statusInputRef} />
+            <p className="pplStatus" style={this.state.editingStatus ? {display: "none"} : null}>{this.props.status}<Edit className="hpEditIcon hpeiStatus" onClick={() => {this.setState({editingStatus: true}); this.statusInputRef.current.focus(); this.statusInputRef.current.setSelectionRange(this.state.statusInputVal.length, this.state.statusInputVal.length);}} /></p>
+            <div className={this.state.editingStatus ? "hpChangeStatusDiv" : "hpChangeStatusDiv hpChangeStatusDivHidden"}>
+              <TextareaAutosize value={this.state.statusInputVal} className={this.state.editingStatus ? "hpStatusInput" : "hpStatusInput hpStatusInputHidden"} onChange={this.handleStatusInputChange} onKeyPress={this.statusInputEnterPressed} ref={this.statusInputRef} maxlength={180} />
+              <Close className="hpEditIcon hpCloseIcon" onClick={() => this.setState({statusInputVal: this.props.status, editingStatus: false})} />
+            </div>
           </div>
           <div className="ppRight">
             <div key="id_no_posts" style={{display: "table", width: "100%", height: "100%"}}>

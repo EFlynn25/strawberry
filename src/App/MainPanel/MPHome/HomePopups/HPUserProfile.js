@@ -19,7 +19,7 @@ class HPUserProfile extends React.Component {
     return (
       <div className="HPUserProfile">
         <div className="ppLeft">
-          <img src={picture} className="pplPFP" alt={name} />
+          <img src={picture.split("=")[0]} className="pplPFP" alt={name} />
           <h1 className="pplName">{name}</h1>
           <p className="pplStatus" title={status}>{status}</p>
         </div>
