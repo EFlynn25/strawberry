@@ -33,13 +33,11 @@ class GSPeople extends React.Component {
   }
 
   componentDidMount() {
-    console.log("mount!");
     document.addEventListener('mouseup', this.handleClickOutside);
     document.addEventListener('mousedown', this.handleClickOutside);
   }
 
   componentWillUnmount() {
-    console.log("unmount!");
     document.removeEventListener('mouseup', this.handleClickOutside);
     document.removeEventListener('mousedown', this.handleClickOutside);
   }
@@ -85,7 +83,7 @@ class GSPeople extends React.Component {
 
     let alphabeticalPeople = [];
     let alphabeticalRequested = [];
-    
+
     const myThread = this.props.threads[this.props.myThreadID];
     if (myThread == null) {
       return null
@@ -159,7 +157,7 @@ class GSPeople extends React.Component {
           <h1 className="gspAddPersonText">Add person</h1>
         </div>
         <div className={this.state.personPickerOpen ? "gsapPicker" : "gsapPicker gsapPickerHide"} ref={this.setWrapperRef}>
-          <PersonPicker callback={this.addPerson} />
+          <PersonPicker callback={this.addPerson} noShow={newPeople.concat(newRequested)} />
         </div>
         <div className="gspPeopleList">
           {peopleElements}

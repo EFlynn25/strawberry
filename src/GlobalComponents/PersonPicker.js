@@ -44,9 +44,12 @@ class PersonPicker extends React.Component {
 
     let alphabeticalPeople = [];
     const localKnownPeople = this.props.knownPeople;
+    const noShow = this.props.noShow || [];
     if (localKnownPeople != null && Object.keys(localKnownPeople).length > 0) {
       Object.keys(localKnownPeople).forEach(function (item, index) {
-        alphabeticalPeople.push([item, getUser(item).name]);
+        if (!noShow.includes(item)) {
+          alphabeticalPeople.push([item, getUser(item).name]);
+        }
       });
       alphabeticalPeople.sort((a,b) => a[1].toUpperCase().localeCompare(b[1].toUpperCase()));
       const newPeople = alphabeticalPeople.map(function(x) {
