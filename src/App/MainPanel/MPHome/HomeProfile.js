@@ -1,21 +1,82 @@
 import React from 'react';
+import TextareaAutosize from 'react-autosize-textarea';
+import { connect } from 'react-redux';
 
 import './HomeProfile.css';
+import { ReactComponent as Edit } from '../../../assets/icons/edit.svg';
+import { set_status } from '../../../socket.js';
 
 class HomeProfile extends React.Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      statusInputVal: this.props.status,
+      editingStatus: false
+    };
+
+    this.statusInputRef = React.createRef();
+
+    this.handleStatusInputChange = this.handleStatusInputChange.bind(this);
+    this.statusInputEnterPressed = this.statusInputEnterPressed.bind(this);
+  }
+
+  handleStatusInputChange(event) {
+    if (this.state.editingStatus) {
+      this.setState({statusInputVal: event.target.value})
+    }
+  }
+
+  statusInputEnterPressed(event) {
+    var code = event.keyCode || event.which;
+    if (code === 13) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      if (this.state.statusInputVal != this.props.status) {
+        set_status(this.state.statusInputVal);
+      }
+      this.setState({editingStatus: false});
+    }
   }
 
   render() {
     return (
       <div className={this.props.classes}>
-        <div style={{display: "table", width: "100%", height: "100%"}}>
-          <h1 style={{position: "relative", display: "table-cell", margin: "0", textAlign: "center", verticalAlign: "middle", color: "#fff5", fontSize: "16px"}}>No profile</h1>
+
+
+        <div className="HPUserProfile">
+          <div className="ppLeft">
+            <img src={this.props.picture} className="pplPFP" alt={this.props.name} />
+            <h1 className="pplName">{this.props.name}{/*<Edit className="hpEditIcon hpeiName" />*/}</h1>
+            <p className="pplStatus" title={this.props.status} style={this.state.editingStatus ? {display: "none"} : null}>{this.props.status}<Edit className="hpEditIcon hpeiStatus" onClick={() => {this.setState({editingStatus: true}); this.statusInputRef.current.focus(); this.statusInputRef.current.setSelectionRange(this.state.statusInputVal.length, this.state.statusInputVal.length);}} /></p>
+            {/*<input value={this.state.statusInputVal} className="hpStatusInput" />*/}
+            <TextareaAutosize value={this.state.statusInputVal} className={this.state.editingStatus ? "hpStatusInput" : "hpStatusInput hpStatusInputHidden"} style={{width: (this.state.statusInputVal.length + 1) + "ch"}} onChange={this.handleStatusInputChange} onKeyPress={this.statusInputEnterPressed} ref={this.statusInputRef} />
+          </div>
+          <div className="ppRight">
+            <div key="id_no_posts" style={{display: "table", width: "100%", height: "100%"}}>
+              <h1 style={{position: "relative", display: "table-cell", margin: "0", textAlign: "center", verticalAlign: "middle", color: "#fff5", fontSize: "16px"}}>No posts</h1>
+            </div>
+          </div>
         </div>
+
+
+
+        {/*
+          <div style={{display: "table", width: "100%", height: "100%"}}>
+            <h1 style={{position: "relative", display: "table-cell", margin: "0", textAlign: "center", verticalAlign: "middle", color: "#fff5", fontSize: "16px"}}>No profile</h1>
+          </div>
+        */}
+
       </div>
     );
   }
 }
 
-export default HomeProfile;
+const mapStateToProps = (state) => ({
+  name: state.app.name,
+  picture: state.app.picture,
+  status: state.app.status,
+});
+
+export default connect(mapStateToProps, null)(HomeProfile);

@@ -40,20 +40,7 @@ class HomePeople extends React.Component {
         const myPerson = getUser(item);
         const personName = myPerson.name;
         const personPicture = myPerson.picture;
-        // let status = "hi im " + personName + " and this is my status";
-        let status = null;
-
-        if (item == "everettflynn25@gmail.com") {
-          status = "bogos binted?";
-        } else if (item == "cherryman656@gmail.com") {
-          status = "Use my other account: everettflynn25@gmail.com";
-        } else if (item == "appleandroidtechmaker@gmail.com") {
-          status = "This is my chat account.";
-        } else if (item == "flynneverett@logoscharter.com") {
-          status = "Me gusta el español.";
-        } else if (item == "toastmaster9804@gmail.com") {
-          status = "EverettPlayz is Gucciiii";
-        }
+        const status = myPerson.status;
 
         people.push(
           <div className="hpPerson" key={item} onClick={() => this.props.opendialog("profile", item)}>

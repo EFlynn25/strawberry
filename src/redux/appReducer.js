@@ -6,6 +6,7 @@ export const appSlice = createSlice({
     name: "",
     email: "",
     picture: "",
+    status: null,
 
     dmsOrGroups: "",
     hideRightPanel: true,
@@ -34,6 +35,9 @@ export const appSlice = createSlice({
     },
     setUserPicture: (state, action) => {
       state.picture = action.payload;
+    },
+    setUserStatus: (state, action) => {
+      state.status = action.payload;
     },
     setdmsOrGroups: (state, action) => {
       state.dmsOrGroups = action.payload;
@@ -74,7 +78,7 @@ export const appSlice = createSlice({
   },
 });
 
-export const { setUserName, setUserEmail, setUserPicture,
+export const { setUserName, setUserEmail, setUserPicture, setUserStatus,
   setdmsOrGroups, sethideRightPanel,
   setdmsLoaded, setgroupsLoaded, setpeopleLoaded,
   setSocket, setMultipleTabs,

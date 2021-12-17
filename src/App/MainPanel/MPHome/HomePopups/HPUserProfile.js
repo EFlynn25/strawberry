@@ -14,20 +14,7 @@ class HPUserProfile extends React.Component {
     const myPerson = getUser(item);
     const name = myPerson.name;
     const picture = myPerson.picture;
-    // let status = "hi im " + name + " and this is my status";
-    let status = "";
-
-    if (item == "everettflynn25@gmail.com") {
-      status = "bogos binted?";
-    } else if (item == "cherryman656@gmail.com") {
-      status = "Use my other account: everettflynn25@gmail.com";
-    } else if (item == "appleandroidtechmaker@gmail.com") {
-      status = "This is my chat account.";
-    } else if (item == "flynneverett@logoscharter.com") {
-      status = "Me gusta el español.";
-    } else if (item == "toastmaster9804@gmail.com") {
-      status = "EverettPlayz is Gucciiii";
-    }
+    const status = myPerson.status;
 
     return (
       <div className="HPUserProfile">

@@ -10,8 +10,9 @@ export const peopleSlice = createSlice({
       if (Object.keys(state.knownPeople).includes(action.payload["email"])) {
         state.knownPeople[action.payload["email"]].name = action.payload.name;
         state.knownPeople[action.payload["email"]].picture = action.payload.picture;
+        state.knownPeople[action.payload["email"]].status = action.payload.status;
       } else {
-        state.knownPeople[action.payload["email"]] = {name: action.payload["name"], picture: action.payload["picture"]}
+        state.knownPeople[action.payload["email"]] = {name: action.payload["name"], picture: action.payload["picture"], status: action.payload["status"]}
       }
     },
     setpersonName: (state, action) => {
@@ -20,10 +21,13 @@ export const peopleSlice = createSlice({
     setpersonPicture: (state, action) => {
       state.knownPeople[action.payload["email"]].picture = action.payload["picture"];
     },
+    setpersonStatus: (state, action) => {
+      state.knownPeople[action.payload["email"]].status = action.payload["status"];
+    },
   },
 });
 
-export const { addPerson, setpersonName, setpersonPicture } = peopleSlice.actions;
+export const { addPerson, setpersonName, setpersonPicture, setpersonStatus } = peopleSlice.actions;
 
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of

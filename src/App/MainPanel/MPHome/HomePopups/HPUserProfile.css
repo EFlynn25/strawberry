@@ -9,7 +9,7 @@
   width: calc(40% - 80px);
   width: 240px;
   height: calc(100% - 80px);
-  border-right: 1px solid #fff1;
+  /* border-right: 1px solid #fff1; */
   padding: 40px;
 }
 
@@ -21,10 +21,7 @@
 }
 
 .pplName {
-
-
   font-size: 30px;
-
 
   word-wrap: break-word;
   hyphens: auto;
@@ -44,11 +41,11 @@
 
 .ppRight {
   position: absolute;
-  width: 60%;
-  height: 100%;
-  left: 40%;
-  top: 0;
-
-  width: calc(100% - 321px);
-  left: 321px;
+  width: calc(100% - 340px);
+  height: calc(100% - 20px);
+  top: 10px;
+  left: 330px;
+  
+  background: #fff1;
+  border-radius: 20px;
 }

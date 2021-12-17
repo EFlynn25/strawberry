@@ -1,7 +1,7 @@
 import firebase from 'firebase/app';
 import { useDispatch } from 'react-redux'
 import { setdmsLoaded, setgroupsLoaded, setpeopleLoaded, setSocket, setAnnouncement, setAnnouncementRead } from './redux/appReducer.js'
-import { setMultipleTabs } from './redux/appReducer.js'
+import { setUserStatus, setMultipleTabs } from './redux/appReducer.js'
 import { addChat, addChatMessage, addLoadedChatMessages, removeSendingChatMessage, setChatCreated, setChatLastRead, setChatTyping, setInChat, setLoadingMessages, addChatRequest, removeChatRequest
   // removeRequesting, addRequested, addRequestedMe
 } from './redux/dmsReducer.js'
@@ -12,7 +12,7 @@ import {
   addThreadRequest, removeThreadRequest,
   addRequested, removeRequested
 } from './redux/groupsReducer.js'
-import { addPerson } from './redux/peopleReducer.js'
+import { addPerson, setpersonStatus } from './redux/peopleReducer.js'
 import mainStore from './redux/mainStore.js';
 import history from "./history";
 
@@ -66,7 +66,7 @@ export function startSocket() {
         //   mainStore.dispatch(setpersonName({"email": jsonData.email, "name": jsonData.name}))
         // } else {
         // }
-        mainStore.dispatch(addPerson({"email": jsonData.email, "name": jsonData.name, "picture": jsonData.picture}));
+        mainStore.dispatch(addPerson({"email": jsonData.email, "name": jsonData.name, "picture": jsonData.picture, "status": jsonData.status}));
 
         // if (!mainStore.getState().app.peopleLoaded) {
         //   let missingPerson = false;
@@ -126,7 +126,15 @@ export function startSocket() {
 
       /* Set functions */
 
-      // there are none
+      else if (com == "add_user") {
+        mainStore.dispatch(setUserStatus(jsonData.status));
+      } else if (com == "set_status") {
+        if (jsonData.response == true) {
+          mainStore.dispatch(setUserStatus(jsonData.status));
+        } else if (jsonData.response == "receive_set_status") {
+          mainStore.dispatch(setpersonStatus({"email": jsonData.email, "status": jsonData.status}));
+        }
+      }
 
 
     } else if (product == "dms") {
@@ -510,6 +518,11 @@ export function get_announcements() {
 
 export function add_user(idToken) {
   var jsonObj = {"product": "app", "command": "add_user", "idToken": idToken}
+  send_websocket_message(jsonObj);
+}
+
+export function set_status(status) {
+  var jsonObj = {"product": "app", "command": "set_status", "status": status}
   send_websocket_message(jsonObj);
 }
 

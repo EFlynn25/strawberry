@@ -25,3 +25,67 @@
   opacity: 0;
   visibility: hidden;
 }
+
+
+
+/* Content */
+
+.hpEditIcon {
+  position: absolute;
+
+  transition: fill .1s, transform .1s;
+  fill: #888;
+  fill: #fff8;
+  transform: none;
+}
+
+.hpeiName {
+  width: 25px;
+  height: 36px;
+  margin-left: 10px;
+}
+
+.hpeiStatus {
+  width: 19px;
+  height: 19px;
+  margin-left: 7px;
+}
+
+.hpEditIcon:hover {
+  cursor: pointer;
+  fill: #fffb;
+  /* transform: scale(1.05); */
+}
+
+.hpEditIcon:active {
+  fill: #fff7;
+  transform: scale(.95);
+}
+
+.hpStatusInput {
+  max-width: 100%;
+  resize: none;
+  margin-top: 5px;
+  padding: 0;
+  padding-bottom: 2px;
+
+  background: transparent;
+  outline: none;
+  border: none;
+  border-bottom: 2px solid #888;
+
+  font-size: 16px;
+  font-family: Roboto;
+  font-family: monospace;
+  color: #ddd;
+}
+
+.hpStatusInputHidden {
+  opacity: 0;
+  z-index: -100;
+  cursor: default;
+}
+
+.hpStatusInputHidden:hover {
+  cursor: default;
+}
