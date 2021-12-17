@@ -143,3 +143,15 @@
 .hnDeclineIcon:active {
   fill: #faa8;
 }
+
+
+
+/* Welcome */
+
+.hnCategory .aliPreview * {
+  color: #ddd;
+}
+
+.hnCategory .aliTimestamp {
+  color: #888;
+}

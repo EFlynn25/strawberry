@@ -91,7 +91,7 @@ class MPHome extends React.Component {
             <div className={this.state.tab == 2 ? "homeTab htSelected" : "homeTab"} onClick={() => this.setState({tab: 2})}>
               <Notify className={this.state.tab == 2 ? "homeTabIcon htiNotify htiSelected" : "homeTabIcon htiNotify"} />
               <h1 className={this.state.tab == 2 ? "homeTitle httSelected" : "homeTitle"}>NOTIFICATIONS</h1>
-              { this.state.tab != 2 && (this.props.dms_requests.length > 0 || Object.keys(this.props.groups_requests).length > 0) ?
+              { this.state.tab != 2 && (this.props.dms_requests.length > 0 || Object.keys(this.props.groups_requests).length > 0 || Object.keys(this.props.announcements).includes("welcome") && !this.props.announcementsRead.includes("welcome")) ?
                 <div className="hwNotificationsUnread">
                   <div className="hwUnreadDot"></div>
                 </div>
@@ -106,7 +106,7 @@ class MPHome extends React.Component {
 
           <div className="homeContent">
             <HomePeople classes={this.state.tab == 1 ? "HomePeople" : "HomePeople HomePeopleHide"} opendialog={this.props.opendialog} />
-            <HomeNotifications classes={this.state.notifyClasses} />
+            <HomeNotifications classes={this.state.notifyClasses} opendialog={this.props.opendialog} />
             <HomeProfile classes={this.state.tab == 3 ? "HomeProfile" : "HomeProfile HomeProfileHide"} />
           </div>
         </div>
