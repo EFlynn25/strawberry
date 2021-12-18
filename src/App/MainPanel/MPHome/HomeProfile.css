@@ -37,6 +37,7 @@
   fill: #888;
   fill: #fff8;
   transform: none;
+  z-index: 1;
 }
 
 .hpeiName {

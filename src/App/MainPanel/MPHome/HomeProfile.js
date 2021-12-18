@@ -42,6 +42,13 @@ class HomeProfile extends React.Component {
   }
 
   render() {
+    let noStatus = false;
+    let status = this.props.status;
+    if (!status || status == "") {
+      status = "No status";
+      noStatus = true;
+    }
+
     return (
       <div className={this.props.classes}>
 
@@ -50,7 +57,7 @@ class HomeProfile extends React.Component {
           <div className="ppLeft">
             <img src={this.props.picture.split("=")[0]} className="pplPFP" alt={this.props.name} />
             <h1 className="pplName">{this.props.name}{/*<Edit className="hpEditIcon hpeiName" />*/}</h1>
-            <p className="pplStatus" style={this.state.editingStatus ? {display: "none"} : null}>{this.props.status}<Edit className="hpEditIcon hpeiStatus" onClick={() => {this.setState({editingStatus: true}); this.statusInputRef.current.focus(); this.statusInputRef.current.setSelectionRange(this.state.statusInputVal.length, this.state.statusInputVal.length);}} /></p>
+            <p className="pplStatus" style={this.state.editingStatus ? {display: "none"} : noStatus ? {fontStyle: "normal", color: "#fff5"} : null}>{status}<Edit className="hpEditIcon hpeiStatus" onClick={() => {this.setState({editingStatus: true}); this.statusInputRef.current.focus(); this.statusInputRef.current.setSelectionRange(this.state.statusInputVal.length, this.state.statusInputVal.length);}} /></p>
             <div className={this.state.editingStatus ? "hpChangeStatusDiv" : "hpChangeStatusDiv hpChangeStatusDivHidden"}>
               <TextareaAutosize value={this.state.statusInputVal} className={this.state.editingStatus ? "hpStatusInput" : "hpStatusInput hpStatusInputHidden"} onChange={this.handleStatusInputChange} onKeyPress={this.statusInputEnterPressed} ref={this.statusInputRef} maxlength={180} />
               <Close className="hpEditIcon hpCloseIcon" onClick={() => this.setState({statusInputVal: this.props.status, editingStatus: false})} />
