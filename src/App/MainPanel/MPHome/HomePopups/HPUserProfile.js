@@ -21,7 +21,7 @@ class HPUserProfile extends React.Component {
         <div className="ppLeft">
           <img src={picture.split("=")[0]} className="pplPFP" alt={name} />
           <h1 className="pplName">{name}</h1>
-          <p className="pplStatus" title={status}>{status}</p>
+          <p className="pplStatus">{status}</p>
         </div>
         <div className="ppRight">
           <div key="id_no_posts" style={{display: "table", width: "100%", height: "100%"}}>
