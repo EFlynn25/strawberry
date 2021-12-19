@@ -13,13 +13,18 @@ class HPUserProfile extends React.Component {
     const item = this.props.email;
     const myPerson = getUser(item);
     const name = myPerson.name;
-    const picture = myPerson.picture;
+    let picture = myPerson.picture;
     const status = myPerson.status;
+
+    const splitPic = picture.split("=")[0];
+    if (splitPic != picture) {
+      picture = splitPic + "=s150";
+    }
 
     return (
       <div className="HPUserProfile">
         <div className="ppLeft">
-          <img src={picture.split("=")[0]} className="pplPFP" alt={name} />
+          <img src={picture} className="pplPFP" alt={name} />
           <h1 className="pplName">{name}</h1>
           <p className="pplStatus">{status}</p>
         </div>

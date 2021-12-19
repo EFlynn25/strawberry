@@ -49,13 +49,19 @@ class HomeProfile extends React.Component {
       noStatus = true;
     }
 
+    let picture = this.props.picture;
+    const splitPic = picture.split("=")[0];
+    if (splitPic != picture) {
+      picture = splitPic + "=s150";
+    }
+
     return (
       <div className={this.props.classes}>
 
 
         <div className="HPUserProfile">
           <div className="ppLeft">
-            <img src={this.props.picture.split("=")[0]} className="pplPFP" alt={this.props.name} />
+            <img src={picture} className="pplPFP" alt={this.props.name} />
             <h1 className="pplName">{this.props.name}{/*<Edit className="hpEditIcon hpeiName" />*/}</h1>
             <p className="pplStatus" style={this.state.editingStatus ? {display: "none"} : noStatus ? {fontStyle: "normal", color: "#fff5"} : null}>{status}<Edit className="hpEditIcon hpeiStatus" onClick={() => {this.setState({editingStatus: true}); this.statusInputRef.current.focus(); this.statusInputRef.current.setSelectionRange(this.state.statusInputVal.length, this.state.statusInputVal.length);}} /></p>
             <div className={this.state.editingStatus ? "hpChangeStatusDiv" : "hpChangeStatusDiv hpChangeStatusDivHidden"}>
