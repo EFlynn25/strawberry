@@ -41,6 +41,23 @@ class LPTabs extends React.Component {
   }
 
   render() {
+    const dmsUnread = Object.keys(this.props.chats).some((item) => {
+      const myChat = this.props.chats[item];
+      const myChatMessages = myChat.messages;
+      if (myChatMessages != null && myChatMessages.length > 0 && myChat.lastRead.me < myChatMessages[myChatMessages.length - 1].id || myChat.lastRead.me == null) {
+        return true;
+      }
+    });
+
+    const groupsUnread = Object.keys(this.props.threads).some((item) => {
+      const myThread = this.props.threads[item];
+      const myThreadMessages = myThread.messages;
+      if (myThreadMessages != null && myThreadMessages.length > 0 && myThread.lastRead[this.props.email] < myThreadMessages[myThreadMessages.length - 1].id || myThread.lastRead[this.props.email] == null) {
+        return true;
+      }
+    });
+
+
     return (
       <div className="LPTabs">
         <div className="dmTab" onClick={this.dmsHandleClick}>
@@ -63,6 +80,7 @@ class LPTabs extends React.Component {
             </svg>
             <h1 className="dmText" style={{fontWeight: this.props.dmsOrGroups == "dms" ? "700" : "500"}}>DMs</h1>
           </div>
+          <div className="tabUnread" style={dmsUnread ? null : {display: "none"}} />
           <div className={this.props.dmsOrGroups == "dms" ? "dmSelected" : "dmHovering"} />
         </div>
         <div className="groupsTab" onClick={this.groupsHandleClick}>
@@ -85,6 +103,7 @@ class LPTabs extends React.Component {
             </svg>
             <h1 className="groupsText" style={{fontWeight: this.props.dmsOrGroups == "groups" ? "700" : "500"}}>Groups</h1>
           </div>
+          <div className="tabUnread" style={groupsUnread ? null : {display: "none"}} />
           <div className={this.props.dmsOrGroups == "groups" ? "groupsSelected" : "groupsHovering"} />
         </div>
       </div>
@@ -93,13 +112,16 @@ class LPTabs extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
+  email: state.app.email,
   dmsOrGroups: state.app.dmsOrGroups,
   openedDM: state.dms.openedDM,
-  openedThread: state.groups.openedThread
+  openedThread: state.groups.openedThread,
+  threads: state.groups.threads,
+  chats: state.dms.chats,
 });
 
 const mapDispatchToProps = {
-    setdmsOrGroups
+  setdmsOrGroups
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(LPTabs));
