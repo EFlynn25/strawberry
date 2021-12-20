@@ -12,7 +12,7 @@ export const peopleSlice = createSlice({
         state.knownPeople[action.payload["email"]].picture = action.payload.picture;
         state.knownPeople[action.payload["email"]].status = action.payload.status;
       } else {
-        state.knownPeople[action.payload["email"]] = {name: action.payload["name"], picture: action.payload["picture"], status: action.payload["status"]}
+        state.knownPeople[action.payload["email"]] = {name: action.payload["name"], picture: action.payload["picture"], status: action.payload["status"]        , posts: {0: {message: "Today sucked.", likes: 10, timestamp: 0}, 12: {message: "Today was great!", likes: 0, timestamp: 700350}}      }
       }
     },
     setpersonName: (state, action) => {
