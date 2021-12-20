@@ -95,8 +95,8 @@ class HomeNotifications extends React.Component {
                         <img src={person1.picture} className="gtpdPFP gtpd4people1" alt={person1.name} />
                         <img src={person2.picture} className="gtpdPFP gtpd4people2" alt={person2.name} />
                         <img src={person3.picture} className="gtpdPFP gtpd4people3" alt={person3.name} />
-                        <div className="gtpdPFP gtpd4people4 gtpdExtraDiv">
-                          <p className="gtpdExtraText">+{numberOfExtra}</p>
+                        <div className="gtpdPFP gtpd4people4 gtpdExtraDiv" style={{background: "#18191B"}}>
+                          <p className="gtpdExtraText" style={{position: "static", fontSize: "9px", color: "white"}}>+{numberOfExtra}</p>
                         </div>
                       </div>
                     );
