@@ -35,14 +35,9 @@ class DMChat extends React.Component {
       thisChatChanged = true;
     }
 
-    // console.groupCollapsed(this.props.chatEmail);
-    // console.log(thisChat);
-    // console.log(nextChat);
-    // console.log(thisChat.messages[thisChat.messages.length - 1].id);
-    // console.log(nextChat.messages[nextChat.messages.length - 1].id);
-    // console.groupEnd();
+    const onlineChanged = this.props.chatEmail in this.props.knownPeople && nextProps.knownPeople[nextProps.chatEmail].online != this.props.knownPeople[this.props.chatEmail].online;
 
-    if (openedDMChanged || thisChatChanged) {
+    if (openedDMChanged || thisChatChanged || onlineChanged) {
       return true;
     }
 
@@ -128,7 +123,7 @@ class DMChat extends React.Component {
 const mapStateToProps = (state) => ({
   openedDM: state.dms.openedDM,
   chats: state.dms.chats,
-  getknownPeople: state.people.knownPeople,
+  knownPeople: state.people.knownPeople,
 });
 
 const mapDispatchToProps = {
