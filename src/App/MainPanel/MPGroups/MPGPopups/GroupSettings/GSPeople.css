@@ -9,8 +9,8 @@
 
 .gspTitle {
   height: 40px;
-  
-  
+
+
   line-height: 40px;
 }
 
@@ -46,18 +46,30 @@
   user-select: none;
 }
 
+.gspOnline {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  top: 30px;
+  left: 30px;
+
+  border-radius: 5px;
+  background: #1D9545;
+  z-index: 1;
+}
+
 .gspName {
   position: absolute;
   width: calc(100% - 50px);
   height: 40px;
   left: 50px;
   top: 0;
-  
+
 
   font-size: 18px;
   font-weight: 500;
   line-height: 40px;
-  
+
 
   text-overflow: ellipsis;
   overflow: hidden;
@@ -70,7 +82,7 @@
   height: 20px;
   left: 50px;
   bottom: 0;
-  
+
 
   font-size: 16px;
   font-weight: 400;
@@ -125,11 +137,11 @@
 }
 
 .gspRemovingPerson h1 {
-  
+
 
   font-size: 18px;
   font-weight: 500;
-  
+
 }
 
 .gspRemovingPerson div {
@@ -142,7 +154,7 @@
 }
 
 .gspRemovingPerson p {
-  
+
 
   font-size: 14px;
   font-weight: 500;
@@ -246,7 +258,7 @@
 
 .gspAddPersonText {
   height: 40px;
-  
+
 
   font-size: 18px;
   font-weight: 600;

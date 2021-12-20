@@ -35,6 +35,18 @@
   font-family: Roboto;
 }
 
+.pplOnline {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  top: 160px;
+  left: 160px;
+
+  border-radius: 18px;
+  background: #1D9545;
+  z-index: 1;
+}
+
 
 
 /* ...right side */
@@ -45,7 +57,7 @@
   height: calc(100% - 20px);
   top: 10px;
   left: 330px;
-  
+
   background: #fff1;
   border-radius: 20px;
 }

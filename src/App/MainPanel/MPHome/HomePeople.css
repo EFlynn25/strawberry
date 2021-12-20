@@ -93,6 +93,18 @@
   white-space: nowrap;
 }
 
+.hpOnline {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  top: 53px;
+  left: 53px;
+
+  border-radius: 6px;
+  background: #1D9545;
+  z-index: 1;
+}
+
 
 /* ...hover */
 

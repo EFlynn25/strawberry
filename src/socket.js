@@ -12,7 +12,7 @@ import {
   addThreadRequest, removeThreadRequest,
   addRequested, removeRequested
 } from './redux/groupsReducer.js'
-import { addPerson, setpersonStatus } from './redux/peopleReducer.js'
+import { addPerson, setpersonStatus, setpersonOnline } from './redux/peopleReducer.js'
 import mainStore from './redux/mainStore.js';
 import history from "./history";
 
@@ -44,59 +44,13 @@ export function startSocket() {
 
       if (com == "multiple_tabs") {
         mainStore.dispatch(setMultipleTabs(jsonData["data"]));
-        console.log("multiple");
       }
 
 
       /* Get functions */
       else if (com == "get_user_info") {
-
-        // if ("chats" in jsonData) {
-        //   const chatsList = jsonData.chats;
-        //   console.log(chatsList);
-        //   if (Array.isArray(chatsList) && chatsList.length) {
-        //     chatsList.map(item => {
-        //       get_user_info(item);
-        //       mainStore.dispatch(addChat(item));
-        //     });
-        //   }
-        // }
-
-        // if (Object.keys(mainStore.getState().people.knownPeople).includes(jsonData.email)) {
-        //   mainStore.dispatch(setpersonName({"email": jsonData.email, "name": jsonData.name}))
-        // } else {
-        // }
         mainStore.dispatch(addPerson({"email": jsonData.email, "name": jsonData.name, "picture": jsonData.picture, "status": jsonData.status}));
-
-        // if (!mainStore.getState().app.peopleLoaded) {
-        //   let missingPerson = false;
-        //   const chatKeys = Object.keys(mainStore.getState().dms.chats);
-        //   const threads = mainStore.getState().groups.threads;
-        //   const people = Object.keys(mainStore.getState().people.knownPeople);
-        //   chatKeys.forEach(item => {
-        //     if (!people.includes(item)) {
-        //       missingPerson = true;
-        //     }
-        //   });
-        //   console.log(people);
-        //   Object.keys(threads).forEach(item => {
-        //     console.log(item);
-        //     if (threads[item].people) {
-        //       threads[item].people.forEach(item => {
-        //         console.log(item);
-        //         if (!people.includes(item)) {
-        //           console.log("missing");
-        //           missingPerson = true;
-        //         }
-        //       });
-        //     } else {
-        //       missingPerson = true;
-        //     }
-        //   });
-        //   if (!missingPerson) {
-        //     mainStore.dispatch(setpeopleLoaded(true));
-        //   }
-        // }
+        get_online(jsonData.email);
       } else if (com == "get_announcements") {
         if (jsonData.response == true || jsonData.response == "receive_new_announcement") {
           jsonData.announcements.forEach((announcement) => {
@@ -113,12 +67,15 @@ export function startSocket() {
             });
           }
         }
-      } else if (com == "set_announcement_read") {
+      } else if (com == "get_online") {
         if (jsonData.response == true) {
-          jsonData.ids.forEach((id) => {
-            if (!mainStore.getState().app.announcementsRead.includes(id)) {
-              mainStore.dispatch(setAnnouncementRead(id));
-            }
+          Object.keys(jsonData.online).forEach((item, i) => {
+            // if (jsonData.online[item]) {
+            //   console.log(i + ": " + item + " is online!")
+            // } else {
+            //   console.log(i + ": " + item + " is offline...")
+            // }
+            mainStore.dispatch(setpersonOnline({email: item, online: jsonData.online[item]}));
           });
         }
       }
@@ -133,6 +90,14 @@ export function startSocket() {
           mainStore.dispatch(setUserStatus(jsonData.status));
         } else if (jsonData.response == "receive_set_status") {
           mainStore.dispatch(setpersonStatus({"email": jsonData.email, "status": jsonData.status}));
+        }
+      } else if (com == "set_announcement_read") {
+        if (jsonData.response == true) {
+          jsonData.ids.forEach((id) => {
+            if (!mainStore.getState().app.announcementsRead.includes(id)) {
+              mainStore.dispatch(setAnnouncementRead(id));
+            }
+          });
         }
       }
 
@@ -151,14 +116,10 @@ export function startSocket() {
           const item = jsonData.chat;
           get_chat_info(item);
         } else if (jsonData.response == "no_chats") {
-          // mainStore.dispatch(setpeopleLoaded(true));
           mainStore.dispatch(setdmsLoaded(true));
         }
       } else if (com == "get_messages") {
         if (jsonData.response == true) {
-
-          // const myEmail = mainStore.getState().app.email;
-          // let myMessages = jsonData.messages.reverse();
           let myMessages = jsonData.messages;
           myMessages.forEach((item, i) => {
             if (item.email == myEmail) {
@@ -511,6 +472,11 @@ export function get_user_info(requested) {
 
 export function get_announcements() {
   var jsonObj = {"product": "app", "command": "get_announcements"}
+  send_websocket_message(jsonObj);
+}
+
+export function get_online(requested) {
+  var jsonObj = {"product": "app", "command": "get_online", "requested": requested}
   send_websocket_message(jsonObj);
 }
 

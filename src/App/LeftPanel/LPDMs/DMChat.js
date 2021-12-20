@@ -79,14 +79,10 @@ class DMChat extends React.Component {
       opened = true;
     }
 
-    let chatName = "";
-    let chatPicture = "";
-    // const myPerson = this.props.getknownPeople[this.props.chatEmail];
     const myPerson = getUser(this.props.chatEmail);
-    if (myPerson != null) {
-      chatName = myPerson.name;
-      chatPicture = myPerson.picture;
-    }
+    const chatName = myPerson.name;
+    const chatPicture = myPerson.picture;
+    const chatOnline = myPerson.online;
 
     let chatMessage = "";
     let chatTime = "";
@@ -116,6 +112,7 @@ class DMChat extends React.Component {
     return (
       <div className="DMChat" onClick={this.handleClick} style={{backgroundPositionX: opened ? "0" : ""}}>
         <img src={chatPicture} className="dmChatPFP" alt={chatName} style={{boxShadow: opened ? "none" : ""}} />
+        { chatOnline ? <div className="dmChatOnline"></div> : null }
         <div className="dmChatTitleTimeFlexbox">
           <h1 className={read ? "dmChatTitle" : "dmChatTitle dmChatTitleUnread"}>{chatName}</h1>
           <h1 className={read ? "dmChatTime" : "dmChatTime dmChatUnread"}>{chatTime}</h1>

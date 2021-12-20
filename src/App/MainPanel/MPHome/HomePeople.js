@@ -33,10 +33,12 @@ class HomePeople extends React.Component {
         const personName = myPerson.name;
         const personPicture = myPerson.picture;
         const status = myPerson.status;
+        const online = myPerson.online;
 
         people.push(
           <div className="hpPerson" key={item} onClick={() => this.props.opendialog("profile", item)}>
             <img src={personPicture} className="hpPFP" alt={personName} />
+            { online ? <div className="hpOnline"></div> : null }
             <h1 className="hpName" style={status == null ? {lineHeight: "50px", bottom: "", top: "15px", height: "50px"} : null}>{personName}</h1>
             { status == null ? null :
               <p className="hpStatus" title={status}>{status}</p>

@@ -24,10 +24,13 @@ export const peopleSlice = createSlice({
     setpersonStatus: (state, action) => {
       state.knownPeople[action.payload["email"]].status = action.payload["status"];
     },
+    setpersonOnline: (state, action) => {
+      state.knownPeople[action.payload["email"]].online = action.payload["online"];
+    },
   },
 });
 
-export const { addPerson, setpersonName, setpersonPicture, setpersonStatus } = peopleSlice.actions;
+export const { addPerson, setpersonName, setpersonPicture, setpersonStatus, setpersonOnline } = peopleSlice.actions;
 
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of

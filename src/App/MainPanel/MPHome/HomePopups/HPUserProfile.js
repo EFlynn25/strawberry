@@ -15,6 +15,7 @@ class HPUserProfile extends React.Component {
     const name = myPerson.name;
     let picture = myPerson.picture;
     const status = myPerson.status;
+    const online = myPerson.online;
 
     const splitPic = picture.split("=")[0];
     if (splitPic != picture) {
@@ -27,6 +28,7 @@ class HPUserProfile extends React.Component {
           <img src={picture} className="pplPFP" alt={name} />
           <h1 className="pplName">{name}</h1>
           <p className="pplStatus">{status}</p>
+          { online ? <div className="pplOnline"></div> : null }
         </div>
         <div className="ppRight">
           <div key="id_no_posts" style={{display: "table", width: "100%", height: "100%"}}>

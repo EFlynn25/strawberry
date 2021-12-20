@@ -112,10 +112,8 @@ class GSPeople extends React.Component {
       peopleElements.push(
         <div className="gspPerson" key={item} style={this.state.personRemoving == item ? {background: "#1D954522"} : null}>
           <img src={thisUser.picture} className="gspPFP" alt={thisUser.name} />
+          { thisUser.online ? <div className="gspOnline"></div> : null }
           <h1 className="gspName" style={personRemoving == item ? {width: "calc(100% - 85px)"} : null}>{thisUser.name}</h1>
-          { !newRequested.includes(item) ? null :
-            null // <p className="gspPending">Pending request...</p>
-          }
           <Close className="gspRemove" onClick={() => {this.setState({personRemoving: item})}} style={this.state.personRemoving == item ? {visibility: "visible"} : null} />
           <div className={this.state.personRemoving == item ? "gspRemovingPerson" : "gspRemovingPerson gspRemovingPersonHide"}>
             <h1>Are you sure?</h1>
