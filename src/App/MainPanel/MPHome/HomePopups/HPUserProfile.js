@@ -43,6 +43,7 @@ class HPUserProfile extends React.Component {
         </div>
         <div className="ppRight">
           <div className="pprPostList">
+            <h3>Posts</h3>
 
             { orderedPostList ?
               orderedPostList.map((item) => {
@@ -52,7 +53,7 @@ class HPUserProfile extends React.Component {
                     <p>{myPost.message}</p>
                     <div className="pprPostBottom">
                       <div>
-                        <ThumbUp />
+                        <ThumbUp className="pprPostThumbUp" />
                         <p>{myPost.likes}</p>
                       </div>
                       <p className="pprPostTimestamp">{parseDate(myPost.timestamp)}</p>
@@ -71,43 +72,6 @@ class HPUserProfile extends React.Component {
               </div>
             }
 
-
-            {/*
-            <div className="pprPost">
-              <p>Had a great day! I went to the snow, and then my family went to the snow, and then my family went to the snow, and then my family went to the snow!</p>
-              <div className="pprPostBottom">
-                <div>
-                  <ThumbUp />
-                  <p>1</p>
-                </div>
-                <p className="pprPostTimestamp">{parseDate(0)}</p>
-              </div>
-            </div>
-            <div className="pprPost">
-              <p>Today sucked.</p>
-              <div className="pprPostBottom">
-                <div>
-                  <ThumbUpFilled />
-                  <p>3</p>
-                </div>
-                <p className="pprPostTimestamp">{parseDate(0)}</p>
-              </div>
-            </div>
-            <div className="pprPost"><p>Today sucked.</p><div className="pprPostBottom"><div><ThumbUpFilled /><p>3</p></div><p className="pprPostTimestamp">{parseDate(0)}</p></div></div>
-            <div className="pprPost"><p>Today sucked.</p><div className="pprPostBottom"><div><ThumbUpFilled /><p>3</p></div><p className="pprPostTimestamp">{parseDate(0)}</p></div></div>
-            <div className="pprPost"><p>Today sucked.</p><div className="pprPostBottom"><div><ThumbUpFilled /><p>3</p></div><p className="pprPostTimestamp">{parseDate(0)}</p></div></div>
-            <div className="pprPost"><p>Today sucked.</p><div className="pprPostBottom"><div><ThumbUpFilled /><p>3</p></div><p className="pprPostTimestamp">{parseDate(0)}</p></div></div>
-            <div className="pprPost"><p>Today sucked.</p><div className="pprPostBottom"><div><ThumbUpFilled /><p>3</p></div><p className="pprPostTimestamp">{parseDate(0)}</p></div></div>
-            <div className="pprPost"><p>Today sucked.</p><div className="pprPostBottom"><div><ThumbUpFilled /><p>3</p></div><p className="pprPostTimestamp">{parseDate(0)}</p></div></div>
-            <div className="pprPost"><p>Today sucked.</p><div className="pprPostBottom"><div><ThumbUpFilled /><p>3</p></div><p className="pprPostTimestamp">{parseDate(0)}</p></div></div>
-            <div className="pprPost"><p>Today sucked.</p><div className="pprPostBottom"><div><ThumbUpFilled /><p>3</p></div><p className="pprPostTimestamp">{parseDate(0)}</p></div></div>
-            <div className="pprPost"><p>Today sucked.</p><div className="pprPostBottom"><div><ThumbUpFilled /><p>3</p></div><p className="pprPostTimestamp">{parseDate(0)}</p></div></div>
-            <div className="pprPost"><p>Today sucked.</p><div className="pprPostBottom"><div><ThumbUpFilled /><p>3</p></div><p className="pprPostTimestamp">{parseDate(0)}</p></div></div>
-            <div className="pprPost"><p>Today sucked.</p><div className="pprPostBottom"><div><ThumbUpFilled /><p>3</p></div><p className="pprPostTimestamp">{parseDate(0)}</p></div></div>
-            <div className="pprPost"><p>Today sucked.</p><div className="pprPostBottom"><div><ThumbUpFilled /><p>3</p></div><p className="pprPostTimestamp">{parseDate(0)}</p></div></div>
-            <div className="pprPost"><p>Today sucked.</p><div className="pprPostBottom"><div><ThumbUpFilled /><p>3</p></div><p className="pprPostTimestamp">{parseDate(0)}</p></div></div>
-            <div className="pprPost"><p>Today sucked.</p><div className="pprPostBottom"><div><ThumbUpFilled /><p>3</p></div><p className="pprPostTimestamp">{parseDate(0)}</p></div></div>
-            <div className="pprPost"><p>Today sucked.</p><div className="pprPostBottom"><div><ThumbUpFilled /><p>3</p></div><p className="pprPostTimestamp">{parseDate(0)}</p></div></div>
             {/*
               <div key="id_no_posts" style={{display: "table", width: "100%", height: "100%"}}>
                 <h1 style={{position: "relative", display: "table-cell", margin: "0", textAlign: "center", verticalAlign: "middle", color: "#fff5", fontSize: "16px"}}>No posts</h1>

@@ -7,6 +7,7 @@ export const appSlice = createSlice({
     email: "",
     picture: "",
     status: null,
+    posts: {0: {message: "Today sucked.", likes: 10, timestamp: 0}, 12: {message: "Today was great!", likes: 0, timestamp: 700350}},
 
     dmsOrGroups: "",
     hideRightPanel: true,

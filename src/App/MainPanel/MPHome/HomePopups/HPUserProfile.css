@@ -111,7 +111,7 @@
   gap: 5px;
 }
 
-.pprPostBottom svg {
+.pprPostThumbUp {
   width: 20px;
   height: 20px;
   fill: #bbb;
@@ -119,12 +119,13 @@
   transition: transform .1s, fill .1s;
 }
 
-.pprPostBottom svg:hover {
+.pprPostThumbUp:hover {
   transform: scale(1.05);
   cursor: pointer;
   fill: white;
 }
-.pprPostBottom svg:active {
+
+.pprPostThumbUp:active {
   transform: scale(.95);
   fill: #fff8;
 }
