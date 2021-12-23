@@ -483,7 +483,7 @@ class MPGroups extends React.Component {
             {this.state.messages}
           </div>
           {this.state.messages.length > 0 ? null : <h1 className="groupsNoMessageText">No messages.<br/>Try sending one!</h1>}
-          <TextareaAutosize value={this.state.inputValue} onChange={this.handleInputChange} onKeyPress={this.inputEnterPressed} placeholder="Type message here" className="groupsMessagesInput" maxLength="2000" ref={this.inputRef} />
+          <TextareaAutosize value={this.state.inputValue} onChange={this.handleInputChange} onKeyPress={this.inputEnterPressed} placeholder="Type message here" className="groupsMessagesInput" maxLength={1000} ref={this.inputRef} />
         </Fragment>
       );
     }

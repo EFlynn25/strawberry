@@ -1,12 +1,13 @@
 import React, { Fragment } from 'react';
-import TextareaAutosize from 'react-autosize-textarea';
 import ReactMarkdown from 'react-markdown';
 import { connect } from 'react-redux';
+import Loader from "react-loader-spinner";
 
 import './HPUserProfile.css';
 import { ReactComponent as ThumbUp } from '../../../../assets/icons/thumb_up.svg';
 import { ReactComponent as ThumbUpFilled } from '../../../../assets/icons/thumb_up_filled.svg';
 import { get_posts, like_post } from '../../../../socket.js';
+import { addLoadingPosts } from '../../../../redux/peopleReducer.js';
 import { getUser } from '../../../../GlobalComponents/getUser.js';
 import { parseDate } from '../../../../GlobalComponents/parseDate.js';
 
@@ -16,8 +17,8 @@ class HPUserProfile extends React.Component {
 
     this.postListRef = React.createRef()
 
-    this.loadMorePosts = this.loadMorePosts.bind(this);
     this.handleScroll = this.handleScroll.bind(this);
+    this.loadMorePosts = this.loadMorePosts.bind(this);
   }
 
   componentDidMount() {
@@ -34,14 +35,18 @@ class HPUserProfile extends React.Component {
   }
 
   loadMorePosts() {
-    const myPerson = getUser(this.props.email);
-    if (myPerson.posts != null && myPerson.posts.length > 0) {
-      const containsFirstPost = myPerson.posts.some(item => item.post_id == myPerson.firstPost);
-      if (!containsFirstPost) {
-        get_posts(this.props.email, 5, myPerson.posts.length)
+    if (!this.props.loadingPosts.includes(this.props.email)) {
+      const myPerson = getUser(this.props.email);
+      if (myPerson.posts != null && myPerson.posts.length > 0) {
+        const containsFirstPost = myPerson.posts.some(item => item.post_id == myPerson.firstPost);
+        if (!containsFirstPost) {
+          this.props.addLoadingPosts({email: this.props.email, data: true})
+          get_posts(this.props.email, 10, myPerson.posts.length)
+        }
+      } else {
+        this.props.addLoadingPosts({email: this.props.email, data: true})
+        get_posts(this.props.email, 10, 0)
       }
-    } else {
-      get_posts(this.props.email, 5, 0)
     }
   }
 
@@ -70,6 +75,10 @@ class HPUserProfile extends React.Component {
       postStatus = "Retrieving posts..."
     }
 
+    if (this.postListRef.current != null && this.postListRef.current.scrollHeight == this.postListRef.current.clientHeight) {
+      // setTimeout(() => this.loadMorePosts(), 1000)
+    }
+
     return (
       <div className="HPUserProfile">
         <div className="ppLeft">
@@ -79,8 +88,12 @@ class HPUserProfile extends React.Component {
           { online ? <div className="pplOnline"></div> : null }
         </div>
         <div className="ppRight">
+          <h3>Posts</h3>
+          { this.props.loadingPosts.includes(this.props.email) ?
+            <Loader className="pprPostLoading" type="Oval" color="var(--accent-color)" height={25} width={25} />
+            : null
+          }
           <div className="pprPostList" ref={this.postListRef} onScroll={this.handleScroll}>
-            <h3>Posts</h3>
 
             { postsExist ?
               posts.map((item) => {
@@ -107,10 +120,9 @@ class HPUserProfile extends React.Component {
               : null
             }
 
-
             {
               postsExist ? null :
-              <div key="id_no_posts" style={{display: "table", flex: "1"}}>
+              <div key="id_no_posts" style={{display: "table", width: "100%", height: "100%"}}>
                 <h1 style={{display: "table-cell", textAlign: "center", verticalAlign: "middle", color: "#fff5", fontSize: "16px"}}>{postStatus}</h1>
               </div>
             }
@@ -129,7 +141,12 @@ class HPUserProfile extends React.Component {
 
 const mapStateToProps = (state) => ({
   knownPeople: state.people.knownPeople,
+  loadingPosts: state.people.loadingPosts,
   likedPosts: state.app.likedPosts
 });
 
-export default connect(mapStateToProps, null)(HPUserProfile);
+const mapDispatchToProps = {
+  addLoadingPosts
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(HPUserProfile);

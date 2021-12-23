@@ -9,7 +9,9 @@ export const appSlice = createSlice({
     status: null,
     // posts: [{post_id: 0, message: "Today sucked.", likes: 10, timestamp: 0}, {post_id: 12, message: "Today was great!", likes: 0, timestamp: 700350}],
     posts: null,
+    firstPost: null,
     likedPosts: [],
+    loadingPosts: false,
 
     dmsOrGroups: "",
     hideRightPanel: true,
@@ -56,6 +58,9 @@ export const appSlice = createSlice({
         state.posts.push(action.payload);
       }
     },
+    setUserFirstPost: (state, action) => {
+      state.firstPost = action.payload;
+    },
     setUserLikedPost: (state, action) => {
       if (Array.isArray(action.payload["post_id"])) {
         action.payload["post_id"].forEach((item, i) => {
@@ -98,6 +103,9 @@ export const appSlice = createSlice({
         state.posts[postIndex].likes--;
       }
     },
+    setUserLoadingPosts: (state, action) => {
+      state.loadingPosts = action.payload;
+    },
     setdmsOrGroups: (state, action) => {
       state.dmsOrGroups = action.payload;
     },
@@ -138,7 +146,7 @@ export const appSlice = createSlice({
 });
 
 export const { setUserName, setUserEmail, setUserPicture, setUserStatus,
-  addUserPost, setUserLikedPost, setLikedPost,
+  addUserPost, setUserFirstPost, setUserLikedPost, setLikedPost, setUserLoadingPosts,
   setdmsOrGroups, sethideRightPanel,
   setdmsLoaded, setgroupsLoaded, setpeopleLoaded,
   setSocket, setMultipleTabs,

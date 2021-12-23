@@ -1,7 +1,7 @@
 import firebase from 'firebase/app';
 import { useDispatch } from 'react-redux'
-import { addUserPost, setLikedPost, setdmsLoaded, setgroupsLoaded, setpeopleLoaded, setSocket, setAnnouncement, setAnnouncementRead } from './redux/appReducer.js'
-import { setUserStatus, setMultipleTabs, setUserLikedPost } from './redux/appReducer.js'
+import { addUserPost, setUserFirstPost, setLikedPost, setdmsLoaded, setgroupsLoaded, setpeopleLoaded, setSocket, setAnnouncement, setAnnouncementRead } from './redux/appReducer.js'
+import { setUserStatus, setMultipleTabs, setUserLikedPost, setUserLoadingPosts } from './redux/appReducer.js'
 import { addChat, addChatMessage, addLoadedChatMessages, removeSendingChatMessage, setChatCreated, setChatLastRead, setChatTyping, setInChat, setLoadingMessages, addChatRequest, removeChatRequest
   // removeRequesting, addRequested, addRequestedMe
 } from './redux/dmsReducer.js'
@@ -12,7 +12,7 @@ import {
   addThreadRequest, removeThreadRequest,
   addRequested, removeRequested
 } from './redux/groupsReducer.js'
-import { addPerson, setpersonStatus, setpersonOnline, addpersonPost, setpersonLikedPost } from './redux/peopleReducer.js'
+import { addPerson, setpersonStatus, setpersonOnline, addpersonPost, setpersonLikedPost, addLoadingPosts } from './redux/peopleReducer.js'
 import mainStore from './redux/mainStore.js';
 import history from "./history";
 
@@ -75,11 +75,18 @@ export function startSocket() {
         }
       } else if (com == "get_posts") {
         if (jsonData.response == true) {
-          mainStore.dispatch(addpersonPost({email: jsonData.requested, post: jsonData.posts}));
+          if (jsonData.requested == myEmail) {
+            mainStore.dispatch(addUserPost(jsonData.posts));
+            mainStore.dispatch(setUserLoadingPosts(false));
+          } else {
+            mainStore.dispatch(addpersonPost({email: jsonData.requested, post: jsonData.posts}));
+            mainStore.dispatch(addLoadingPosts({email: jsonData.requested, data: false}));
+          }
         } else if (jsonData.response == "receive_post") {
           mainStore.dispatch(addpersonPost({email: jsonData.email, post: jsonData.post}));
         } else if (jsonData.response == "no_posts") {
           mainStore.dispatch(addpersonPost({email: jsonData.requested, post: []}));
+          mainStore.dispatch(addLoadingPosts({email: jsonData.requested, data: false}));
         }
       }
 
@@ -89,6 +96,7 @@ export function startSocket() {
       else if (com == "add_user") {
         mainStore.dispatch(setUserStatus(jsonData.status));
         mainStore.dispatch(addUserPost(jsonData.posts));
+        mainStore.dispatch(setUserFirstPost(jsonData.first_post));
         mainStore.dispatch(setUserLikedPost({post_id: jsonData.liked_posts, data: true}));
       } else if (com == "set_status") {
         if (jsonData.response == true) {

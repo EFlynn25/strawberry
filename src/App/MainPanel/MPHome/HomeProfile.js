@@ -2,14 +2,15 @@ import React from 'react';
 import TextareaAutosize from 'react-autosize-textarea';
 import ReactMarkdown from 'react-markdown';
 import { connect } from 'react-redux';
+import Loader from "react-loader-spinner";
 
 import './HomeProfile.css';
 import { ReactComponent as Edit } from '../../../assets/icons/edit.svg';
 import { ReactComponent as Close } from '../../../assets/icons/close.svg';
 import { ReactComponent as ThumbUp } from '../../../assets/icons/thumb_up.svg';
 import { ReactComponent as ThumbUpFilled } from '../../../assets/icons/thumb_up_filled.svg';
-import { set_status, add_post } from '../../../socket.js';
-import { addUserPost } from '../../../redux/appReducer.js';
+import { set_status, get_posts, add_post } from '../../../socket.js';
+import { setUserLoadingPosts } from '../../../redux/appReducer.js';
 import { parseDate } from '../../../GlobalComponents/parseDate.js';
 
 class HomeProfile extends React.Component {
@@ -23,9 +24,12 @@ class HomeProfile extends React.Component {
     };
 
     this.statusInputRef = React.createRef();
+    this.postListRef = React.createRef();
 
     this.handleInputChange = this.handleInputChange.bind(this);
     this.inputEnterPressed = this.inputEnterPressed.bind(this);
+    this.handleScroll = this.handleScroll.bind(this);
+    this.loadMorePosts = this.loadMorePosts.bind(this);
   }
 
   handleInputChange(event) {
@@ -51,10 +55,27 @@ class HomeProfile extends React.Component {
         }
         this.setState({editingStatus: false});
       } else if (event.target.getAttribute("class") == "hpPostInput") {
-        // this.props.addUserPost({id: 13, post: {"message": this.state.newPostVal, "likes": 0, "timestamp": 0}})
         add_post(this.state.newPostVal)
         this.setState({newPostVal: ''})
       }
+    }
+  }
+
+  handleScroll() {
+    if (this.postListRef.current.scrollTop == this.postListRef.current.scrollHeight - this.postListRef.current.clientHeight) {
+      this.loadMorePosts();
+    }
+  }
+
+  loadMorePosts() {
+    if (!this.props.loadingPosts) {
+
+      const containsFirstPost = this.props.posts.some(item => item.post_id == this.props.firstPost);
+      if (!containsFirstPost) {
+        this.props.setUserLoadingPosts({email: this.props.email, data: true})
+        get_posts(this.props.email, 5, this.props.posts.length)
+      }
+
     }
   }
 
@@ -79,6 +100,10 @@ class HomeProfile extends React.Component {
       posts.sort((a, b) => b.timestamp - a.timestamp);
     }
 
+    if (this.postListRef.current != null && this.postListRef.current.scrollHeight == this.postListRef.current.clientHeight) {
+      // this.loadMorePosts();
+    }
+
     return (
       <div className={this.props.classes}>
 
@@ -94,9 +119,13 @@ class HomeProfile extends React.Component {
             </div>
           </div>
           <div className="ppRight">
-            <div className="pprPostList">
-              <h3>Posts</h3>
-              <TextareaAutosize value={this.state.newPostVal} className="hpPostInput" onChange={this.handleInputChange} onKeyPress={this.inputEnterPressed} placeholder="Create post here" />
+            <h3>Posts</h3>
+            { this.props.loadingPosts ?
+              <Loader className="pprPostLoading" type="Oval" color="var(--accent-color)" height={25} width={25} />
+              : null
+            }
+            <div className="pprPostList" ref={this.postListRef} onScroll={this.handleScroll}>
+              <TextareaAutosize value={this.state.newPostVal} className="hpPostInput" onChange={this.handleInputChange} onKeyPress={this.inputEnterPressed} placeholder="Create post here" maxlength={1001} />
 
               { postsExist ?
                 posts.map((item) => {
@@ -116,12 +145,9 @@ class HomeProfile extends React.Component {
                 : null
               }
 
-
               {
                 postsExist ? null :
-                <div key="id_no_posts" style={{display: "table", width: "100%", height: "100%"}}>
-                  <h1 style={{position: "relative", display: "table-cell", margin: "0", textAlign: "center", verticalAlign: "middle", color: "#fff5", fontSize: "16px"}}>No posts</h1>
-                </div>
+                <h1 style={{position: "absolute", width: "70px", top: "calc(50% - 10px)", left: "calc(50% - 45px)", textAlign: "center", color: "#fff5", fontSize: "16px"}}>No posts</h1>
               }
 
               {/*
@@ -147,14 +173,17 @@ class HomeProfile extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
+  email: state.app.email,
   name: state.app.name,
   picture: state.app.picture,
   status: state.app.status,
   posts: state.app.posts,
+  loadingPosts: state.app.loadingPosts,
+  firstPost: state.app.firstPost,
 });
 
 const mapDispatchToProps = {
-  addUserPost
+  setUserLoadingPosts
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomeProfile);

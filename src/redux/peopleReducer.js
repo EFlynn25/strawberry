@@ -3,7 +3,8 @@ import { createSlice } from '@reduxjs/toolkit';
 export const peopleSlice = createSlice({
   name: 'people',
   initialState: {
-    knownPeople: {}
+    knownPeople: {},
+    loadingPosts: ["fireno656@yahoo.co"]
   },
   reducers: {
     addPerson: (state, action) => {
@@ -73,10 +74,22 @@ export const peopleSlice = createSlice({
         }
       }
     },
+    addLoadingPosts: (state, action) => {
+      if (action.payload["data"]) {
+        if (!state.loadingPosts.includes(action.payload["email"])) {
+          state.loadingPosts.push(action.payload["email"]);
+        }
+      } else {
+        let index = state.loadingPosts.indexOf(action.payload["email"]);
+        if (index > -1) {
+          state.loadingPosts.splice(index, 1);
+        }
+      }
+    },
   },
 });
 
-export const { addPerson, setpersonName, setpersonPicture, setpersonStatus, setpersonOnline, addpersonPost, setpersonLikedPost } = peopleSlice.actions;
+export const { addPerson, setpersonName, setpersonPicture, setpersonStatus, setpersonOnline, addpersonPost, setpersonLikedPost, addLoadingPosts } = peopleSlice.actions;
 
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of
