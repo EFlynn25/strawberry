@@ -1,5 +1,6 @@
 import React from 'react';
 import TextareaAutosize from 'react-autosize-textarea';
+import ReactMarkdown from 'react-markdown';
 import { connect } from 'react-redux';
 
 import './HomeProfile.css';
@@ -7,7 +8,8 @@ import { ReactComponent as Edit } from '../../../assets/icons/edit.svg';
 import { ReactComponent as Close } from '../../../assets/icons/close.svg';
 import { ReactComponent as ThumbUp } from '../../../assets/icons/thumb_up.svg';
 import { ReactComponent as ThumbUpFilled } from '../../../assets/icons/thumb_up_filled.svg';
-import { set_status } from '../../../socket.js';
+import { set_status, add_post } from '../../../socket.js';
+import { addUserPost } from '../../../redux/appReducer.js';
 import { parseDate } from '../../../GlobalComponents/parseDate.js';
 
 class HomeProfile extends React.Component {
@@ -37,8 +39,9 @@ class HomeProfile extends React.Component {
   }
 
   inputEnterPressed(event) {
+    console.log(event)
     var code = event.keyCode || event.which;
-    if (code === 13) {
+    if (code === 13 && !event.shiftKey) {
       event.preventDefault();
       event.stopPropagation();
 
@@ -48,8 +51,9 @@ class HomeProfile extends React.Component {
         }
         this.setState({editingStatus: false});
       } else if (event.target.getAttribute("class") == "hpPostInput") {
+        // this.props.addUserPost({id: 13, post: {"message": this.state.newPostVal, "likes": 0, "timestamp": 0}})
+        add_post(this.state.newPostVal)
         this.setState({newPostVal: ''})
-        //   <--- Add post here
       }
     }
   }
@@ -68,11 +72,11 @@ class HomeProfile extends React.Component {
       picture = splitPic + "=s150";
     }
 
-    const posts = this.props.posts;
-    let postsExist = posts != null && Object.keys(posts).length > 0 ? true : false;
+    const posts = JSON.parse(JSON.stringify(this.props.posts));
+    let postsExist = posts != null && posts.length > 0 ? true : false;
     let orderedPostList;
     if (postsExist) {
-      orderedPostList = Object.keys(posts).sort((a, b) => b - a);
+      posts.sort((a, b) => b.timestamp - a.timestamp);
     }
 
     return (
@@ -94,18 +98,17 @@ class HomeProfile extends React.Component {
               <h3>Posts</h3>
               <TextareaAutosize value={this.state.newPostVal} className="hpPostInput" onChange={this.handleInputChange} onKeyPress={this.inputEnterPressed} placeholder="Create post here" />
 
-              { orderedPostList ?
-                orderedPostList.map((item) => {
-                  const myPost = posts[item];
+              { postsExist ?
+                posts.map((item) => {
                   return (
-                    <div className="pprPost">
-                      <p>{myPost.message}</p>
+                    <div className="pprPost" key={item.post_id}>
+                      <ReactMarkdown>{item.message}</ReactMarkdown>
                       <div className="pprPostBottom">
                         <div>
                           <ThumbUp className="hpPostThumbUp" />
-                          <p>{myPost.likes}</p>
+                          <p>{item.likes}</p>
                         </div>
-                        <p className="pprPostTimestamp">{parseDate(myPost.timestamp)}</p>
+                        <p className="pprPostTimestamp">{parseDate(item.timestamp)}</p>
                       </div>
                     </div>
                   )
@@ -150,4 +153,8 @@ const mapStateToProps = (state) => ({
   posts: state.app.posts,
 });
 
-export default connect(mapStateToProps, null)(HomeProfile);
+const mapDispatchToProps = {
+  addUserPost
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomeProfile);

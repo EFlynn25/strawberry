@@ -7,7 +7,9 @@ export const appSlice = createSlice({
     email: "",
     picture: "",
     status: null,
-    posts: {0: {message: "Today sucked.", likes: 10, timestamp: 0}, 12: {message: "Today was great!", likes: 0, timestamp: 700350}},
+    // posts: [{post_id: 0, message: "Today sucked.", likes: 10, timestamp: 0}, {post_id: 12, message: "Today was great!", likes: 0, timestamp: 700350}],
+    posts: null,
+    likedPosts: [],
 
     dmsOrGroups: "",
     hideRightPanel: true,
@@ -39,6 +41,62 @@ export const appSlice = createSlice({
     },
     setUserStatus: (state, action) => {
       state.status = action.payload;
+    },
+    addUserPost: (state, action) => {
+      if (state.posts == null) {
+        state.posts = []
+      }
+      if (Array.isArray(action.payload)) {
+        action.payload.forEach((item, i) => {
+          delete item.email
+          state.posts.push(item);
+        });
+      } else {
+        delete action.payload.email
+        state.posts.push(action.payload);
+      }
+    },
+    setUserLikedPost: (state, action) => {
+      if (Array.isArray(action.payload["post_id"])) {
+        action.payload["post_id"].forEach((item, i) => {
+          if (action.payload["data"]) {
+            state.likedPosts.push(item);
+          } else {
+            // state.likedPosts.remove(item);
+
+            let index = state.likedPosts.indexOf(item);
+            if (index > -1) {
+              state.likedPosts.splice(index, 1);
+            }
+          }
+        });
+      } else {
+        if (action.payload["data"]) {
+          state.likedPosts.push(action.payload["post_id"]);
+        } else {
+          // state.likedPosts.remove(action.payload["post_id"]);
+
+          let index = state.likedPosts.indexOf(action.payload["post_id"]);
+          if (index > -1) {
+            state.likedPosts.splice(index, 1);
+          }
+        }
+      }
+    },
+    setLikedPost: (state, action) => {
+      let postIndex;
+      state.posts.some((post_item, i) => {
+        if (post_item.post_id == action.payload["post_id"]) {
+          postIndex = i;
+          return true;
+        }
+      });
+
+      if (action.payload["data"]) {
+        state.posts[postIndex].likes++;
+      } else {
+        state.posts[postIndex].likes--;
+      }
     },
     setdmsOrGroups: (state, action) => {
       state.dmsOrGroups = action.payload;
@@ -80,6 +138,7 @@ export const appSlice = createSlice({
 });
 
 export const { setUserName, setUserEmail, setUserPicture, setUserStatus,
+  addUserPost, setUserLikedPost, setLikedPost,
   setdmsOrGroups, sethideRightPanel,
   setdmsLoaded, setgroupsLoaded, setpeopleLoaded,
   setSocket, setMultipleTabs,

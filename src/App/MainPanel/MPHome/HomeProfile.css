@@ -114,6 +114,7 @@
 
 .hpPostInput {
   width: calc(100% - 30px);
+  min-height: 20px;
   max-height: 120px;
   padding: 15px;
 

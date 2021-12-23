@@ -1,7 +1,7 @@
 import firebase from 'firebase/app';
 import { useDispatch } from 'react-redux'
-import { setdmsLoaded, setgroupsLoaded, setpeopleLoaded, setSocket, setAnnouncement, setAnnouncementRead } from './redux/appReducer.js'
-import { setUserStatus, setMultipleTabs } from './redux/appReducer.js'
+import { addUserPost, setLikedPost, setdmsLoaded, setgroupsLoaded, setpeopleLoaded, setSocket, setAnnouncement, setAnnouncementRead } from './redux/appReducer.js'
+import { setUserStatus, setMultipleTabs, setUserLikedPost } from './redux/appReducer.js'
 import { addChat, addChatMessage, addLoadedChatMessages, removeSendingChatMessage, setChatCreated, setChatLastRead, setChatTyping, setInChat, setLoadingMessages, addChatRequest, removeChatRequest
   // removeRequesting, addRequested, addRequestedMe
 } from './redux/dmsReducer.js'
@@ -12,7 +12,7 @@ import {
   addThreadRequest, removeThreadRequest,
   addRequested, removeRequested
 } from './redux/groupsReducer.js'
-import { addPerson, setpersonStatus, setpersonOnline } from './redux/peopleReducer.js'
+import { addPerson, setpersonStatus, setpersonOnline, addpersonPost, setpersonLikedPost } from './redux/peopleReducer.js'
 import mainStore from './redux/mainStore.js';
 import history from "./history";
 
@@ -49,7 +49,7 @@ export function startSocket() {
 
       /* Get functions */
       else if (com == "get_user_info") {
-        mainStore.dispatch(addPerson({"email": jsonData.email, "name": jsonData.name, "picture": jsonData.picture, "status": jsonData.status}));
+        mainStore.dispatch(addPerson({"email": jsonData.email, "name": jsonData.name, "picture": jsonData.picture, "status": jsonData.status, "first_post": jsonData.first_post}));
         get_online(jsonData.email);
       } else if (com == "get_announcements") {
         if (jsonData.response == true || jsonData.response == "receive_new_announcement") {
@@ -70,13 +70,16 @@ export function startSocket() {
       } else if (com == "get_online") {
         if (jsonData.response == true) {
           Object.keys(jsonData.online).forEach((item, i) => {
-            // if (jsonData.online[item]) {
-            //   console.log(i + ": " + item + " is online!")
-            // } else {
-            //   console.log(i + ": " + item + " is offline...")
-            // }
             mainStore.dispatch(setpersonOnline({email: item, online: jsonData.online[item]}));
           });
+        }
+      } else if (com == "get_posts") {
+        if (jsonData.response == true) {
+          mainStore.dispatch(addpersonPost({email: jsonData.requested, post: jsonData.posts}));
+        } else if (jsonData.response == "receive_post") {
+          mainStore.dispatch(addpersonPost({email: jsonData.email, post: jsonData.post}));
+        } else if (jsonData.response == "no_posts") {
+          mainStore.dispatch(addpersonPost({email: jsonData.requested, post: []}));
         }
       }
 
@@ -85,6 +88,8 @@ export function startSocket() {
 
       else if (com == "add_user") {
         mainStore.dispatch(setUserStatus(jsonData.status));
+        mainStore.dispatch(addUserPost(jsonData.posts));
+        mainStore.dispatch(setUserLikedPost({post_id: jsonData.liked_posts, data: true}));
       } else if (com == "set_status") {
         if (jsonData.response == true) {
           mainStore.dispatch(setUserStatus(jsonData.status));
@@ -98,6 +103,22 @@ export function startSocket() {
               mainStore.dispatch(setAnnouncementRead(id));
             }
           });
+        }
+      } else if (com == "add_post") {
+        if (jsonData.response == true) {
+          mainStore.dispatch(addUserPost(jsonData.post));
+        }
+      } else if (com == "like_post") {
+        if (jsonData.response == true) {
+          mainStore.dispatch(setpersonLikedPost({post_id: jsonData.post_id, data: jsonData.data}));
+          mainStore.dispatch(setUserLikedPost({post_id: jsonData.post_id, data: jsonData.data}));
+        } else if (jsonData.response == "receive_post_like") {
+          const myPosts = mainStore.getState().app.posts;
+          if (myPosts.some(item => item.post_id == jsonData.post_id)) {
+            mainStore.dispatch(setLikedPost({post_id: jsonData.post_id, data: jsonData.data}));
+          } else {
+            mainStore.dispatch(setpersonLikedPost({post_id: jsonData.post_id, data: jsonData.data}));
+          }
         }
       }
 
@@ -480,6 +501,11 @@ export function get_online(requested) {
   send_websocket_message(jsonObj);
 }
 
+export function get_posts(requested, amount, already_have) {
+  var jsonObj = {"product": "app", "command": "get_posts", "requested": requested, "amount": amount, "already_have": already_have}
+  send_websocket_message(jsonObj);
+}
+
 // Set functions
 
 export function add_user(idToken) {
@@ -489,6 +515,16 @@ export function add_user(idToken) {
 
 export function set_status(status) {
   var jsonObj = {"product": "app", "command": "set_status", "status": status}
+  send_websocket_message(jsonObj);
+}
+
+export function add_post(message) {
+  var jsonObj = {"product": "app", "command": "add_post", "message": message}
+  send_websocket_message(jsonObj);
+}
+
+export function like_post(post_id, data) {
+  var jsonObj = {"product": "app", "command": "like_post", "post_id": post_id, "data": data}
   send_websocket_message(jsonObj);
 }
 

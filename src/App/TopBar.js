@@ -21,8 +21,6 @@ class TopBar extends React.Component {
 
   componentDidUpdate() {
     this.reloadClasses();
-
-    console.log(window.location.href.startsWith("http://localhost"))
   }
 
   reloadClasses() {

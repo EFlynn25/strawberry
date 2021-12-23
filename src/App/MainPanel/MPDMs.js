@@ -66,7 +66,6 @@ class MPDMs extends React.Component {
 
       this.loadMoreMessages();
     }
-    // console.log(logtext + " | shouldScroll " + this.shouldScroll);
   }
 
   scrollToBottom() {
