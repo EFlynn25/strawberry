@@ -16,12 +16,12 @@ import { addPerson, setpersonStatus, setpersonOnline, addpersonPost, setpersonLi
 import mainStore from './redux/mainStore.js';
 import history from "./history";
 
-// import textToneAudio from './assets/audio/text-tone.mp3';
+import defaultTextTone from './assets/audio/text-tone/default.wav';
 
 // Socket start
 
 let socket = null;
-// const textTone = new Audio(textToneAudio);
+const textTone = new Audio(defaultTextTone);
 
 export function startSocket() {
   // socket = new WebSocket('wss://strawberry.neonblacknetwork.com:2096');
@@ -169,9 +169,9 @@ export function startSocket() {
             const dmsOrGroups = mainStore.getState().app.dmsOrGroups;
             console.log(openedDM);
             console.log(dmsOrGroups);
-            if (openedDM != jsonData.chat || dmsOrGroups != "dms") {
+            if (openedDM != jsonData.chat || dmsOrGroups != "dms" || !document.hasFocus()) {
               console.log("NOTIFY NOW!!");
-              // textTone.play();
+              textTone.play();
             }
         } else if (jsonData.response == "no_messages") {
           dms_get_chat_created(jsonData.chat);
@@ -308,8 +308,8 @@ export function startSocket() {
 
             const openedThread = mainStore.getState().groups.openedThread;
             const dmsOrGroups = mainStore.getState().app.dmsOrGroups;
-            if (openedThread != jsonData.thread_id || dmsOrGroups != "groups") {
-              // textTone.play();
+            if (openedThread != jsonData.thread_id || dmsOrGroups != "groups" || !document.hasFocus()) {
+              textTone.play();
             }
         } else if (jsonData.response == "no_messages") {
           dms_get_thread_created(jsonData.thread_id);
