@@ -67,15 +67,14 @@ class MainPanel extends React.Component {
           <Route path="/dms/:chatEmail" component={MPDMs} />
           <Route path="/dms">
             <div style={{display: "table", width: "100%", height: "100%"}}>
-              <h1 style={{position: "relative", display: "table-cell", margin: "0", textAlign: "center", verticalAlign: "middle", color: "#fff5", fontSize: "20px"}}>Welcome to Strawberry DMs</h1>
+              <h1 style={{position: "relative", display: "table-cell", margin: "0", textAlign: "center", verticalAlign: "middle", color: "#fff5", fontSize: "20px", userSelect: "none"}}>Welcome to Strawberry DMs</h1>
             </div>
           </Route>
           <Route path="/groups/:threadID" render={routeProps => (<MPGroups opendialog={this.openPanel} {...routeProps} />)} />
           <Route path="/groups">
             <div style={{display: "table", width: "100%", height: "100%"}}>
-              <h1 style={{position: "relative", display: "table-cell", margin: "0", textAlign: "center", verticalAlign: "middle", color: "#fff5", fontSize: "20px"}}>
+              <h1 style={{position: "relative", display: "table-cell", margin: "0", textAlign: "center", verticalAlign: "middle", color: "#fff5", fontSize: "20px", userSelect: "none"}}>
                 Welcome to Strawberry Groups
-                {/*<h1 style={{fontSize: "18px", color: "#fff3"}}>(not yet functional)</h1>*/}
               </h1>
             </div>
           </Route>

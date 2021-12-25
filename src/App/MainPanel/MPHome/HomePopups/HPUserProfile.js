@@ -123,7 +123,7 @@ class HPUserProfile extends React.Component {
             {
               postsExist ? null :
               <div key="id_no_posts" style={{display: "table", width: "100%", height: "100%"}}>
-                <h1 style={{display: "table-cell", textAlign: "center", verticalAlign: "middle", color: "#fff5", fontSize: "16px"}}>{postStatus}</h1>
+                <h1 style={{display: "table-cell", textAlign: "center", verticalAlign: "middle", color: "#fff5", fontSize: "16px", userSelect: "none"}}>{postStatus}</h1>
               </div>
             }
 

@@ -125,4 +125,6 @@
   outline: none;
   border: none;
   resize: none;
+  
+  user-select: none;
 }

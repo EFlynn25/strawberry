@@ -4,6 +4,8 @@
   width: 40px;
   height: 40px;
   border-radius: 20px;
+
+  user-select: none;
 }
 
 .defaultMessageName {
@@ -11,7 +13,7 @@
   height: 20px;
   left: 50px;
   top: 0;
-  
+
 
   font-style: normal;
   font-weight: 500;
@@ -31,7 +33,7 @@
 
 .defaultMessageText {
   position: relative;
-  
+
   left: -5px;
   margin-bottom: 3px;
 
@@ -62,7 +64,7 @@
   width: 65px;
   right: -65px;
   bottom: 1px;
-  
+
 
   font-style: normal;
   font-weight: 500;
@@ -79,7 +81,7 @@
   height: 20px;
   bottom: 0;
   left: 50px;
-  
+
 
   font-style: normal;
   font-weight: 400;
@@ -96,7 +98,6 @@
 .defaultLastRead {
   position: absolute;
   right: -40px;
-  /* bottom: -5px; */
   top: calc(50% - 15px);
   width: 30px;
   height: 30px;
@@ -106,6 +107,8 @@
 
   transition: opacity .1s, transform .1s;
   opacity: 1;
+
+  user-select: none;
 }
 
 .defaultInChat {
@@ -118,6 +121,8 @@
 
   transition: filter .5s, opacity .1s, transform .1s;
   opacity: 1;
+  
+  user-select: none;
 }
 
 .defaultInChatGone {

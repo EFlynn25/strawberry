@@ -140,7 +140,7 @@ class HomeNotifications extends React.Component {
 
         { dmsRequestsExist || groupsRequestsExist || notReadWelcome ? null :
           <div style={{display: "table", width: "100%", height: "100%"}}>
-            <h1 style={{position: "relative", display: "table-cell", margin: "0", textAlign: "center", verticalAlign: "middle", color: "#fff5", fontSize: "16px"}}>No notifications</h1>
+            <h1 style={{position: "relative", display: "table-cell", margin: "0", textAlign: "center", verticalAlign: "middle", color: "#fff5", fontSize: "16px", userSelect: "none"}}>No notifications</h1>
           </div>
         }
 

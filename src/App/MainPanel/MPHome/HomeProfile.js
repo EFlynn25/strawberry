@@ -147,25 +147,12 @@ class HomeProfile extends React.Component {
 
               {
                 postsExist ? null :
-                <h1 style={{position: "absolute", width: "70px", top: "calc(50% - 10px)", left: "calc(50% - 45px)", textAlign: "center", color: "#fff5", fontSize: "16px"}}>No posts</h1>
+                <h1 style={{position: "absolute", width: "70px", top: "calc(50% - 10px)", left: "calc(50% - 45px)", textAlign: "center", color: "#fff5", fontSize: "16px", userSelect: "none"}}>No posts</h1>
               }
-
-              {/*
-                <div key="id_no_posts" style={{display: "table", width: "100%", height: "100%"}}>
-                  <h1 style={{position: "relative", display: "table-cell", margin: "0", textAlign: "center", verticalAlign: "middle", color: "#fff5", fontSize: "16px"}}>No posts</h1>
-                </div>
-              */}
             </div>
           </div>
         </div>
-
-
-
-        {/*
-          <div style={{display: "table", width: "100%", height: "100%"}}>
-            <h1 style={{position: "relative", display: "table-cell", margin: "0", textAlign: "center", verticalAlign: "middle", color: "#fff5", fontSize: "16px"}}>No profile</h1>
-          </div>
-        */}
+        
 
       </div>
     );

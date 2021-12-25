@@ -18,6 +18,8 @@
   height: 150px;
   border-radius: 150px;
   margin-bottom: 5px;
+
+  user-select: none;
 }
 
 .pplName {
@@ -29,6 +31,7 @@
 
 .pplStatus {
   margin-top: 5px;
+
   color: #888;
   font-size: 16px;
   font-style: italic;
@@ -67,6 +70,8 @@
   height: 25px;
   line-height: 25px;
   margin-bottom: 20px;
+
+  user-select: none;
 }
 
 .pprPostLoading {
@@ -80,7 +85,7 @@
 /* ...posts */
 
 .pprPostList {
-  position: relative;  
+  position: relative;
   width: 100%;
   height: calc(100% - 45px);
   padding-right: 20px;
@@ -152,7 +157,7 @@
   fill: #fff8;
 }
 
-.pprPostBottom p {
+.pprPostBottom div p {
   color: #bbb;
   user-select: none;
 }

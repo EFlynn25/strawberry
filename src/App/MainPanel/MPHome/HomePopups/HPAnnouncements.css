@@ -36,6 +36,7 @@
 
 .announcementsTitle {
   margin-top: 10px;
+  user-select: none;
 }
 
 .alActions {
@@ -102,9 +103,8 @@
   margin-bottom: 20px;
 
   border-radius: 15px;
-  background: #0002;
-
   transition: transform .1s, background .1s;
+  background: #0002;
 }
 
 .aliDiv:hover {
@@ -119,6 +119,7 @@
 
 .aliTitle {
   font-size: 24px;
+  user-select: none;
 }
 
 .aliPreview {
@@ -132,6 +133,7 @@
   -webkit-box-orient: vertical;
 
   color: #bbb;
+  user-select: none;
 }
 
 .aliPreview p {
@@ -145,6 +147,7 @@
   text-align: right;
 
   color: #bbb;
+  user-select: none;
 }
 
 
