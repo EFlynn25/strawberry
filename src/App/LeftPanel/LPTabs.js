@@ -44,16 +44,20 @@ class LPTabs extends React.Component {
     const dmsUnread = Object.keys(this.props.chats).some((item) => {
       const myChat = this.props.chats[item];
       const myChatMessages = myChat.messages;
-      if (myChatMessages != null && myChatMessages.length > 0 && myChat.lastRead.me < myChatMessages[myChatMessages.length - 1].id || myChat.lastRead.me == null) {
-        return true;
+      if (myChatMessages != null && myChatMessages.length > 0) {
+        if (myChat.lastRead.me < myChatMessages[myChatMessages.length - 1].id || myChat.lastRead.me == null) {
+          return true;
+        }
       }
     });
 
     const groupsUnread = Object.keys(this.props.threads).some((item) => {
       const myThread = this.props.threads[item];
       const myThreadMessages = myThread.messages;
-      if (myThreadMessages != null && myThreadMessages.length > 0 && myThread.lastRead[this.props.email] < myThreadMessages[myThreadMessages.length - 1].id || myThread.lastRead[this.props.email] == null) {
-        return true;
+      if (myThreadMessages != null && myThreadMessages.length > 0) {
+        if (myThread.lastRead[this.props.email] < myThreadMessages[myThreadMessages.length - 1].id || myThread.lastRead[this.props.email] == null) {
+          return true;
+        }
       }
     });
 
