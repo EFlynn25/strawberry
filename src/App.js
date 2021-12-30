@@ -16,13 +16,17 @@ import Overlay from './App/Overlay';
 import TopBar from './App/TopBar';
 import LeftPanel from './App/LeftPanel';
 import MainPanel from './App/MainPanel';
+import { ReactComponent as Menu } from './assets/icons/menu.svg';
+import { ReactComponent as Close } from './assets/icons/close.svg';
 import { startSocket, add_user } from './socket.js';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      pageLoaded: false
+      pageLoaded: false,
+      showLeftPanel: false,
+      showCloseButton: false
     };
   }
 
@@ -61,6 +65,10 @@ class App extends React.Component {
     }
   }
 
+  // setCloseButton() {
+  //
+  // }
+
   render() {
     var myTitle = "";
     var tnc = 0;
@@ -85,6 +93,12 @@ class App extends React.Component {
 
     return (
       <div className="App">
+
+        <div className="appHamburgerIcon" onClick={() => {this.setState({showLeftPanel: true})}} style={this.state.showCloseButton ? {width: "54px"} : null}>
+          <Menu />
+          {this.state.showCloseButton ? <Close /> : null}
+        </div>
+
         <Switch>
           <Route path="/welcome">
             <Overlay type="welcome" />
@@ -94,8 +108,8 @@ class App extends React.Component {
 
               <Fragment>
                 <TopBar />
-                <LeftPanel />
-                <MainPanel />
+                <LeftPanel showLeftPanel={this.state.showLeftPanel} hideLeftPanel={() => {this.setState({showLeftPanel: false})}} />
+                <MainPanel setCloseButton={(value) => {this.setState({showCloseButton: value})}} />
               </Fragment>
 
               :

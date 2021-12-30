@@ -1,16 +1,14 @@
 .MainPanel {
   position: absolute;
-  left: 20%;
   left: 300px;
   top: 50px;
-  width: 60%;
-  /* width: calc(100% - 600px); */
   width: calc(100% - 300px);
   height: calc(100% - 50px);
   background: #18191B;
   background: #131416;
 
   transition: transform .3s;
+  /* overflow: hidden; */
 }
 
 .MainPanelTransition {
@@ -20,4 +18,15 @@
 
 .MainPanelShrink {
   transform: scale(.9);
+}
+
+
+
+/* RESPONSIVE DESIGN */
+
+@media screen and (max-width: 880px) {
+  .MainPanel {
+    left: 0;
+    width: 100%;
+  }
 }

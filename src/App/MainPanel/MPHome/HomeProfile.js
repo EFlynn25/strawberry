@@ -125,7 +125,7 @@ class HomeProfile extends React.Component {
               : null
             }
             <div className="pprPostList" ref={this.postListRef} onScroll={this.handleScroll}>
-              <TextareaAutosize value={this.state.newPostVal} className="hpPostInput" onChange={this.handleInputChange} onKeyPress={this.inputEnterPressed} placeholder="Create post here" maxlength={1001} />
+              <TextareaAutosize value={this.state.newPostVal} className="hpPostInput" onChange={this.handleInputChange} onKeyPress={this.inputEnterPressed} placeholder="Create post here" maxlength={1000} />
 
               { postsExist ?
                 posts.map((item) => {
@@ -152,7 +152,7 @@ class HomeProfile extends React.Component {
             </div>
           </div>
         </div>
-        
+
 
       </div>
     );

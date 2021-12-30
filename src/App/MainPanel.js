@@ -50,6 +50,8 @@ class MainPanel extends React.Component {
         panelData: newData
       });
     }
+    
+    this.props.setCloseButton(true);
   }
 
   closePanel() {
@@ -57,10 +59,11 @@ class MainPanel extends React.Component {
     this.setState({
       panelType: ""
     });
+
+    this.props.setCloseButton(false);
   }
 
   render() {
-    // <div className="MainPanel" style={{width: this.props.hideRightPanel ? "calc(100% - 300px)" : "calc(100% - 600px)"}}>
     return (
       <div className={this.state.mpClass} style={this.state.specialEasing ? {transition: "opacity .3s cubic-bezier(0.65, 0, 0.35, 1), transform .3s cubic-bezier(0.65, 0, 0.35, 1)"} : null}>
         <Switch>

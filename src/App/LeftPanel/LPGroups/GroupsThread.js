@@ -40,8 +40,9 @@ class GroupsThread extends React.Component {
     e.preventDefault();
     console.log("[from " + this.props.threadID + "] clicked");
     this.props.setOpenedThread(this.props.threadID);
-
     this.props.history.push("/groups/" + this.props.threadID);
+
+    this.props.hideLeftPanel();
   }
 
   render() {

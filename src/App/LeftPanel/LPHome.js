@@ -43,6 +43,7 @@ class LPHome extends React.Component {
     e.preventDefault();
 
     this.props.history.push("/home");
+    this.props.hideLeftPanel();
   }
 
   render () {

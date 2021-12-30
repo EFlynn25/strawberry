@@ -427,3 +427,26 @@
   cursor: pointer;
   filter: brightness(.8);
 }
+
+
+
+/* RESPONSIVE DESIGN */
+
+@media screen and (max-width: 880px) {
+  .AAnnouncementsList {
+    height: calc(100% - 50px);
+    top: 30px;
+  }
+  .announcementsTitle {
+    font-size: 26px;
+  }
+  .alActions {
+    height: 31px;
+  }
+  .aliTitle, .announcementTitle {
+    font-size: 20px;
+  }
+  .aliTimestamp {
+    font-size: 12px;
+  }
+}

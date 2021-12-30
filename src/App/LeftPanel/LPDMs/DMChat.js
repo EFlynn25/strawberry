@@ -61,8 +61,9 @@ class DMChat extends React.Component {
     e.preventDefault();
     console.log("[from " + this.props.chatEmail + "] clicked");
     this.props.setOpenedDM(this.props.chatEmail);
-
     this.props.history.push("/dms/" + this.props.chatEmail);
+
+    this.props.hideLeftPanel();
   }
 
   render() {

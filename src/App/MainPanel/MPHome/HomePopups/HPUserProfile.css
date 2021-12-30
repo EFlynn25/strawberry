@@ -161,3 +161,29 @@
   color: #bbb;
   user-select: none;
 }
+
+
+
+/* RESPONSIVE DESIGN */
+
+@media screen and (max-width: 880px) {
+  .ppLeft {
+    width: calc(100% - 80px);
+    height: 260px;
+    padding-top: 30px;
+    padding-bottom: 0;
+  }
+  .pplStatus {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+  }
+  .ppRight{
+    width: calc(100% - 60px);
+    height: calc(100% - 360px);
+    top: 310px;
+    left: 10px;
+  }
+}
