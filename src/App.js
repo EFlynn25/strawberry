@@ -94,11 +94,6 @@ class App extends React.Component {
     return (
       <div className="App">
 
-        <div className="appHamburgerIcon" onClick={() => {this.setState({showLeftPanel: true})}} style={this.state.showCloseButton ? {width: "54px"} : null}>
-          <Menu />
-          {this.state.showCloseButton ? <Close /> : null}
-        </div>
-
         <Switch>
           <Route path="/welcome">
             <Overlay type="welcome" />
@@ -107,6 +102,10 @@ class App extends React.Component {
             {  this.state.pageLoaded ?
 
               <Fragment>
+                <div className="appHamburgerIcon" onClick={() => {this.setState({showLeftPanel: true})}} style={this.state.showCloseButton ? {width: "54px"} : null}>
+                  <Menu />
+                  {this.state.showCloseButton ? <Close /> : null}
+                </div>
                 <TopBar />
                 <LeftPanel showLeftPanel={this.state.showLeftPanel} hideLeftPanel={() => {this.setState({showLeftPanel: false})}} />
                 <MainPanel setCloseButton={(value) => {this.setState({showCloseButton: value})}} />
