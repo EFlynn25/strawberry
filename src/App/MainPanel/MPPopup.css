@@ -56,6 +56,25 @@
 
 /* RESPONSIVE DESIGN */
 
+@media screen and (max-width: 1290px) {
+  .mainPanel {
+    width: 80%;
+    height: 80%;
+    top: 10%;
+    left: 10%;
+  }
+}
+
+@media screen and (max-width: 1060px) {
+  .mainPanel {
+    width: 90%;
+    height: 90%;
+    top: 5%;
+    left: 5%;
+  }
+}
+
+/* @media screen and (max-width: 1060px) { */
 @media screen and (max-width: 880px) {
   .mainPanel {
     top: 0;

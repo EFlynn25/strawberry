@@ -51,7 +51,7 @@
   left: calc(50% - 50px);
   top: 40px;
   border-radius: 100px;
-  
+
   user-select: none;
 }
 
@@ -140,17 +140,18 @@
 .homeTabs {
   position: absolute;
   width: 100%;
-  height: 10px;
+  height: 30px;
   top: 240px;
 
   display: flex;
   justify-content: center;
+  gap: 50px;
 }
 
 .homeTab {
   position: relative;
   height: 25px;
-  margin: 0 25px;
+  /* margin: 0 25px; */
   padding-bottom: 4px;
   border-bottom: 2px solid #b2b2b2;
   user-select: none;
@@ -161,6 +162,7 @@
 .homeTabIcon {
   width: 25px;
   float: left;
+  margin-left: -14px;
 }
 
 .hwNotificationsUnread {
@@ -231,16 +233,131 @@
 
 
 
-/* Specific Tab Icons */
+/* Home Sections */
 
-.htiNotify {
-  margin-left: -14px;
+.homeSection {
+  position: absolute;
+  width: 60%;
+  height: 80%;
+  left: calc(20% - 10px);
+  top: 10%;
+  padding: 0 10px;
+
+  border-left: 2px solid #ffffff05 !important;
+
+  transition: transform .2s cubic-bezier(0.65, 0, 0.35, 1),
+              opacity .2s cubic-bezier(0.65, 0, 0.35, 1);
+  visibility: visible;
+  opacity: 1;
+
+  overflow-y: scroll;
 }
 
-.htiPeople {
-  margin-left: -11px;
+.homeSectionHideLeft {
+  transition: transform .2s cubic-bezier(0.65, 0, 0.35, 1),
+              opacity .2s cubic-bezier(0.65, 0, 0.35, 1),
+              visibility 0s .2s;
+  visibility: hidden;
+  transform: translateX(-40px);
+  opacity: 0;
 }
 
-.htiProfile {
-  margin-left: -12px;
+.homeSectionHideRight {
+  transition: transform .2s cubic-bezier(0.65, 0, 0.35, 1),
+              opacity .2s cubic-bezier(0.65, 0, 0.35, 1),
+              visibility 0s .2s;
+  visibility: hidden;
+  transform: translateX(40px);
+  opacity: 0;
+}
+
+
+
+/* RESPONSIVE DESIGN */
+
+@media screen and (max-width: 880px) {
+  .homeTabs {
+    top: 210px;
+  }
+  .homeContent {
+    top: 241px;
+    height: calc(100% - 241px);
+  }
+  .homeSection {
+    width: 80%;
+    height: 90%;
+    top: 5%;
+    left: calc(10% - 10px);
+  }
+}
+
+@media screen and (max-width: 475px) {
+  .hwName {
+    font-size: 24px;
+  }
+  .homeTabs {
+    top: 190px;
+    gap: 30px;
+  }
+  .homeContent {
+    top: 226px;
+    height: calc(100% - 226px);
+  }
+
+  .homeTitle {
+    display: none;
+  }
+  .homeTabIcon {
+    margin: 0;
+  }
+  .homeTab {
+    height: 30px;
+  }
+  .homeTabIcon {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+
+@media screen and (max-height: 720px) and (max-width: 475px) {
+  .hwPFP {
+    width: 50px;
+    height: 50px;
+    left: calc(50% - 25px);
+  }
+  .hwName {
+    top: 90px;
+    font-size: 20px;
+  }
+  .homeTabs {
+    top: 135px;
+  }
+  .homeContent {
+    top: 170px;
+    height: calc(100% - 170px);
+  }
+}
+
+@media screen and (max-height: 650px) {
+  .hwPFP {
+    display: none;
+  }
+  .hwName {
+    top: 55px;
+  }
+  .homeTabs {
+    top: 110px;
+  }
+  .homeContent {
+    top: 140px;
+    height: calc(100% - 140px);
+  }
+}
+
+@media screen and (max-height: 650px) and (max-width: 475px) {
+  .homeContent {
+    top: 145px;
+    height: calc(100% - 145px);
+  }
 }

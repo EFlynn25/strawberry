@@ -1,4 +1,4 @@
-.HomeProfile {
+/* .HomeProfile {
   position: absolute;
   width: 60%;
   height: 80%;
@@ -24,11 +24,17 @@
   transform: translateX(40px);
   opacity: 0;
   visibility: hidden;
-}
+} */
 
 
 
 /* Content */
+
+.hpEditStatus {
+  display: none;
+  color: #ccc;
+  margin-bottom: 10px;
+}
 
 .hpEditIcon {
   position: absolute;
@@ -125,6 +131,52 @@
   outline: none;
   border: none;
   resize: none;
-  
+
   user-select: none;
+}
+
+
+
+/* RESPONSIVE DESIGN */
+
+@media screen and (max-width: 730px), (min-width: 880px) and (max-width: 1275px) {
+  .HPUserProfile {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .HomeProfile .ppLeft {
+    width: auto;
+    height: auto;
+    padding: 20px;
+  }
+  .HomeProfile .pplPFP {
+    display: none;
+  }
+  .HomeProfile .pplName {
+    display: none;
+  }
+  .HomeProfile .hpEditStatus {
+    display: block;
+  }
+  .HomeProfile .pplStatus {
+    margin-top: 24px;
+    margin: 0;
+  }
+  .HomeProfile .hpChangeStatusDiv {
+    position: static;
+  }
+  .HomeProfile .hpChangeStatusDivHidden {
+    position: absolute;
+    margin: 0;
+  }
+
+  .HomeProfile .ppRight {
+    position: static;
+    width: calc(100% - 40px);
+    height: 0;
+    top: 40px;
+    left: 10px;
+    flex: 1;
+  }
 }

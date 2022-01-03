@@ -437,6 +437,12 @@
     height: calc(100% - 50px);
     top: 30px;
   }
+}
+
+/* @media screen and (max-width: 1290px) { */
+  .announcements {
+    height: calc(100% - 60px);
+  }
   .announcementsTitle {
     font-size: 26px;
   }
@@ -449,4 +455,4 @@
   .aliTimestamp {
     font-size: 12px;
   }
-}
+/* } */

@@ -48,11 +48,11 @@ class MPHome extends React.Component {
   componentDidUpdate(prevState) {
     let newClasses = "";
     if (this.state.tab == 1) {
-      newClasses = "HomeNotifications hnHideRight";
+      newClasses = "HomeNotifications homeSection homeSectionHideRight";
     } else if (this.state.tab == 2) {
-      newClasses = "HomeNotifications";
+      newClasses = "HomeNotifications homeSection";
     } else if (this.state.tab == 3) {
-      newClasses = "HomeNotifications hnHideLeft";
+      newClasses = "HomeNotifications homeSection homeSectionHideLeft";
     }
     if (this.state.notifyClasses != newClasses) {
       this.setState({ notifyClasses: newClasses });
@@ -69,7 +69,7 @@ class MPHome extends React.Component {
 
   render() {
     return (
-      <VisibilitySensor onChange={this.transitionCheck}>
+      <VisibilitySensor onChange={this.transitionCheck} partialVisibility={true}>
         <div className={this.state.homeClass} style={this.state.specialEasing ? {transition: "opacity .3s cubic-bezier(0.65, 0, 0.35, 1), transform .3s cubic-bezier(0.65, 0, 0.35, 1)"} : null}>
           <div className="homeWelcome">
             <img src={this.props.picture} className="hwPFP" alt={this.props.name} />
@@ -85,11 +85,11 @@ class MPHome extends React.Component {
 
           <div className="homeTabs">
             <div className={this.state.tab == 1 ? "homeTab htSelected" : "homeTab"} onClick={() => this.setState({tab: 1})}>
-              <People className={this.state.tab == 1 ? "homeTabIcon htiNotify htiSelected" : "homeTabIcon htiNotify"} />
+              <People className={this.state.tab == 1 ? "homeTabIcon htiSelected" : "homeTabIcon"} />
               <h1 className={this.state.tab == 1 ? "homeTitle httSelected" : "homeTitle"}>PEOPLE</h1>
             </div>
             <div className={this.state.tab == 2 ? "homeTab htSelected" : "homeTab"} onClick={() => this.setState({tab: 2})}>
-              <Notify className={this.state.tab == 2 ? "homeTabIcon htiNotify htiSelected" : "homeTabIcon htiNotify"} />
+              <Notify className={this.state.tab == 2 ? "homeTabIcon htiSelected" : "homeTabIcon"} />
               <h1 className={this.state.tab == 2 ? "homeTitle httSelected" : "homeTitle"}>NOTIFICATIONS</h1>
               { this.state.tab != 2 && (this.props.dms_requests.length > 0 || Object.keys(this.props.groups_requests).length > 0 || Object.keys(this.props.announcements).includes("welcome") && !this.props.announcementsRead.includes("welcome")) ?
                 <div className="hwNotificationsUnread">
@@ -99,15 +99,15 @@ class MPHome extends React.Component {
               }
             </div>
             <div className={this.state.tab == 3 ? "homeTab htSelected" : "homeTab"} onClick={() => this.setState({tab: 3})}>
-              <Profile className={this.state.tab == 3 ? "homeTabIcon htiNotify htiSelected" : "homeTabIcon htiNotify"} />
+              <Profile className={this.state.tab == 3 ? "homeTabIcon htiSelected" : "homeTabIcon"} />
               <h1 className={this.state.tab == 3 ? "homeTitle httSelected" : "homeTitle"}>PROFILE</h1>
             </div>
           </div>
 
           <div className="homeContent">
-            <HomePeople classes={this.state.tab == 1 ? "HomePeople" : "HomePeople HomePeopleHide"} opendialog={this.props.opendialog} />
+            <HomePeople classes={this.state.tab == 1 ? "HomePeople homeSection" : "HomePeople homeSection homeSectionHideLeft"} opendialog={this.props.opendialog} />
             <HomeNotifications classes={this.state.notifyClasses} opendialog={this.props.opendialog} />
-            <HomeProfile classes={this.state.tab == 3 ? "HomeProfile" : "HomeProfile HomeProfileHide"} />
+            <HomeProfile classes={this.state.tab == 3 ? "HomeProfile homeSection" : "HomeProfile homeSection homeSectionHideRight"} />
           </div>
         </div>
       </VisibilitySensor>

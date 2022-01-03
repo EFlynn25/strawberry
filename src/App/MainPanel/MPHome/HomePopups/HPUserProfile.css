@@ -14,8 +14,8 @@
 }
 
 .pplPFP {
-  width: 150px;
-  height: 150px;
+  width: 140px;
+  height: 140px;
   border-radius: 150px;
   margin-bottom: 5px;
 
@@ -23,7 +23,7 @@
 }
 
 .pplName {
-  font-size: 30px;
+  font-size: 28px;
 
   word-wrap: break-word;
   hyphens: auto;
@@ -42,8 +42,8 @@
   position: absolute;
   width: 30px;
   height: 30px;
-  top: 160px;
-  left: 160px;
+  top: 150px;
+  left: 150px;
 
   border-radius: 18px;
   background: #1D9545;
@@ -166,7 +166,10 @@
 
 /* RESPONSIVE DESIGN */
 
-@media screen and (max-width: 880px) {
+/* @media screen and (max-width: 1060px) { */
+/* @media screen and (max-width: 880px) { */
+/* @media screen and (max-width: 960px) { */
+@media screen and (max-width: 720px), (min-width: 880px) and (max-width: 960px) {
   .ppLeft {
     width: calc(100% - 80px);
     height: 260px;
@@ -185,5 +188,8 @@
     height: calc(100% - 360px);
     top: 310px;
     left: 10px;
+  }
+  .pplOnline {
+    top: 140px;
   }
 }

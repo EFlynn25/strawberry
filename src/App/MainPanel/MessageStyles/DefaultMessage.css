@@ -121,7 +121,7 @@
 
   transition: filter .5s, opacity .1s, transform .1s;
   opacity: 1;
-  
+
   user-select: none;
 }
 
@@ -201,4 +201,14 @@
 
 .defaultSystemMessage p:hover {
   background: transparent;
+}
+
+
+
+/* RESPONSIVE DESIGN */
+
+@media screen and (max-width: 880px) {
+  .defaultMessageGroup {
+    width: calc(100% - 70px);
+  }
 }

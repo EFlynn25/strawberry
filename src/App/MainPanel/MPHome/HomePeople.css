@@ -1,4 +1,4 @@
-.HomePeople {
+/* .HomePeople {
   position: absolute;
   width: 60%;
   height: 80%;
@@ -24,7 +24,7 @@
   transform: translateX(-40px);
   opacity: 0;
   visibility: hidden;
-}
+} */
 
 
 
@@ -95,7 +95,7 @@
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
-  
+
   user-select: none;
 }
 
@@ -137,4 +137,14 @@
 .hpPerson:active {
   background: #ffffff08;
   transform: scale(.99);
+}
+
+
+
+/* RESPONSIVE DESIGN */
+
+@media screen and (max-height: 720px) and (max-width: 475px) {
+  .hpName {
+    font-size: 20px;
+  }
 }

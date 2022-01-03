@@ -63,7 +63,7 @@ class HPUserProfile extends React.Component {
 
     const splitPic = picture.split("=")[0];
     if (splitPic != picture) {
-      picture = splitPic + "=s150";
+      picture = splitPic + "=s140";
     }
 
     if (postsExist) {
