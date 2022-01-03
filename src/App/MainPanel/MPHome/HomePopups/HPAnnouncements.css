@@ -36,12 +36,13 @@
 
 .announcementsTitle {
   margin-top: 10px;
+  font-size: 26px;
   user-select: none;
 }
 
 .alActions {
   position: absolute;
-  height: 39px;
+  height: 31px;
   top: 10px;
   right: 0;
 
@@ -87,7 +88,7 @@
 .announcements {
   position: absolute;
   width: calc(100% - 20px);
-  height: calc(100% - 70px);
+  height: calc(100% - 60px);
   bottom: 0;
   padding: 0 10px;
   overflow-y: auto;
@@ -118,7 +119,7 @@
 }
 
 .aliTitle {
-  font-size: 24px;
+  font-size: 20px;
   user-select: none;
 }
 
@@ -143,7 +144,7 @@
 .aliTimestamp {
   margin-top: 10px;
 
-  font-size: 14px;
+  font-size: 12px;
   text-align: right;
 
   color: #bbb;
@@ -203,7 +204,7 @@
 .announcementTitle {
   width: 100%;
   margin-left: 10px;
-  font-size: 28px;
+  font-size: 20px;
 }
 
 .announcementContent {
@@ -439,20 +440,13 @@
   }
 }
 
-/* @media screen and (max-width: 1290px) { */
-  .announcements {
-    height: calc(100% - 60px);
-  }
-  .announcementsTitle {
-    font-size: 26px;
-  }
+@media screen and (max-width: 410px) {
   .alActions {
-    height: 31px;
+    right: initial;
+    top: 41px;
+    left: 0;
   }
-  .aliTitle, .announcementTitle {
-    font-size: 20px;
+  .announcements {
+    height: calc(100% - 90px);
   }
-  .aliTimestamp {
-    font-size: 12px;
-  }
-/* } */
+}
