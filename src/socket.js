@@ -24,8 +24,8 @@ let socket = null;
 const textTone = new Audio(defaultTextTone);
 
 export function startSocket() {
-  // socket = new WebSocket('wss://strawberry.neonblacknetwork.com:2096');
-  socket = new WebSocket('wss://strawberry.neonblacknetwork.com:2053');
+  socket = new WebSocket('wss://strawberry.neonblacknetwork.com:2096');
+  // socket = new WebSocket('wss://strawberry.neonblacknetwork.com:2053');
 
   setTimeout(function() {
     if (socket.readyState == 0) {
