@@ -1,27 +1,152 @@
-.HomeProfile {
-  position: absolute;
-  width: 60%;
-  height: 80%;
-  left: calc(20% - 10px);
-  top: 10%;
+/* Content */
 
-  padding: 0 10px;
-
-  border-left: 2px solid #ffffff05 !important;
-
-  transition: transform .2s cubic-bezier(0.65, 0, 0.35, 1),
-              opacity .2s cubic-bezier(0.65, 0, 0.35, 1);
-  opacity: 1;
-  visibility: visible;
-
-  overflow-y: scroll;
+.hpEditStatus {
+  display: none;
+  color: #ccc;
+  margin-bottom: 10px;
 }
 
-.HomeProfileHide {
-  transition: transform .2s cubic-bezier(0.65, 0, 0.35, 1),
-              opacity .2s cubic-bezier(0.65, 0, 0.35, 1),
-              visibility 0s .2s;
-  transform: translateX(40px);
+.hpEditIcon {
+  position: absolute;
+
+  transition: fill .1s, transform .1s;
+  fill: #888;
+  fill: #fff8;
+  transform: none;
+  z-index: 1;
+}
+
+.hpeiName {
+  width: 25px;
+  height: 36px;
+  margin-left: 10px;
+}
+
+.hpeiStatus {
+  width: 19px;
+  height: 19px;
+  margin-left: 7px;
+}
+
+.hpEditIcon:hover {
+  cursor: pointer;
+  fill: #fffb;
+  /* transform: scale(1.05); */
+}
+
+.hpEditIcon:active {
+  fill: #fff7;
+  transform: scale(.95);
+}
+
+/* Change Status */
+
+.hpChangeStatusDiv {
+  display: flex;
+  align-items: end;
+  gap: 10px;
+}
+
+.hpChangeStatusDivHidden {
   opacity: 0;
-  visibility: hidden;
+  z-index: -100;
+}
+
+.hpStatusInput {
+  /* width: 100%; */
+  flex: 1;
+  margin-top: 5px;
+  padding: 0;
+  padding-bottom: 2px;
+
+  background: transparent;
+  outline: none;
+  resize: none;
+  border: none;
+  border-bottom: 2px solid #888;
+
+  font-size: 16px;
+  font-family: Roboto;
+  color: #ddd;
+}
+
+.hpStatusInputHidden {
+  cursor: default;
+}
+
+.hpCloseIcon {
+  position: static;
+  width: 26px;
+  height: 26px;
+}
+
+/* Posts */
+
+.hpPostThumbUp {
+  width: 20px;
+  height: 20px;
+  fill: #bbb;
+}
+
+.hpPostInput {
+  width: calc(100% - 30px);
+  min-height: 20px;
+  max-height: 120px;
+  padding: 15px;
+
+  background: #2A2B2D;
+  border-radius: 20px;
+  font-size: 16px;
+
+  outline: none;
+  border: none;
+  resize: none;
+
+  user-select: none;
+}
+
+
+
+/* RESPONSIVE DESIGN */
+
+@media screen and (max-width: 730px), (min-width: 880px) and (max-width: 1275px) {
+  .HPUserProfile {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .HomeProfile .ppLeft {
+    width: auto;
+    height: auto;
+    padding: 20px;
+  }
+  .HomeProfile .pplPFP {
+    display: none;
+  }
+  .HomeProfile .pplName {
+    display: none;
+  }
+  .HomeProfile .hpEditStatus {
+    display: block;
+  }
+  .HomeProfile .pplStatus {
+    margin-top: 24px;
+    margin: 0;
+  }
+  .HomeProfile .hpChangeStatusDiv {
+    position: static;
+  }
+  .HomeProfile .hpChangeStatusDivHidden {
+    position: absolute;
+    margin: 0;
+  }
+
+  .HomeProfile .ppRight {
+    position: static;
+    width: calc(100% - 40px);
+    height: 0;
+    top: 40px;
+    left: 10px;
+    flex: 1;
+  }
 }

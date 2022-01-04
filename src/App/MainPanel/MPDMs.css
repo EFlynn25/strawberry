@@ -16,6 +16,7 @@
   position: absolute;
   width: calc(100% - 78px);
   min-height: 20px;
+  max-height: 40%;
   left: 20px;
   bottom: 20px;
   padding: 8px 12px;
@@ -29,8 +30,8 @@
   font-size: 14px;
 
   outline: none;
-
   resize: none;
+  user-select: none;
 }
 
 .dmsTopTextDiv {
@@ -51,6 +52,7 @@
   text-align: center;
 
   color: #FFF8;
+  user-select: none;
 }
 
 .dmsLoadingMessagesText {

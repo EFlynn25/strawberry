@@ -50,6 +50,8 @@ class MainPanel extends React.Component {
         panelData: newData
       });
     }
+    
+    this.props.setCloseButton(true);
   }
 
   closePanel() {
@@ -57,25 +59,25 @@ class MainPanel extends React.Component {
     this.setState({
       panelType: ""
     });
+
+    this.props.setCloseButton(false);
   }
 
   render() {
-    // <div className="MainPanel" style={{width: this.props.hideRightPanel ? "calc(100% - 300px)" : "calc(100% - 600px)"}}>
     return (
       <div className={this.state.mpClass} style={this.state.specialEasing ? {transition: "opacity .3s cubic-bezier(0.65, 0, 0.35, 1), transform .3s cubic-bezier(0.65, 0, 0.35, 1)"} : null}>
         <Switch>
           <Route path="/dms/:chatEmail" component={MPDMs} />
           <Route path="/dms">
             <div style={{display: "table", width: "100%", height: "100%"}}>
-              <h1 style={{position: "relative", display: "table-cell", margin: "0", textAlign: "center", verticalAlign: "middle", color: "#fff5", fontSize: "20px"}}>Welcome to Strawberry DMs</h1>
+              <h1 style={{position: "relative", display: "table-cell", margin: "0", textAlign: "center", verticalAlign: "middle", color: "#fff5", fontSize: "20px", userSelect: "none"}}>Welcome to Strawberry DMs</h1>
             </div>
           </Route>
           <Route path="/groups/:threadID" render={routeProps => (<MPGroups opendialog={this.openPanel} {...routeProps} />)} />
           <Route path="/groups">
             <div style={{display: "table", width: "100%", height: "100%"}}>
-              <h1 style={{position: "relative", display: "table-cell", margin: "0", textAlign: "center", verticalAlign: "middle", color: "#fff5", fontSize: "20px"}}>
+              <h1 style={{position: "relative", display: "table-cell", margin: "0", textAlign: "center", verticalAlign: "middle", color: "#fff5", fontSize: "20px", userSelect: "none"}}>
                 Welcome to Strawberry Groups
-                {/*<h1 style={{fontSize: "18px", color: "#fff3"}}>(not yet functional)</h1>*/}
               </h1>
             </div>
           </Route>

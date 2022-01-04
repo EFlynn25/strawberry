@@ -33,13 +33,11 @@ class GSPeople extends React.Component {
   }
 
   componentDidMount() {
-    console.log("mount!");
     document.addEventListener('mouseup', this.handleClickOutside);
     document.addEventListener('mousedown', this.handleClickOutside);
   }
 
   componentWillUnmount() {
-    console.log("unmount!");
     document.removeEventListener('mouseup', this.handleClickOutside);
     document.removeEventListener('mousedown', this.handleClickOutside);
   }
@@ -85,7 +83,7 @@ class GSPeople extends React.Component {
 
     let alphabeticalPeople = [];
     let alphabeticalRequested = [];
-    
+
     const myThread = this.props.threads[this.props.myThreadID];
     if (myThread == null) {
       return null
@@ -114,10 +112,8 @@ class GSPeople extends React.Component {
       peopleElements.push(
         <div className="gspPerson" key={item} style={this.state.personRemoving == item ? {background: "#1D954522"} : null}>
           <img src={thisUser.picture} className="gspPFP" alt={thisUser.name} />
+          { thisUser.online ? <div className="gspOnline"></div> : null }
           <h1 className="gspName" style={personRemoving == item ? {width: "calc(100% - 85px)"} : null}>{thisUser.name}</h1>
-          { !newRequested.includes(item) ? null :
-            null // <p className="gspPending">Pending request...</p>
-          }
           <Close className="gspRemove" onClick={() => {this.setState({personRemoving: item})}} style={this.state.personRemoving == item ? {visibility: "visible"} : null} />
           <div className={this.state.personRemoving == item ? "gspRemovingPerson" : "gspRemovingPerson gspRemovingPersonHide"}>
             <h1>Are you sure?</h1>
@@ -159,7 +155,7 @@ class GSPeople extends React.Component {
           <h1 className="gspAddPersonText">Add person</h1>
         </div>
         <div className={this.state.personPickerOpen ? "gsapPicker" : "gsapPicker gsapPickerHide"} ref={this.setWrapperRef}>
-          <PersonPicker callback={this.addPerson} />
+          <PersonPicker callback={this.addPerson} noShow={newPeople.concat(newRequested)} />
         </div>
         <div className="gspPeopleList">
           {peopleElements}

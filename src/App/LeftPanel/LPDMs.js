@@ -84,7 +84,7 @@ class LPDMs extends React.Component {
       newChildren = [];
       this.listOfEmails = chatKeys;
       chatKeys.map(item => {
-        const chatElement = <DMChat key={"id" + item} chatEmail={item} />;
+        const chatElement = <DMChat key={"id" + item} chatEmail={item} hideLeftPanel={this.props.hideLeftPanel} />;
         newChildren.push(chatElement);
       });
     } else {

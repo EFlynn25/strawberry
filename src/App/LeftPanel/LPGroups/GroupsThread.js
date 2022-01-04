@@ -40,8 +40,9 @@ class GroupsThread extends React.Component {
     e.preventDefault();
     console.log("[from " + this.props.threadID + "] clicked");
     this.props.setOpenedThread(this.props.threadID);
-
     this.props.history.push("/groups/" + this.props.threadID);
+
+    this.props.hideLeftPanel();
   }
 
   render() {
@@ -125,12 +126,14 @@ class GroupsThread extends React.Component {
     let systemMessage = false;
     if (Array.isArray(myThreadMessages) && myThreadMessages.length) {
       const lastMessage = myThreadMessages[myThreadMessages.length - 1];
-      let you = "";
+      let who = "";
 
       if (lastMessage.from == this.props.email) {
-        you = "You: "
+        who = "You: "
+      } else if (lastMessage.from != "system") {
+        who = getUser(lastMessage.from).name.split(" ")[0] + ": "
       }
-      threadMessage = you + lastMessage["message"];
+      threadMessage = who + lastMessage["message"];
 
       if (lastMessage.from == "system") {
         systemMessage = true;

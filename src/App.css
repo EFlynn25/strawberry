@@ -1,3 +1,44 @@
 .App {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
 
+
+
+/* Content */
+
+.appHamburgerIcon {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  top: 50px;
+
+  background: #2A2B2DBB;
+  backdrop-filter: blur(6px);
+  border-bottom-right-radius: 10px;
+  border-bottom: 1px solid;
+  border-right: 1px solid;
+  border-color: #37383A;
+
+  transition: transform .1s;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+}
+
+.appHamburgerIcon svg {
+  transition: fill .1s;
+  fill: #ddd;
+}
+
+.appHamburgerIcon:active {
+  transform: translateX(-3px);
+}
+
+.appHamburgerIcon svg:active {
+  fill: #888;
 }

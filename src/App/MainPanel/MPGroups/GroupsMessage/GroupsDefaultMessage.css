@@ -22,7 +22,7 @@
   height: 20px;
   top: calc(50% - 10px);
   right: -30px;
-  
+
 
   font-size: 10px;
   line-height: 20px;
@@ -32,25 +32,12 @@
 }
 
 .gExtraInThread {
-  /* position: absolute;
-  width: 20px;
-  height: 20px;
-  top: calc(50% - 10px);
-  right: -30px;
-  
-
-  font-size: 10px;
-  line-height: 20px;
-  text-align: center;
-  color: #888;
-  user-select: none; */
-
   filter: brightness(100%);
   position: absolute;
   width: 20px;
   height: 20px;
   left: 50px;
-  
+
   margin-top: 5px;
   border-radius: 15px;
 
@@ -87,4 +74,14 @@
   left: 3px;
 
   transform: scale(.8);
+}
+
+
+
+/* RESPONSIVE DESIGN */
+
+@media screen and (max-width: 880px) {
+  .gDefaultMessageGroup {
+    width: calc(100% - 80px);
+  }
 }

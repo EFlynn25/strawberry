@@ -43,6 +43,7 @@ class LPHome extends React.Component {
     e.preventDefault();
 
     this.props.history.push("/home");
+    this.props.hideLeftPanel();
   }
 
   render () {
@@ -57,6 +58,10 @@ class LPHome extends React.Component {
           <path d="M0 0h24v24H0z" fill="none"/>
           <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
         </svg>
+        { this.props.dms_requests.length > 0 || Object.keys(this.props.groups_requests).length > 0 || Object.keys(this.props.announcements).includes("welcome") && !this.props.announcementsRead.includes("welcome") ?
+          <div className="hwUnreadDot" style={{top: "32.5px", right: "20px"}}></div>
+          : null
+        }
         <h1 className="homeText">Home</h1>
         <div className="homeSelected" style={{transform: opened ? "none" : ""}} />
       </div>
@@ -64,9 +69,16 @@ class LPHome extends React.Component {
   }
 }
 
+const mapStateToProps = (state) => ({
+  dms_requests: state.dms.requests,
+  groups_requests: state.groups.requests,
+  announcementsRead: state.app.announcementsRead,
+  announcements: state.app.announcements,
+});
+
 const mapDispatchToProps = {
   setOpenedDM,
   setOpenedThread
 }
 
-export default connect(null, mapDispatchToProps)(withRouter(LPHome));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(LPHome));

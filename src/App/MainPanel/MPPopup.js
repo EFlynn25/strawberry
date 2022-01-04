@@ -92,7 +92,7 @@ class MPPopup extends React.Component {
     if (this.state.type == "profile") {
       child = <HPUserProfile email={this.state.data} />;
     } else if (this.state.type == "announcements") {
-      child = <HPAnnouncements />;
+      child = <HPAnnouncements openAnnouncement={this.state.data} />;
     } else if (this.state.type == "settings") {
       child = <HPSettings />;
     } else if (this.state.type == "groupSettings") {

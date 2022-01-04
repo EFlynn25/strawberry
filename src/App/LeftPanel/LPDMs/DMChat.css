@@ -28,7 +28,7 @@
 
 
 
-/* Profile Picture */
+/* Profile Picture Stuff */
 
 .dmChatPFP {
   position: absolute;
@@ -42,6 +42,18 @@
   user-select: none;
 
   transition: box-shadow .1s;
+}
+
+.dmChatOnline {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  top: 47.5px;
+  left: 50px;
+
+  border-radius: 5px;
+  background: #1D9545;
+  z-index: 1;
 }
 
 

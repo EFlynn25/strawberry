@@ -35,14 +35,9 @@ class DMChat extends React.Component {
       thisChatChanged = true;
     }
 
-    // console.groupCollapsed(this.props.chatEmail);
-    // console.log(thisChat);
-    // console.log(nextChat);
-    // console.log(thisChat.messages[thisChat.messages.length - 1].id);
-    // console.log(nextChat.messages[nextChat.messages.length - 1].id);
-    // console.groupEnd();
+    const onlineChanged = this.props.chatEmail in this.props.knownPeople && nextProps.knownPeople[nextProps.chatEmail].online != this.props.knownPeople[this.props.chatEmail].online;
 
-    if (openedDMChanged || thisChatChanged) {
+    if (openedDMChanged || thisChatChanged || onlineChanged) {
       return true;
     }
 
@@ -66,8 +61,9 @@ class DMChat extends React.Component {
     e.preventDefault();
     console.log("[from " + this.props.chatEmail + "] clicked");
     this.props.setOpenedDM(this.props.chatEmail);
-
     this.props.history.push("/dms/" + this.props.chatEmail);
+
+    this.props.hideLeftPanel();
   }
 
   render() {
@@ -79,14 +75,10 @@ class DMChat extends React.Component {
       opened = true;
     }
 
-    let chatName = "";
-    let chatPicture = "";
-    // const myPerson = this.props.getknownPeople[this.props.chatEmail];
     const myPerson = getUser(this.props.chatEmail);
-    if (myPerson != null) {
-      chatName = myPerson.name;
-      chatPicture = myPerson.picture;
-    }
+    const chatName = myPerson.name;
+    const chatPicture = myPerson.picture;
+    const chatOnline = myPerson.online;
 
     let chatMessage = "";
     let chatTime = "";
@@ -116,6 +108,7 @@ class DMChat extends React.Component {
     return (
       <div className="DMChat" onClick={this.handleClick} style={{backgroundPositionX: opened ? "0" : ""}}>
         <img src={chatPicture} className="dmChatPFP" alt={chatName} style={{boxShadow: opened ? "none" : ""}} />
+        { chatOnline ? <div className="dmChatOnline"></div> : null }
         <div className="dmChatTitleTimeFlexbox">
           <h1 className={read ? "dmChatTitle" : "dmChatTitle dmChatTitleUnread"}>{chatName}</h1>
           <h1 className={read ? "dmChatTime" : "dmChatTime dmChatUnread"}>{chatTime}</h1>
@@ -131,7 +124,7 @@ class DMChat extends React.Component {
 const mapStateToProps = (state) => ({
   openedDM: state.dms.openedDM,
   chats: state.dms.chats,
-  getknownPeople: state.people.knownPeople,
+  knownPeople: state.people.knownPeople,
 });
 
 const mapDispatchToProps = {

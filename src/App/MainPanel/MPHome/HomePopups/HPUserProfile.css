@@ -9,22 +9,21 @@
   width: calc(40% - 80px);
   width: 240px;
   height: calc(100% - 80px);
-  border-right: 1px solid #fff1;
+  /* border-right: 1px solid #fff1; */
   padding: 40px;
 }
 
 .pplPFP {
-  width: 150px;
-  height: 150px;
+  width: 140px;
+  height: 140px;
   border-radius: 150px;
   margin-bottom: 5px;
+
+  user-select: none;
 }
 
 .pplName {
-
-
-  font-size: 30px;
-
+  font-size: 28px;
 
   word-wrap: break-word;
   hyphens: auto;
@@ -32,10 +31,23 @@
 
 .pplStatus {
   margin-top: 5px;
+
   color: #888;
   font-size: 16px;
   font-style: italic;
   font-family: Roboto;
+}
+
+.pplOnline {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  top: 150px;
+  left: 150px;
+
+  border-radius: 18px;
+  background: #1D9545;
+  z-index: 1;
 }
 
 
@@ -44,11 +56,140 @@
 
 .ppRight {
   position: absolute;
-  width: 60%;
-  height: 100%;
-  left: 40%;
-  top: 0;
+  width: calc(100% - 380px);
+  height: calc(100% - 60px);
+  padding: 20px;
+  top: 10px;
+  left: 330px;
 
-  width: calc(100% - 321px);
-  left: 321px;
+  background: #fff1;
+  border-radius: 20px;
+}
+
+.ppRight h3 {
+  height: 25px;
+  line-height: 25px;
+  margin-bottom: 20px;
+
+  user-select: none;
+}
+
+.pprPostLoading {
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  top: 20px;
+  left: 80px;
+}
+
+/* ...posts */
+
+.pprPostList {
+  position: relative;
+  width: 100%;
+  height: calc(100% - 45px);
+  padding-right: 20px;
+
+  overflow: auto;
+}
+
+.pprPost:first-child {
+  margin: 0;
+}
+
+.pprPost {
+  position: relative;
+  padding: 15px;
+  margin-top: 20px;
+
+  background: #2A2B2D;
+  border-radius: 20px;
+}
+
+.pprPost * {
+  color: #ddd;
+}
+
+.pprPost > * {
+  margin: 16px 0;
+}
+
+.pprPost *:first-child {
+  margin-top: 0;
+}
+
+.pprPostBottom {
+  height: 20px;
+  margin: 0;
+  margin-top: 10px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.pprPostTimestamp {
+  color: #888 !important;
+  font-size: 12px;
+}
+
+.pprPostBottom div {
+  display: flex;
+  gap: 5px;
+}
+
+.pprPostThumbUp {
+  width: 20px;
+  height: 20px;
+  fill: #bbb;
+
+  transition: transform .1s, fill .1s;
+}
+
+.pprPostThumbUp:hover {
+  transform: scale(1.05);
+  cursor: pointer;
+  fill: white;
+}
+
+.pprPostThumbUp:active {
+  transform: scale(.95);
+  fill: #fff8;
+}
+
+.pprPostBottom div p {
+  color: #bbb;
+  user-select: none;
+}
+
+
+
+/* RESPONSIVE DESIGN */
+
+/* @media screen and (max-width: 1060px) { */
+/* @media screen and (max-width: 880px) { */
+/* @media screen and (max-width: 960px) { */
+@media screen and (max-width: 720px), (min-width: 880px) and (max-width: 960px) {
+  .ppLeft {
+    width: calc(100% - 80px);
+    height: 260px;
+    padding-top: 30px;
+    padding-bottom: 0;
+  }
+  .pplStatus {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+  }
+  .ppRight{
+    width: calc(100% - 60px);
+    height: calc(100% - 360px);
+    top: 310px;
+    left: 10px;
+  }
+  .pplOnline {
+    top: 140px;
+  }
 }

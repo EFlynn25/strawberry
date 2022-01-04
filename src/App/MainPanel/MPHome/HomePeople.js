@@ -20,15 +20,7 @@ class HomePeople extends React.Component {
     let alphabeticalPeople = [];
     const localKnownPeople = this.props.knownPeople;
     if (localKnownPeople != null && Object.keys(localKnownPeople).length > 0) {
-      // Object.keys(this.props.chats).forEach(function (item, index) {
       Object.keys(localKnownPeople).forEach(function (item, index) {
-        // let myName;
-        // if (localKnownPeople[item] == null) {
-        //   myName = item;
-        // } else {
-        //   myName = localKnownPeople[item].name;
-        // }
-
         alphabeticalPeople.push([item, getUser(item).name]);
       });
       alphabeticalPeople.sort((a,b) => a[1].toUpperCase().localeCompare(b[1].toUpperCase()));
@@ -40,24 +32,13 @@ class HomePeople extends React.Component {
         const myPerson = getUser(item);
         const personName = myPerson.name;
         const personPicture = myPerson.picture;
-        // let status = "hi im " + personName + " and this is my status";
-        let status = null;
-
-        if (item == "everettflynn25@gmail.com") {
-          status = "bogos binted?";
-        } else if (item == "cherryman656@gmail.com") {
-          status = "Use my other account: everettflynn25@gmail.com";
-        } else if (item == "appleandroidtechmaker@gmail.com") {
-          status = "This is my chat account.";
-        } else if (item == "flynneverett@logoscharter.com") {
-          status = "Me gusta el español.";
-        } else if (item == "toastmaster9804@gmail.com") {
-          status = "EverettPlayz is Gucciiii";
-        }
+        const status = myPerson.status;
+        const online = myPerson.online;
 
         people.push(
           <div className="hpPerson" key={item} onClick={() => this.props.opendialog("profile", item)}>
             <img src={personPicture} className="hpPFP" alt={personName} />
+            { online ? <div className="hpOnline"></div> : null }
             <h1 className="hpName" style={status == null ? {lineHeight: "50px", bottom: "", top: "15px", height: "50px"} : null}>{personName}</h1>
             { status == null ? null :
               <p className="hpStatus" title={status}>{status}</p>
@@ -85,8 +66,6 @@ class HomePeople extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  picture: state.app.picture,
-  name: state.app.name,
   knownPeople: state.people.knownPeople,
   chats: state.dms.chats,
 });

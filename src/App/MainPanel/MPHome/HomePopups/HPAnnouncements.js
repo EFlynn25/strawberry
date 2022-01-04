@@ -31,6 +31,15 @@ class HPAnnouncements extends React.Component {
     this.aapbMouseLeave = this.aapbMouseLeave.bind(this);
   }
 
+  componentDidMount() {
+    if (Object.keys(this.props.announcements).includes(this.props.openAnnouncement)) {
+      this.setState({
+        showAnnouncement: true,
+        openedAnnouncement: this.props.openAnnouncement
+      });
+    }
+  }
+
   markAllHandleClick() {
     let idsList = [];
     const ar = this.props.announcementsRead;

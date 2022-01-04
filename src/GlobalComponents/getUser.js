@@ -5,5 +5,5 @@ export function getUser(user) {
   if (Object.keys(localKnownPeople).includes(user)) {
     return localKnownPeople[user]
   }
-  return {"name": user, "picture": "/assets/images/default_profile_pic.png"}
+  return {"name": user, "picture": "/assets/images/default_profile_pic.png", "status": "", "online": false}
 }

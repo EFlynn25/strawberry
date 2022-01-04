@@ -5,6 +5,17 @@
   background: #1D1E20;
 }
 
+.tabUnread {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  left: 42px;
+  top: 21px;
+
+  border-radius: 5px;
+  background: var(--darker-accent-color);
+}
+
 
 
 /* DM Tab */

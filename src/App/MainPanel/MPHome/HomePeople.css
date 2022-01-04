@@ -1,38 +1,8 @@
-.HomePeople {
-  position: absolute;
-  width: 60%;
-  height: 80%;
-  left: calc(20% - 10px);
-  top: 10%;
-
-  padding: 0 10px;
-
-  border-left: 2px solid #ffffff05 !important;
-
-  transition: transform .2s cubic-bezier(0.65, 0, 0.35, 1),
-              opacity .2s cubic-bezier(0.65, 0, 0.35, 1);
-  visibility: visible;
-  opacity: 1;
-
-  overflow-y: scroll;
-}
-
-.HomePeopleHide {
-  transition: transform .2s cubic-bezier(0.65, 0, 0.35, 1),
-              opacity .2s cubic-bezier(0.65, 0, 0.35, 1),
-              visibility 0s .2s;
-  transform: translateX(-40px);
-  opacity: 0;
-  visibility: hidden;
-}
-
-
-
 /* Person Classes */
 
 .hpPerson {
   position: relative;
-  min-height: 54px;
+  height: 50px;
   padding: 15px;
 
   border-radius: 15px;
@@ -46,10 +16,9 @@
   content: "View profile";
 
   position: absolute;
-  top: 32px;
+  top: 30px;
   right: 20px;
 
-  /* color: #131416; */
   color: transparent;
   font-size: 16px;
 }
@@ -60,6 +29,8 @@
   max-width: 50px;
   max-height: 50px;
   border-radius: 50px;
+
+  user-select: none;
 }
 
 .hpName {
@@ -67,25 +38,24 @@
   width: calc(100% - 210px);
   width: calc(100% - 95px);
   left: 80px;
-  bottom: 43px;
-  
+  bottom: 41px;
 
-  
   font-size: 22px;
   font-weight: 500;
 
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
+
+  user-select: none;
 }
 
 .hpStatus {
   position: absolute;
   width: calc(100% - 210px);
   width: calc(100% - 95px);
-  top: 43px;
+  top: 41px;
   left: 80px;
-  
 
   color: #888;
   font-size: 16px;
@@ -95,6 +65,20 @@
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
+
+  user-select: none;
+}
+
+.hpOnline {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  top: 53px;
+  left: 53px;
+
+  border-radius: 6px;
+  background: #1D9545;
+  z-index: 1;
 }
 
 
@@ -123,4 +107,14 @@
 .hpPerson:active {
   background: #ffffff08;
   transform: scale(.99);
+}
+
+
+
+/* RESPONSIVE DESIGN */
+
+@media screen and (max-height: 720px) and (max-width: 475px) {
+  .hpName {
+    font-size: 20px;
+  }
 }

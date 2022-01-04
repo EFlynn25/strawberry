@@ -1,36 +1,166 @@
-.HomeNotifications {
+/* Category */
+
+.hnCategory {
+  margin: 10px;
+  margin-bottom: 30px;
+}
+
+.hnCategoryHeader {
+  margin-bottom: 10px;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.hnCategoryTitle {
+  height: 25px;
+
+  font-size: 18px;
+  line-height: 25px;
+
+  color: #FFF6;
+}
+
+.hnCategoryLine {
+  flex: 1;
+  height: 1px;
+  background: #FFF6;
+}
+
+.hnCategoryContentDiv {
+  position: relative;
+  width: calc(100% - 20px);
+  padding: 10px;
+  margin-bottom: 10px;
+
+  border-radius: 20px;
+  background: #0002;
+}
+
+
+
+/* Requests */
+
+.hnRequestDiv {
+  width: calc(100% - 60px);
+  height: 55px;
+  margin-left: 40px;
+}
+
+.hnRequestTypeIcon {
   position: absolute;
-  width: 60%;
-  height: 80%;
-  left: calc(20% - 10px);
-  top: 10%;
-
-  padding: 0 10px;
-
-  border-left: 2px solid #ffffff05 !important;
-
-  transition: transform .2s cubic-bezier(0.65, 0, 0.35, 1),
-              opacity .2s cubic-bezier(0.65, 0, 0.35, 1);
-  opacity: 1;
-  visibility: visible;
-
-  overflow-y: scroll;
+  width: 30px;
+  height: 30px;
+  top: 22.5px;
+  left: -40px;
 }
 
-.hnHideLeft {
-  transition: transform .2s cubic-bezier(0.65, 0, 0.35, 1),
-              opacity .2s cubic-bezier(0.65, 0, 0.35, 1),
-              visibility 0s .2s;
-  visibility: hidden;
-  transform: translateX(-40px);
-  opacity: 0;
+.hnRequestDiv > img {
+  width: 50px;
+  height: 50px;
+  margin: 2.5px;
+  border-radius: 25px;
 }
 
-.hnHideRight {
-  transition: transform .2s cubic-bezier(0.65, 0, 0.35, 1),
-              opacity .2s cubic-bezier(0.65, 0, 0.35, 1),
-              visibility 0s .2s;
-  visibility: hidden;
-  transform: translateX(40px);
-  opacity: 0;
+.hnRequestDiv > h1, .hnRequestDiv > p {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  width: calc(100% - 82.5px);
 }
+
+.hnRequestDiv > h1 {
+  position: absolute;
+  left: 72.5px;
+  top: 10px;
+  /* bottom: 36.5px; */
+  font-size: 22px;
+}
+
+.hnRequestDiv > p {
+  position: absolute;
+  left: 72.5px;
+  top: 36.5px;
+
+  font-size: 16px;
+  color: #888;
+}
+
+.hnDeclineIcon {
+  right: 20px;
+  top: 22.5px;
+}
+
+.hnAcceptIcon {
+  right: 55px;
+  top: 22.5px;
+}
+
+.hnAcceptIcon:hover {
+  fill: #afa;
+}
+
+.hnAcceptIcon:active {
+  fill: #afa8;
+}
+
+.hnDeclineIcon:hover {
+  fill: #faa;
+}
+
+.hnDeclineIcon:active {
+  fill: #faa8;
+}
+
+
+
+/* Welcome */
+
+.hnCategory .aliPreview * {
+  color: #ddd;
+}
+
+.hnCategory .aliTimestamp {
+  color: #888;
+}
+
+
+
+/* RESPONSIVE DESIGN */
+
+@media screen and (max-width: 680px) {
+  .hnRequestDiv {
+    height: 80px;
+  }
+  .hnAcceptIcon {
+    top: initial;
+    /* left: 72.5px; */
+    bottom: 10px;
+  }
+  .hnDeclineIcon {
+    top: initial;
+    /* left: 107.5px; */
+    bottom: 10px;
+  }
+
+  .hnRequestTypeIcon {
+    width: 20px;
+    height: 20px;
+    top: initial;
+    bottom: 10px;
+    left: 27.5px;
+  }
+  .hnRequestDiv {
+    width: calc(100% - 20px);
+    margin-left: 0;
+  }
+}
+
+/* @media screen and (max-width: 475px) {
+  .hnRequestTypeIcon {
+    width: 20px;
+    height: 20px;
+    top: 25px;
+  }
+} */
