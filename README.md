@@ -1,70 +1,41 @@
-# Getting Started with Create React App
+# Strawberry
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+The in-development messaging app with a new UI experience.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+### DMs
+You can create chats with people in the DMs tab! Just press "Create Chat" and type your friend's email. Even if they haven't signed up yet, they will see your request in the Notifications tab when they do.
 
-### `npm start`
+### Groups
+You can also create threads with multiple people in the Groups tab! Press "Create Thread" and give your thread a name. After submitting, you will see the thread pop up in the left panel. Then, just open the thread, press the settings icon at the top right, and add your friends!
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### Posts and statuses
+Let's give the Home page some love! You can see your friends' posts and statuses in the Home page by finding them in the People tab. You can post or set a status yourself in the Profile tab.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### Animations and modern design
+Strawberry has so many animations everywhere, similar to Discord. The web app has gradients and nice color accents, too.
 
-### `npm test`
+### Future features...
+In the future, there will be a ton of customization. I planned from the start that users would be able to customize their message style (Bubble-style or Discord-style) and they could choose whether or not they want a DMs and Groups tab, or if they want their chats and threads bunched together.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Technical details
+This app uses...
 
-### `npm run build`
+Frontend:
+* React
+* Redux Toolkit
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Backend:
+* Python websockets
+* MongoDB
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Other:
+* Firebase Authentication
+* Google Fonts and Icons
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+---
 
-### `npm run eject`
+### Disclaimer
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+I am an intermediate developer and I am still in my teens, so my code might be messy. I open sourced this project in hopes that the project might gain a bit of traction and other developers could help clean up and improve my code.
