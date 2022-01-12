@@ -2,6 +2,8 @@
 
 The in-development messaging app with a new UI experience.
 
+Link: [https://strawberry.neonblacknetwork.com](https://strawberry.neonblacknetwork.com)
+
 ## Features
 
 ### DMs
