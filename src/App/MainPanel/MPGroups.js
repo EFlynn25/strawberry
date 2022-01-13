@@ -1,3 +1,8 @@
+// I will comment this one out another time...
+// that's just so much...
+
+
+
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Switch, Route } from "react-router-dom";
@@ -68,7 +73,6 @@ class MPGroups extends React.Component {
 
       this.loadMoreMessages();
     }
-    // console.log(logtext + " | shouldScroll " + this.shouldScroll);
   }
 
   scrollToBottom() {

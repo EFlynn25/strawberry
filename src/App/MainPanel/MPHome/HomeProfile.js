@@ -50,7 +50,7 @@ class HomeProfile extends React.Component {
       event.stopPropagation();
 
       if (event.target.getAttribute("class") == "hpStatusInput") {
-        if (this.state.statusInputVal != this.props.status) {
+        if (this.state.statusInputVal != this.props.status) { // I don't want more requests to the server than I need
           set_status(this.state.statusInputVal);
         }
         this.setState({editingStatus: false});
@@ -87,6 +87,7 @@ class HomeProfile extends React.Component {
       noStatus = true;
     }
 
+    // This part enlarges the image, because Google automatically sets the image to 96x96
     let picture = this.props.picture;
     const splitPic = picture.split("=")[0];
     if (splitPic != picture) {
@@ -100,10 +101,6 @@ class HomeProfile extends React.Component {
       posts.sort((a, b) => b.timestamp - a.timestamp);
     }
 
-    if (this.postListRef.current != null && this.postListRef.current.scrollHeight == this.postListRef.current.clientHeight) {
-      // this.loadMorePosts();
-    }
-
     return (
       <div className={this.props.classes}>
 
@@ -111,7 +108,7 @@ class HomeProfile extends React.Component {
         <div className="HPUserProfile">
           <div className="ppLeft">
             <img src={picture} className="pplPFP" alt={this.props.name} />
-            <h1 className="pplName">{this.props.name}{/*<Edit className="hpEditIcon hpeiName" />*/}</h1>
+            <h1 className="pplName">{this.props.name}</h1>
             <p className="hpEditStatus">Edit status:</p>
             <p className="pplStatus" style={this.state.editingStatus ? {display: "none"} : noStatus ? {fontStyle: "normal", color: "#fff5"} : null}>{status}<Edit className="hpEditIcon hpeiStatus" onClick={() => {this.setState({editingStatus: true}); this.statusInputRef.current.focus(); this.statusInputRef.current.setSelectionRange(this.state.statusInputVal.length, this.state.statusInputVal.length);}} /></p>
             <div className={this.state.editingStatus ? "hpChangeStatusDiv" : "hpChangeStatusDiv hpChangeStatusDivHidden"}>

@@ -78,7 +78,7 @@ class DMNewChat extends React.Component {
     }
   }
 
-  handleClickOutside(event) {
+  handleClickOutside(event) { // Like MPPopup, this makes sure the user has pressed both down and up outside of the panel before closing
     if (this.ddWrapperRef && this.ncWrapperRef && !this.ddWrapperRef.contains(event.target) && !this.ncWrapperRef.contains(event.target) && this.state.dropdown) {
       if (event.type == "mousedown") {
         this.mousePressedDown = true;
@@ -134,7 +134,7 @@ class DMNewChat extends React.Component {
       event.preventDefault();
       event.stopPropagation();
 
-      // if (/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(this.state.inputValue)) {
+      // Why is this regex so long... I just wanted to be as precise as possible...
       if (/(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/
         .test(this.state.inputValue)) {
         if (this.props.requested.includes(this.state.inputValue) || this.props.already_requested.includes(this.state.inputValue)) {
@@ -167,20 +167,10 @@ class DMNewChat extends React.Component {
     return(
       <Fragment>
         <div className={this.state.dropdown ? "DMNewChat DMNewChatHide" : "DMNewChat"} onClick={this.handleClick} ref={this.setWrapperRef}>
-          {/*<img src={add} className="ncAddIcon" alt="Add Icon" />*/}
           <Add className="ncAddIcon" alt="Add Icon" />
           <h1 className="ncText">Create Chat</h1>
         </div>
-        {/*
-        <div className={this.state.dropdown ? "oldncDropdown" : "oldncDropdown oldncDropdownHide"} ref={this.setWrapperRef}>
-          <h1 className="oldncddTitle">New Chat</h1>
-          <h1 className="oldncddText">Email:</h1>
-          <input value={this.state.inputValue} onChange={this.handleInputChange} onKeyPress={this.inputEnterPressed} className="oldncddInput" placeholder="Type email here" ref={this.inputRef} disabled={this.state.emailRequested == "" ? "" : "disabled"} />
-          <h1 className="oldncddStatus">{this.state.status}</h1>
-        </div>
-        */}
         <div className={this.state.dropdown ? "ncDropdown" : "ncDropdown ncDropdownHide"} ref={this.setWrapperRef}>
-          {/*<img src={add} className="ncAddIcon" alt="Add Icon" />*/}
           <AddPerson className="ntdIcon" />
           <h1 className="ncdTitle">Create Chat</h1>
           <h1 className="ncdText">Email:</h1>

@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from "react-router-dom";
-// import { Switch, Route, Link } from "react-router-dom";
 
 import './LPTabs.css';
 import {

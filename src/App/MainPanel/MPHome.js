@@ -28,19 +28,16 @@ class MPHome extends React.Component {
     this.state = {
       homeClass: "MPHome",
       specialEasing: true,
-      tab: 1,
-      notifyClasses: "HomeNotifications hnHideRight",
-      // showAnnouncementsPanel: false,
-      panelType: "",
-      panelData: ""
-    };
+      tab: 1, // Identifies whether user is in People, Notifications, or Profile tab. (I know, "how dare it not start at 0!")
+      notifyClasses: "HomeNotifications hnHideRight", // Needed because the Notifications tab hides itself to the left or right based on
+    };                                                // what tab the user was in before pressing "Notifications"
 
     this.transitionCheck = this.transitionCheck.bind(this);
   }
 
   componentDidMount() {
     this.props.setCurrentPage("Home");
-    if (!this.props.announcements || Object.keys(this.props.announcements).length <= 0) {
+    if (!this.props.announcements || Object.keys(this.props.announcements).length <= 0) { // Load announcements if not already loaded
       get_announcements();
     }
   }
@@ -59,7 +56,7 @@ class MPHome extends React.Component {
     }
   }
 
-  transitionCheck(isVisible) {
+  transitionCheck(isVisible) { // Used with VisibilitySensor to transition the Home page in on startup
     if (isVisible && this.state.homeClass != "MPHome MPHomeTransition") {
       this.setState({
         homeClass: "MPHome MPHomeTransition"

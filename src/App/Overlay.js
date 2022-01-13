@@ -18,14 +18,14 @@ function Overlay(props) {
   let ovClass = "OverlayView";
   let overlayContent;
   let showBg = true;
-  if (props.type == "welcome") {
+  if (props.type == "welcome") { // Overlay has different types, for sign-in page, loading screen, and just blur (unused).
     firebase.auth().onAuthStateChanged(user => {
       if (!!user) {
         history.push('/');
       }
     });
 
-    dispatch(setCurrentPage("Welcome"));
+    dispatch(setCurrentPage("Welcome")); // Sets the title of the page to "Welcome - Strawberry" with App.js
 
     overlayContent =
       <div className="overlayPanel">
@@ -106,10 +106,9 @@ function Overlay(props) {
         showBg ?
 
         <Fragment>
-          <div className="OTopBar"></div>
-          <div className="OLeftPanel"></div>
+          <div className="OTopBar"></div>    {/* These panels are placeholders for the background of the sign-in page */}
+          <div className="OLeftPanel"></div> {/* (The "O" stands for "Overlay") */}
           <div className="OMainPanel"></div>
-          {/*<div className="ORightPanel"></div>*/}
         </Fragment>
 
         :

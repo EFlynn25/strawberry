@@ -20,7 +20,7 @@ class LeftPanel extends React.Component {
     super(props)
 
     this.state = {
-      mobile: false
+      mobile: false // If this is true, LeftPanel will have a darkened background to put focus on itself
     }
 
     this.checkMobile = this.checkMobile.bind(this)

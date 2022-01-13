@@ -16,8 +16,8 @@ class MainPanel extends React.Component {
     this.state = {
       mpClass: "MainPanel",
       specialEasing: true,
-      panelType: "",
-      panelData: ""
+      panelType: "", // Type of panel (announcements, settings, etc.)
+      panelData: "" // Special data passed to MPPopup, like a user's email when opening a user's profile
     };
 
     this.enableShrink = this.enableShrink.bind(this);
@@ -27,20 +27,22 @@ class MainPanel extends React.Component {
     this.closePanel = this.closePanel.bind(this);
   }
 
-  enableShrink() {
+  enableShrink() { // Enables shrinking MainPanel when opening the MainPanel popup (MPPopup)
     this.setState({ specialEasing: false });
     if (this.state.mpClass != "MainPanel MainPanelTransition MainPanelShrink") {
       this.setState({ mpClass: "MainPanel MainPanelTransition MainPanelShrink" });
     }
   }
 
-  disableShrink() {
+  disableShrink() { // Disables shrinking...
     if (this.state.mpClass == "MainPanel MainPanelTransition MainPanelShrink") {
       this.setState({ mpClass: "MainPanel MainPanelTransition" });
     }
   }
 
-  openPanel(newType, newData, shrink=true) {
+  openPanel(newType, newData, shrink=true) { // Opens the main panel popup (MPPopup)
+    // This if statement enables shrinking MainPanel when not in Groups
+    // because shrinking MainPanel for Groups settings looks weird
     if (!this.props.history.location.pathname.startsWith("/groups")) {
       this.enableShrink();
     }
@@ -54,7 +56,7 @@ class MainPanel extends React.Component {
     this.props.setCloseButton(true);
   }
 
-  closePanel() {
+  closePanel() { // Closes MPPopup...
     this.disableShrink();
     this.setState({
       panelType: ""

@@ -22,7 +22,7 @@ class PersonPicker extends React.Component {
     });
   }
 
-  inputEnterPressed(event) {
+  inputEnterPressed(event) { // Used when the user enters and email and presses "Enter" if the user they want to add is not in the list.
     var code = event.keyCode || event.which;
     if (code === 13 && !event.shiftKey) {
       event.preventDefault();
@@ -61,7 +61,7 @@ class PersonPicker extends React.Component {
         const personName = myPerson.name;
         const personPicture = myPerson.picture;
 
-        const myElement = (
+        const myElement = ( // "pp" stands for PersonPicker...
           <div className="ppPerson" key={item} onClick={() => this.props.callback(item)}>
             <img src={personPicture} className="ppPFP" alt={personName} />
             <h1 className="ppName">{personName}</h1>
@@ -83,9 +83,7 @@ class PersonPicker extends React.Component {
       <div className="PersonPicker">
         <input className="ppInput" value={this.state.inputValue} onChange={this.handleInputChange} onKeyPress={this.inputEnterPressed} placeholder="Type email here" ref={this.inputRef} />
         <div className="ppPeopleDiv">
-          {
-            newPeople
-          }
+          { newPeople }
         </div>
       </div>
     )

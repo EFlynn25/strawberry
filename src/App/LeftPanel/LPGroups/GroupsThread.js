@@ -59,18 +59,14 @@ class GroupsThread extends React.Component {
       threadName = myThread.name;
     } else {
       if (myThread.people != null && myThread.people.length > 0) {
-        // set thread name to something default
+        // TODO: set thread name to something default
       } else {
         threadName = <i style={{color: "#FFFD"}}>No people</i>;
       }
     }
 
     let profilesDiv = null;
-    if (myThread.people != null && myThread.people.length > 0) {
-      // const person1 = this.props.getknownPeople[myThread.people[0]];
-      // const person2 = this.props.getknownPeople[myThread.people[1]];
-      // const person3 = this.props.getknownPeople[myThread.people[2]];
-      // const person4 = this.props.getknownPeople[myThread.people[3]];
+    if (myThread.people != null && myThread.people.length > 0) { // This if statement is also used in HomeNotifications...
       const person1 = getUser(myThread.people[0]);
       const person2 = getUser(myThread.people[1]);
       const person3 = getUser(myThread.people[2]);
@@ -124,28 +120,28 @@ class GroupsThread extends React.Component {
     let threadMessage = "";
     let threadTime = "";
     let systemMessage = false;
-    if (Array.isArray(myThreadMessages) && myThreadMessages.length) {
+    if (Array.isArray(myThreadMessages) && myThreadMessages.length) { // If messages exist...
       const lastMessage = myThreadMessages[myThreadMessages.length - 1];
       let who = "";
 
-      if (lastMessage.from == this.props.email) {
+      if (lastMessage.from == this.props.email) { // Add prefix to last message to show who sent it
         who = "You: "
       } else if (lastMessage.from != "system") {
-        who = getUser(lastMessage.from).name.split(" ")[0] + ": "
+        who = getUser(lastMessage.from).name.split(" ")[0] + ": " // Google Authentication does not give first/last name...
       }
       threadMessage = who + lastMessage["message"];
 
       if (lastMessage.from == "system") {
-        systemMessage = true;
+        systemMessage = true; // Used for special system message styling
       }
 
       threadTime = parseDate(lastMessage.timestamp, "time");
     }
 
     let read = true;
-    if (myThreadMessages != null && myThreadMessages.length > 0) {
+    if (myThreadMessages != null && myThreadMessages.length > 0) { // Checks if messages exist
       if (myThread.lastRead[this.props.email] < myThreadMessages[myThreadMessages.length - 1].id || myThread.lastRead[this.props.email] == null) {
-        read = false;
+        read = false; // This if statement painstakingly checks if the user has read the last message.
       }
     } else {
       threadMessage = <i>No messages</i>;

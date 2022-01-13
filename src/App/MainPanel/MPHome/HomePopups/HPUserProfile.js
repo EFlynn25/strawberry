@@ -37,13 +37,13 @@ class HPUserProfile extends React.Component {
   loadMorePosts() {
     if (!this.props.loadingPosts.includes(this.props.email)) {
       const myPerson = getUser(this.props.email);
-      if (myPerson.posts != null && myPerson.posts.length > 0) {
+      if (myPerson.posts != null && myPerson.posts.length > 0) { // User posts are loaded
         const containsFirstPost = myPerson.posts.some(item => item.post_id == myPerson.firstPost);
-        if (!containsFirstPost) {
+        if (!containsFirstPost) { // User posts don't contain first post; load more posts
           this.props.addLoadingPosts({email: this.props.email, data: true})
           get_posts(this.props.email, 10, myPerson.posts.length)
         }
-      } else {
+      } else { // User posts are not loaded; load more posts
         this.props.addLoadingPosts({email: this.props.email, data: true})
         get_posts(this.props.email, 10, 0)
       }
@@ -59,7 +59,6 @@ class HPUserProfile extends React.Component {
     const online = myPerson.online;
     const posts = JSON.parse(JSON.stringify(myPerson.posts));
     let postsExist = posts != null && posts.length > 0 ? true : false;
-    // let orderedPostList;
 
     const splitPic = picture.split("=")[0];
     if (splitPic != picture) {
@@ -75,11 +74,7 @@ class HPUserProfile extends React.Component {
       postStatus = "Retrieving posts..."
     }
 
-    if (this.postListRef.current != null && this.postListRef.current.scrollHeight == this.postListRef.current.clientHeight) {
-      // setTimeout(() => this.loadMorePosts(), 1000)
-    }
-
-    return (
+    return ( // "pp" probably stands for "PersonProfile"... otherwise it would be "upLeft" which is confusing
       <div className="HPUserProfile">
         <div className="ppLeft">
           <img src={picture} className="pplPFP" alt={name} />

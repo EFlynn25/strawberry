@@ -10,8 +10,8 @@ class TopBar extends React.Component {
     super(props);
 
     this.state = {
-      tbWelcomeDivClass: "tbWelcomeDiv",
-      tbLogoDivClass: "tbLogoDiv tbLogoDivHide",
+      tbWelcomeDivClass: "tbWelcomeDiv", // Welcome div has logo on the right with the "Hey, ...!" text on the left
+      tbLogoDivClass: "tbLogoDiv tbLogoDivHide", // Logo div just has the logo on the left, for when user is in the Home page
     };
   }
 

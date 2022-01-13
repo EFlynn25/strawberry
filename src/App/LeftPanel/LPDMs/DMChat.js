@@ -21,8 +21,7 @@ class DMChat extends React.Component {
     this.updateData();
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    // console.log("SHOULD I UPDATE?!");
+  shouldComponentUpdate(nextProps, nextState) { // I need to implement more of these throughout the app for performance.
     const openedDMChanged = (this.props.chatEmail == nextProps.openedDM && this.props.chatEmail != this.props.openedDM) || (this.props.chatEmail != nextProps.openedDM && this.props.chatEmail == this.props.openedDM);
 
     const thisChat = this.props.chats[this.props.chatEmail];
@@ -82,11 +81,11 @@ class DMChat extends React.Component {
 
     let chatMessage = "";
     let chatTime = "";
-    if (Array.isArray(myChatMessages) && myChatMessages.length) {
+    if (Array.isArray(myChatMessages) && myChatMessages.length) { // Checks if messages exist
       const lastMessage = myChatMessages[myChatMessages.length - 1];
       let you = "";
 
-      if (lastMessage["from"] == "me") {
+      if (lastMessage["from"] == "me") { // I took the inspiration of using "You: " as a prefix from Google Hangouts (my favorite messaging app)
         you = "You: "
       }
       chatMessage = you + lastMessage["message"];
@@ -104,7 +103,6 @@ class DMChat extends React.Component {
       chatTime = null;
     }
 
-    // <div className="DMChat" onClick={this.handleClick} style={{background: opened ? "linear-gradient(90deg, #282A2D 0%, transparent 100%)" : ""}}>
     return (
       <div className="DMChat" onClick={this.handleClick} style={{backgroundPositionX: opened ? "0" : ""}}>
         <img src={chatPicture} className="dmChatPFP" alt={chatName} style={{boxShadow: opened ? "none" : ""}} />

@@ -3,7 +3,6 @@ import { Switch, Route, withRouter } from "react-router-dom";
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import { connect } from 'react-redux';
-import { Helmet } from 'react-helmet';
 
 import './App.css';
 import {
@@ -40,8 +39,7 @@ class App extends React.Component {
         this.props.setUserEmail(user.email);
         let picture = user.photoURL
         if (picture == null) {
-          // picture = "https://drive.google.com/uc?id=1Veh7wpXzbjuHHXPBafyWQfSNZr3zUsf-";
-          picture = "/assets/images/default_profile_pic.png";
+          picture = "/assets/images/default_profile_pic.png"; // Set default PFP
         }
         this.props.setUserPicture(picture);
       }
@@ -50,6 +48,7 @@ class App extends React.Component {
 
   componentDidUpdate() {
     if (!this.state.pageLoaded && this.props.dmsLoaded && this.props.groupsLoaded && this.props.peopleLoaded && this.props.socket == true) {
+      // All backend data loaded, ready to close overlay and navigate home
       if (this.props.history.location.pathname == "/") {
         this.props.history.push("/home");
       }
@@ -65,30 +64,26 @@ class App extends React.Component {
     }
   }
 
-  // setCloseButton() {
-  //
-  // }
-
   render() {
     var myTitle = "";
-    var tnc = 0;
+    var tnc = 0; // Total notification count
     var newHref = "/favicon_package/favicon.ico";
     const nc = this.props.notificationCount;
     Object.keys(nc).map(function(key) {
       tnc += nc[key];
     });
-    if (tnc > 0) {
+    if (tnc > 0) { // Set favicon to unread and set title prefix
       myTitle = "(" + tnc + ") ";
       newHref = "/favicon_package/nfavicon.ico"
     }
-    if (this.props.currentPage != "") {
+    if (this.props.currentPage != "") { // If the current page is Home, DMs, etc., add it to the title
       myTitle += this.props.currentPage + " - ";
     }
     myTitle += "Strawberry";
 
+    // Set favicon and title based on if statements before
     const favicon = document.getElementById("favicon");
     favicon.href = newHref;
-
     document.title = myTitle;
 
     return (
@@ -108,7 +103,7 @@ class App extends React.Component {
                 </div>
                 <TopBar />
                 <LeftPanel showLeftPanel={this.state.showLeftPanel} hideLeftPanel={() => {this.setState({showLeftPanel: false})}} />
-                <MainPanel setCloseButton={(value) => {this.setState({showCloseButton: value})}} />
+                <MainPanel setCloseButton={(value) => {this.setState({showCloseButton: value})} /* Shows close button when MPPopup is open */} />
               </Fragment>
 
               :

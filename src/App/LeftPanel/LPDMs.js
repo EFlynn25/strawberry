@@ -101,7 +101,7 @@ class LPDMs extends React.Component {
     this.props.setNotificationCount({type: "dms", count: unreadChats});
   }
 
-  handleKeyDown(e) {
+  handleKeyDown(e) { // This method sets up the Ctrl+UpArrow and Ctrl+DownArrow shortcuts
     if (this.props.dmsOrGroups != "dms") {
       return false;
     }
@@ -111,14 +111,9 @@ class LPDMs extends React.Component {
       e.stopPropagation();
 
       if (!this.props.history.location.pathname.startsWith("/home")) {
-        // const listOfChildrenEmails = this.state.children.map(child => child.props.chatEmail);
-        // const myIndex = listOfChildrenEmails.indexOf(this.props.openedDM);
-
         const myIndex = this.listOfEmails.indexOf(this.props.openedDM);
 
         if (myIndex != 0) {
-          // const newChat = listOfChildrenEmails[myIndex - 1];
-
           const newChat = this.listOfEmails[myIndex - 1];
           this.props.setOpenedDM(newChat);
           this.props.history.push("/dms/" + newChat);
@@ -131,21 +126,14 @@ class LPDMs extends React.Component {
       e.preventDefault();
       e.stopPropagation();
 
-      // const listOfChildrenEmails = this.state.children.map(child => child.props.chatEmail);
       if (this.props.history.location.pathname.startsWith("/home")) {
-        // const newChat = listOfChildrenEmails[0];
         const newChat = this.listOfEmails[0];
         this.props.setOpenedDM(newChat);
         this.props.history.push("/dms/" + newChat);
       } else {
-        // const myIndex = listOfChildrenEmails.indexOf(this.props.openedDM);
-
         const myIndex = this.listOfEmails.indexOf(this.props.openedDM);
 
         if (myIndex != this.listOfEmails.length - 1) {
-        // if (myIndex != listOfChildrenEmails.length - 1) {
-          // const newChat = listOfChildrenEmails[myIndex + 1];
-
           const newChat = this.listOfEmails[myIndex + 1];
           this.props.setOpenedDM(newChat);
           this.props.history.push("/dms/" + newChat);

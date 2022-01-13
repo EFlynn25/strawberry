@@ -1,3 +1,8 @@
+// This file contains many "acronyms" to identify things.
+// They are confusing and I am sorry. The CSS classes would have
+// been very long if I didn't do this. I explain a few of them
+// above "this.state".
+
 import React, { Fragment } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { connect } from 'react-redux';
@@ -16,10 +21,10 @@ class HPAnnouncements extends React.Component {
       showAnnouncement: false,
       showAddAnnouncement: false,
       openedAnnouncement: "",
-      aaTab: "write",
-      aawValue: "",
-      aapbText: "Post",
-      aaphiTitleText: "",
+      aaTab: "write", // "aa" stands for AddAnnouncement
+      aawValue: "", // "aaw" stands for AddAnnouncement write
+      aapbText: "Post", // "aapb" stands for AddAnnouncement preview button
+      aaphiTitleText: "", // "aaphi" stands for AddAnnouncement post header input (for inputting ID and Title)
       aaphiIDText: ""
     };
 
@@ -40,7 +45,7 @@ class HPAnnouncements extends React.Component {
     }
   }
 
-  markAllHandleClick() {
+  markAllHandleClick() { // Handles clicking the "Mark all as read" button
     let idsList = [];
     const ar = this.props.announcementsRead;
     Object.keys(this.props.announcements).forEach(function(id) {
@@ -53,7 +58,7 @@ class HPAnnouncements extends React.Component {
     }
   }
 
-  aawHandleChange(event) {
+  aawHandleChange(event) { // This an the functions that follow are only for me to see.
     this.setState({aawValue: event.target.value});
   }
 
@@ -78,7 +83,7 @@ class HPAnnouncements extends React.Component {
     }
   }
 
-  aapbMouseLeave() {
+  aapbMouseLeave() { // This makes me have to press the Post button twice, while hovering over it the whole time
     if (this.state.aapbText != "Post") {
       this.setState({
         aapbText: "Post"

@@ -22,8 +22,7 @@ class MPPopup extends React.Component {
     this.setWrapperRef = this.setWrapperRef.bind(this);
     this.handleClickOutside = this.handleClickOutside.bind(this);
 
-    // this.noTypeTimeout = null;
-    this.mousePressedDown = false;
+    this.mousePressedDown = false; // Has the user already pressed down outside of the panel?
   }
 
   componentDidMount() {
@@ -48,7 +47,7 @@ class MPPopup extends React.Component {
     if (this.props.type == "") {
       newClasses = "MPPopup MPPopupHide";
       if (this.state.type != "") {
-        setTimeout(function() {
+        setTimeout(function() { // Resets this.state.type AFTER panel is completely closed, for smoother transitions
           if (this.updater.isMounted(this)) {
             this.setState({ type: "" });
           }
@@ -65,7 +64,7 @@ class MPPopup extends React.Component {
     }
   }
 
-  handleClickOutside(event) {
+  handleClickOutside(event) { // Checks if the user has pressed both down and up outside of the panel
     if (this.panelRef && !this.panelRef.contains(event.target) && this.props.type != "") {
       if (event.type == "mousedown") {
         this.mousePressedDown = true;
@@ -102,9 +101,7 @@ class MPPopup extends React.Component {
         <div style={{display: "flex", width: "100%", height: "100%", flexDirection: "column", justifyContent: "center", alignItems: "center"}}>
           <h1 style={{margin: "0", color: "#fff5", fontSize: "18px"}}>
             {this.state.type}
-            {/*this.state.data != "" ? this.state.data : null*/}
           </h1>
-          {/*this.state.data != "" ? <h1 style={{margin: "0", marginTop: "10px", color: "#fff3", fontSize: "18px"}}>({this.state.data})</h1> : null*/}
         </div>
       );
     }

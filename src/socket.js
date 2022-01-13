@@ -1,9 +1,14 @@
+// Get ready for this one... oh geez...
+// This file basically runs the whole app. It is used to communicate with the server.
+
+
+
 import firebase from 'firebase/app';
 import { useDispatch } from 'react-redux'
 import { addUserPost, setUserFirstPost, setLikedPost, setdmsLoaded, setgroupsLoaded, setpeopleLoaded, setSocket, setAnnouncement, setAnnouncementRead } from './redux/appReducer.js'
 import { setUserStatus, setMultipleTabs, setUserLikedPost, setUserLoadingPosts } from './redux/appReducer.js'
-import { addChat, addChatMessage, addLoadedChatMessages, removeSendingChatMessage, setChatCreated, setChatLastRead, setChatTyping, setInChat, setLoadingMessages, addChatRequest, removeChatRequest
-  // removeRequesting, addRequested, addRequestedMe
+import {
+  addChat, addChatMessage, addLoadedChatMessages, removeSendingChatMessage, setChatCreated, setChatLastRead, setChatTyping, setInChat, setLoadingMessages, addChatRequest, removeChatRequest
 } from './redux/dmsReducer.js'
 import {
   setOpenedThread, addThread, removeThread, setThreadName, addThreadPeople, removeThreadPerson, addThreadMessage, addLoadedThreadMessages, removeSendingThreadMessage,
@@ -24,6 +29,7 @@ let socket = null;
 const textTone = new Audio(defaultTextTone);
 
 export function startSocket() {
+  // 2096 - Production, 2053 - Testing
   socket = new WebSocket('wss://strawberry.neonblacknetwork.com:2096');
   // socket = new WebSocket('wss://strawberry.neonblacknetwork.com:2053');
 
@@ -39,10 +45,10 @@ export function startSocket() {
     var product = jsonData.product;
     var com = jsonData.command;
     const myEmail = mainStore.getState().app.email;
-    if (product == "app") {
+    if (product == "app") { // There are three products: app, dms, and groups. They separate methods from each other, like "send_message".
 
 
-      if (com == "multiple_tabs") {
+      if (com == "multiple_tabs") { // Used when user has Strawberry open in another tab
         mainStore.dispatch(setMultipleTabs(jsonData["data"]));
       }
 
@@ -93,7 +99,7 @@ export function startSocket() {
 
       /* Set functions */
 
-      else if (com == "add_user") {
+      else if (com == "add_user") { // add_user is run in every product on startup to ensure the user has an entry in the database (and to get basic info)
         mainStore.dispatch(setUserStatus(jsonData.status));
         mainStore.dispatch(addUserPost(jsonData.posts));
         mainStore.dispatch(setUserFirstPost(jsonData.first_post));
@@ -191,7 +197,7 @@ export function startSocket() {
             mainStore.dispatch(setdmsLoaded(true));
           }
         }
-      } else if (com == "get_chat_created") {
+      } else if (com == "get_chat_created") { // Get the timestamp that a chat was created (used to sort the chat in LPDMs if it has no messages)
         if (jsonData.response == true) {
           mainStore.dispatch(setChatCreated({chat: jsonData.chat, created: jsonData.created}));
         }
@@ -230,7 +236,7 @@ export function startSocket() {
 
 
       /* Hybrid Functions */
-      else if (com == "in_chat") {
+      else if (com == "in_chat") { // in_chat is used for in chat indicators
         if (myEmail != jsonData.email) {
           mainStore.dispatch(setInChat({"chat": jsonData.chat, "data": jsonData.data}));
         }
@@ -246,13 +252,11 @@ export function startSocket() {
             mainStore.dispatch(setChatLastRead({"who": "them", "chat": jsonData.chat, "lastRead": myMessages[myMessages.length - 1].id}));
           }
         }
-      } else if (com == "typing") {
-        // mainStore.dispatch(setChatLastRead({"who": "me", "chat": jsonData.chat, "lastRead": jsonData.me}));
-        // mainStore.dispatch(setChatLastRead({"who": "them", "chat": jsonData.chat, "lastRead": jsonData.them}));
+      } else if (com == "typing") { // typing is used for typing indicators
         if (myEmail != jsonData.email) {
           mainStore.dispatch(setChatTyping({"chat": jsonData.chat, "data": jsonData.data}));
         }
-      } else if (com == "last_read") {
+      } else if (com == "last_read") { // last_read is used for last read indicators (difficult, isn't it?)
         mainStore.dispatch(setChatLastRead({"who": "me", "chat": jsonData.chat, "lastRead": jsonData.me}));
         mainStore.dispatch(setChatLastRead({"who": "them", "chat": jsonData.chat, "lastRead": jsonData.them}));
       }
@@ -271,7 +275,7 @@ export function startSocket() {
         } else if (jsonData.response == "no_threads") {
           mainStore.dispatch(setgroupsLoaded(true));
         }
-      } else if (com == "get_thread_info") {
+      } else if (com == "get_thread_info") { // Retrieves thread name, people, and other basic info
         if (jsonData.response == true && jsonData.requested.includes(myEmail)) {
           mainStore.dispatch(addThreadRequest({[jsonData.thread_id]: {"name": jsonData.name, "people": jsonData.people}}));
         } else if (jsonData.response == true) {
@@ -282,19 +286,14 @@ export function startSocket() {
             const people = Object.keys(mainStore.getState().people.knownPeople);
             jsonData.people.forEach(item => {
               if (!people.includes(item)) {
-                // mainStore.dispatch(addPerson({"email": item, "name": item, "picture": "/assets/images/default_profile_pic.png"}));
                 get_user_info(item);
               }
             });
-            console.log(people);
-            // get_user_info();
+            console.log(people)
           }
         }
       } else if (com == "get_messages") {
         if (jsonData.response == true) {
-
-          // const myEmail = mainStore.getState().app.email;
-          // let myMessages = jsonData.messages.reverse();
           let myMessages = jsonData.messages;
           myMessages.forEach((item, i) => {
             item.from = item.email;
@@ -346,7 +345,6 @@ export function startSocket() {
         if (jsonData.response == true) {
           mainStore.dispatch(removeThreadCreating(jsonData.name));
           mainStore.dispatch(addThreadCreated(jsonData.name));
-          // mainStore.dispatch(addThread(jsonData.thread));
           get_thread_info(jsonData.thread);
         }
       } else if (com == "rename_thread") {
@@ -374,13 +372,10 @@ export function startSocket() {
           mainStore.dispatch(addThreadPeople({thread_id: jsonData.thread_id, people: [jsonData.person]}))
           mainStore.dispatch(removeRequested({thread_id: jsonData.thread_id, people: [jsonData.person]}))
           if (!Object.keys(mainStore.getState().people.knownPeople).includes(jsonData.person)) {
-            // mainStore.dispatch(addPerson({"email": jsonData.person, "name": jsonData.person, "picture": "/assets/images/default_profile_pic.png"}));
             get_user_info(jsonData.person)
           }
         }
       } else if (com == "deny_request") {
-        // console.log(Object.keys(mainStore.getState().groups.requests));
-        // console.log(jsonData.thread_id);
         if (Object.keys(mainStore.getState().groups.requests).includes(jsonData.thread_id.toString())) {
           mainStore.dispatch(removeThreadRequest(jsonData.thread_id));
         } else if (jsonData.response == true || jsonData.response == "receive_denied_request") {
@@ -389,8 +384,6 @@ export function startSocket() {
       } else if (com == "remove_person") {
         if (jsonData.response == true || jsonData.response == "receive_removed_person") {
           if (jsonData.person == myEmail) {
-            // mainStore.dispatch(setOpenedThread(""));
-            // history.push("/groups");
             mainStore.dispatch(removeThread(jsonData.thread_id));
           } else {
             mainStore.dispatch(removeThreadPerson({thread_id: jsonData.thread_id, person: jsonData.person}));
@@ -403,7 +396,7 @@ export function startSocket() {
 
       else if (com == "in_thread") {
         if (jsonData.response == true) {
-          // do nothing
+          // do nothing (Then why is it here??)
         } else if (jsonData.response == "receive_in_thread") {
           mainStore.dispatch(setInThread({"thread_id": jsonData.thread_id, "people": jsonData.in_thread, "data": jsonData.data}));
           if (jsonData.data === false && jsonData.lastRead != null) {
@@ -489,6 +482,12 @@ function send_websocket_message(jsonData) {
   console.log("WebSocket message sending: " + jsonString);
   socket.send(jsonString);
 }
+
+
+
+// The rest of these functions are specific methods for the backend to make calling them easier.
+// This way, I don't have to create a new JSON object everytime.
+
 
 // App Functions
 

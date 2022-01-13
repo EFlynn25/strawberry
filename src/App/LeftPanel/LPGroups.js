@@ -47,7 +47,6 @@ class LPGroups extends React.Component {
   }
 
   reloadThreads() {
-    // let children = [];
     let unreadThreads = 0;
 
     const noMessageThreads = [];
@@ -102,20 +101,15 @@ class LPGroups extends React.Component {
     this.props.setNotificationCount({type: "groups", count: unreadThreads});
   }
 
-  handleKeyDown(e) {
+  handleKeyDown(e) { // This method sets up the Ctrl+UpArrow and Ctrl+DownArrow shortcuts
     if (e.ctrlKey && e.which === 38) {
       e.preventDefault();
       e.stopPropagation();
 
       if (!this.props.history.location.pathname.startsWith("/home")) {
-        // const listOfChildrenEmails = this.state.children.map(child => child.props.threadEmail);
-        // const myIndex = listOfChildrenEmails.indexOf(this.props.openedGroups);
-
         const myIndex = this.listOfEmails.indexOf(this.props.openedGroups);
 
         if (myIndex != 0) {
-          // const newThread = listOfChildrenEmails[myIndex - 1];
-
           const newThread = this.listOfEmails[myIndex - 1];
           this.props.setOpenedThread(newThread);
           this.props.history.push("/groups/" + newThread);
@@ -128,21 +122,14 @@ class LPGroups extends React.Component {
       e.preventDefault();
       e.stopPropagation();
 
-      // const listOfChildrenEmails = this.state.children.map(child => child.props.threadEmail);
       if (this.props.history.location.pathname.startsWith("/home")) {
-        // const newThread = listOfChildrenEmails[0];
         const newThread = this.listOfEmails[0];
         this.props.setOpenedThread(newThread);
         this.props.history.push("/groups/" + newThread);
       } else {
-        // const myIndex = listOfChildrenEmails.indexOf(this.props.openedGroups);
-
         const myIndex = this.listOfEmails.indexOf(this.props.openedGroups);
 
         if (myIndex != this.listOfEmails.length - 1) {
-        // if (myIndex != listOfChildrenEmails.length - 1) {
-          // const newThread = listOfChildrenEmails[myIndex + 1];
-
           const newThread = this.listOfEmails[myIndex + 1];
           this.props.setOpenedThread(newThread);
           this.props.history.push("/groups/" + newThread);

@@ -1,3 +1,9 @@
+// I hope someone can try to understand this...
+// My thought was to have the "...Message.js" files be like a wrapper
+// for the "...DefaultMessage.js" files so that I can implement customizable
+// messages in the future. The "...DefaultMessage.js" files JUST display what
+// "...Message.js" files give them.
+
 import React from 'react';
 import { connect } from 'react-redux';
 
@@ -93,8 +99,6 @@ class DMsMessage extends React.Component {
       this.setState({
         myIDs: ids,
         messageEmail: propsOpenedDM,
-        // messageName: this.props.knownPeople[propsOpenedDM].name,
-        // messagePicture: this.props.knownPeople[propsOpenedDM].picture,
         messageName: thisUser.name,
         messagePicture: thisUser.picture,
       });
@@ -149,7 +153,6 @@ class DMsMessage extends React.Component {
 
       const oldStateMessages = this.state.messageList;
       if (oldStateMessages != null && oldStateMessages.length > 0 && oldStateMessages[oldStateMessages.length - 1].id == thisChat.messages[thisChat.messages.length - 1].id) {
-      // if (lastMessageID == newMessageObjects[newMessageObjects.length - 1].id) {
         if (this.state.inChat == "here" && !this.props.inChat) {
           newInChat = "gone";
           icnt = false;
@@ -157,9 +160,7 @@ class DMsMessage extends React.Component {
         if (this.state.inChat == "gone" && newInChat == "here") {
           icnt = false;
         }
-        // console.log(prevProps.openedDM);
-        // console.log(this.props.openedDM);
-        if (this.state.inChat == "no" && newInChat == "here" /*&& lastRead < lastMessageID*/) {
+        if (this.state.inChat == "no" && newInChat == "here") {
           icnt = false;
         }
       }

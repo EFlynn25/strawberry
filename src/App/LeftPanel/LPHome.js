@@ -13,7 +13,7 @@ class LPHome extends React.Component {
     this.handleClick = this.handleClick.bind(this);
 
     this.state = {
-      opened: false
+      opened: false // This is used to start the Home icon animation when opening the Home page
     };
   }
 
@@ -43,7 +43,7 @@ class LPHome extends React.Component {
     e.preventDefault();
 
     this.props.history.push("/home");
-    this.props.hideLeftPanel();
+    this.props.hideLeftPanel(); // Obviously, this method does nothing when the user is not in mobile.
   }
 
   render () {

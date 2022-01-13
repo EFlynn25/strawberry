@@ -65,7 +65,7 @@ class GroupsNewThread extends React.Component {
     }
   }
 
-  handleClickOutside(event) {
+  handleClickOutside(event) { // Like MPPopup, this makes sure the user has pressed both down and up outside of the panel before closing
     if (this.ddWrapperRef && this.ntWrapperRef && !this.ddWrapperRef.contains(event.target) && !this.ntWrapperRef.contains(event.target) && this.state.dropdown) {
       if (event.type == "mousedown") {
         this.mousePressedDown = true;
@@ -120,18 +120,6 @@ class GroupsNewThread extends React.Component {
     if (code === 13 && !event.shiftKey) {
       event.preventDefault();
       event.stopPropagation();
-
-      // if (this.props.requested.includes(this.state.inputValue) || this.props.already_requested.includes(this.state.inputValue)) {
-      //   this.setState({
-      //     status: "You already requested that person!"
-      //   });
-      // } else if (this.props.chat_exists.includes(this.state.inputValue) || Object.keys(this.props.chats).includes(this.state.inputValue)) {
-      //   this.setState({
-      //     status: "You already have a chat with that person!"
-      //   });
-      // } else {
-      //
-      // }
 
       this.setState({
         inputValue: "",

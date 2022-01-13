@@ -7,3 +7,6 @@ export function getUser(user) {
   }
   return {"name": user, "picture": "/assets/images/default_profile_pic.png", "status": "", "online": false}
 }
+
+
+// This is one of my favorite files. Concise, useful, and handles null errors for me.

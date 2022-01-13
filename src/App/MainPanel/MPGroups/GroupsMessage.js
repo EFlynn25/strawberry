@@ -1,3 +1,9 @@
+// I hope someone can try to understand this...
+// My thought was to have the "...Message.js" files be like a wrapper
+// for the "...DefaultMessage.js" files so that I can implement customizable
+// messages in the future. The "...DefaultMessage.js" files JUST display what
+// "...Message.js" files give them.
+
 import React from 'react';
 import { connect } from 'react-redux';
 
@@ -125,7 +131,6 @@ class GroupsMessage extends React.Component {
       });
     }
 
-    // const lastRead = thisThread.lastRead.them;
     this.state.myIDs.filter(item => {
       const message = thisThread.messages.find( ({ id }) => id === item );
       if (message == null) {
@@ -181,7 +186,6 @@ class GroupsMessage extends React.Component {
     if (message.from == this.props.myEmail && this.state.myIDs.includes(thisThread.messages[thisThread.messages.length - 1].id) && thisThread.sendingMessages != null) {
       thisThread.sendingMessages.forEach((item, i) => {
         console.log(item);
-        // let messageElement = (<p key={"key" + item} className="defaultMessageText defaultMessageSending">{item}</p>);
         const sendingMessageObject = {"message": item, "id": "sending" + i, "sending": true};
         newMessageObjects.push(sendingMessageObject);
         console.log(message);
@@ -198,9 +202,6 @@ class GroupsMessage extends React.Component {
         MessageType = GroupsDefaultMessage;
         break;
     }
-    // if (this.props.messageStyle == "default") {
-    //   MessageType = GroupsDefaultMessage;
-    // }
 
     return (
       <div className="GroupsMessage">

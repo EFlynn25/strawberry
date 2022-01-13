@@ -52,7 +52,7 @@ class HomeNotifications extends React.Component {
                 let name = myThread.name;
 
                 let profilesDiv = null;
-                if (myThread.people != null && myThread.people.length > 0) {
+                if (myThread.people != null && myThread.people.length > 0) { // I hate this if statement. ~50 lines just for Groups images.
                   const person1 = getUser(myThread.people[0]);
                   const person2 = getUser(myThread.people[1]);
                   const person3 = getUser(myThread.people[2]);
@@ -106,7 +106,6 @@ class HomeNotifications extends React.Component {
                 return (
                   <div className="hnCategoryContentDiv hnRequestDiv" key={item}>
                     <ForumOutline className="hnRequestTypeIcon" style={{fill: "#1D9545"}} />
-                    {/*<img src={myUser.picture} />*/}
                     { profilesDiv }
                     <h1>{name}</h1>
                     <p>You have been requested to join this Thread.</p>
