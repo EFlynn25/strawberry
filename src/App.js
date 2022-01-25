@@ -3,6 +3,7 @@ import { Switch, Route, withRouter } from "react-router-dom";
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import { connect } from 'react-redux';
+import Div100vh from 'react-div-100vh';
 
 import './App.css';
 import {
@@ -87,34 +88,36 @@ class App extends React.Component {
     document.title = myTitle;
 
     return (
-      <div className="App">
+      <Div100vh>
+        <div className="App">
 
-        <Switch>
-          <Route path="/welcome">
-            <Overlay type="welcome" />
-          </Route>
-          <Route path="/">
-            {  this.state.pageLoaded ?
+          <Switch>
+            <Route path="/welcome">
+              <Overlay type="welcome" />
+            </Route>
+            <Route path="/">
+              {  this.state.pageLoaded ?
 
-              <Fragment>
-                <div className="appHamburgerIcon" onClick={() => {this.setState({showLeftPanel: true})}} style={this.state.showCloseButton ? {width: "54px"} : null}>
-                  <Menu />
-                  {this.state.showCloseButton ? <Close /> : null}
-                </div>
-                <TopBar />
-                <LeftPanel showLeftPanel={this.state.showLeftPanel} hideLeftPanel={() => {this.setState({showLeftPanel: false})}} />
-                <MainPanel setCloseButton={(value) => {this.setState({showCloseButton: value})} /* Shows close button when MPPopup is open */} />
-              </Fragment>
+                <Fragment>
+                  <div className="appHamburgerIcon" onClick={() => {this.setState({showLeftPanel: true})}} style={this.state.showCloseButton ? {width: "54px"} : null}>
+                    <Menu />
+                    {this.state.showCloseButton ? <Close /> : null}
+                  </div>
+                  <TopBar />
+                  <LeftPanel showLeftPanel={this.state.showLeftPanel} hideLeftPanel={() => {this.setState({showLeftPanel: false})}} />
+                  <MainPanel setCloseButton={(value) => {this.setState({showCloseButton: value})} /* Shows close button when MPPopup is open */} />
+                </Fragment>
 
-              :
+                :
 
-              null
-            }
+                null
+              }
 
-            <Overlay type="loading" hide={this.state.pageLoaded} socket={this.props.socket} multipleTabs={this.props.multipleTabs} dmsLoaded={this.props.dmsLoaded} groupsLoaded={this.props.groupsLoaded} peopleLoaded={this.props.peopleLoaded} />
-          </Route>
-        </Switch>
-      </div>
+              <Overlay type="loading" hide={this.state.pageLoaded} socket={this.props.socket} multipleTabs={this.props.multipleTabs} dmsLoaded={this.props.dmsLoaded} groupsLoaded={this.props.groupsLoaded} peopleLoaded={this.props.peopleLoaded} />
+            </Route>
+          </Switch>
+        </div>
+      </Div100vh>
     );
   }
 }
