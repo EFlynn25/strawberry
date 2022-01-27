@@ -9,7 +9,7 @@ class HPSAbout extends React.Component {
       <Fragment>
         <SLogo className="hpsaLogoBg" />
         <h1 className="hpsaTitle">Strawberry <span>v0.2</span></h1>
-        <span className="hpsaSmoothie">🥤</span>
+        <span className="hpsaSmoothie" title="Strawberry Smoothie">🥤</span>
         <p className="hpsaCopyright">© 2022 Neon Black Network. All Rights Reserved.</p>
       </Fragment>
     )

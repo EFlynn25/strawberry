@@ -42,7 +42,6 @@ class LeftPanel extends React.Component {
   }
 
   checkMobile() {
-    console.log(window.innerWidth)
     if (window.innerWidth <= 880 && !this.state.mobile) {
       this.setState({ mobile: true });
     } else if (window.innerWidth > 880 && this.state.mobile) {

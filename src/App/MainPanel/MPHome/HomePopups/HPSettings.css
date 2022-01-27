@@ -57,7 +57,7 @@
 .hpsSection div {
   display: flex;
   gap: 10px;
-  transition: transform .1s;
+  transition: transform .15s;
 }
 
 .hpsSection svg {
