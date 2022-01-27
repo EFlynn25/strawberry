@@ -1,13 +1,36 @@
 .HPSettings {
-  width: 100%;
-  height: 100%;
+  width: calc(100% - 40px);
+  height: calc(100% - 40px);
 
   padding: 20px;
 }
 
-.HPSettings > h1 {
-  width: fit-content;
+
+
+/* Header */
+
+.hpsHeader {
+  height: 40px;
   padding: 20px;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  user-select: none;
+}
+
+.hpsHeader > p {
+  font-size: 20px;
+}
+
+.hpsHeader > div {
+  height: 100%;
+}
+
+.hpsHeaderPage {
+  position: absolute;
+  color: #bbb;
+  transition: opacity .3s;
 }
 
 
@@ -15,14 +38,78 @@
 /* Sections (left panel) */
 
 .hpsSections {
-  width: 250px;
-  height: 100%;
+  width: 230px;
+  height: calc(100% - 100px);
+  padding: 10px;
+
+  background: #fff1;
+  border-radius: 20px;
 }
 
-.hpSection {
+.hpsSection {
+  padding: 10px;
+  margin-bottom: 10px;
 
+  border-radius: 20px;
+  user-select: none;
 }
 
-.hpSection h1 {
+.hpsSection div {
+  display: flex;
+  gap: 10px;
+  transition: transform .1s;
+}
 
+.hpsSection svg {
+  width: 26px;
+  height: 26px;
+}
+
+.hpsSection h1 {
+  font-size: 22px;
+}
+
+.hpsSectionSelected {
+  background: #fff1 !important;
+}
+
+.hpsSectionSelected div {
+  transform: translateX(10px);
+}
+
+.hpsSectionSelected svg, .hpsSectionSelected h1 {
+  fill: var(--accent-color) !important;
+  color: var(--accent-color) !important;
+}
+
+/* ...hover */
+
+.hpsSection:hover {
+  cursor: pointer;
+}
+
+.hpsSection:hover h1, .hpsSection:hover svg {
+  color: #bbb;
+  fill: #bbb;
+}
+
+/* ...active */
+
+.hpsSection:active h1, .hpsSection:active svg {
+  color: #888;
+  fill: #888;
+}
+
+
+
+/* Content */
+
+.hpsContent {
+  position: absolute;
+  width: 30px;
+  width: calc(100% - 310px);
+  height: 30px;
+  height: calc(100% - 119px);
+  top: 99px;
+  left: 290px;
 }

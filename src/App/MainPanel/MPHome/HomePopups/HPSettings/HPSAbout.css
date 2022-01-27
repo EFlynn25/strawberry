@@ -1,0 +1,56 @@
+/* Logo BG */
+
+.hpsaLogoBg {
+  position: absolute;
+  width: 130%;
+  height: 170%;
+
+  transition: transform .3s;
+  /* transform: translateY(-10px); */
+  z-index: 0;
+}
+
+.hpsaLogoBg g, .hpsaLogoBg g path:last-of-type {
+  stroke: #444;
+  fill: #444;
+}
+
+
+
+/* Content */
+
+.hpsaTitle {
+  position: absolute;
+  user-select: none;
+}
+
+.hpsaTitle span {
+  font-size: 22px;
+  color: #888;
+  z-index: 1;
+}
+
+.hpsaSmoothie {
+  position: absolute;
+  bottom: 50px;
+
+  color: transparent;
+  text-shadow: 0 0 0 var(--accent-color);
+  font-size: 22px;
+}
+
+.hpsaCopyright {
+  position: absolute;
+  bottom: 20px;
+  color: #bbb;
+}
+
+
+
+/* RESPONSIVE DESIGN */
+
+@media screen and (max-width: 686px), (min-width: 880px) and (max-width: 1157px), (min-width: 1290px) and (max-width: 1443px) {
+  .hpsaSmoothie {
+    bottom: 70px;
+  }
+}
