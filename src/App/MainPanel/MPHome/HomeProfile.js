@@ -55,8 +55,10 @@ class HomeProfile extends React.Component {
         }
         this.setState({editingStatus: false});
       } else if (event.target.getAttribute("class") == "hpPostInput") {
-        add_post(this.state.newPostVal)
-        this.setState({newPostVal: ''})
+        if (this.state.newPostVal != "") {
+          add_post(this.state.newPostVal)
+          this.setState({newPostVal: ''})
+        }
       }
     }
   }

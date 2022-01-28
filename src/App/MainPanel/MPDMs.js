@@ -30,6 +30,7 @@ import {
 } from '../../socket.js';
 import DMsMessage from './MPDMs/DMsMessage';
 import DMsDefaultMessage from './MPDMs/DMsMessage/DMsDefaultMessage';
+import DMsBreckanMessage from './MPDMs/DMsMessage/DMsBreckanMessage';
 import { getUser } from '../../GlobalComponents/getUser.js';
 
 class MPDMs extends React.Component {
@@ -366,6 +367,8 @@ class MPDMs extends React.Component {
       let MessageType;
       if (this.props.messageStyle == "default") {
         MessageType = DMsDefaultMessage;
+      } else if (this.props.messageStyle == "breckan") {
+        MessageType = DMsBreckanMessage;
       }
 
       const newMessage = <MessageType email={this.props.myEmail} name={this.props.myName} picture={this.props.myPicture} messages={mySendingMessages} inChat={["no", true]} inChatTyping={false} onUpdate={this.props.onUpdate} />;

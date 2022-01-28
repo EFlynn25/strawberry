@@ -1,0 +1,115 @@
+/* Receive */
+
+.breckanMessagePFPR {
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+
+  user-select: none;
+}
+
+.breckanMessageNameR {
+  position: absolute;
+  height: 20px;
+  left: 50px;
+  top: 0;
+
+
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 20px;
+
+  color: #fff;
+}
+
+.breckanMessageGroupR {
+  position: relative;
+  width: calc(100% - 125px);
+  left: 50px;
+  right: 0;
+  top: -22px;
+}
+
+.breckanMessageTextR {
+  position: relative;
+  width: fit-content;
+  max-width: calc(100% - 14px);
+  left: -5px;
+  margin-bottom: 3px;
+  padding: 7px;
+
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  overflow-wrap: break-word;
+
+  background: #fff1;
+  color: #DDD;
+  border-radius: 15px;
+}
+
+
+
+/* Send */
+
+.breckanMessagePFPS {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  right: 0;
+  border-radius: 20px;
+
+  user-select: none;
+}
+
+.breckanMessageNameS {
+  position: absolute;
+  height: 20px;
+  right: 50px;
+  top: 0;
+
+
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 20px;
+
+  color: #fff;
+}
+
+.breckanMessageGroupS {
+  position: relative;
+  width: calc(100% - 125px);
+  left: 75px;
+  top: 22px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.breckanMessageTextS {
+  position: relative;
+  width: fit-content;
+  max-width: calc(100% - 14px);
+  right: -5px;
+  margin-bottom: 3px;
+  padding: 7px;
+
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  overflow-wrap: break-word;
+
+  background: #ffffff08;
+  color: #DDD;
+  border-radius: 15px;
+}
+
+.breckanMessageSendingTextS {
+  right: unset;
+  bottom: unset;
+  left: -75px;
+  top: 8.5px;
+}

@@ -373,6 +373,8 @@ class MPGroups extends React.Component {
       let MessageType;
       if (this.props.messageStyle == "default") {
         MessageType = GroupsDefaultMessage;
+      } else if (this.props.messageStyle == "breckan") {
+        MessageType = GroupsDefaultMessage; // this needs changed when I port Breckan-style to Groups
       }
 
       const newMessage = <MessageType key={mySendingMessages[0].id} email={this.props.myEmail} name={this.props.myName} picture={this.props.myPicture} messages={mySendingMessages} /*inThread={["no", true]null}*/ inThreadTyping={/*false*/null} onUpdate={this.props.onUpdate} />;

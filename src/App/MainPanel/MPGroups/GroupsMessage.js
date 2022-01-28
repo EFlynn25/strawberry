@@ -197,10 +197,10 @@ class GroupsMessage extends React.Component {
 
   render() {
     let MessageType;
-    switch(this.props.messageStyle) {
-      case "default":
-        MessageType = GroupsDefaultMessage;
-        break;
+    if (this.props.messageStyle == "default") {
+      MessageType = GroupsDefaultMessage; // this needs changed when I port Breckan-style to Groups
+    } else if (this.props.messageStyle == "breckan") {
+      MessageType = GroupsDefaultMessage; // this needs changed when I port Breckan-style to Groups
     }
 
     return (

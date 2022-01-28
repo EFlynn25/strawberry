@@ -11,6 +11,7 @@ import './DMsMessage.css';
 import { getUser } from '../../../GlobalComponents/getUser.js';
 import { parseDate } from '../../../GlobalComponents/parseDate.js';
 import DMsDefaultMessage from './DMsMessage/DMsDefaultMessage';
+import DMsBreckanMessage from './DMsMessage/DMsBreckanMessage';
 
 class DMsMessage extends React.Component {
   constructor(props) {
@@ -202,6 +203,8 @@ class DMsMessage extends React.Component {
     let MessageType;
     if (this.props.messageStyle == "default") {
       MessageType = DMsDefaultMessage;
+    } else if (this.props.messageStyle == "breckan") {
+      MessageType = DMsBreckanMessage;
     }
 
     return (
