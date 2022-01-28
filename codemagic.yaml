@@ -4,7 +4,7 @@ workflows:
     instance_type: mac_mini
     max_build_duration: 60
     environment:
-      node: latest
+      node: 14.15.5
       xcode: latest
     triggering:
       events:
@@ -29,6 +29,12 @@ workflows:
       - name: Sync capacitor
         script: |
           npx cap sync
+      - name: Cocoapods installation
+        script: |
+          cd ios/App && pod install
+      - name: Build Xcode
+        script: |
+          xcodebuild build -workspace "MyXcodeWorkspace.xcworkspace" -scheme "MyScheme" CODE_SIGN_INDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
