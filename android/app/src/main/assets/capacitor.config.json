@@ -1,0 +1,6 @@
+{
+	"appId": "com.neonblacknetwork.strawberry",
+	"appName": "Strawberry",
+	"webDir": "build",
+	"bundledWebRuntime": false
+}
