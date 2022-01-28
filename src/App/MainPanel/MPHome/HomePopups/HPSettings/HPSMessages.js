@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import './HPSMessages.css'
 import defaultPreview from '../../../../../assets/images/default_message_preview.png';
-import breckanPreview from '../../../../../assets/images/breckan_message_preview2.png';
+import breckanPreview from '../../../../../assets/images/breckan_message_preview.png';
 import {
   setMessageStyle
 } from '../../../../../redux/appReducer';

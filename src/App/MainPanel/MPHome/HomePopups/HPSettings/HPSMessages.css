@@ -35,10 +35,10 @@
 
 .hpsmOptionName {
   position: absolute;
+  height: 40px;
   left: 10px;
   right: 10px;
   bottom: 10px;
-  height: 40px;
 
   border-radius: 20px;
   background: #37383A;
@@ -67,4 +67,21 @@
 
 .hpsmOption:active {
   transform: scale(.98);
+}
+
+
+
+/* RESPONSIVE DESIGN */
+
+@media screen and (max-width: 1090px) {
+  .hpsmOptionName {
+    height: 35px;
+    left: 12.5px;
+    right: 12.5px;
+    bottom: 12.5px;
+  }
+
+  .hpsmOptionName h1 {
+    font-size: 16px;
+  }
 }

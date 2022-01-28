@@ -50,7 +50,7 @@
 
 /* RESPONSIVE DESIGN */
 
-@media screen and (max-width: 686px), (min-width: 880px) and (max-width: 1157px), (min-width: 1290px) and (max-width: 1443px) {
+@media screen and (max-width: 686px), (min-width: 881px) and (max-width: 1157px), (min-width: 1290px) and (max-width: 1443px) {
   .hpsaSmoothie {
     bottom: 70px;
   }
