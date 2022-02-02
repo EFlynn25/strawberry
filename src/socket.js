@@ -4,7 +4,6 @@
 
 
 import firebase from 'firebase/app';
-import { useDispatch } from 'react-redux'
 import { addUserPost, setUserFirstPost, setLikedPost, setdmsLoaded, setgroupsLoaded, setpeopleLoaded, setSocket, setAnnouncement, setAnnouncementRead } from './redux/appReducer.js'
 import { setUserStatus, setMultipleTabs, setUserLikedPost, setUserLoadingPosts } from './redux/appReducer.js'
 import {
@@ -19,7 +18,6 @@ import {
 } from './redux/groupsReducer.js'
 import { addPerson, setpersonStatus, setpersonOnline, addpersonPost, setpersonLikedPost, addLoadingPosts } from './redux/peopleReducer.js'
 import mainStore from './redux/mainStore.js';
-import history from "./history";
 
 import defaultTextTone from './assets/audio/text-tone/default.wav';
 
@@ -30,7 +28,7 @@ const textTone = new Audio(defaultTextTone);
 
 export function startSocket() {
   // PORTS: 2096 - Production, 2053 - Testing
-  socket = new WebSocket('wss://strawberry.neonblacknetwork.com:2096');
+  socket = new WebSocket('wss://strawberry.neonblacknetwork.com:2053');
 
   setTimeout(function() {
     if (socket.readyState == 0) {
@@ -143,7 +141,7 @@ export function startSocket() {
       if (com == "get_chats") {
         if (jsonData.response == true) {
           const chatsList = jsonData.chats;
-          chatsList.map(item => {
+          chatsList.forEach(item => {
             get_chat_info(item);
           });
         } else if (jsonData.response == "accepted_request") {
@@ -186,7 +184,7 @@ export function startSocket() {
           let missingMessages = false;
           const chats = mainStore.getState().dms.chats;
           const chatKeys = Object.keys(chats);
-          chatKeys.map(item => {
+          chatKeys.forEach(item => {
             const myMessages = chats[item].messages;
             if (myMessages == null) {
               missingMessages = true;
@@ -268,7 +266,7 @@ export function startSocket() {
       if (com == "get_threads") {
         if (jsonData.response == true) {
           const threadsList = jsonData.threads;
-          threadsList.map(item => {
+          threadsList.forEach(item => {
             get_thread_info(item);
           });
         } else if (jsonData.response == "no_threads") {
@@ -317,7 +315,7 @@ export function startSocket() {
           let missingMessages = false;
           const threads = mainStore.getState().groups.threads;
           const threadKeys = Object.keys(threads);
-          threadKeys.map(item => {
+          threadKeys.forEach(item => {
             const myMessages = threads[item].messages;
             if (myMessages == null) {
               missingMessages = true;

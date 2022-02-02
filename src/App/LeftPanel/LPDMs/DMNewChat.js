@@ -1,7 +1,6 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 
-import add from '../../../assets/icons/add.svg';
 import { ReactComponent as Add } from '../../../assets/icons/add.svg';
 import { ReactComponent as AddPerson } from '../../../assets/icons/add_person.svg';
 import './DMNewChat.css';

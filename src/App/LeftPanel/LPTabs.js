@@ -48,6 +48,7 @@ class LPTabs extends React.Component {
           return true;
         }
       }
+      return false;
     });
 
     const groupsUnread = Object.keys(this.props.threads).some((item) => {
@@ -58,6 +59,7 @@ class LPTabs extends React.Component {
           return true;
         }
       }
+      return false;
     });
 
 

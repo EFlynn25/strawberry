@@ -110,10 +110,6 @@ class GroupsMessage extends React.Component {
   }
 
   reloadMessage(prevProps) {
-    let myOldMessages;
-    if (prevProps != null) {
-      myOldMessages = prevProps.threads[this.props.openedThread].messages;
-    }
     let newMessageObjects = [];
     const thisThread = this.props.threads[this.props.openedThread];
 
@@ -137,9 +133,8 @@ class GroupsMessage extends React.Component {
         return false;
       }
       return true;
-    }).map(item => {
+    }).forEach(item => {
       const message = thisThread.messages.find( ({ id }) => id === item );
-      const messageKey = "id" + item;
 
       const unrefinedLR = this.myLastRead[message.id];
       let lr = [];

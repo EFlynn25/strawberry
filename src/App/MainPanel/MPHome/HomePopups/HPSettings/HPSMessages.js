@@ -32,23 +32,20 @@ class HPSMessages extends React.Component {
   }
 
   render() {
-    const now = Math.floor(Date.now() / 1000);
     return (
       <Fragment>
         <div className="hpsmOptions">
-          {/*<div className={"hpsmOption" + (this.state.selectedMessage == "default" ? " hpsmOptionSelected" : "")} onClick={() => this.setState({selectedMessage: "default"})}>*/}
           <div className={"hpsmOption" + (this.state.selectedMessage == "default" ? " hpsmOptionSelected" : "")} onClick={() => this.props.setMessageStyle("default")}>
             <div className="hpsmOptionPreview">
-              <img src={defaultPreview} />
+              <img src={defaultPreview} alt={"Default message preview"} />
             </div>
             <div className="hpsmOptionName">
               <h1>Default</h1>
             </div>
           </div>
-          {/*<div className={"hpsmOption" + (this.state.selectedMessage == "breckan" ? " hpsmOptionSelected" : "")} onClick={() => this.setState({selectedMessage: "breckan"})}>*/}
           <div className={"hpsmOption" + (this.state.selectedMessage == "breckan" ? " hpsmOptionSelected" : "")} onClick={() => this.props.setMessageStyle("breckan")}>
             <div className="hpsmOptionPreview">
-              <img src={breckanPreview} />
+              <img src={breckanPreview} alt={"Breckan message preview"} />
             </div>
             <div className="hpsmOptionName">
               <h1>Breckan</h1>

@@ -12,10 +12,6 @@ import { ReactComponent as ForumOutline } from '../../../assets/icons/forum_outl
 import { dms_request_to_chat, dms_deny_request, groups_join_thread, groups_deny_request, set_announcement_read } from '../../../socket.js';
 
 class HomeNotifications extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     const dmsRequestsExist = this.props.dms_requests.length > 0;
     const groupsRequestsExist = Object.keys(this.props.groups_requests).length > 0;
@@ -36,7 +32,7 @@ class HomeNotifications extends React.Component {
                 return (
                   <div className="hnCategoryContentDiv hnRequestDiv" key={item}>
                     <ChatOutline className="hnRequestTypeIcon" style={{fill: "#1540C2"}} />
-                    <img src={myUser.picture} />
+                    <img src={myUser.picture} alt={myUser.name} />
                     <h1>{myUser.name}</h1>
                     <p>has a requested a chat with you.</p>
                     <Done className="hwTopRightIcon hnAcceptIcon" onClick={() => dms_request_to_chat(item)} />

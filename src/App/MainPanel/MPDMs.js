@@ -5,7 +5,6 @@
 
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
-import { Switch, Route } from "react-router-dom";
 import TextareaAutosize from 'react-autosize-textarea';
 import Loader from "react-loader-spinner";
 
@@ -60,7 +59,6 @@ class MPDMs extends React.Component {
   }
 
   handleScroll() {
-    let logtext = "scrolling!! " + this.scrollsToIgnore;
     if (this.scrollsToIgnore > 0) {
       this.scrollsToIgnore--;
     } else {
@@ -297,7 +295,7 @@ class MPDMs extends React.Component {
     if ("sendingMessages" in thisChat && thisChat["sendingMessages"].length > 0) {
       hasSending = true;
       let myID = thisChat.messages[thisChat.messages.length - 1].id + 1;
-      thisChat["sendingMessages"].map(item => {
+      thisChat["sendingMessages"].forEach(item => {
         const myMessage = {message: item, sending: true, id: myID};
         thisChat["messages"].push(myMessage);
         myID++;
@@ -319,7 +317,7 @@ class MPDMs extends React.Component {
 
     let nextID = thisChat["messages"][0]["id"];
     let tempMessages = [];
-    thisChat["messages"].map((message, i) => {
+    thisChat["messages"].forEach((message, i) => {
 
       if (message["id"] >= nextID && !("sending" in message)) {
         let messageIDs = [message["id"]];
@@ -359,7 +357,7 @@ class MPDMs extends React.Component {
 
     if (hasSending && !handledSending) {
       let mySendingMessages = [];
-      thisChat["sendingMessages"].map(item => {
+      thisChat["sendingMessages"].forEach(item => {
         const messageObject = {message: item, lastRead: false, noTransition: true, sending: true, id: "sending" + mySendingMessages.length};
         mySendingMessages.push(messageObject);
       });
@@ -471,7 +469,6 @@ class MPDMs extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  openedDM: state.dms.openedDM,
   chats: state.dms.chats,
   myName: state.app.name,
   myEmail: state.app.email,

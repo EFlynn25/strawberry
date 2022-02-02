@@ -9,7 +9,7 @@ import { setCurrentPage } from '../redux/appReducer';
 // import wlogo from '../assets/icons/swhite.svg';
 import { ReactComponent as SLogo } from '../assets/icons/strawberry.svg';
 import './Overlay.css';
-import { uiConfig, signedIn } from '../StartFirebase'
+import { uiConfig } from '../StartFirebase'
 
 function Overlay(props) {
   const history = useHistory();

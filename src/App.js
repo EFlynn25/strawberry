@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment } from 'react';
 import { Switch, Route, withRouter } from "react-router-dom";
 import firebase from 'firebase/app';
 import 'firebase/auth';
@@ -18,7 +18,7 @@ import LeftPanel from './App/LeftPanel';
 import MainPanel from './App/MainPanel';
 import { ReactComponent as Menu } from './assets/icons/menu.svg';
 import { ReactComponent as Close } from './assets/icons/close.svg';
-import { startSocket, add_user } from './socket.js';
+import { startSocket } from './socket.js';
 
 class App extends React.Component {
   constructor(props) {
@@ -70,7 +70,7 @@ class App extends React.Component {
     var tnc = 0; // Total notification count
     var newHref = "/favicon_package/favicon.ico";
     const nc = this.props.notificationCount;
-    Object.keys(nc).map(function(key) {
+    Object.keys(nc).forEach(function(key) {
       tnc += nc[key];
     });
     if (tnc > 0) { // Set favicon to unread and set title prefix

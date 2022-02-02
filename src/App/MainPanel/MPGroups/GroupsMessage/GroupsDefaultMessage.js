@@ -42,7 +42,7 @@ class GroupsDefaultMessage extends React.Component {
     let myExtraHere = 0;
     let myExtraGone = 0;
     let conditionalInThread = this.props.inThread == null ? [] : Object.keys(this.props.inThread[0]);
-    conditionalInThread.map(item => {
+    conditionalInThread.forEach(item => {
       if (this.props.inThread[0][item] == "here") {
         herePeople.push(item);
       } else if (this.props.inThread[0][item] == "gone") {

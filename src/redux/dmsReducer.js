@@ -1,4 +1,4 @@
-import { createSlice, current } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 
 export const dmsSlice = createSlice({
   name: 'dms',
@@ -53,8 +53,6 @@ export const dmsSlice = createSlice({
 
 
 
-        // console.log(current(state).chats[myChatEmail]);
-
         if (myMessages == null || myMessages.length == 0 || myMessages[myMessages.length - 1].id < myID) {
           myMessages.push(newMessage);
         } else if (myMessages[0].id > myID) {
@@ -64,8 +62,6 @@ export const dmsSlice = createSlice({
           let currentSubtractCheck = 1;
           while (findIDBefore == null) {
             const tempfidb = myMessages.find( ({ id }) => id === myID - currentSubtractCheck );
-            // console.log(myID - currentSubtractCheck);
-            // console.log(tempfidb);
             if (tempfidb != null) {
               findIDBefore = tempfidb;
             } else {
@@ -78,11 +74,6 @@ export const dmsSlice = createSlice({
           }
 
           const theIndex = myMessages.indexOf(findIDBefore);
-          if (findIDBefore != false) {
-            // console.log(findIDBefore);
-            // console.log(theIndex);
-          }
-
           myMessages.splice(theIndex, 0, newMessage);
         }
 
@@ -97,8 +88,6 @@ export const dmsSlice = createSlice({
             state.chats[myChatEmail].loadingMessages.splice(index, 1);
           }
         }
-
-        // console.log(current(state).chats[myChatEmail]);
 
 
 

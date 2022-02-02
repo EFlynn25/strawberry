@@ -83,7 +83,7 @@ class LPGroups extends React.Component {
     if (Array.isArray(threadKeys) && threadKeys.length) {
       newChildren = [];
       this.listOfEmails = threadKeys;
-      threadKeys.map(item => {
+      threadKeys.forEach(item => {
         const threadElement = <GroupsThread key={"id" + item} threadID={item} hideLeftPanel={this.props.hideLeftPanel} />;
         newChildren.push(threadElement);
       });

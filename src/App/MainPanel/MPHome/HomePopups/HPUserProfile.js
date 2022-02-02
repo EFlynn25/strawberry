@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import { connect } from 'react-redux';
 import Loader from "react-loader-spinner";
@@ -74,7 +74,7 @@ class HPUserProfile extends React.Component {
       postStatus = "Retrieving posts..."
     }
 
-    return ( // "pp" probably stands for "PersonProfile"... otherwise it would be "upLeft" which is confusing
+    return ( // "pp" probably stands for "PersonProfile"... otherwise it would be "upLeft" for "UserProfile", which is confusing
       <div className="HPUserProfile">
         <div className="ppLeft">
           <img src={picture} className="pplPFP" alt={name} />

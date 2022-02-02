@@ -8,7 +8,6 @@ import './HomeProfile.css';
 import { ReactComponent as Edit } from '../../../assets/icons/edit.svg';
 import { ReactComponent as Close } from '../../../assets/icons/close.svg';
 import { ReactComponent as ThumbUp } from '../../../assets/icons/thumb_up.svg';
-import { ReactComponent as ThumbUpFilled } from '../../../assets/icons/thumb_up_filled.svg';
 import { set_status, get_posts, add_post } from '../../../socket.js';
 import { setUserLoadingPosts } from '../../../redux/appReducer.js';
 import { parseDate } from '../../../GlobalComponents/parseDate.js';
@@ -98,7 +97,6 @@ class HomeProfile extends React.Component {
 
     const posts = JSON.parse(JSON.stringify(this.props.posts));
     let postsExist = posts != null && posts.length > 0 ? true : false;
-    let orderedPostList;
     if (postsExist) {
       posts.sort((a, b) => b.timestamp - a.timestamp);
     }

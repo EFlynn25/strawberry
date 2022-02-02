@@ -52,7 +52,7 @@ class MainPanel extends React.Component {
         panelData: newData
       });
     }
-    
+
     this.props.setCloseButton(true);
   }
 
@@ -69,7 +69,7 @@ class MainPanel extends React.Component {
     return (
       <div className={this.state.mpClass} style={this.state.specialEasing ? {transition: "opacity .3s cubic-bezier(0.65, 0, 0.35, 1), transform .3s cubic-bezier(0.65, 0, 0.35, 1)"} : null}>
         <Switch>
-          <Route path="/dms/:chatEmail" component={MPDMs} />
+          <Route path="/dms/:chatEmail" render={routeProps => (<MPDMs openedDM={this.props.openedDM} {...routeProps} />)} />
           <Route path="/dms">
             <div style={{display: "table", width: "100%", height: "100%"}}>
               <h1 style={{position: "relative", display: "table-cell", margin: "0", textAlign: "center", verticalAlign: "middle", color: "#fff5", fontSize: "20px", userSelect: "none"}}>Welcome to Strawberry DMs</h1>
@@ -95,7 +95,8 @@ class MainPanel extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  hideRightPanel: state.app.hideRightPanel
+  hideRightPanel: state.app.hideRightPanel,
+  openedDM: state.dms.openedDM,
 });
 
 export default connect(mapStateToProps, null)(withRouter(MainPanel));

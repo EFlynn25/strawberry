@@ -7,8 +7,6 @@ import { addThreadPeople, removeThreadPerson } from '../../../../../redux/groups
 import PersonPicker from '../../../../../GlobalComponents/PersonPicker.js';
 import { getUser } from '../../../../../GlobalComponents/getUser.js';
 
-import { ReactComponent as People } from '../../../../../assets/icons/people.svg';
-import { ReactComponent as Settings } from '../../../../../assets/icons/settings.svg';
 import { ReactComponent as Close } from '../../../../../assets/icons/close.svg';
 import { ReactComponent as Done } from '../../../../../assets/icons/done.svg';
 import { ReactComponent as AddPerson } from '../../../../../assets/icons/add_person.svg';
