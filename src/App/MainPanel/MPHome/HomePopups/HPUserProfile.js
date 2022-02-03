@@ -104,10 +104,14 @@ class HPUserProfile extends React.Component {
                     <ReactMarkdown>{item.message}</ReactMarkdown>
                     <div className="pprPostBottom">
                       <div>
-                        <ThumbComponent className="pprPostThumbUp" onClick={() => like_post(item.post_id, !haveLikedPost)} />
+                        <ThumbComponent className="pprPostAction" onClick={() => like_post(item.post_id, !haveLikedPost)} />
                         <p>{item.likes}</p>
                       </div>
-                      <p className="pprPostTimestamp">{parseDate(item.timestamp)}</p>
+                      <p
+                        className="pprPostTimestamp"
+                        title={item.edited != null ? "Edited on " + parseDate(item.edited, "basic") : "Original post"} >
+                        {parseDate(item.timestamp)}
+                      </p>
                     </div>
                   </div>
                 )

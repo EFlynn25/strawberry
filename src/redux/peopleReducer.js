@@ -4,7 +4,7 @@ export const peopleSlice = createSlice({
   name: 'people',
   initialState: {
     knownPeople: {},
-    loadingPosts: ["fireno656@yahoo.co"]
+    loadingPosts: []
   },
   reducers: {
     addPerson: (state, action) => {
@@ -86,10 +86,34 @@ export const peopleSlice = createSlice({
         }
       }
     },
+    editpersonPost: (state, action) => {
+      const myPerson = state.knownPeople[action.payload["email"]];
+      console.log(myPerson)
+      myPerson.posts.some((item, i) => {
+        if (item.post_id == action.payload["post_id"]) {
+          state.knownPeople[action.payload["email"]].posts[i].message = action.payload["message"];
+          state.knownPeople[action.payload["email"]].posts[i].edited = action.payload["edited"];
+          return true;
+        }
+        return false;
+      });
+    },
+    deletepersonPost: (state, action) => {
+      const myPerson = state.knownPeople[action.payload["email"]];
+      myPerson.posts.some((item, i) => {
+        if (item.post_id == action.payload["post_id"]) {
+          state.knownPeople[action.payload["email"]].posts.splice(i, 1);
+          return true;
+        }
+        return false;
+      });
+    },
   },
 });
 
-export const { addPerson, setpersonName, setpersonPicture, setpersonStatus, setpersonOnline, addpersonPost, setpersonLikedPost, addLoadingPosts } = peopleSlice.actions;
+export const { addPerson, setpersonName, setpersonPicture, setpersonStatus, setpersonOnline,
+  addpersonPost, setpersonLikedPost, addLoadingPosts, editpersonPost, deletepersonPost
+} = peopleSlice.actions;
 
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of

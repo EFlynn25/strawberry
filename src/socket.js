@@ -5,7 +5,7 @@
 
 import firebase from 'firebase/app';
 import { addUserPost, setUserFirstPost, setLikedPost, setdmsLoaded, setgroupsLoaded, setpeopleLoaded, setSocket, setAnnouncement, setAnnouncementRead } from './redux/appReducer.js'
-import { setUserStatus, setMultipleTabs, setUserLikedPost, setUserLoadingPosts } from './redux/appReducer.js'
+import { setUserStatus, setMultipleTabs, setUserLikedPost, setUserLoadingPosts, editUserPost, deleteUserPost } from './redux/appReducer.js'
 import {
   addChat, addChatMessage, addLoadedChatMessages, removeSendingChatMessage, setChatCreated, setChatLastRead, setChatTyping, setInChat, setLoadingMessages, addChatRequest, removeChatRequest
 } from './redux/dmsReducer.js'
@@ -16,7 +16,9 @@ import {
   addThreadRequest, removeThreadRequest,
   addRequested, removeRequested
 } from './redux/groupsReducer.js'
-import { addPerson, setpersonStatus, setpersonOnline, addpersonPost, setpersonLikedPost, addLoadingPosts } from './redux/peopleReducer.js'
+import { addPerson, setpersonStatus, setpersonOnline,
+  addpersonPost, setpersonLikedPost, editpersonPost, deletepersonPost, addLoadingPosts
+} from './redux/peopleReducer.js'
 import mainStore from './redux/mainStore.js';
 
 import defaultTextTone from './assets/audio/text-tone/default.wav';
@@ -130,6 +132,18 @@ export function startSocket() {
           } else {
             mainStore.dispatch(setpersonLikedPost({post_id: jsonData.post_id, data: jsonData.data}));
           }
+        }
+      } else if (com == "edit_post") {
+        if (jsonData.response == true) {
+          mainStore.dispatch(editUserPost({post_id: jsonData.post_id, message: jsonData.message, edited: jsonData.edited}));
+        } else if (jsonData.response == "receive_edited_post") {
+          mainStore.dispatch(editpersonPost({email: jsonData.email, post_id: jsonData.post_id, message: jsonData.message, edited: jsonData.edited}));
+        }
+      } else if (com == "delete_post") {
+        if (jsonData.response == true) {
+          mainStore.dispatch(deleteUserPost({post_id: jsonData.post_id}));
+        } else if (jsonData.response == "receive_deleted_post") {
+          mainStore.dispatch(deletepersonPost({email: jsonData.email, post_id: jsonData.post_id}));
         }
       }
 
@@ -529,6 +543,16 @@ export function add_post(message) {
 
 export function like_post(post_id, data) {
   var jsonObj = {"product": "app", "command": "like_post", "post_id": post_id, "data": data}
+  send_websocket_message(jsonObj);
+}
+
+export function edit_post(post_id, message) {
+  var jsonObj = {"product": "app", "command": "edit_post", "post_id": post_id, "message": message}
+  send_websocket_message(jsonObj);
+}
+
+export function delete_post(post_id) {
+  var jsonObj = {"product": "app", "command": "delete_post", "post_id": post_id}
   send_websocket_message(jsonObj);
 }
 

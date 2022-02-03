@@ -7,7 +7,6 @@ export const appSlice = createSlice({
     email: "",
     picture: "",
     status: null,
-    // posts: [{post_id: 0, message: "Today sucked.", likes: 10, timestamp: 0}, {post_id: 12, message: "Today was great!", likes: 0, timestamp: 700350}],
     posts: null,
     firstPost: null,
     likedPosts: [],
@@ -67,8 +66,6 @@ export const appSlice = createSlice({
           if (action.payload["data"]) {
             state.likedPosts.push(item);
           } else {
-            // state.likedPosts.remove(item);
-
             let index = state.likedPosts.indexOf(item);
             if (index > -1) {
               state.likedPosts.splice(index, 1);
@@ -79,8 +76,6 @@ export const appSlice = createSlice({
         if (action.payload["data"]) {
           state.likedPosts.push(action.payload["post_id"]);
         } else {
-          // state.likedPosts.remove(action.payload["post_id"]);
-
           let index = state.likedPosts.indexOf(action.payload["post_id"]);
           if (index > -1) {
             state.likedPosts.splice(index, 1);
@@ -105,6 +100,25 @@ export const appSlice = createSlice({
     },
     setUserLoadingPosts: (state, action) => {
       state.loadingPosts = action.payload;
+    },
+    editUserPost: (state, action) => {
+      state.posts.some((item, i) => {
+        if (item.post_id == action.payload["post_id"]) {
+          state.posts[i].message = action.payload["message"];
+          state.posts[i].edited = action.payload["edited"];
+          return true;
+        }
+        return false;
+      });
+    },
+    deleteUserPost: (state, action) => {
+      state.posts.some((item, i) => {
+        if (item.post_id == action.payload["post_id"]) {
+          state.posts.splice(i, 1);
+          return true;
+        }
+        return false;
+      });
     },
     setdmsOrGroups: (state, action) => {
       state.dmsOrGroups = action.payload;
@@ -146,7 +160,7 @@ export const appSlice = createSlice({
 });
 
 export const { setUserName, setUserEmail, setUserPicture, setUserStatus,
-  addUserPost, setUserFirstPost, setUserLikedPost, setLikedPost, setUserLoadingPosts,
+  addUserPost, setUserFirstPost, setUserLikedPost, setLikedPost, setUserLoadingPosts, editUserPost, deleteUserPost,
   setdmsOrGroups, sethideRightPanel,
   setdmsLoaded, setgroupsLoaded, setpeopleLoaded,
   setSocket, setMultipleTabs,
