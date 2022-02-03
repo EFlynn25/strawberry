@@ -110,7 +110,8 @@ class HPUserProfile extends React.Component {
                       <p
                         className="pprPostTimestamp"
                         title={item.edited != null ? "Edited on " + parseDate(item.edited, "basic") : "Original post"} >
-                        {parseDate(item.timestamp)}
+                        { item.edited != null ? <span>(edited)</span> : null }
+                        { parseDate(item.timestamp) }
                       </p>
                     </div>
                   </div>

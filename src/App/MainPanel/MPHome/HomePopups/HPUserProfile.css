@@ -133,6 +133,12 @@
   font-size: 12px;
 }
 
+.pprPostTimestamp > span {
+  color: #777 !important;
+  font-size: 12px;
+  margin-right: 3px;
+}
+
 .pprPostBottom div {
   display: flex;
   gap: 5px;

@@ -164,8 +164,6 @@ class HomeProfile extends React.Component {
                         {
                           this.state.editingPost == item.post_id ?
                           <Fragment>
-                            {/*<p style={{color: "white", fontWeight: "bold", fontSize: "14px"}}>Editing...</p>*/}
-                            {/*<i><ReactMarkdown className="hpEditingPost">{item.message}</ReactMarkdown></i>*/}
                             <TextareaAutosize
                               value={this.state.editingPostVal}
                               className="hpEditPostInput"
@@ -188,7 +186,8 @@ class HomeProfile extends React.Component {
                           <p
                             className="pprPostTimestamp"
                             title={item.edited != null ? "Edited on " + parseDate(item.edited, "basic") : "Original post"} >
-                            {parseDate(item.timestamp)}
+                            { item.edited != null ? <span>(edited)</span> : null }
+                            { parseDate(item.timestamp) }
                           </p>
                         </div>
                       </div>
