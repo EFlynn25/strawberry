@@ -7,7 +7,7 @@ import firebase from 'firebase/app';
 import { addUserPost, setUserFirstPost, setLikedPost, setdmsLoaded, setgroupsLoaded, setpeopleLoaded, setSocket, setAnnouncement, setAnnouncementRead } from './redux/appReducer.js'
 import { setUserStatus, setMultipleTabs, setUserLikedPost, setUserLoadingPosts, editUserPost, deleteUserPost } from './redux/appReducer.js'
 import {
-  addChat, addChatMessage, addLoadedChatMessages, removeSendingChatMessage, setChatCreated, setChatLastRead, setChatTyping, setInChat, setLoadingMessages, addChatRequest, removeChatRequest
+  addChat, addChatMessage, editChatMessage, addLoadedChatMessages, removeSendingChatMessage, setChatCreated, setChatLastRead, setChatTyping, setInChat, setLoadingMessages, addChatRequest, removeChatRequest
 } from './redux/dmsReducer.js'
 import {
   setOpenedThread, addThread, removeThread, setThreadName, addThreadPeople, removeThreadPerson, addThreadMessage, addLoadedThreadMessages, removeSendingThreadMessage,
@@ -243,6 +243,10 @@ export function startSocket() {
         const myMessage = jsonData.message;
         mainStore.dispatch(removeSendingChatMessage({"chat": jsonData.chat, "message": jsonData.message.message}));
         mainStore.dispatch(addChatMessage({chat: jsonData.chat, message: myMessage.message, from: "me", id: myMessage.id, timestamp: myMessage.timestamp}));
+      } else if (com == "edit_message") {
+        if (jsonData.response == true || jsonData.response == "receive_edited_message") {
+          mainStore.dispatch(editChatMessage({chat: jsonData.chat, id: jsonData.id, message: jsonData.message, edited: jsonData.edited}));
+        }
       }
 
 
@@ -606,6 +610,11 @@ export function dms_deny_request(email) {
 
 export function dms_send_message(chat, message) {
   var jsonObj = {"product": "dms", "command": "send_message", "chat": chat, "message": message}
+  send_websocket_message(jsonObj);
+}
+
+export function dms_edit_message(chat, id, message) {
+  var jsonObj = {"product": "dms", "command": "edit_message", "chat": chat, "id": id, "message": message}
   send_websocket_message(jsonObj);
 }
 

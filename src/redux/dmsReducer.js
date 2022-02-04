@@ -95,9 +95,16 @@ export const dmsSlice = createSlice({
 
 
     },
+    editChatMessage: (state, action) => {
+      let myMessages = state.chats[action.payload["chat"]].messages;
+      myMessages.some((item, i) => {
+        if (item.id == action.payload["id"]) {
+          state.chats[action.payload["chat"]].messages[i].message = action.payload["message"];
+          state.chats[action.payload["chat"]].messages[i].edited = action.payload["edited"];
+        }
+      })
+    },
     addLoadedChatMessages: (state, action) => {
-      console.log("payload... ", action.payload);
-
       let myChatEmail = action.payload.chat;
       if (state.chats[myChatEmail].messages == null) {
         state.chats[myChatEmail].messages = action.payload.messages;
@@ -191,7 +198,7 @@ export const dmsSlice = createSlice({
   },
 });
 
-export const { setOpenedDM, addChat, addChatMessage, addLoadedChatMessages, addSendingChatMessage, removeSendingChatMessage,
+export const { setOpenedDM, addChat, addChatMessage, editChatMessage, addLoadedChatMessages, addSendingChatMessage, removeSendingChatMessage,
   setChatCreated, setTempMessageInput, setChatLastRead, setChatTyping, setInChat, setLoadingMessages,
   addChatRequest, removeChatRequest
  } = dmsSlice.actions;

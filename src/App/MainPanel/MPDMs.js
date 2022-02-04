@@ -38,7 +38,8 @@ class MPDMs extends React.Component {
     this.state = {
       inputValue: '',
       messages: [],
-      loaded: false
+      loaded: false,
+      editing: false
     };
 
     this.messagesRef = React.createRef();
@@ -51,6 +52,7 @@ class MPDMs extends React.Component {
     this.loadMoreMessages = this.loadMoreMessages.bind(this);
     this.handleWindowFocus = this.handleWindowFocus.bind(this);
     this.handleWindowBlur = this.handleWindowBlur.bind(this);
+    this.setMessageEditing = this.setMessageEditing.bind(this);
 
     this.shouldScroll = true;
     this.scrollsToIgnore = 0;
@@ -169,19 +171,13 @@ class MPDMs extends React.Component {
 
     let title = "404";
     if (this.props.openedDM in this.props.chats && this.props.openedDM in this.props.getknownPeople) {
-      // title = this.props.getknownPeople[this.props.openedDM].name;
       title = getUser(this.props.openedDM).name;
     }
 
     this.props.setCurrentPage(title);
 
-    // const myFirstID = thisChat.messages[thisChat.messages.length - 1].id;
-    // dms_get_messages(propsOpenedDM, myFirstID - 1, 20);
-
     window.addEventListener("focus", this.handleWindowFocus);
     window.addEventListener("blur", this.handleWindowBlur);
-    // window.onblur = this.handleWindowBlur.bind(this);
-    // window.addEventListener("focus", this.handleWindowBlur.bind(this));
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -190,7 +186,7 @@ class MPDMs extends React.Component {
     const propsOpenedDM = this.props.openedDM;
 
     if (prevProps.openedDM == propsOpenedDM) {
-      if (prevProps.chats[propsOpenedDM] != this.props.chats[propsOpenedDM]) {
+      if (JSON.stringify(prevProps.chats[propsOpenedDM]) != JSON.stringify(this.props.chats[propsOpenedDM]) || prevState.editing != this.state.editing) {
         this.reloadMessages(prevProps);
       }
     } else {
@@ -350,7 +346,7 @@ class MPDMs extends React.Component {
             break;
           }
         }
-        const newMessage = (<DMsMessage inChat={inChat} typing={thisChat.typing} id={messageIDs} key={messageIDs[0]} onUpdate={this.scrollToBottom} />);
+        const newMessage = (<DMsMessage inChat={inChat} typing={thisChat.typing} id={messageIDs} key={messageIDs[0]} onUpdate={this.scrollToBottom} editing={this.state.editing} setMessageEditing={this.setMessageEditing} />);
         tempMessages.push(newMessage);
       }
     });
@@ -413,6 +409,14 @@ class MPDMs extends React.Component {
         this.props.addSendingChatMessage({message: iv});
         this.setState({inputValue: ''});
       }
+    }
+  }
+
+  setMessageEditing(data) {
+    if (this.state.editing != data) {
+      this.setState({ editing: data })
+    } else if (this.state.editing == data || (data == false && this.state.editing != false)) {
+      this.setState({ editing: false })
     }
   }
 

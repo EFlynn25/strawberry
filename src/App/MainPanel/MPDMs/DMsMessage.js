@@ -40,15 +40,14 @@ class DMsMessage extends React.Component {
     const prevCurrentChat = prevProps.chats[propsOpenedDM];
 
     const messagesExist = thisChat.messages != null && thisChat.messages.length > 0;
-    const sentNewMessage = prevCurrentChat.messages != thisChat.messages && prevCurrentChat.messages[prevCurrentChat.messages.length - 1].id == this.state.myIDs[this.state.myIDs.length - 1];
+    const chatChanged = JSON.stringify(prevCurrentChat.messages) != JSON.stringify(thisChat.messages);
     const openedDMChanged = prevProps.openedDM != propsOpenedDM;
 
     const idsChanged = prevState.myIDs != this.state.myIDs;
     const themLastReadChanged = prevCurrentChat.lastRead.them != thisChat.lastRead.them;
     const otherUserStateChanged = prevProps.inChat != this.props.inChat || prevProps.typing != this.props.typing;
-    // const newSentMessage = prevCurrentChat.sendingMessages != null && thisChat.sendingMessages != null && prevCurrentChat.sendingMessages != thisChat.sendingMessages;
     const newSentMessage = prevCurrentChat.sendingMessages != thisChat.sendingMessages;
-    if (messagesExist && (sentNewMessage || openedDMChanged)) {
+    if (messagesExist && (chatChanged || openedDMChanged)) {
       this.reloadData();
       this.reloadMessage(prevProps);
     } else {
@@ -135,8 +134,10 @@ class DMsMessage extends React.Component {
         nt = false;
       }
 
+      let edited = message.edited != null ? message.edited : false;
+
       let messageObject;
-      messageObject = {message: message.message, timestamp: parseDate(message.timestamp), basicTimestamp: parseDate(message.timestamp, "basic"), lastRead: lr, noTransition: nt, id: item};
+      messageObject = {message: message.message, timestamp: parseDate(message.timestamp), basicTimestamp: parseDate(message.timestamp, "basic"), lastRead: lr, noTransition: nt, id: item, edited: edited};
 
       newMessageObjects.push(messageObject);
     });
@@ -209,7 +210,16 @@ class DMsMessage extends React.Component {
 
     return (
       <div className="DMsMessage">
-        <MessageType email={this.state.messageEmail} name={this.state.messageName} picture={this.state.messagePicture} messages={this.state.messageList} inChat={[this.state.inChat, this.state.inChatNoTransition]} inChatTyping={this.state.inChatTyping} onUpdate={this.props.onUpdate} />
+        <MessageType
+          email={this.state.messageEmail}
+          name={this.state.messageName}
+          picture={this.state.messagePicture}
+          messages={this.state.messageList}
+          inChat={[this.state.inChat, this.state.inChatNoTransition]}
+          inChatTyping={this.state.inChatTyping}
+          onUpdate={this.props.onUpdate}
+          editing={this.props.editing}
+          setMessageEditing={this.props.setMessageEditing} />
       </div>
     );
   }

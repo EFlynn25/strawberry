@@ -54,6 +54,50 @@
   background: #fff1;
 }
 
+.defaultMessageEditIcon {
+  width: 18px;
+  height: 18px;
+  margin-bottom: -4px;
+  margin-left: 5px;
+
+  fill: #888;
+  visibility: hidden;
+  transition: fill .1s, transform .1s;
+}
+
+.defaultMessageEditIcon:hover {
+  cursor: pointer;
+  fill: #ddd;
+  transform: scale(1.05);
+}
+
+.defaultMessageEditIcon:active {
+  cursor: pointer;
+  fill: #777;
+  transform: scale(.95);
+}
+
+.defaultMessageText:hover .defaultMessageEditIcon {
+  visibility: visible;
+}
+
+.defaultMessageEditInput {
+  width: calc(100% - 10px);
+  margin-bottom: -1px;
+
+  background: #fff1;
+  border: none;
+  resize: none;
+  outline: none;
+  user-select: none;
+}
+
+.defaultMessageEditSpan {
+  margin-left: 5px;
+  font-size: 12px;
+  color: #888;
+}
+
 .defaultMessageSending {
   color: #888;
 }
