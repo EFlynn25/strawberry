@@ -26,7 +26,7 @@ class HPSettings extends React.Component {
     super(props);
 
     this.state = {
-      tab: "General",
+      tab: "Messages",
     };
 
     this.setTab = this.setTab.bind(this);
@@ -43,14 +43,14 @@ class HPSettings extends React.Component {
           <h1>Settings</h1>
           <p> > </p>
           <div>
-            <h1 className="hpsHeaderPage" style={this.state.tab == "General" ? null : {opacity: 0}}>General</h1>
+            {/*<h1 className="hpsHeaderPage" style={this.state.tab == "General" ? null : {opacity: 0}}>General</h1>*/}
             <h1 className="hpsHeaderPage" style={this.state.tab == "Messages" ? null : {opacity: 0}}>Messages</h1>
             <h1 className="hpsHeaderPage" style={this.state.tab == "About" ? null : {opacity: 0}}>About</h1>
           </div>
         </div>
 
         <div className="hpsSections">
-          <HPSSection setTab={this.setTab} tab={this.state.tab} name="General" icon={Settings} />
+          {/*<HPSSection setTab={this.setTab} tab={this.state.tab} name="General" icon={Settings} />*/}
           <HPSSection setTab={this.setTab} tab={this.state.tab} name="Messages" icon={Messages} />
           <HPSSection setTab={this.setTab} tab={this.state.tab} name="About" icon={Info} />
         </div>

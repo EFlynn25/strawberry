@@ -29,6 +29,23 @@
   z-index: 1;
 }
 
+.hpsaCredits {
+  position: absolute;
+  height: calc(100% - 40px);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.hpsaCredits h3 {
+  color: #ddd;
+}
+
+.hpsaCredits p {
+  color: #bbb;
+}
+
 .hpsaSmoothie {
   position: absolute;
   bottom: 50px;
