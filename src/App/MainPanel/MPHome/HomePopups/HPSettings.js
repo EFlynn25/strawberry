@@ -55,7 +55,7 @@ class HPSettings extends React.Component {
           <HPSSection setTab={this.setTab} tab={this.state.tab} name="About" icon={Info} />
         </div>
 
-        <div className="hpsContent" style={this.state.tab == "General" ? {zIndex: 1} : null}><HPSWrapper tab={this.state.tab} name="General" /></div>
+        {/*<div className="hpsContent" style={this.state.tab == "General" ? {zIndex: 1} : null}><HPSWrapper tab={this.state.tab} name="General" /></div>*/}
         <div className="hpsContent" style={this.state.tab == "Messages" ? {zIndex: 1} : null}><HPSWrapper tab={this.state.tab} name="Messages" /></div>
         <div className="hpsContent" style={this.state.tab == "About" ? {zIndex: 1} : null}><HPSWrapper tab={this.state.tab} name="About" /></div>
 

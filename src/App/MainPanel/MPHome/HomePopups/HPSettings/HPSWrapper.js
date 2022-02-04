@@ -1,7 +1,7 @@
 import React from 'react';
 
 import './HPSWrapper.css'
-import HPSGeneral from './HPSGeneral'
+// import HPSGeneral from './HPSGeneral'
 import HPSMessages from './HPSMessages'
 import HPSAbout from './HPSAbout'
 
@@ -14,7 +14,8 @@ class HPSWrapper extends React.Component {
     }
 
     this.setClasses = this.setClasses.bind(this);
-    this.components = {"General": HPSGeneral, "Messages": HPSMessages, "About": HPSAbout}
+    // this.components = {"General": HPSGeneral, "Messages": HPSMessages, "About": HPSAbout}
+    this.components = {"Messages": HPSMessages, "About": HPSAbout}
   }
 
   componentDidMount() {
