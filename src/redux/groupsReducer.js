@@ -195,10 +195,10 @@ export const groupsSlice = createSlice({
       state.threads[action.payload["thread_id"]].tempMessageInput = action.payload["input"];
     },
     setThreadLastRead: (state, action) => {
-      console.log("payload: ", action.payload);
+      // console.log("payload: ", action.payload);
       if (action.payload["last_read"] != null) {
         Object.keys(action.payload["last_read"]).forEach(item => {
-          console.log(item);
+          // console.log(item);
           state.threads[action.payload["thread_id"]].lastRead[item] = action.payload["last_read"][item];
           // state.threads[action.payload["thread_id"]].lastRead[item] = null;
         });

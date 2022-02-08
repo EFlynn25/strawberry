@@ -70,6 +70,10 @@ class HomeProfile extends React.Component {
           this.setState({editingPost: '', editingPostVal: ''})
         }
       }
+    } else if (code === 27) {
+      if (event.target.getAttribute("class") == "hpEditPostInput") {
+        this.setState({editingPost: '', editingPostVal: ''})
+      }
     }
   }
 
@@ -136,7 +140,7 @@ class HomeProfile extends React.Component {
             <p className="hpEditStatus">Edit status:</p>
             <p className="pplStatus" style={this.state.editingStatus ? {display: "none"} : noStatus ? {fontStyle: "normal", color: "#fff5"} : null}>{status}<Edit className="hpEditIcon hpeiStatus" onClick={() => {this.setState({editingStatus: true}); this.statusInputRef.current.focus(); this.statusInputRef.current.setSelectionRange(this.state.statusInputVal.length, this.state.statusInputVal.length);}} /></p>
             <div className={this.state.editingStatus ? "hpChangeStatusDiv" : "hpChangeStatusDiv hpChangeStatusDivHidden"}>
-              <TextareaAutosize value={this.state.statusInputVal} className={this.state.editingStatus ? "hpStatusInput" : "hpStatusInput hpStatusInputHidden"} onChange={this.handleInputChange} onKeyPress={this.inputEnterPressed} ref={this.statusInputRef} maxlength={180} />
+              <TextareaAutosize value={this.state.statusInputVal} className={this.state.editingStatus ? "hpStatusInput" : "hpStatusInput hpStatusInputHidden"} onChange={this.handleInputChange} onKeyPress={this.inputEnterPressed} ref={this.statusInputRef} maxLength={180} />
               <Close className="hpEditIcon hpCloseIcon" onClick={() => this.setState({statusInputVal: this.props.status, editingStatus: false})} />
             </div>
           </div>
@@ -147,12 +151,12 @@ class HomeProfile extends React.Component {
               : null
             }
             <div className="pprPostList" ref={this.postListRef} onScroll={this.handleScroll}>
-              <TextareaAutosize value={this.state.newPostVal} className="hpPostInput" onChange={this.handleInputChange} onKeyPress={this.inputEnterPressed} placeholder="Create post here" maxlength={1000} />
+              <TextareaAutosize value={this.state.newPostVal} className="hpPostInput" onChange={this.handleInputChange} onKeyPress={this.inputEnterPressed} placeholder="Create post here" maxLength={1000} />
 
               { postsExist ?
                 posts.map((item) => {
                   return (
-                    <Fragment>
+                    <Fragment key={item.post_id}>
                       { this.state.editingPost == item.post_id ?
                         <div style={{display: "flex", gap: "5px", marginTop: "18px"}}>
                           <p style={{paddingLeft: "10px", color: "#bbb", userSelect: "none"}}>Editing post...</p>
@@ -168,9 +172,9 @@ class HomeProfile extends React.Component {
                               value={this.state.editingPostVal}
                               className="hpEditPostInput"
                               onChange={this.handleInputChange}
-                              onKeyPress={this.inputEnterPressed}
+                              onKeyDown={this.inputEnterPressed}
                               placeholder="Create post here"
-                              maxlength={1000}
+                              maxLength={1000}
                               ref={this.editPostInputRef} />
                           </Fragment>
                           :
