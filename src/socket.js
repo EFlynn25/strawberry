@@ -10,7 +10,7 @@ import {
   addChat, addChatMessage, editChatMessage, addLoadedChatMessages, removeSendingChatMessage, setChatCreated, setChatLastRead, setChatTyping, setInChat, setLoadingMessages, addChatRequest, removeChatRequest
 } from './redux/dmsReducer.js'
 import {
-  setOpenedThread, addThread, removeThread, setThreadName, addThreadPeople, removeThreadPerson, addThreadMessage, addLoadedThreadMessages, removeSendingThreadMessage,
+  setOpenedThread, addThread, removeThread, setThreadName, addThreadPeople, removeThreadPerson, addThreadMessage, editThreadMessage, addLoadedThreadMessages, removeSendingThreadMessage,
   removeThreadCreating, addThreadCreated,
   setThreadCreated, setThreadTyping, setInThread, setThreadLastRead,
   addThreadRequest, removeThreadRequest,
@@ -369,6 +369,10 @@ export function startSocket() {
         const myMessage = jsonData.message;
         mainStore.dispatch(removeSendingThreadMessage({"thread_id": jsonData.thread_id, "message": jsonData.message.message}));
         mainStore.dispatch(addThreadMessage({thread_id: jsonData.thread_id, message: myMessage.message, from: myMessage.email, id: myMessage.id, timestamp: myMessage.timestamp}));
+      } else if (com == "edit_message") {
+        if (jsonData.response == true || jsonData.response == "receive_edited_message") {
+          mainStore.dispatch(editThreadMessage({thread_id: jsonData.thread_id, id: jsonData.id, message: jsonData.message, edited: jsonData.edited}));
+        }
       } else if (com == "request_to_thread") {
         if (jsonData.response === "receive_request") {
           jsonData.thread_id.forEach((item, i) => {
@@ -661,11 +665,6 @@ export function dms_get_thread_created(thread_id) {
   send_websocket_message(jsonObj);
 }
 
-
-
-
-
-
 // Set functions
 
 export function groups_add_user(idToken) {
@@ -704,10 +703,6 @@ export function groups_leave_thread(thread_id) {
 }
 
 export function groups_deny_request(thread_id, unrequesting = null) {
-  // var jsonObj = {"product": "groups", "command": "deny_request", "thread_id": thread_id}
-  // if (unrequesting != null) {
-  //   jsonObj["unrequesting"] = unrequesting;
-  // }
   var jsonObj = {"product": "groups", "command": "deny_request", "thread_id": thread_id, "unrequesting": unrequesting}
   send_websocket_message(jsonObj);
 }
@@ -722,20 +717,12 @@ export function groups_send_message(thread_id, message) {
   send_websocket_message(jsonObj);
 }
 
-// export function groups_rename_thread(thread_id, name) {
-//   var jsonObj = {"product": "groups", "command": "rename_thread", "thread_id": thread_id, "name": name}
-//   send_websocket_message(jsonObj);
-// }
+export function groups_edit_message(thread_id, id, message) {
+  var jsonObj = {"product": "groups", "command": "edit_message", "thread_id": thread_id, "id": id, "message": message}
+  send_websocket_message(jsonObj);
+}
 
-// export function groups_get_user_info(email) {
-//   var jsonObj = {"product": "groups", "command": "get_user_info", "requested": email}
-//   send_websocket_message(jsonObj);
-// }
-
-// export function groups_get_known_people() {
-//   var jsonObj = {"product": "groups", "command": "get_known_people"}
-//   send_websocket_message(jsonObj);
-// }
+// Hybrid functions
 
 export function groups_in_thread(thread_id, data) {
   var jsonObj = {"product": "groups", "command": "in_thread", "thread_id": thread_id, "data": data}

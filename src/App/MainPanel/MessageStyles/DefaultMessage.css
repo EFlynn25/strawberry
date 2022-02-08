@@ -33,21 +33,25 @@
 
 .defaultMessageText {
   position: relative;
-
   left: -5px;
   margin-bottom: 3px;
+  padding: 0 5px;
 
+  font-size: 14px;
+  font-weight: 400;
+  font-style: normal;
+  overflow-wrap: break-word;
+  color: #ddd;
+
+  border-radius: 5px;
+}
+
+.defaultMessageText > p {
+  display: inline;
+  color: #ddd;
   font-style: normal;
   font-weight: 400;
   font-size: 14px;
-
-  overflow-wrap: break-word;
-
-  color: #FFFFFF;
-  color: #DDD;
-
-  border-radius: 5px;
-  padding: 0 5px;
 }
 
 .defaultMessageText:hover {
@@ -57,12 +61,13 @@
 .defaultMessageEditIcon {
   width: 18px;
   height: 18px;
-  margin-bottom: -4px;
+  margin-bottom: -3px;
   margin-left: 5px;
 
   fill: #888;
-  visibility: hidden;
+  user-select: none;
   transition: fill .1s, transform .1s;
+  visibility: hidden;
 }
 
 .defaultMessageEditIcon:hover {

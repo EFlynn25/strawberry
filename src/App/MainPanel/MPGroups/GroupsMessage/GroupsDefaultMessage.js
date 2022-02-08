@@ -1,12 +1,15 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
+import TextareaAutosize from 'react-autosize-textarea';
 
 import './GroupsDefaultMessage.css';
 import '../../MessageStyles/DefaultMessage.css';
-import { getUser } from '../../../../GlobalComponents/getUser.js';
 import { ReactComponent as Edit } from '../../../../assets/icons/edit.svg';
 import { ReactComponent as Leave } from '../../../../assets/icons/leave.svg';
 import { ReactComponent as Join } from '../../../../assets/icons/join.svg';
+import { getUser } from '../../../../GlobalComponents/getUser.js';
+import { parseDate } from '../../../../GlobalComponents/parseDate.js';
+import { groups_edit_message } from '../../../../socket.js';
 
 class GroupsDefaultMessage extends React.Component {
   constructor(props) {
@@ -17,18 +20,36 @@ class GroupsDefaultMessage extends React.Component {
       goneTransforms: {},
       extraHere: 0,
       extraGone: 0,
+      editingInputVal: "",
     };
 
+    this.inputRef = React.createRef();
+
     this.reloadInThread = this.reloadInThread.bind(this);
+    this.inputEnterPressed = this.inputEnterPressed.bind(this);
+
+    this.editingID = null;
+    this.editingIDOriginal = "";
   }
 
   componentDidMount() {
     this.reloadInThread();
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     if (this.props.onUpdate != null) {
       this.props.onUpdate();
+    }
+
+    if (prevProps.editing != this.editingID && this.editingID != null) {
+      if (this.inputRef.current != null) {
+        this.inputRef.current.focus()
+      }
+      this.setState({ editingInputVal: this.editingIDOriginal })
+    }
+
+    if (prevProps.openedDM != this.props.openedDM) {
+      this.props.setMessageEditing(false);
     }
 
     this.reloadInThread();
@@ -100,6 +121,27 @@ class GroupsDefaultMessage extends React.Component {
         extraHere: myExtraHere,
         extraGone: myExtraGone,
       });
+    }
+  }
+
+  inputEnterPressed(event) {
+    var code = event.keyCode || event.which;
+    if (code === 13 && !event.shiftKey) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      const iv = this.state.editingInputVal;
+      if (iv != null && iv != "") {
+        if (this.editingIDOriginal != iv) {
+          const ot = this.props.openedThread;
+          groups_edit_message(ot, this.props.editing, iv);
+        }
+        this.setState({editingInputVal: ''});
+        this.props.setMessageEditing(false);
+      }
+    } else if (code == 27) {
+      this.setState({editingInputVal: ''});
+      this.props.setMessageEditing(false);
     }
   }
 
@@ -204,7 +246,7 @@ class GroupsDefaultMessage extends React.Component {
 
                 for (let i = 0; i < peopleToShow; i++) {
                   if (item.lastRead[i] != null && item.lastRead[i] != this.props.myEmail) {
-                    console.log("YAY, ", item.lastRead[i]);
+                    // console.log("YAY, ", item.lastRead[i]);
                     const myPerson = getUser(item.lastRead[i]);
                     lastReadElementPictures.push(<img style={ i == 0 ? null : {transform: "translateX(" + transformPX + "px)"}} src={myPerson.picture} className={lrClasses} alt={myPerson.name} title={myPerson.name + " (" + item.lastRead[i] + ")"} />);
                     transformPX += tpxIncrement;
@@ -231,20 +273,46 @@ class GroupsDefaultMessage extends React.Component {
                   top = "1px";
                 }
               }
-              return (
-                <p key={"id" + item.id} title={item.basicTimestamp} className={messageClass}>
-                  {MyIcon != null ? <MyIcon style={{position: "absolute", width: "15px", height: "15px", marginLeft: "-20px", fill: "#999", top: top}} /> : null}
-                  {item.message}
-                  {lastReadElement}
-                </p>
-              );
+
+              if (this.props.editing === item.id) {
+                this.editingID = item.id;
+                this.editingIDOriginal = item.message;
+                return <TextareaAutosize
+                          key={"id" + item.id}
+                          value={this.state.editingInputVal}
+                          onChange={(event) => this.setState({ editingInputVal: event.target.value })}
+                          onKeyDown={this.inputEnterPressed}
+                          className="defaultMessageText defaultMessageEditInput"
+                          maxLength={1000}
+                          ref={this.inputRef} />;
+              } else {
+                if (this.props.editing - this.props.messages[0].id < 0 || this.props.messages[this.props.messages.length - 1].id < this.props.editing) {
+                  this.editingID = null;
+                }
+
+                // const lastReadElement = <img src={thisUser.picture} className={lrClasses} alt={thisUser.name} />;
+                const editedElement = item.edited == false ? null : <span title={"Edited on " + parseDate(item.edited, "basic")} className="defaultMessageEditSpan">(edited)</span>;
+                let editIconElement = null;
+                if (this.props.email == this.props.myEmail) {
+                  editIconElement = <Edit className="defaultMessageEditIcon" onClick={() => this.props.setMessageEditing(item.id)} />;
+                }
+                return (
+                  <div key={"id" + item.id} title={item.basicTimestamp} className={messageClass}>
+                    {MyIcon != null ? <MyIcon style={{position: "absolute", width: "15px", height: "15px", marginLeft: "-20px", fill: "#999", top: top}} /> : null}
+                    <p>{item.message}</p>
+                    {editedElement}
+                    {editIconElement}
+                    {lastReadElement}
+                  </div>
+                );
+              }
 
             })
           }
         </div>
 
         { this.props.email == "system" ? null :
-          <h1 className="defaultMessageTimestamp">{this.props.messages == null || this.props.messages.length == 0 ? "" : this.props.messages[this.props.messages.length - 1].timestamp/*"time lol"*/}</h1>
+          <h1 className="defaultMessageTimestamp">{this.props.messages == null || this.props.messages.length == 0 ? "" : this.props.messages[this.props.messages.length - 1].timestamp}</h1>
         }
         { inThreadElements }
 

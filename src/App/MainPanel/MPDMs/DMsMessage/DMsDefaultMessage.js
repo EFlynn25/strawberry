@@ -54,16 +54,21 @@ class DMsDefaultMessage extends React.Component {
 
       const iv = this.state.editingInputVal;
       if (iv != null && iv != "") {
-        const oc = this.props.openedDM;
-        dms_edit_message(oc, this.props.editing, iv);
+        if (this.editingIDOriginal != iv) {
+          const oc = this.props.openedDM;
+          dms_edit_message(oc, this.props.editing, iv);
+        }
         this.setState({editingInputVal: ''});
         this.props.setMessageEditing(false);
       }
+    } else if (code == 27) {
+      this.setState({editingInputVal: ''});
+      this.props.setMessageEditing(false);
     }
   }
 
   render() {
-    const thisChat = this.props.chats[this.props.openedDM];
+    // const thisChat = this.props.chats[this.props.openedDM];
 
     let inChatClasses = "defaultInChat defaultIndicatorHide noTransition";
     let nt = true;
@@ -120,7 +125,7 @@ class DMsDefaultMessage extends React.Component {
                           key={"id" + item.id}
                           value={this.state.editingInputVal}
                           onChange={(event) => this.setState({ editingInputVal: event.target.value })}
-                          onKeyPress={this.inputEnterPressed}
+                          onKeyDown={this.inputEnterPressed}
                           className="defaultMessageText defaultMessageEditInput"
                           maxLength={1000}
                           ref={this.inputRef} />;
@@ -135,7 +140,13 @@ class DMsDefaultMessage extends React.Component {
                 if (this.props.email == this.props.myEmail) {
                   editIconElement = <Edit className="defaultMessageEditIcon" onClick={() => this.props.setMessageEditing(item.id)} />;
                 }
-                return <p key={"id" + item.id} title={item.basicTimestamp} className={messageClass}>{item.message}{editedElement}{lastReadElement}{editIconElement}</p>;
+                return (
+                  <div key={"id" + item.id} title={item.basicTimestamp} className={messageClass}>
+                    <p>{item.message}{editedElement}</p>
+                    {lastReadElement}
+                    {editIconElement}
+                  </div>
+                );
               }
             })
           }
@@ -157,7 +168,7 @@ class DMsDefaultMessage extends React.Component {
 const mapStateToProps = (state) => ({
   myEmail: state.app.email,
   openedDM: state.dms.openedDM,
-  chats: state.dms.chats,
+  // chats: state.dms.chats,
   knownPeople: state.people.knownPeople
 });
 

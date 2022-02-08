@@ -2,7 +2,7 @@
 // My thought was to have the "...Message.js" files be like a wrapper
 // for the "...DefaultMessage.js" files so that I can implement customizable
 // messages in the future. The "...DefaultMessage.js" files JUST display what
-// "...Message.js" files give them.
+// "...Message.js" files give them. (not really, but that was the hope)
 
 import React from 'react';
 import { connect } from 'react-redux';
@@ -11,6 +11,7 @@ import './GroupsMessage.css';
 import { getUser } from '../../../GlobalComponents/getUser.js';
 import { parseDate } from '../../../GlobalComponents/parseDate.js';
 import GroupsDefaultMessage from './GroupsMessage/GroupsDefaultMessage';
+import GroupsBreckanMessage from './GroupsMessage/GroupsBreckanMessage';
 
 class GroupsMessage extends React.Component {
   constructor(props) {
@@ -41,7 +42,8 @@ class GroupsMessage extends React.Component {
     const prevCurrentThread = prevProps.threads[propsOpenedThread];
 
     const messagesExist = thisThread.messages != null && thisThread.messages.length > 0;
-    const sentNewMessage = prevCurrentThread.messages != thisThread.messages && prevCurrentThread.messages[prevCurrentThread.messages.length - 1].id == this.state.myIDs[this.state.myIDs.length - 1];
+    // const sentNewMessage = prevCurrentThread.messages != thisThread.messages && prevCurrentThread.messages[prevCurrentThread.messages.length - 1].id == this.state.myIDs[this.state.myIDs.length - 1];
+    const chatChanged = JSON.stringify(prevCurrentThread.messages) != JSON.stringify(thisThread.messages);
     const openedThreadChanged = prevProps.openedThread != propsOpenedThread;
 
     const idsChanged = prevState.myIDs != this.state.myIDs;
@@ -51,7 +53,7 @@ class GroupsMessage extends React.Component {
     const newSentMessage = prevCurrentThread.sendingMessages != thisThread.sendingMessages;
 
     const newKnownPeople = JSON.stringify(prevProps.knownPeople) != JSON.stringify(this.props.knownPeople);
-    if (messagesExist && (sentNewMessage || openedThreadChanged || newKnownPeople)) {
+    if (messagesExist && (/*sentNewMessage*/ chatChanged || openedThreadChanged || newKnownPeople)) {
       this.reloadData();
       this.reloadMessage(prevProps);
     } else {
@@ -146,8 +148,10 @@ class GroupsMessage extends React.Component {
         });
       }
 
+      let edited = message.edited != null ? message.edited : false;
+
       let messageObject;
-      messageObject = {message: message.message, timestamp: parseDate(message.timestamp), basicTimestamp: parseDate(message.timestamp, "basic"), lastRead: lr, noTransition: /*nt*/null, id: item};
+      messageObject = {message: message.message, timestamp: parseDate(message.timestamp), basicTimestamp: parseDate(message.timestamp, "basic"), lastRead: lr, noTransition: /*nt*/null, id: item, edited: edited};
 
       newMessageObjects.push(messageObject);
     });
@@ -155,7 +159,6 @@ class GroupsMessage extends React.Component {
     let newInThread = {};
     let newTyping = [];
     const lastMessageID = thisThread.messages[thisThread.messages.length - 1].id;
-    console.log(newMessageObjects);
     if (newMessageObjects[newMessageObjects.length - 1].id == lastMessageID) {
       let myLR = this.myLastRead[lastMessageID];
       if (myLR != null) {
@@ -180,10 +183,8 @@ class GroupsMessage extends React.Component {
     const message = thisThread.messages.find( ({ id }) => id === this.state.myIDs[0] );
     if (message.from == this.props.myEmail && this.state.myIDs.includes(thisThread.messages[thisThread.messages.length - 1].id) && thisThread.sendingMessages != null) {
       thisThread.sendingMessages.forEach((item, i) => {
-        console.log(item);
-        const sendingMessageObject = {"message": item, "id": "sending" + i, "sending": true};
+        const sendingMessageObject = {"message": item, "id": "sending" + i, "sending": true, edited: false};
         newMessageObjects.push(sendingMessageObject);
-        console.log(message);
       });
     }
 
@@ -193,14 +194,23 @@ class GroupsMessage extends React.Component {
   render() {
     let MessageType;
     if (this.props.messageStyle == "default") {
-      MessageType = GroupsDefaultMessage; // this needs changed when I port Breckan-style to Groups
+      MessageType = GroupsDefaultMessage;
     } else if (this.props.messageStyle == "breckan") {
-      MessageType = GroupsDefaultMessage; // this needs changed when I port Breckan-style to Groups
+      MessageType = GroupsBreckanMessage;
     }
 
     return (
       <div className="GroupsMessage">
-        <MessageType email={this.state.messageEmail} name={this.state.messageName} picture={this.state.messagePicture} messages={this.state.messageList} inThread={[this.state.inThread, this.state.inThreadNoTransition]} inThreadTyping={this.state.inThreadTyping} onUpdate={this.props.onUpdate} />
+        <MessageType
+          email={this.state.messageEmail}
+          name={this.state.messageName}
+          picture={this.state.messagePicture}
+          messages={this.state.messageList}
+          inThread={[this.state.inThread, this.state.inThreadNoTransition]}
+          inThreadTyping={this.state.inThreadTyping}
+          onUpdate={this.props.onUpdate}
+          editing={this.props.editing}
+          setMessageEditing={this.props.setMessageEditing} />
       </div>
     );
   }

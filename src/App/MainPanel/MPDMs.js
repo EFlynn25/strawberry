@@ -354,7 +354,7 @@ class MPDMs extends React.Component {
     if (hasSending && !handledSending) {
       let mySendingMessages = [];
       thisChat["sendingMessages"].forEach(item => {
-        const messageObject = {message: item, lastRead: false, noTransition: true, sending: true, id: "sending" + mySendingMessages.length};
+        const messageObject = {message: item, lastRead: false, noTransition: true, sending: true, id: "sending" + mySendingMessages.length, edited: false};
         mySendingMessages.push(messageObject);
       });
 

@@ -1,26 +1,70 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import TextareaAutosize from 'react-autosize-textarea';
 
 import './DMsBreckanMessage.css';
 import '../../MessageStyles/BreckanMessage.css';
+import { ReactComponent as Edit } from '../../../../assets/icons/edit.svg';
 import { getUser } from '../../../../GlobalComponents/getUser.js';
+import { parseDate } from '../../../../GlobalComponents/parseDate.js';
+import { dms_edit_message } from '../../../../socket.js';
 
 class DMsBreckanMessage extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-
+      editingInputVal: ""
     };
+
+    this.inputRef = React.createRef();
+
+    this.inputEnterPressed = this.inputEnterPressed.bind(this);
+
+    this.editingID = null;
+    this.editingIDOriginal = "";
   }
 
   componentDidMount() {
 
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     if (this.props.onUpdate != null) {
       this.props.onUpdate();
+    }
+
+    if (prevProps.editing != this.editingID && this.editingID != null) {
+      if (this.inputRef.current != null) {
+        this.inputRef.current.focus()
+      }
+      this.setState({ editingInputVal: this.editingIDOriginal })
+    }
+
+    if (prevProps.openedDM != this.props.openedDM) {
+      this.props.setMessageEditing(false);
+    }
+  }
+
+  inputEnterPressed(event) {
+    console.log(event)
+    var code = event.keyCode || event.which;
+    if (code === 13 && !event.shiftKey) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      const iv = this.state.editingInputVal;
+      if (iv != null && iv != "") {
+        if (this.editingIDOriginal != iv) {
+          const oc = this.props.openedDM;
+          dms_edit_message(oc, this.props.editing, iv);
+        }
+        this.setState({editingInputVal: ''});
+        this.props.setMessageEditing(false);
+      }
+    } else if (code == 27) {
+      this.setState({editingInputVal: ''});
+      this.props.setMessageEditing(false);
     }
   }
 
@@ -45,13 +89,8 @@ class DMsBreckanMessage extends React.Component {
     }
 
     let parentStyles = {};
-    if (this.props.messages.length > 0 && this.props.messages[this.props.messages.length - 1].sending && this.props.messages[0].sending) {
-      // parentStyles.marginTop = "40px";
-    }
-
     let classExtension = "R";
     if (who == "me") {
-      // parentStyles.top = "-20px";
       parentStyles.paddingBottom = "40px";
       classExtension = "S";
     }
@@ -73,19 +112,45 @@ class DMsBreckanMessage extends React.Component {
                 lrClasses += " noTransition";
               }
 
-              let messageClass = "breckanMessageText" + classExtension;
-              if (item.sending) {
-                messageClass = "breckanMessageText" + classExtension + " breckanMessageSending";
+              if (this.props.editing === item.id) {
+                this.editingID = item.id;
+                this.editingIDOriginal = item.message;
+                return (
+                  <div className={"breckanMessageTextWrap" + classExtension}>
+                    <TextareaAutosize
+                        key={"id" + item.id}
+                        value={this.state.editingInputVal}
+                        onChange={(event) => this.setState({ editingInputVal: event.target.value })}
+                        onKeyDown={this.inputEnterPressed}
+                        className="breckanMessageTextS defaultMessageEditInput"
+                        maxLength={1000}
+                        ref={this.inputRef}
+                        style={{width: "calc(100% - 14px)"}} />
+                  </div>
+                );
+              } else {
+                if (this.props.editing - this.props.messages[0].id < 0 || this.props.messages[this.props.messages.length - 1].id < this.props.editing) {
+                  this.editingID = null;
+                }
+
+                const lastReadElement = <img src={thisUser.picture} className={lrClasses} alt={thisUser.name} />;
+                const editedElement = item.edited == false ? null : <span title={"Edited on " + parseDate(item.edited, "basic")} className="defaultMessageEditSpan">(edited)</span>;
+                let editIconElement = null;
+                if (this.props.email == this.props.myEmail) {
+                  editIconElement = <Edit className="breckanMessageEditIcon" onClick={() => this.props.setMessageEditing(item.id)} />;
+                }
+                return (
+                  <div className={"breckanMessageTextWrap" + classExtension}>
+                    <div key={"id" + item.id} title={item.basicTimestamp} className={"breckanMessageText" + classExtension}>
+                      {item.sending ? <h1 className={"defaultMessageSendingText breckanMessageSendingText" + classExtension}>Sending...</h1> : null}
+                      <p>{item.message}{editedElement}</p>
+                      {lastReadElement}
+                      {editIconElement}
+                    </div>
+                  </div>
+                );
               }
 
-              const lastReadElement = <img src={thisUser.picture} className={lrClasses} alt={thisUser.name}  style={who == "me" ? {right: "unset", left: "-40px"} : null} />;
-              return (
-                <p key={"id" + item.id} title={item.basicTimestamp} className={messageClass}>
-                  {item.sending ? <h1 className={"defaultMessageSendingText breckanMessageSendingText" + classExtension}>Sending...</h1> : null}
-                  {item.message}
-                  {lastReadElement}
-                </p>
-              );
             })
           }
         </div>

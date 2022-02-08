@@ -45,8 +45,15 @@
   overflow-wrap: break-word;
 
   background: #fff1;
-  color: #DDD;
+  color: #ddd;
   border-radius: 15px;
+}
+
+.breckanMessageTextR > p {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  color: #ddd;
 }
 
 
@@ -80,10 +87,11 @@
 
 .breckanMessageGroupS {
   position: relative;
-  width: calc(100% - 125px);
-  left: 75px;
+  width: calc(100% - 50px);
   top: 22px;
+}
 
+.breckanMessageTextWrapS {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -92,19 +100,64 @@
 .breckanMessageTextS {
   position: relative;
   width: fit-content;
-  max-width: calc(100% - 14px);
+  max-width: calc(100% - 89px);
   right: -5px;
   margin-bottom: 3px;
   padding: 7px;
 
+  overflow-wrap: break-word;
   font-style: normal;
   font-weight: 400;
   font-size: 14px;
-  overflow-wrap: break-word;
 
   background: #ffffff08;
-  color: #DDD;
+  color: #ddd;
   border-radius: 15px;
+}
+
+.breckanMessageTextS > p {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  color: #ddd;
+}
+
+.breckanMessageEditIcon {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  top: calc(50% - 9px);
+  left: -22px;
+
+  fill: #888;
+  visibility: hidden;
+  transition: fill .1s, transform .1s;
+}
+
+.breckanMessageEditIcon:hover {
+  cursor: pointer;
+  fill: #ddd;
+  transform: scale(1.05);
+  visibility: visible;
+}
+
+.breckanMessageEditIcon:active {
+  cursor: pointer;
+  fill: #777;
+  transform: scale(.95);
+}
+
+.breckanMessageTextWrapS:hover .breckanMessageEditIcon {
+  visibility: visible;
+}
+
+.breckanMessageTextWrapS .defaultLastRead {
+  left: -40px;
+  right: unset;
+}
+
+.breckanMessageTextWrapS:hover .defaultLastRead {
+  left: -55px;
 }
 
 .breckanMessageSendingTextS {

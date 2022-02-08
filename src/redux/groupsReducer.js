@@ -129,6 +129,15 @@ export const groupsSlice = createSlice({
 
 
     },
+    editThreadMessage: (state, action) => {
+      let myMessages = state.threads[action.payload["thread_id"]].messages;
+      myMessages.some((item, i) => {
+        if (item.id == action.payload["id"]) {
+          state.threads[action.payload["thread_id"]].messages[i].message = action.payload["message"];
+          state.threads[action.payload["thread_id"]].messages[i].edited = action.payload["edited"];
+        }
+      })
+    },
     addLoadedThreadMessages: (state, action) => {
       let myThreadID = action.payload.thread_id;
       if (state.threads[myThreadID].messages == null) {
@@ -308,24 +317,15 @@ export const groupsSlice = createSlice({
       }
     },
     addThreadRequest: (state, action) => {
-      // if (Array.isArray(action.payload)) {
-      //   state.requests = state.requests.concat(action.payload)
-      // } else {
-      //   state.requests.push(action.payload);
-      // }
       Object.assign(state.requests, action.payload)
     },
     removeThreadRequest: (state, action) => {
       delete state.requests[action.payload]
-      // let index = state.requests.indexOf(action.payload);
-      // if (index > -1) {
-      //   state.requests.splice(index, 1);
-      // }
     },
   },
 });
 
-export const { setOpenedThread, addThread, removeThread, setThreadName, addThreadPeople, removeThreadPerson, addThreadMessage, addLoadedThreadMessages, addSendingThreadMessage, removeSendingThreadMessage,
+export const { setOpenedThread, addThread, removeThread, setThreadName, addThreadPeople, removeThreadPerson, addThreadMessage, editThreadMessage, addLoadedThreadMessages, addSendingThreadMessage, removeSendingThreadMessage,
   setThreadCreated, setTempMessageInput, setThreadLastRead, setThreadTyping, setInThread, setLoadingMessages,
   addThreadCreating, removeThreadCreating, addThreadCreated, removeThreadCreated,
   addRequested, removeRequested,

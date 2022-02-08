@@ -2,7 +2,7 @@
 // My thought was to have the "...Message.js" files be like a wrapper
 // for the "...DefaultMessage.js" files so that I can implement customizable
 // messages in the future. The "...DefaultMessage.js" files JUST display what
-// "...Message.js" files give them.
+// "...Message.js" files give them. (not really, but that was the hope)
 
 import React from 'react';
 import { connect } from 'react-redux';
@@ -178,7 +178,7 @@ class DMsMessage extends React.Component {
       if (thisChat.sendingMessages != null && thisChat.sendingMessages.length > 0 && this.state.messageEmail == this.props.myEmail) {
         var currentSendingID = 0;
         thisChat["sendingMessages"].map(item => {
-          const messageObject = {message: item, lastRead: false, noTransition: true, sending: true, id: "sending" + currentSendingID};
+          const messageObject = {message: item, lastRead: false, noTransition: true, sending: true, id: "sending" + currentSendingID, edited: false};
           newMessageObjects.push(messageObject);
           currentSendingID++;
         });

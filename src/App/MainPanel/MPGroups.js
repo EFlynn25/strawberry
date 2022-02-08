@@ -29,6 +29,7 @@ import {
 } from '../../socket.js';
 import GroupsMessage from './MPGroups/GroupsMessage';
 import GroupsDefaultMessage from './MPGroups/GroupsMessage/GroupsDefaultMessage';
+import GroupsBreckanMessage from './MPGroups/GroupsMessage/GroupsBreckanMessage';
 
 import { ReactComponent as Settings } from '../../assets/icons/settings.svg';
 
@@ -38,7 +39,8 @@ class MPGroups extends React.Component {
     this.state = {
       inputValue: '',
       messages: [],
-      loaded: false
+      loaded: false,
+      editing: false
     };
 
     this.messagesRef = React.createRef();
@@ -51,6 +53,7 @@ class MPGroups extends React.Component {
     this.loadMoreMessages = this.loadMoreMessages.bind(this);
     this.handleWindowFocus = this.handleWindowFocus.bind(this);
     this.handleWindowBlur = this.handleWindowBlur.bind(this);
+    this.setMessageEditing = this.setMessageEditing.bind(this);
 
     this.shouldScroll = true;
     this.scrollsToIgnore = 0;
@@ -186,7 +189,7 @@ class MPGroups extends React.Component {
     const propsOpenedThread = this.props.openedThread;
 
     if (prevProps.openedThread == propsOpenedThread) {
-      if (prevProps.threads[propsOpenedThread] != this.props.threads[propsOpenedThread]) {
+      if (JSON.stringify(prevProps.threads[propsOpenedThread]) != JSON.stringify(this.props.threads[propsOpenedThread]) || prevState.editing != this.state.editing) {
         this.reloadMessages(prevProps);
       }
     } else {
@@ -355,7 +358,7 @@ class MPGroups extends React.Component {
           }
         }
 
-        const newMessage = (<GroupsMessage inThread={/*inThread*/null} typing={/*thisThread.typing*/null} id={messageIDs} key={messageIDs[0]} onUpdate={this.scrollToBottom} />);
+        const newMessage = (<GroupsMessage inThread={/*inThread*/null} typing={/*thisThread.typing*/null} id={messageIDs} key={messageIDs[0]} onUpdate={this.scrollToBottom} editing={this.state.editing} setMessageEditing={this.setMessageEditing} />);
         // console.debug(newMessage);
         tempMessages.push(newMessage);
       }
@@ -366,7 +369,7 @@ class MPGroups extends React.Component {
 
       let mySendingMessages = [];
       thisThread["sendingMessages"].map(item => {
-        const messageObject = {message: item, /*lastRead: false,*/ noTransition: true, sending: true, id: "sending" + mySendingMessages.length};
+        const messageObject = {message: item, /*lastRead: false,*/ noTransition: true, sending: true, id: "sending" + mySendingMessages.length, edited: false};
         mySendingMessages.push(messageObject);
       });
 
@@ -374,7 +377,7 @@ class MPGroups extends React.Component {
       if (this.props.messageStyle == "default") {
         MessageType = GroupsDefaultMessage;
       } else if (this.props.messageStyle == "breckan") {
-        MessageType = GroupsDefaultMessage; // this needs changed when I port Breckan-style to Groups
+        MessageType = GroupsBreckanMessage;
       }
 
       const newMessage = <MessageType key={mySendingMessages[0].id} email={this.props.myEmail} name={this.props.myName} picture={this.props.myPicture} messages={mySendingMessages} /*inThread={["no", true]null}*/ inThreadTyping={/*false*/null} onUpdate={this.props.onUpdate} />;
@@ -422,6 +425,14 @@ class MPGroups extends React.Component {
         this.props.addSendingThreadMessage({message: iv});
         this.setState({inputValue: ''});
       }
+    }
+  }
+
+  setMessageEditing(data) {
+    if (this.state.editing != data) {
+      this.setState({ editing: data })
+    } else if (this.state.editing == data || (data == false && this.state.editing != false)) {
+      this.setState({ editing: false })
     }
   }
 
