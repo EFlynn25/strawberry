@@ -4,8 +4,14 @@
 
 
 import firebase from 'firebase/app';
-import { addUserPost, setUserFirstPost, setLikedPost, setdmsLoaded, setgroupsLoaded, setpeopleLoaded, setSocket, setAnnouncement, setAnnouncementRead } from './redux/appReducer.js'
-import { setUserStatus, setMultipleTabs, setUserLikedPost, setUserLoadingPosts, editUserPost, deleteUserPost } from './redux/appReducer.js'
+import {
+  setUserStatus,
+  addUserPost, setUserFirstPost, setUserLikedPost, setLikedPost, setUserLoadingPosts, editUserPost, deleteUserPost,
+  setdmsLoaded, setgroupsLoaded, setpeopleLoaded,
+  setSocket, setMultipleTabs,
+  setMessageStyle,
+  setAnnouncement, setAnnouncementRead
+} from './redux/appReducer.js'
 import {
   addChat, addChatMessage, editChatMessage, addLoadedChatMessages, removeSendingChatMessage, setChatCreated, setChatLastRead, setChatTyping, setInChat, setLoadingMessages, addChatRequest, removeChatRequest
 } from './redux/dmsReducer.js'
@@ -16,7 +22,8 @@ import {
   addThreadRequest, removeThreadRequest,
   addRequested, removeRequested
 } from './redux/groupsReducer.js'
-import { addPerson, setpersonStatus, setpersonOnline,
+import {
+  addPerson, setpersonStatus, setpersonOnline,
   addpersonPost, setpersonLikedPost, editpersonPost, deletepersonPost, addLoadingPosts
 } from './redux/peopleReducer.js'
 import mainStore from './redux/mainStore.js';
@@ -103,6 +110,11 @@ export function startSocket() {
         mainStore.dispatch(addUserPost(jsonData.posts));
         mainStore.dispatch(setUserFirstPost(jsonData.first_post));
         mainStore.dispatch(setUserLikedPost({post_id: jsonData.liked_posts, data: true}));
+        mainStore.dispatch(setMessageStyle(jsonData.settings.message_style));
+      } else if (com == "set_setting") {
+        if (jsonData.setting == "message_style") {
+          mainStore.dispatch(setMessageStyle(jsonData.value));
+        }
       } else if (com == "set_status") {
         if (jsonData.response == true) {
           mainStore.dispatch(setUserStatus(jsonData.status));
@@ -536,6 +548,11 @@ export function get_posts(requested, amount, already_have) {
 
 export function add_user(idToken) {
   var jsonObj = {"product": "app", "command": "add_user", "idToken": idToken}
+  send_websocket_message(jsonObj);
+}
+
+export function set_setting(setting, value) {
+  var jsonObj = {"product": "app", "command": "set_setting", "setting": setting, "value": value}
   send_websocket_message(jsonObj);
 }
 

@@ -159,7 +159,8 @@ export const appSlice = createSlice({
   },
 });
 
-export const { setUserName, setUserEmail, setUserPicture, setUserStatus,
+export const {
+  setUserName, setUserEmail, setUserPicture, setUserStatus,
   addUserPost, setUserFirstPost, setUserLikedPost, setLikedPost, setUserLoadingPosts, editUserPost, deleteUserPost,
   setdmsOrGroups, sethideRightPanel,
   setdmsLoaded, setgroupsLoaded, setpeopleLoaded,

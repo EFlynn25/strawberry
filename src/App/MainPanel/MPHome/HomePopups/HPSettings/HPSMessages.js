@@ -7,6 +7,7 @@ import breckanPreview from '../../../../../assets/images/breckan_message_preview
 import {
   setMessageStyle
 } from '../../../../../redux/appReducer';
+import { set_setting } from '../../../../../socket.js';
 
 class HPSMessages extends React.Component {
   constructor(props) {
@@ -15,6 +16,8 @@ class HPSMessages extends React.Component {
     this.state = {
       selectedMessage: "default"
     }
+
+    this.setStyle = this.setStyle.bind(this)
   }
 
   componentDidMount() {
@@ -31,11 +34,16 @@ class HPSMessages extends React.Component {
     }
   }
 
+  setStyle(style) {
+    set_setting("message_style", style)
+    this.props.setMessageStyle(style)
+  }
+
   render() {
     return (
       <Fragment>
         <div className="hpsmOptions">
-          <div className={"hpsmOption" + (this.state.selectedMessage == "default" ? " hpsmOptionSelected" : "")} onClick={() => this.props.setMessageStyle("default")}>
+          <div className={"hpsmOption" + (this.state.selectedMessage == "default" ? " hpsmOptionSelected" : "")} onClick={() => this.setStyle("default")}>
             <div className="hpsmOptionPreview">
               <img src={defaultPreview} alt={"Default message preview"} />
             </div>
@@ -43,7 +51,7 @@ class HPSMessages extends React.Component {
               <h1>Default</h1>
             </div>
           </div>
-          <div className={"hpsmOption" + (this.state.selectedMessage == "breckan" ? " hpsmOptionSelected" : "")} onClick={() => this.props.setMessageStyle("breckan")}>
+          <div className={"hpsmOption" + (this.state.selectedMessage == "breckan" ? " hpsmOptionSelected" : "")} onClick={() => this.setStyle("breckan")}>
             <div className="hpsmOptionPreview">
               <img src={breckanPreview} alt={"Breckan message preview"} />
             </div>
