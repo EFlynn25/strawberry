@@ -26,8 +26,12 @@ class App extends React.Component {
     this.state = {
       pageLoaded: false,
       showLeftPanel: false,
-      showCloseButton: false
+      showCloseButton: false,
+      mobile: false
     };
+
+    this.checkMobile = this.checkMobile.bind(this)
+    window.addEventListener("resize", this.checkMobile);
   }
 
   componentDidMount() {
@@ -65,6 +69,18 @@ class App extends React.Component {
     }
   }
 
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.checkMobile);
+  }
+
+  checkMobile() {
+    if (window.innerWidth <= 880 && !this.state.mobile) {
+      this.setState({ mobile: true });
+    } else if (window.innerWidth > 880 && this.state.mobile) {
+      this.setState({ mobile: false });
+    }
+  }
+
   render() {
     var myTitle = "";
     var tnc = 0; // Total notification count
@@ -99,10 +115,12 @@ class App extends React.Component {
               {  this.state.pageLoaded ?
 
                 <Fragment>
-                  <div className="appHamburgerIcon" onClick={() => {this.setState({showLeftPanel: true})}} style={this.state.showCloseButton ? {width: "54px"} : null}>
-                    <Menu />
-                    {this.state.showCloseButton ? <Close /> : null}
-                  </div>
+                  { this.state.mobile != true ? null :
+                    <div className="appHamburgerIcon" onClick={() => {this.setState({showLeftPanel: true})}} style={this.state.showCloseButton ? {width: "54px"} : null}>
+                      <Menu />
+                      {this.state.showCloseButton ? <Close /> : null}
+                    </div>
+                  }
                   <TopBar />
                   <LeftPanel showLeftPanel={this.state.showLeftPanel} hideLeftPanel={() => {this.setState({showLeftPanel: false})}} />
                   <MainPanel setCloseButton={(value) => {this.setState({showCloseButton: value})} /* Shows close button when MPPopup is open */} />
