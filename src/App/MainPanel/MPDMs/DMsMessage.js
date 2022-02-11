@@ -219,14 +219,15 @@ class DMsMessage extends React.Component {
           inChatTyping={this.state.inChatTyping}
           onUpdate={this.props.onUpdate}
           editing={this.props.editing}
-          setMessageEditing={this.props.setMessageEditing} />
+          setMessageEditing={this.props.setMessageEditing}
+          openedDM={this.props.openedDM} />
       </div>
     );
   }
 }
 
 const mapStateToProps = (state) => ({
-  openedDM: state.dms.openedDM,
+  // openedDM: state.dms.openedDM,
   chats: state.dms.chats,
   myName: state.app.name,
   myEmail: state.app.email,

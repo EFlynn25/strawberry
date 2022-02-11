@@ -69,7 +69,6 @@ class DMsBreckanMessage extends React.Component {
   }
 
   render() {
-    const thisChat = this.props.chats[this.props.openedDM];
     const who = this.props.email == this.props.myEmail ? "me" : "them";
 
     let inChatClasses = "defaultInChat defaultIndicatorHide noTransition";
@@ -170,8 +169,6 @@ class DMsBreckanMessage extends React.Component {
 
 const mapStateToProps = (state) => ({
   myEmail: state.app.email,
-  openedDM: state.dms.openedDM,
-  chats: state.dms.chats,
   knownPeople: state.people.knownPeople,
 });
 

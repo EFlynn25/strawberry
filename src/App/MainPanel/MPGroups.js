@@ -358,7 +358,17 @@ class MPGroups extends React.Component {
           }
         }
 
-        const newMessage = (<GroupsMessage inThread={/*inThread*/null} typing={/*thisThread.typing*/null} id={messageIDs} key={messageIDs[0]} onUpdate={this.scrollToBottom} editing={this.state.editing} setMessageEditing={this.setMessageEditing} />);
+        const newMessage = (
+          <GroupsMessage
+            inThread={/*inThread*/null}
+            typing={/*thisThread.typing*/null}
+            id={messageIDs}
+            key={messageIDs[0]}
+            onUpdate={this.scrollToBottom}
+            editing={this.state.editing}
+            setMessageEditing={this.setMessageEditing}
+            openedThread={this.props.openedThread} />
+        );
         // console.debug(newMessage);
         tempMessages.push(newMessage);
       }
@@ -380,7 +390,16 @@ class MPGroups extends React.Component {
         MessageType = GroupsBreckanMessage;
       }
 
-      const newMessage = <MessageType key={mySendingMessages[0].id} email={this.props.myEmail} name={this.props.myName} picture={this.props.myPicture} messages={mySendingMessages} /*inThread={["no", true]null}*/ inThreadTyping={/*false*/null} onUpdate={this.props.onUpdate} />;
+      const newMessage = <MessageType
+                            key={mySendingMessages[0].id}
+                            email={this.props.myEmail}
+                            name={this.props.myName}
+                            picture={this.props.myPicture}
+                            messages={mySendingMessages}
+                            /*inThread={["no", true]null}*/
+                            inThreadTyping={/*false*/null}
+                            onUpdate={this.props.onUpdate}
+                            openedThread={this.props.openedThread} />;
       // console.debug(newMessage);
       tempMessages.push(newMessage);
 
@@ -522,7 +541,7 @@ class MPGroups extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  openedThread: state.groups.openedThread,
+  // openedThread: state.groups.openedThread,
   threads: state.groups.threads,
   myName: state.app.name,
   myEmail: state.app.email,

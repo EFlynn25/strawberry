@@ -210,14 +210,15 @@ class GroupsMessage extends React.Component {
           inThreadTyping={this.state.inThreadTyping}
           onUpdate={this.props.onUpdate}
           editing={this.props.editing}
-          setMessageEditing={this.props.setMessageEditing} />
+          setMessageEditing={this.props.setMessageEditing}
+          openedThread={this.props.openedThread} />
       </div>
     );
   }
 }
 
 const mapStateToProps = (state) => ({
-  openedThread: state.groups.openedThread,
+  // openedThread: state.groups.openedThread,
   threads: state.groups.threads,
   myName: state.app.name,
   myEmail: state.app.email,

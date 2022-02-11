@@ -346,7 +346,17 @@ class MPDMs extends React.Component {
             break;
           }
         }
-        const newMessage = (<DMsMessage inChat={inChat} typing={thisChat.typing} id={messageIDs} key={messageIDs[0]} onUpdate={this.scrollToBottom} editing={this.state.editing} setMessageEditing={this.setMessageEditing} />);
+        const newMessage = (
+          <DMsMessage
+            inChat={inChat}
+            typing={thisChat.typing}
+            id={messageIDs}
+            key={messageIDs[0]}
+            onUpdate={this.scrollToBottom}
+            editing={this.state.editing}
+            setMessageEditing={this.setMessageEditing}
+            openedDM={this.props.openedDM} />
+          );
         tempMessages.push(newMessage);
       }
     });
@@ -365,7 +375,15 @@ class MPDMs extends React.Component {
         MessageType = DMsBreckanMessage;
       }
 
-      const newMessage = <MessageType email={this.props.myEmail} name={this.props.myName} picture={this.props.myPicture} messages={mySendingMessages} inChat={["no", true]} inChatTyping={false} onUpdate={this.props.onUpdate} />;
+      const newMessage = <MessageType
+                            email={this.props.myEmail}
+                            name={this.props.myName}
+                            picture={this.props.myPicture}
+                            messages={mySendingMessages}
+                            inChat={["no", true]}
+                            inChatTyping={false}
+                            onUpdate={this.props.onUpdate}
+                            openedDM={this.props.openedDM} />;
       // console.debug(newMessage);
       tempMessages.push(newMessage);
     }

@@ -75,7 +75,7 @@ class MainPanel extends React.Component {
               <h1 style={{position: "relative", display: "table-cell", margin: "0", textAlign: "center", verticalAlign: "middle", color: "#fff5", fontSize: "20px", userSelect: "none"}}>Welcome to Strawberry DMs</h1>
             </div>
           </Route>
-          <Route path="/groups/:threadID" render={routeProps => (<MPGroups opendialog={this.openPanel} {...routeProps} />)} />
+          <Route path="/groups/:threadID" render={routeProps => (<MPGroups opendialog={this.openPanel} openedThread={this.props.openedThread} {...routeProps} />)} />
           <Route path="/groups">
             <div style={{display: "table", width: "100%", height: "100%"}}>
               <h1 style={{position: "relative", display: "table-cell", margin: "0", textAlign: "center", verticalAlign: "middle", color: "#fff5", fontSize: "20px", userSelect: "none"}}>
@@ -97,6 +97,7 @@ class MainPanel extends React.Component {
 const mapStateToProps = (state) => ({
   hideRightPanel: state.app.hideRightPanel,
   openedDM: state.dms.openedDM,
+  openedThread: state.groups.openedThread,
 });
 
 export default connect(mapStateToProps, null)(withRouter(MainPanel));

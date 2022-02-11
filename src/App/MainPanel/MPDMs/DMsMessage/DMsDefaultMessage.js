@@ -167,8 +167,6 @@ class DMsDefaultMessage extends React.Component {
 
 const mapStateToProps = (state) => ({
   myEmail: state.app.email,
-  openedDM: state.dms.openedDM,
-  // chats: state.dms.chats,
   knownPeople: state.people.knownPeople
 });
 

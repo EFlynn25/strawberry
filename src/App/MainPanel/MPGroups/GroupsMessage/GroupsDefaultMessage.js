@@ -324,8 +324,6 @@ class GroupsDefaultMessage extends React.Component {
 
 const mapStateToProps = (state) => ({
   myEmail: state.app.email,
-  openedThread: state.groups.openedThread,
-  threads: state.groups.threads,
   knownPeople: state.people.knownPeople
 });
 
