@@ -101,7 +101,7 @@ class GroupsNewThread extends React.Component {
       });
     } else {
       this.setState({dropdown: true});
-      var root = this;
+      let root = this;
       setTimeout(function() {
         root.inputRef.current.focus();
       }, 10);
@@ -115,7 +115,7 @@ class GroupsNewThread extends React.Component {
   }
 
   inputEnterPressed(event) {
-    var code = event.keyCode || event.which;
+    let code = event.keyCode || event.which;
     if (code === 13 && !event.shiftKey) {
       event.preventDefault();
       event.stopPropagation();

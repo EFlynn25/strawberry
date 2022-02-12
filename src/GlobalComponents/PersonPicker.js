@@ -23,7 +23,7 @@ class PersonPicker extends React.Component {
   }
 
   inputEnterPressed(event) { // Used when the user enters and email and presses "Enter" if the user they want to add is not in the list.
-    var code = event.keyCode || event.which;
+    let code = event.keyCode || event.which;
     if (code === 13 && !event.shiftKey) {
       event.preventDefault();
       event.stopPropagation();

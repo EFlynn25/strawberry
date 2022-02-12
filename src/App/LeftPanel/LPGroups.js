@@ -52,7 +52,7 @@ class LPGroups extends React.Component {
     const noMessageThreads = [];
     const threads = JSON.parse(JSON.stringify(this.props.threads));
     const myEmail = this.props.email;
-    var threadTimestampList = Object.keys(threads).filter(function(key) {
+    let threadTimestampList = Object.keys(threads).filter(function(key) {
       const thisThread = threads[key];
       const thisThreadMessages = thisThread.messages;
       if (thisThreadMessages == null || thisThreadMessages.length == 0) {

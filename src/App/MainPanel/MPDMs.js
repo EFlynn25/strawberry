@@ -9,6 +9,8 @@ import TextareaAutosize from 'react-autosize-textarea';
 import Loader from "react-loader-spinner";
 
 import './MPDMs.css';
+import { ReactComponent as Send } from '../../assets/icons/send.svg';
+import { ReactComponent as ChatBubble } from '../../assets/icons/chat_bubble.svg';
 import {
   setOpenedDM,
   // addChatMessage,
@@ -27,10 +29,11 @@ import {
   dms_typing,
   dms_last_read
 } from '../../socket.js';
+import { getUser } from '../../GlobalComponents/getUser.js';
+
 import DMsMessage from './MPDMs/DMsMessage';
 import DMsDefaultMessage from './MPDMs/DMsMessage/DMsDefaultMessage';
 import DMsBreckanMessage from './MPDMs/DMsMessage/DMsBreckanMessage';
-import { getUser } from '../../GlobalComponents/getUser.js';
 
 class MPDMs extends React.Component {
   constructor(props) {
@@ -45,13 +48,14 @@ class MPDMs extends React.Component {
     this.messagesRef = React.createRef();
     this.inputRef = React.createRef();
 
-    this.handleInputChange = this.handleInputChange.bind(this);
-    this.inputEnterPressed = this.inputEnterPressed.bind(this);
     this.handleScroll = this.handleScroll.bind(this);
     this.scrollToBottom = this.scrollToBottom.bind(this);
     this.loadMoreMessages = this.loadMoreMessages.bind(this);
     this.handleWindowFocus = this.handleWindowFocus.bind(this);
     this.handleWindowBlur = this.handleWindowBlur.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.inputEnterPressed = this.inputEnterPressed.bind(this);
+    this.sendMessage = this.sendMessage.bind(this);
     this.setMessageEditing = this.setMessageEditing.bind(this);
 
     this.shouldScroll = true;
@@ -101,7 +105,7 @@ class MPDMs extends React.Component {
         const myFirstID = thisChat.messages[0].id;
         if (myFirstID != 0) {
           let ids = [];
-          for (var i = myFirstID - 20; i <= myFirstID - 1; i++) {
+          for (let i = myFirstID - 20; i <= myFirstID - 1; i++) {
             if (i >= 0) {
               ids.push(i);
             }
@@ -138,11 +142,11 @@ class MPDMs extends React.Component {
 
 
   componentDidMount() {
-    this.props.setOpenedDM(this.props.match.params.chatEmail);
+    if (this.props.popout != true) {
+      this.props.setOpenedDM(this.props.match.params.chatEmail);
+    }
 
     console.log("[MPDMs]: componentDidMount with thread ID " + this.props.openedDM);
-    //this.messagesRef.current.scrollTop = this.messagesRef.current.scrollHeight;
-    // this.messagesRef.current.scrollTop = this.messagesRef.current.scrollHeight - this.messagesRef.current.clientHeight;
 
     const propsOpenedDM = this.props.openedDM;
     const thisChat = this.props.chats[propsOpenedDM];
@@ -243,13 +247,14 @@ class MPDMs extends React.Component {
 
     this.loadMoreMessages();
 
-    let title = "404";
-    if (this.props.openedDM in this.props.chats) {
-      // title = this.props.getknownPeople[this.props.openedDM].name;
-      title = getUser(this.props.openedDM).name;
+    if (this.props.popout != true) {
+      let title = "404";
+      if (this.props.openedDM in this.props.chats) {
+        // title = this.props.getknownPeople[this.props.openedDM].name;
+        title = getUser(this.props.openedDM).name;
+      }
+      this.props.setCurrentPage(title);
     }
-
-    this.props.setCurrentPage(title);
   }
 
   componentWillUnmount() {
@@ -395,10 +400,10 @@ class MPDMs extends React.Component {
   }
 
   handleInputChange(event) {
-    var val = event.target.value;
-    var iv = this.state.inputValue;
-    var nowEmpty = val == "" || val == null;
-    var pastEmpty = iv == "" || iv == null;
+    let val = event.target.value;
+    let iv = this.state.inputValue;
+    let nowEmpty = val == "" || val == null;
+    let pastEmpty = iv == "" || iv == null;
     if (pastEmpty && !nowEmpty) {
       dms_typing(this.props.openedDM, true);
     } else if (!pastEmpty && nowEmpty) {
@@ -411,22 +416,23 @@ class MPDMs extends React.Component {
   }
 
   inputEnterPressed(event) {
-    var code = event.keyCode || event.which;
-    if (code === 13 && !event.shiftKey) {
+    let code = event.keyCode || event.which;
+    if (code === 13 && !event.shiftKey && window.innerWidth > 880) {
       event.preventDefault();
       event.stopPropagation();
 
-      const iv = this.state.inputValue;
-      if (iv != null && iv != "") {
-        const oc = this.props.openedDM;
-        setTimeout(function() {
-          // dms_send_message(oc, iv);
-        }, 3000);
-        dms_send_message(oc, iv);
-        dms_typing(this.props.openedDM, false);
-        this.props.addSendingChatMessage({message: iv});
-        this.setState({inputValue: ''});
-      }
+      this.sendMessage();
+    }
+  }
+
+  sendMessage() {
+    const iv = this.state.inputValue;
+    if (iv != null && iv != "") {
+      const oc = this.props.openedDM;
+      dms_send_message(oc, iv);
+      dms_typing(this.props.openedDM, false);
+      this.props.addSendingChatMessage({message: iv});
+      this.setState({inputValue: ''});
     }
   }
 
@@ -441,18 +447,18 @@ class MPDMs extends React.Component {
   render() {
     const otherName = getUser(this.props.openedDM).name;
 
-    let children = (<h1 className="dmsCenterText">Loading...</h1>);
+    let children = (<h1 className="mpCenterText">Loading...</h1>);
     if (this.state.loaded) {
       children = (
         <Fragment>
-          <div className="dmsMessages" ref={this.messagesRef} onScroll={this.handleScroll}>
+          <div className="mpMessages" ref={this.messagesRef} onScroll={this.handleScroll}>
             {
               (this.props.chats[this.props.openedDM].messages == null)
               || (this.props.openedDM != "" && this.props.openedDM in this.props.chats && this.props.chats[this.props.openedDM].messages.length > 0 && this.props.chats[this.props.openedDM].messages[0].id == 0)
               || (this.props.openedDM != "" && this.props.openedDM in this.props.chats && this.props.chats[this.props.openedDM].messages.length <= 0) ?
 
-              <div className="dmsTopTextDiv">
-                <h1 className="dmsStartConversationText">This is the start of your conversation with {otherName}</h1>
+              <div className="mpTopTextDiv">
+                <h1 className="mpStartConversationText">This is the start of your conversation with {otherName}</h1>
               </div>
 
               :
@@ -462,9 +468,9 @@ class MPDMs extends React.Component {
             {
               this.isLoadingMessages[this.props.openedDM] ?
 
-              <div className="dmsTopTextDiv">
-                <h1 className="dmsLoadingMessagesText">Loading...</h1>
-                <Loader className="dmsLoadingMessagesSpinner" type="Oval" color="var(--accent-color)" height={30} width={30} />
+              <div className="mpTopTextDiv">
+                <h1 className="mpLoadingMessagesText">Loading...</h1>
+                <Loader className="mpLoadingMessagesSpinner" type="Oval" color="var(--accent-color)" height={30} width={30} />
               </div>
 
               :
@@ -473,17 +479,25 @@ class MPDMs extends React.Component {
             }
             {this.state.messages}
           </div>
-          {this.state.messages.length > 0 ? null : <h1 className="dmsNoMessageText">No messages.<br/>Try sending one!</h1>}
-          <TextareaAutosize value={this.state.inputValue} onChange={this.handleInputChange} onKeyPress={this.inputEnterPressed} placeholder="Type message here" className="dmsMessagesInput" maxLength={1000} ref={this.inputRef} />
+          {this.state.messages.length > 0 ? null : <h1 className="mpNoMessageText">No messages.<br/>Try sending one!</h1>}
+          <TextareaAutosize value={this.state.inputValue} onChange={this.handleInputChange} onKeyPress={this.inputEnterPressed} placeholder="Type message here" className="mpMessagesInput" maxLength={1000} ref={this.inputRef} />
+          <div className="mpSendMessage dmsSendMessage" onClick={this.sendMessage}><Send /></div>
         </Fragment>
       );
     }
     if (!(this.props.openedDM in this.props.chats)) {
-      children = (<h1 className="dmsCenterText">That chat doesn't exist...</h1>);
+      children = (<h1 className="mpCenterText">That chat doesn't exist...</h1>);
     }
 
     return (
-      <div className="MPDMs">
+      <div className={this.props.popout == true ? "MPDMs mpPopoutConversation" : "MPDMs"}>
+        <div className="mpPopoutResizer"></div>
+        { this.props.popout != true ? null :
+          <div className="mpPopoutHandle">
+            <ChatBubble style={{fill: "#2052b6"}} />
+            <h1>{ getUser(this.props.openedDM).name }</h1>
+          </div>
+        }
         { children }
       </div>
     );

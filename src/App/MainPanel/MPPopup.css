@@ -6,21 +6,33 @@
   top: 0;
   left: 0;
 
-  transition: background .3s, transform .3s;
-  background: #0006;
+  transition: transform .3s;
   transform: scale(calc(1 / .9));
 
   z-index: 2;
 }
 
 .MPPopupHide {
-  transition: background .3s, transform .3s, visibility 0s .3s;
+  transition: transform .3s, visibility 0s .3s;
   visibility: hidden;
   background: none;
 }
 
 .MPPopupNoShrink {
   transform: none;
+}
+
+.mpDarkenBackground {
+  position: absolute;
+  width: calc(100% + 340px);
+  height: 100%;
+  left: -340px;
+  transition: background .3s;
+  background: #0006;
+}
+
+.MPPopupHide .mpDarkenBackground {
+  background: none;
 }
 
 

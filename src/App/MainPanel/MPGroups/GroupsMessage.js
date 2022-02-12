@@ -71,11 +71,11 @@ class GroupsMessage extends React.Component {
     const thisThreadMessages = thisThread.messages;
     const firstMessageID = thisThreadMessages[0].id;
 
-    var ids = [];
-    var from = "";
+    let ids = [];
+    let from = "";
 
     if (!Array.isArray(myID)) {
-      for (var i = myID - firstMessageID; true; i++) {
+      for (let i = myID - firstMessageID; true; i++) {
         if (from.length == 0) {
           from = thisThreadMessages[i].from;
         }

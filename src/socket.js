@@ -47,9 +47,9 @@ export function startSocket() {
 
   socket.onmessage = function(event) {
     console.log("WebSocket message received: ", event);
-    var jsonData = JSON.parse(event.data);
-    var product = jsonData.product;
-    var com = jsonData.command;
+    const jsonData = JSON.parse(event.data);
+    const product = jsonData.product;
+    const com = jsonData.command;
     const myEmail = mainStore.getState().app.email;
     if (product == "app") { // There are three products: app, dms, and groups. They separate methods from each other, like "send_message".
 
@@ -509,7 +509,7 @@ function get_thread_info(thread_id) {
 }
 
 function send_websocket_message(jsonData) {
-  var jsonString = JSON.stringify(jsonData);
+  let jsonString = JSON.stringify(jsonData);
   console.log("WebSocket message sending: " + jsonString);
   socket.send(jsonString);
 }
@@ -525,69 +525,69 @@ function send_websocket_message(jsonData) {
 // Get functions
 
 export function get_user_info(requested) {
-  var jsonObj = {"product": "app", "command": "get_user_info", "requested": requested}
+  let jsonObj = {"product": "app", "command": "get_user_info", "requested": requested}
   send_websocket_message(jsonObj);
 }
 
 export function get_announcements() {
-  var jsonObj = {"product": "app", "command": "get_announcements"}
+  let jsonObj = {"product": "app", "command": "get_announcements"}
   send_websocket_message(jsonObj);
 }
 
 export function get_online(requested) {
-  var jsonObj = {"product": "app", "command": "get_online", "requested": requested}
+  let jsonObj = {"product": "app", "command": "get_online", "requested": requested}
   send_websocket_message(jsonObj);
 }
 
 export function get_posts(requested, amount, already_have) {
-  var jsonObj = {"product": "app", "command": "get_posts", "requested": requested, "amount": amount, "already_have": already_have}
+  let jsonObj = {"product": "app", "command": "get_posts", "requested": requested, "amount": amount, "already_have": already_have}
   send_websocket_message(jsonObj);
 }
 
 // Set functions
 
 export function add_user(idToken) {
-  var jsonObj = {"product": "app", "command": "add_user", "idToken": idToken}
+  let jsonObj = {"product": "app", "command": "add_user", "idToken": idToken}
   send_websocket_message(jsonObj);
 }
 
 export function set_setting(setting, value) {
-  var jsonObj = {"product": "app", "command": "set_setting", "setting": setting, "value": value}
+  let jsonObj = {"product": "app", "command": "set_setting", "setting": setting, "value": value}
   send_websocket_message(jsonObj);
 }
 
 export function set_status(status) {
-  var jsonObj = {"product": "app", "command": "set_status", "status": status}
+  let jsonObj = {"product": "app", "command": "set_status", "status": status}
   send_websocket_message(jsonObj);
 }
 
 export function add_post(message) {
-  var jsonObj = {"product": "app", "command": "add_post", "message": message}
+  let jsonObj = {"product": "app", "command": "add_post", "message": message}
   send_websocket_message(jsonObj);
 }
 
 export function like_post(post_id, data) {
-  var jsonObj = {"product": "app", "command": "like_post", "post_id": post_id, "data": data}
+  let jsonObj = {"product": "app", "command": "like_post", "post_id": post_id, "data": data}
   send_websocket_message(jsonObj);
 }
 
 export function edit_post(post_id, message) {
-  var jsonObj = {"product": "app", "command": "edit_post", "post_id": post_id, "message": message}
+  let jsonObj = {"product": "app", "command": "edit_post", "post_id": post_id, "message": message}
   send_websocket_message(jsonObj);
 }
 
 export function delete_post(post_id) {
-  var jsonObj = {"product": "app", "command": "delete_post", "post_id": post_id}
+  let jsonObj = {"product": "app", "command": "delete_post", "post_id": post_id}
   send_websocket_message(jsonObj);
 }
 
 export function add_announcement(id, title, content) {
-  var jsonObj = {"product": "app", "command": "add_announcement", "id": id, "title": title, "content": content}
+  let jsonObj = {"product": "app", "command": "add_announcement", "id": id, "title": title, "content": content}
   send_websocket_message(jsonObj);
 }
 
 export function set_announcement_read(ids) {
-  var jsonObj = {"product": "app", "command": "set_announcement_read", "ids": ids}
+  let jsonObj = {"product": "app", "command": "set_announcement_read", "ids": ids}
   send_websocket_message(jsonObj);
 }
 
@@ -598,61 +598,61 @@ export function set_announcement_read(ids) {
 // Get functions
 
 export function dms_get_chats() {
-  var jsonObj = {"product": "dms", "command": "get_chats"}
+  let jsonObj = {"product": "dms", "command": "get_chats"}
   send_websocket_message(jsonObj);
 }
 
 export function dms_get_messages(email, id, amount) {
-  var jsonObj = {"product": "dms", "command": "get_messages", "chat": email, "id": id, "amount": amount}
+  let jsonObj = {"product": "dms", "command": "get_messages", "chat": email, "id": id, "amount": amount}
   send_websocket_message(jsonObj);
 }
 
 export function dms_get_chat_created(email) {
-  var jsonObj = {"product": "dms", "command": "get_chat_created", "chat": email}
+  let jsonObj = {"product": "dms", "command": "get_chat_created", "chat": email}
   send_websocket_message(jsonObj);
 }
 
 // Set functions
 
 export function dms_add_user(idToken) {
-  var jsonObj = {"product": "dms", "command": "add_user", "idToken": idToken}
+  let jsonObj = {"product": "dms", "command": "add_user", "idToken": idToken}
   send_websocket_message(jsonObj);
 }
 
 export function dms_request_to_chat(email) {
-  var jsonObj = {"product": "dms", "command": "request_to_chat", "requested": email}
+  let jsonObj = {"product": "dms", "command": "request_to_chat", "requested": email}
   send_websocket_message(jsonObj);
 }
 
 export function dms_deny_request(email) {
-  var jsonObj = {"product": "dms", "command": "deny_request", "requested": email}
+  let jsonObj = {"product": "dms", "command": "deny_request", "requested": email}
   send_websocket_message(jsonObj);
 }
 
 export function dms_send_message(chat, message) {
-  var jsonObj = {"product": "dms", "command": "send_message", "chat": chat, "message": message}
+  let jsonObj = {"product": "dms", "command": "send_message", "chat": chat, "message": message}
   send_websocket_message(jsonObj);
 }
 
 export function dms_edit_message(chat, id, message) {
-  var jsonObj = {"product": "dms", "command": "edit_message", "chat": chat, "id": id, "message": message}
+  let jsonObj = {"product": "dms", "command": "edit_message", "chat": chat, "id": id, "message": message}
   send_websocket_message(jsonObj);
 }
 
 // Hybrid Functions
 
 export function dms_in_chat(chat, data) {
-  var jsonObj = {"product": "dms", "command": "in_chat", "chat": chat, "data": data}
+  let jsonObj = {"product": "dms", "command": "in_chat", "chat": chat, "data": data}
   send_websocket_message(jsonObj);
 }
 
 export function dms_typing(chat, data) {
-  var jsonObj = {"product": "dms", "command": "typing", "chat": chat, "data": data}
+  let jsonObj = {"product": "dms", "command": "typing", "chat": chat, "data": data}
   send_websocket_message(jsonObj);
 }
 
 export function dms_last_read(chat) {
-  var jsonObj = {"product": "dms", "command": "last_read", "chat": chat}
+  let jsonObj = {"product": "dms", "command": "last_read", "chat": chat}
   send_websocket_message(jsonObj);
 }
 
@@ -663,95 +663,95 @@ export function dms_last_read(chat) {
 // Get functions
 
 export function groups_get_threads() {
-  var jsonObj = {"product": "groups", "command": "get_threads"}
+  let jsonObj = {"product": "groups", "command": "get_threads"}
   send_websocket_message(jsonObj);
 }
 
 export function groups_get_thread_info(thread_id) {
-  var jsonObj = {"product": "groups", "command": "get_thread_info", "thread_id": thread_id}
+  let jsonObj = {"product": "groups", "command": "get_thread_info", "thread_id": thread_id}
   send_websocket_message(jsonObj);
 }
 
 export function groups_get_messages(thread_id, id, amount) {
-  var jsonObj = {"product": "groups", "command": "get_messages", "thread_id": thread_id, "id": id, "amount": amount}
+  let jsonObj = {"product": "groups", "command": "get_messages", "thread_id": thread_id, "id": id, "amount": amount}
   send_websocket_message(jsonObj);
 }
 
 export function dms_get_thread_created(thread_id) {
-  var jsonObj = {"product": "groups", "command": "get_thread_created", "thread_id": thread_id}
+  let jsonObj = {"product": "groups", "command": "get_thread_created", "thread_id": thread_id}
   send_websocket_message(jsonObj);
 }
 
 // Set functions
 
 export function groups_add_user(idToken) {
-  var jsonObj = {"product": "groups", "command": "add_user", "idToken": idToken}
+  let jsonObj = {"product": "groups", "command": "add_user", "idToken": idToken}
   send_websocket_message(jsonObj);
 }
 
 export function groups_create_thread(name, people) {
-  var jsonObj = {"product": "groups", "command": "create_thread", "name": name, "people": people}
+  let jsonObj = {"product": "groups", "command": "create_thread", "name": name, "people": people}
   send_websocket_message(jsonObj);
 }
 
 export function groups_rename_thread(thread_id, new_name) {
-  var jsonObj = {"product": "groups", "command": "rename_thread", "thread_id": thread_id, "new_name": new_name}
+  let jsonObj = {"product": "groups", "command": "rename_thread", "thread_id": thread_id, "new_name": new_name}
   send_websocket_message(jsonObj);
 }
 
 export function groups_request_to_thread(email, thread_id) {
-  var jsonObj = {"product": "groups", "command": "request_to_thread", "requested": email, "thread_id": thread_id}
+  let jsonObj = {"product": "groups", "command": "request_to_thread", "requested": email, "thread_id": thread_id}
   send_websocket_message(jsonObj);
 }
 
 export function groups_join_thread(thread_id) {
-  var jsonObj = {"product": "groups", "command": "join_thread", "thread_id": thread_id}
+  let jsonObj = {"product": "groups", "command": "join_thread", "thread_id": thread_id}
   send_websocket_message(jsonObj);
 }
 
 export function groups_get_requests() {
-  var jsonObj = {"product": "groups", "command": "get_requests"}
+  let jsonObj = {"product": "groups", "command": "get_requests"}
   send_websocket_message(jsonObj);
 }
 
 export function groups_leave_thread(thread_id) {
-  var jsonObj = {"product": "groups", "command": "leave_thread", "thread_id": thread_id}
+  let jsonObj = {"product": "groups", "command": "leave_thread", "thread_id": thread_id}
   send_websocket_message(jsonObj);
 }
 
 export function groups_deny_request(thread_id, unrequesting = null) {
-  var jsonObj = {"product": "groups", "command": "deny_request", "thread_id": thread_id, "unrequesting": unrequesting}
+  let jsonObj = {"product": "groups", "command": "deny_request", "thread_id": thread_id, "unrequesting": unrequesting}
   send_websocket_message(jsonObj);
 }
 
 export function groups_remove_person(thread_id, person) {
-  var jsonObj = {"product": "groups", "command": "remove_person", "thread_id": thread_id, "person": person}
+  let jsonObj = {"product": "groups", "command": "remove_person", "thread_id": thread_id, "person": person}
   send_websocket_message(jsonObj);
 }
 
 export function groups_send_message(thread_id, message) {
-  var jsonObj = {"product": "groups", "command": "send_message", "message": message, "thread_id": thread_id}
+  let jsonObj = {"product": "groups", "command": "send_message", "message": message, "thread_id": thread_id}
   send_websocket_message(jsonObj);
 }
 
 export function groups_edit_message(thread_id, id, message) {
-  var jsonObj = {"product": "groups", "command": "edit_message", "thread_id": thread_id, "id": id, "message": message}
+  let jsonObj = {"product": "groups", "command": "edit_message", "thread_id": thread_id, "id": id, "message": message}
   send_websocket_message(jsonObj);
 }
 
 // Hybrid functions
 
 export function groups_in_thread(thread_id, data) {
-  var jsonObj = {"product": "groups", "command": "in_thread", "thread_id": thread_id, "data": data}
+  let jsonObj = {"product": "groups", "command": "in_thread", "thread_id": thread_id, "data": data}
   send_websocket_message(jsonObj);
 }
 
 export function groups_typing(thread_id, data) {
-  var jsonObj = {"product": "groups", "command": "typing", "thread_id": thread_id, "data": data}
+  let jsonObj = {"product": "groups", "command": "typing", "thread_id": thread_id, "data": data}
   send_websocket_message(jsonObj);
 }
 
 export function groups_last_read(thread_id) {
-  var jsonObj = {"product": "groups", "command": "last_read", "thread_id": thread_id}
+  let jsonObj = {"product": "groups", "command": "last_read", "thread_id": thread_id}
   send_websocket_message(jsonObj);
 }

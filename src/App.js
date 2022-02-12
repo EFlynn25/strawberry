@@ -49,6 +49,8 @@ class App extends React.Component {
         this.props.setUserPicture(picture);
       }
     });
+
+    this.checkMobile();
   }
 
   componentDidUpdate() {
@@ -82,9 +84,9 @@ class App extends React.Component {
   }
 
   render() {
-    var myTitle = "";
-    var tnc = 0; // Total notification count
-    var newHref = "/favicon_package/favicon.ico";
+    let myTitle = "";
+    let tnc = 0; // Total notification count
+    let newHref = "/favicon_package/favicon.ico";
     const nc = this.props.notificationCount;
     Object.keys(nc).forEach(function(key) {
       tnc += nc[key];
@@ -103,6 +105,14 @@ class App extends React.Component {
     favicon.href = newHref;
     document.title = myTitle;
 
+    let appHamburgerIconStyles = {};
+    if (this.state.showCloseButton) {
+      appHamburgerIconStyles.width = "70px"
+    }
+    if (this.state.showLeftPanel == true) {
+      appHamburgerIconStyles.transform = "translateX(-41px)"
+    }
+
     return (
       <Div100vh>
         <div className="App">
@@ -116,12 +126,13 @@ class App extends React.Component {
 
                 <Fragment>
                   { this.state.mobile != true ? null :
-                    <div className="appHamburgerIcon" onClick={() => {this.setState({showLeftPanel: true})}} style={this.state.showCloseButton ? {width: "54px"} : null}>
+                    <div className="appHamburgerIcon" style={appHamburgerIconStyles}>
+                      <div className="ahiMenuTrigger" onClick={() => {this.setState({showLeftPanel: true})}}></div>
                       <Menu />
                       {this.state.showCloseButton ? <Close /> : null}
                     </div>
                   }
-                  <TopBar />
+                  <TopBar showLeftPanel={this.state.showLeftPanel} hideLeftPanel={() => {this.setState({showLeftPanel: false})}} />
                   <LeftPanel showLeftPanel={this.state.showLeftPanel} hideLeftPanel={() => {this.setState({showLeftPanel: false})}} />
                   <MainPanel setCloseButton={(value) => {this.setState({showCloseButton: value})} /* Shows close button when MPPopup is open */} />
                 </Fragment>
