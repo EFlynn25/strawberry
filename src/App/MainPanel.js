@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Switch, Route, withRouter } from "react-router-dom";
+import { Resizable } from "re-resizable";
 
 import './MainPanel.css';
 import './MainPanel/MPConversation.css';
@@ -44,7 +45,7 @@ class MainPanel extends React.Component {
   openPanel(newType, newData, shrink=true) { // Opens the main panel popup (MPPopup)
     // This if statement enables shrinking MainPanel when not in Groups
     // because shrinking MainPanel for Groups settings looks weird
-    if (!this.props.history.location.pathname.startsWith("/groups")) {
+    if (shrink) {
       this.enableShrink();
     }
     if (this.state.panelType != newType || this.state.panelData != newData) {
@@ -91,10 +92,30 @@ class MainPanel extends React.Component {
           </Route>
         </Switch>
 
+        {/*
         <div className="mpPopouts">
-          <MPDMs openedDM="asher.molzer@gmail.com" popout={true} />
-          <MPGroups openedThread="754844326590" opendialog={this.openPanel} popout={true} />
+          <Resizable
+            style={{marginRight: "20px"}}
+            defaultSize={{width: 350, height: 450}}
+            minWidth={350}
+            minHeight={340}
+            enable={{top: true, right: false, bottom: false, left: true, topRight: false, bottomRight: false, bottomLeft: false, topLeft: true}}>
+
+            <MPDMs openedDM="asher.molzer@gmail.com" popout={true} />
+          </Resizable>
+
+          <Resizable
+            style={{marginRight: "20px"}}
+            defaultSize={{width: 350, height: 450}}
+            minWidth={350}
+            minHeight={340}
+            enable={{top: true, right: false, bottom: false, left: true, topRight: false, bottomRight: false, bottomLeft: false, topLeft: true}}>
+
+            <MPGroups openedThread="754844326590" opendialog={this.openPanel} popout={true} />
+          </Resizable>
+
         </div>
+        */}
 
         <MPPopup type={this.state.panelType} data={this.state.panelData} shrink={this.props.history.location.pathname.startsWith("/groups") ? false : true} onclose={this.closePanel} />
       </div>

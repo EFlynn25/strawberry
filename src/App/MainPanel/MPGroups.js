@@ -252,12 +252,13 @@ class MPGroups extends React.Component {
 
     this.loadMoreMessages();
 
-    let title = "404";
-    if (this.props.openedThread in this.props.threads) {
-      title = this.props.threads[this.props.openedThread].name;
+    if (this.props.popout != true) {
+      let title = "404";
+      if (this.props.openedThread in this.props.threads) {
+        title = this.props.threads[this.props.openedThread].name;
+      }
+      this.props.setCurrentPage(title);
     }
-
-    this.props.setCurrentPage(title);
   }
 
   componentWillUnmount() {
@@ -544,9 +545,8 @@ class MPGroups extends React.Component {
 
     return (
       <div className={this.props.popout == true ? "MPGroups mpPopoutConversation" : "MPGroups"}>
-        <div className="mpPopoutResizer"></div>
         { this.props.popout != true ? null :
-          <div className="mpPopoutHandle">
+          <div className="mpPopoutHandle" style={{paddingRight: "45px"}}>
             <Forum style={{fill: "#1D9545"}} />
             <h1>{ this.props.threads[this.props.openedThread].name }</h1>
             <Settings

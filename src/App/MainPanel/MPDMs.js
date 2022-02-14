@@ -491,7 +491,6 @@ class MPDMs extends React.Component {
 
     return (
       <div className={this.props.popout == true ? "MPDMs mpPopoutConversation" : "MPDMs"}>
-        <div className="mpPopoutResizer"></div>
         { this.props.popout != true ? null :
           <div className="mpPopoutHandle">
             <ChatBubble style={{fill: "#2052b6"}} />

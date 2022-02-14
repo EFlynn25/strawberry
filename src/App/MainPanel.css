@@ -33,9 +33,9 @@
 
 .mpPopoutConversation {
   position: relative !important;
-  width: 300px !important;
+  /* width: 300px !important;
   height: 450px !important;
-  margin-right: 20px;
+  margin-right: 20px; */
   /* padding-top: 20px; */
 
   background: #131416 !important;

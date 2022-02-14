@@ -111,6 +111,7 @@
 
 .mpPopoutHandle {
   height: 50px;
+  padding-right: 10px;
   background: #1D1E20;
   box-shadow: 0px 4px 16px rgb(0 0 0 / 25%);
 
@@ -129,21 +130,15 @@
 
 .mpPopoutHandle h1 {
   padding-left: 10px;
+  flex: 1;
 
   font-size: 20px;
   line-height: 50px;
   user-select: none;
-}
 
-.mpPopoutResizer {
-  position: absolute;
-  width: 15px;
-  height: 15px;
-  top: -5px;
-  left: -5px;
-
-  cursor: nw-resize;
-  /* background: white; */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 
