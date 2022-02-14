@@ -87,6 +87,8 @@ class MPPopup extends React.Component {
   }
 
   render() {
+    let panelStyles = {};
+
     let child = null;
     if (this.state.type == "profile") {
       child = <HPUserProfile email={this.state.data} />;
@@ -96,6 +98,8 @@ class MPPopup extends React.Component {
       child = <HPSettings />;
     } else if (this.state.type == "groupSettings") {
       child = <GroupSettings myThreadID={this.state.data} closedialog={this.props.onclose} />;
+      panelStyles.height = "100%";
+      panelStyles.paddingTop = "unset";
     } else {
       child = (
         <div style={{display: "flex", width: "100%", height: "100%", flexDirection: "column", justifyContent: "center", alignItems: "center"}}>
@@ -109,7 +113,7 @@ class MPPopup extends React.Component {
     return (
       <div className={this.props.shrink ? this.state.mainClasses : this.state.mainClasses + " MPPopupNoShrink"}>
         <div className="mpDarkenBackground"></div>
-        <div className={this.state.mainClasses == "MPPopup" ? "mainPanel" : "mainPanel mainPanelHide"} ref={this.setWrapperRef}>
+        <div className={this.state.mainClasses == "MPPopup" ? "mainPanel" : "mainPanel mainPanelHide"} ref={this.setWrapperRef} style={panelStyles}>
           { child }
         </div>
       </div>

@@ -73,15 +73,17 @@
 
 /* RESPONSIVE DESIGN */
 
+@media screen and (max-width: 1340px) {
+  .hpsmOptionName h1 {
+    font-size: 16px;
+  }
+}
+
 @media screen and (max-width: 1090px) {
   .hpsmOptionName {
     height: 35px;
     left: 12.5px;
     right: 12.5px;
     bottom: 12.5px;
-  }
-
-  .hpsmOptionName h1 {
-    font-size: 16px;
   }
 }

@@ -38,12 +38,16 @@
 /* Sections (left panel) */
 
 .hpsSections {
+  position: absolute;
   width: 230px;
-  height: calc(100% - 100px);
+  height: calc(100% - 140px);
   padding: 10px;
 
-  background: #fff1;
+  background: #393a3c;
   border-radius: 20px;
+  z-index: 2;
+
+  transition: width .15s cubic-bezier(0.65, 0, 0.35, 1);
 }
 
 .hpsSection {
@@ -52,10 +56,12 @@
 
   border-radius: 20px;
   user-select: none;
+  overflow: hidden;
 }
 
 .hpsSection div {
   display: flex;
+  align-items: center;
   gap: 10px;
   transition: transform .15s;
 }
@@ -63,6 +69,7 @@
 .hpsSection svg {
   width: 26px;
   height: 26px;
+  flex-shrink: 0;
 }
 
 .hpsSection h1 {
@@ -106,10 +113,68 @@
 
 .hpsContent {
   position: absolute;
-  width: 30px;
   width: calc(100% - 310px);
-  height: 30px;
   height: calc(100% - 119px);
   top: 99px;
   left: 290px;
+}
+
+
+
+/* RESPONSIVE DESIGN */
+
+@media screen and (max-width: 1450px) {
+  .hpsSections {
+    width: 180px;
+  }
+  .hpsSection h1 {
+    font-size: 18px;
+  }
+
+  .hpsContent {
+    width: calc(100% - 260px);
+    left: 240px;
+  }
+}
+
+@media screen and (max-width: 960px) {
+  .hpsSections {
+    width: 46px;
+  }
+  .hpsSections:hover {
+    transition: width .15s cubic-bezier(0.65, 0, 0.35, 1) .2s;
+    width: 180px;
+  }
+
+  .hpsSection h1 {
+    transition: opacity .2s, visibility 0s .2s;
+    opacity: 0;
+    visibility: hidden;
+  }
+  .hpsSections:hover h1 {
+    transition: opacity .2s .3s, visibility 0s;
+    opacity: 1;
+    visibility: visible;
+  }
+  .hpsSectionSelected > div {
+    transform: none;
+  }
+
+  .hpsContent {
+    width: calc(100% - 126px);
+    left: 106px;
+  }
+}
+
+@media screen and (max-width: 880px) {
+  .hpsSections, .hpsSections:hover {
+    width: 54px;
+  }
+  .hpsSections:hover h1 {
+    visibility: hidden;
+  }
+  .hpsSection svg {
+    width: 32px;
+    height: 32px;
+  }
 }
