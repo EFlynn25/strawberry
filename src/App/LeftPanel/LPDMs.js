@@ -52,7 +52,7 @@ class LPDMs extends React.Component {
 
     const noMessageChats = [];
     const chats = JSON.parse(JSON.stringify(this.props.chats));
-    var chatTimestampList = Object.keys(chats).filter(function(key) {
+    let chatTimestampList = Object.keys(chats).filter(function(key) {
       const thisChat = chats[key];
       const thisChatMessages = thisChat.messages;
       if (thisChatMessages == null || thisChatMessages.length == 0) {

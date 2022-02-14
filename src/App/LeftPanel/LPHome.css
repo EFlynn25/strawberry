@@ -1,15 +1,18 @@
 .LPHome {
   position: relative;
   height: 75px;
-  cursor: pointer;
 
   background: linear-gradient(90deg, #282A2D 0%, transparent 50%, transparent 100%);
   background-size: 600px auto;
   background-position-x: -300px;
+  border-top-left-radius: 20px;
+  overflow: hidden;
+
   transition: background-position-x .3s;
 }
 
 .LPHome:hover {
+  cursor: pointer;
   background-position-x: -100px;
 }
 

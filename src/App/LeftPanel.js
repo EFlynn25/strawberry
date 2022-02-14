@@ -3,6 +3,7 @@ import { withRouter } from "react-router-dom";
 import { connect } from 'react-redux';
 
 import './LeftPanel.css';
+import { ReactComponent as Close } from '../assets/icons/close.svg';
 
 import LPHome from './LeftPanel/LPHome'
 import LPSeparator from './LeftPanel/LPSeparator'
@@ -53,8 +54,7 @@ class LeftPanel extends React.Component {
     return (
       <Fragment>
         { !this.state.mobile ? null :
-          <div className={this.props.showLeftPanel ? "lpMobileDarken" : "lpMobileDarken lpMobileDarkenHide"} onClick={this.props.hideLeftPanel}>
-          </div>
+          <div className={this.props.showLeftPanel ? "lpMobileDarken" : "lpMobileDarken lpMobileDarkenHide"} onClick={this.props.hideLeftPanel}></div>
         }
         <div className="LeftPanel" style={this.props.showLeftPanel ? {transform: "none"} : null}>
           <LPHome hideLeftPanel={this.props.hideLeftPanel} />

@@ -65,11 +65,11 @@ class DMsMessage extends React.Component {
     const myChatMessages = myChat.messages;
     const firstMessageID = myChatMessages[0].id;
 
-    var ids = [];
-    var from = "";
+    let ids = [];
+    let from = "";
 
     if (!Array.isArray(myID)) {
-      for (var i = myID - firstMessageID; true; i++) {
+      for (let i = myID - firstMessageID; true; i++) {
         if (from.length == 0) {
           from = myChatMessages[i].from;
         }
@@ -176,7 +176,7 @@ class DMsMessage extends React.Component {
 
 
       if (thisChat.sendingMessages != null && thisChat.sendingMessages.length > 0 && this.state.messageEmail == this.props.myEmail) {
-        var currentSendingID = 0;
+        let currentSendingID = 0;
         thisChat["sendingMessages"].map(item => {
           const messageObject = {message: item, lastRead: false, noTransition: true, sending: true, id: "sending" + currentSendingID, edited: false};
           newMessageObjects.push(messageObject);

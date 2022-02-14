@@ -49,7 +49,7 @@ class HomeProfile extends React.Component {
   }
 
   inputEnterPressed(event) {
-    var code = event.keyCode || event.which;
+    let code = event.keyCode || event.which;
     if (code === 13 && !event.shiftKey) {
       event.preventDefault();
       event.stopPropagation();

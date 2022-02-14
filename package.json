@@ -13,6 +13,7 @@
     "autoprefixer": "^10.2.6",
     "firebase": "^8.6.8",
     "rc-progress": "^3.1.4",
+    "re-resizable": "^6.9.1",
     "react": "^17.0.2",
     "react-autosize-textarea": "^7.1.0",
     "react-div-100vh": "^0.7.0",

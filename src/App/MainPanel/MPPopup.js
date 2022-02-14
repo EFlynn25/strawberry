@@ -108,6 +108,7 @@ class MPPopup extends React.Component {
 
     return (
       <div className={this.props.shrink ? this.state.mainClasses : this.state.mainClasses + " MPPopupNoShrink"}>
+        <div className="mpDarkenBackground"></div>
         <div className={this.state.mainClasses == "MPPopup" ? "mainPanel" : "mainPanel mainPanelHide"} ref={this.setWrapperRef}>
           { child }
         </div>

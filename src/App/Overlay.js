@@ -42,9 +42,9 @@ function Overlay(props) {
         ovClass = "OverlayView OverlayViewHide";
       }
       showBg = false;
-      var myProgress = "";
-      var hideProgress = false;
-      var step = 0;
+      let myProgress = "";
+      let hideProgress = false;
+      let step = 0;
       if (props.socket == null) {
         myProgress = "Connecting to server...";
       } else if (props.dmsLoaded == false) {
@@ -66,8 +66,8 @@ function Overlay(props) {
       if (props.multipleTabs == true) {
         hideProgress = true;
       }
-      var percent = 0;
-      var color = "#FAA";
+      let percent = 0;
+      let color = "#FAA";
       if (step == 1) {
         percent = 25;
         color = "#D88";

@@ -1,8 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Switch, Route, withRouter } from "react-router-dom";
+import { Resizable } from "re-resizable";
 
 import './MainPanel.css';
+import './MainPanel/MPConversation.css';
 import MPDMs from './MainPanel/MPDMs';
 import MPGroups from './MainPanel/MPGroups';
 import MPHome from './MainPanel/MPHome';
@@ -43,7 +45,7 @@ class MainPanel extends React.Component {
   openPanel(newType, newData, shrink=true) { // Opens the main panel popup (MPPopup)
     // This if statement enables shrinking MainPanel when not in Groups
     // because shrinking MainPanel for Groups settings looks weird
-    if (!this.props.history.location.pathname.startsWith("/groups")) {
+    if (shrink) {
       this.enableShrink();
     }
     if (this.state.panelType != newType || this.state.panelData != newData) {
@@ -71,13 +73,15 @@ class MainPanel extends React.Component {
         <Switch>
           <Route path="/dms/:chatEmail" render={routeProps => (<MPDMs openedDM={this.props.openedDM} {...routeProps} />)} />
           <Route path="/dms">
-            <div style={{display: "table", width: "100%", height: "100%"}}>
-              <h1 style={{position: "relative", display: "table-cell", margin: "0", textAlign: "center", verticalAlign: "middle", color: "#fff5", fontSize: "20px", userSelect: "none"}}>Welcome to Strawberry DMs</h1>
+            <div style={{position: "absolute", display: "table", width: "100%", height: "100%"}}>
+              <h1 style={{position: "relative", display: "table-cell", margin: "0", textAlign: "center", verticalAlign: "middle", color: "#fff5", fontSize: "20px", userSelect: "none"}}>
+                Welcome to Strawberry DMs
+              </h1>
             </div>
           </Route>
           <Route path="/groups/:threadID" render={routeProps => (<MPGroups opendialog={this.openPanel} openedThread={this.props.openedThread} {...routeProps} />)} />
           <Route path="/groups">
-            <div style={{display: "table", width: "100%", height: "100%"}}>
+            <div style={{position: "absolute", display: "table", width: "100%", height: "100%"}}>
               <h1 style={{position: "relative", display: "table-cell", margin: "0", textAlign: "center", verticalAlign: "middle", color: "#fff5", fontSize: "20px", userSelect: "none"}}>
                 Welcome to Strawberry Groups
               </h1>
@@ -87,6 +91,31 @@ class MainPanel extends React.Component {
             <MPHome opendialog={this.openPanel} />
           </Route>
         </Switch>
+
+        {/*
+        <div className="mpPopouts">
+          <Resizable
+            style={{marginRight: "20px"}}
+            defaultSize={{width: 350, height: 450}}
+            minWidth={350}
+            minHeight={340}
+            enable={{top: true, right: false, bottom: false, left: true, topRight: false, bottomRight: false, bottomLeft: false, topLeft: true}}>
+
+            <MPDMs openedDM="asher.molzer@gmail.com" popout={true} />
+          </Resizable>
+
+          <Resizable
+            style={{marginRight: "20px"}}
+            defaultSize={{width: 350, height: 450}}
+            minWidth={350}
+            minHeight={340}
+            enable={{top: true, right: false, bottom: false, left: true, topRight: false, bottomRight: false, bottomLeft: false, topLeft: true}}>
+
+            <MPGroups openedThread="754844326590" opendialog={this.openPanel} popout={true} />
+          </Resizable>
+
+        </div>
+        */}
 
         <MPPopup type={this.state.panelType} data={this.state.panelData} shrink={this.props.history.location.pathname.startsWith("/groups") ? false : true} onclose={this.closePanel} />
       </div>

@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter } from "react-router-dom";
 
 import { ReactComponent as SLogo } from '../assets/icons/strawberry.svg';
+import { ReactComponent as Close } from '../assets/icons/close.svg';
 import './TopBar.css';
 
 class TopBar extends React.Component {
@@ -47,7 +48,8 @@ class TopBar extends React.Component {
         <div className={this.state.tbWelcomeDivClass}>
           <img src={this.props.picture} className="tbPFP" alt="Profile picture" />
           <h1 className="tbWelcomeText">Hey, {this.props.name}!</h1>
-          <SLogo className="tbLogoRight" />
+          <SLogo className={this.props.showLeftPanel ? "tbIconRight tbIconRightHide" : "tbIconRight"} />
+          {/*<Close className={this.props.showLeftPanel || this.state.tbWelcomeDivClass.includes("Hide") ? "tbIconRight tbIconRightHide" : "tbIconRight tbIconRightHide"} onClick={this.props.hideLeftPanel} />*/}
         </div>
         <div className={this.state.tbLogoDivClass}>
           <SLogo className="tbLogoLeft" />
@@ -55,6 +57,11 @@ class TopBar extends React.Component {
             <h1 className="tbDev">dev</h1>
           }
         </div>
+
+        <Close
+          className={this.props.showLeftPanel ? "tbIconRight" : "tbIconRight tbIconRightHide"}
+          onClick={this.props.hideLeftPanel}
+          style={{width: "30px", height: "30px", top: "8.5px", right: "8.5px"}} />
       </div>
     );
   }

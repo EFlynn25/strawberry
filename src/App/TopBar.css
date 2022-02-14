@@ -60,7 +60,7 @@
   color: #FFF;
 }
 
-.tbLogoRight {
+.tbIconRight {
   position: absolute;
   width: 35px;
   height: 35px;
@@ -68,6 +68,25 @@
   right: 6px;
 
   user-select: none;
+
+  transition: transform .2s, opacity .2s, fill .2s;
+  transform: none;
+  opacity: 1;
+  fill: #fff;
+}
+
+.tbIconRightHide {
+  opacity: 0;
+}
+
+.tbIconRight:hover {
+  cursor: pointer;
+  transform: scale(1.05);
+}
+
+.tbIconRight:active {
+  fill: #bbb;
+  transform: scale(.95);
 }
 
 
@@ -111,4 +130,12 @@
   color: #888;
   font-size: 14px;
   user-select: none;
+}
+
+
+
+/* Close button */
+
+.tbCloseButton {
+
 }
