@@ -62,8 +62,8 @@ class LeftPanel extends React.Component {
           {/*this.props.dmsOrGroups == "dms" ? <LPDMs /> : <LPGroups />*/}
           <div className="lpConversations">
             <LPTabs />
-            <LPDMs mainClasses={this.props.dmsOrGroups == "dms" ? "LPDMs" : "LPDMs LPDMsHide"} hideLeftPanel={this.props.hideLeftPanel} />
-            <LPGroups mainClasses={this.props.dmsOrGroups == "groups" ? "LPGroups" : "LPGroups LPGroupsHide"} hideLeftPanel={this.props.hideLeftPanel} />
+            <LPDMs mainClasses={this.props.dmsOrGroups == "dms" ? "LPDMs" : "LPDMs LPDMsHide"} hideLeftPanel={this.props.hideLeftPanel} changePopout={this.props.changePopout} />
+            <LPGroups mainClasses={this.props.dmsOrGroups == "groups" ? "LPGroups" : "LPGroups LPGroupsHide"} hideLeftPanel={this.props.hideLeftPanel} changePopout={this.props.changePopout} />
           </div>
         </div>
       </Fragment>

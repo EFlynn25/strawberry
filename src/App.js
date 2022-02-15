@@ -27,10 +27,14 @@ class App extends React.Component {
       pageLoaded: false,
       showLeftPanel: false,
       showCloseButton: false,
-      mobile: false
+      mobile: false,
+      chatPopouts: [],
+      threadPopouts: [],
     };
 
-    this.checkMobile = this.checkMobile.bind(this)
+    this.checkMobile = this.checkMobile.bind(this);
+    this.changePopout = this.changePopout.bind(this);
+
     window.addEventListener("resize", this.checkMobile);
   }
 
@@ -83,6 +87,25 @@ class App extends React.Component {
     }
   }
 
+  changePopout(type, data, add=true) {
+    const stateName = type + "Popouts";
+    let newArray = this.state[stateName];
+    if (add) {
+      if (this.state.chatPopouts.length + this.state.threadPopouts.length < 3 && !newArray.includes(data)) {
+        newArray.unshift(data);
+      }
+    } else {
+      const index = newArray.indexOf(data);
+      if (index > -1) {
+        newArray.splice(index, 1);
+      }
+    }
+
+    let stateObject = {}
+    stateObject[stateName] = newArray;
+    this.setState(stateObject);
+  }
+
   render() {
     let myTitle = "";
     let tnc = 0; // Total notification count
@@ -133,8 +156,14 @@ class App extends React.Component {
                     </div>
                   }
                   <TopBar showLeftPanel={this.state.showLeftPanel} hideLeftPanel={() => {this.setState({showLeftPanel: false})}} />
-                  <LeftPanel showLeftPanel={this.state.showLeftPanel} hideLeftPanel={() => {this.setState({showLeftPanel: false})}} />
-                  <MainPanel setCloseButton={(value) => {this.setState({showCloseButton: value})} /* Shows close button when MPPopup is open */} />
+                  <LeftPanel
+                    showLeftPanel={this.state.showLeftPanel} hideLeftPanel={() => {this.setState({showLeftPanel: false})}}
+                    changePopout={this.changePopout} />
+                  <MainPanel
+                    setCloseButton={(value) => {this.setState({showCloseButton: value})} /* Shows close button when MPPopup is open */}
+                    chatPopouts={this.state.chatPopouts}
+                    threadPopouts={this.state.threadPopouts}
+                    changePopout={this.changePopout} />
                 </Fragment>
 
                 :

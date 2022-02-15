@@ -19,7 +19,7 @@ class MainPanel extends React.Component {
       mpClass: "MainPanel",
       specialEasing: true,
       panelType: "", // Type of panel (announcements, settings, etc.)
-      panelData: "" // Special data passed to MPPopup, like a user's email when opening a user's profile
+      panelData: "", // Special data passed to MPPopup, like a user's email when opening a user's profile
     };
 
     this.enableShrink = this.enableShrink.bind(this);
@@ -92,30 +92,42 @@ class MainPanel extends React.Component {
           </Route>
         </Switch>
 
-        {/*
         <div className="mpPopouts">
-          <Resizable
-            style={{marginRight: "20px"}}
-            defaultSize={{width: 350, height: 450}}
-            minWidth={350}
-            minHeight={340}
-            enable={{top: true, right: false, bottom: false, left: true, topRight: false, bottomRight: false, bottomLeft: false, topLeft: true}}>
+          {
+            this.props.chatPopouts.map((item) => {
+              return (
+                <Resizable
+                  style={{marginRight: "20px"}}
+                  defaultSize={{width: 350, height: 450}}
+                  minWidth={250}
+                  minHeight={340}
+                  bounds="parent"
+                  boundsByDirection={true}
+                  enable={{top: true, right: false, bottom: false, left: true, topRight: false, bottomRight: false, bottomLeft: false, topLeft: true}}>
 
-            <MPDMs openedDM="asher.molzer@gmail.com" popout={true} />
-          </Resizable>
+                  <MPDMs openedDM={item} changePopout={this.props.changePopout} popout={true} />
+                </Resizable>
+              )
+            })
+          }
+          {
+            this.props.threadPopouts.map((item) => {
+              return (
+                <Resizable
+                  style={{marginRight: "20px"}}
+                  defaultSize={{width: 350, height: 450}}
+                  minWidth={250}
+                  minHeight={340}
+                  bounds="parent"
+                  boundsByDirection={true}
+                  enable={{top: true, right: false, bottom: false, left: true, topRight: false, bottomRight: false, bottomLeft: false, topLeft: true}}>
 
-          <Resizable
-            style={{marginRight: "20px"}}
-            defaultSize={{width: 350, height: 450}}
-            minWidth={350}
-            minHeight={340}
-            enable={{top: true, right: false, bottom: false, left: true, topRight: false, bottomRight: false, bottomLeft: false, topLeft: true}}>
-
-            <MPGroups openedThread="754844326590" opendialog={this.openPanel} popout={true} />
-          </Resizable>
-
+                  <MPGroups openedThread={item} opendialog={this.openPanel} changePopout={this.props.changePopout} popout={true} />
+                </Resizable>
+              )
+            })
+          }
         </div>
-        */}
 
         <MPPopup type={this.state.panelType} data={this.state.panelData} shrink={this.props.history.location.pathname.startsWith("/groups") ? false : true} onclose={this.closePanel} />
       </div>

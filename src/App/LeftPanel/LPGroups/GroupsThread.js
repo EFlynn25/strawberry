@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter } from "react-router-dom";
 
 import './GroupsThread.css';
+import { ReactComponent as Popout } from '../../../assets/icons/popout.svg';
 import {
   setOpenedThread,
   setThreadLastRead
@@ -39,10 +40,14 @@ class GroupsThread extends React.Component {
   handleClick(e) {
     e.preventDefault();
     console.log("[from " + this.props.threadID + "] clicked");
-    this.props.setOpenedThread(this.props.threadID);
-    this.props.history.push("/groups/" + this.props.threadID);
+    if (e.target.parentElement.className.baseVal == "dmChatPopout" || e.target.className.baseVal == "dmChatPopout") {
+      this.props.changePopout("thread", this.props.threadID)
+    } else {
+      this.props.setOpenedThread(this.props.threadID);
+      this.props.history.push("/groups/" + this.props.threadID);
 
-    this.props.hideLeftPanel();
+      this.props.hideLeftPanel();
+    }
   }
 
   render() {
@@ -158,6 +163,7 @@ class GroupsThread extends React.Component {
         <p className={read ? "gtMessage" : "gtMessage gtUnread"} title={myThreadMessages != null && myThreadMessages.length > 0 ? threadMessage : null} style={systemMessage ? {fontStyle: "italic"} : null}>{threadMessage}</p>
         <div className="gtSelected" style={{transform: opened ? "none" : ""}} />
         {read ? null : <div className="gtUnreadNotify" />}
+        <Popout className="dmChatPopout" />
       </div>
     );
   }

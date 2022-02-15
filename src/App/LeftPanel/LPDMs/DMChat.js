@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter } from "react-router-dom";
 
 import './DMChat.css';
+import { ReactComponent as Popout } from '../../../assets/icons/popout.svg';
 import {
   setOpenedDM,
   setChatLastRead
@@ -59,10 +60,14 @@ class DMChat extends React.Component {
   handleClick(e) {
     e.preventDefault();
     console.log("[from " + this.props.chatEmail + "] clicked");
-    this.props.setOpenedDM(this.props.chatEmail);
-    this.props.history.push("/dms/" + this.props.chatEmail);
+    if (e.target.parentElement.className.baseVal == "dmChatPopout" || e.target.className.baseVal == "dmChatPopout") {
+      this.props.changePopout("chat", this.props.chatEmail)
+    } else {
+      this.props.setOpenedDM(this.props.chatEmail);
+      this.props.history.push("/dms/" + this.props.chatEmail);
 
-    this.props.hideLeftPanel();
+      this.props.hideLeftPanel();
+    }
   }
 
   render() {
@@ -114,6 +119,7 @@ class DMChat extends React.Component {
         <p className={read ? "dmChatMessage" : "dmChatMessage dmChatUnread"} title={chatMessage}>{chatMessage}</p>
         <div className="dmChatSelected" style={{transform: opened ? "none" : ""}} />
         {read ? null : <div className="dmChatUnreadNotify" />}
+        <Popout className="dmChatPopout" />
       </div>
     );
   }

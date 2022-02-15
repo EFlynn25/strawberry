@@ -13,6 +13,7 @@ import './MPGroups.css';
 import { ReactComponent as Settings } from '../../assets/icons/settings.svg';
 import { ReactComponent as Send } from '../../assets/icons/send.svg';
 import { ReactComponent as Forum } from '../../assets/icons/forum.svg';
+import { ReactComponent as Close } from '../../assets/icons/close.svg';
 import {
   setOpenedThread,
   addSendingThreadMessage,
@@ -178,12 +179,13 @@ class MPGroups extends React.Component {
       }
     }
 
-    let title = "404";
-    if (this.props.openedThread in this.props.threads) {
-      title = this.props.threads[this.props.openedThread].name;
+    if (this.props.popout != true) {
+      let title = "404";
+      if (this.props.openedThread in this.props.threads) {
+        title = this.props.threads[this.props.openedThread].name;
+      }
+      this.props.setCurrentPage(title);
     }
-
-    this.props.setCurrentPage(title);
 
     window.addEventListener("focus", this.handleWindowFocus);
     window.addEventListener("blur", this.handleWindowBlur);
@@ -546,13 +548,17 @@ class MPGroups extends React.Component {
     return (
       <div className={this.props.popout == true ? "MPGroups mpPopoutConversation" : "MPGroups"}>
         { this.props.popout != true ? null :
-          <div className="mpPopoutHandle" style={{paddingRight: "45px"}}>
+          <div className="mpPopoutHandle">
             <Forum style={{fill: "#1D9545"}} />
             <h1>{ this.props.threads[this.props.openedThread].name }</h1>
             <Settings
               className="ghSettingsIcon"
-              style={{position: "absolute", right: "10px"}}
+              style={/*{position: "absolute", right: "10px"}*/{paddingLeft: "5px"}}
               onClick={() => this.props.opendialog("groupSettings", this.props.openedThread, false)} />
+            <Close
+              className="ghSettingsIcon"
+              style={{paddingLeft: "5px"}}
+              onClick={() => this.props.changePopout("thread", this.props.openedThread, false)} />
           </div>
         }
         { children }

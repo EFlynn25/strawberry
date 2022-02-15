@@ -225,3 +225,11 @@
   transform: translateX(-4px);
   transition: transform .1s;
 }
+
+.GroupsThread:hover > .dmChatPopout {
+  visibility: visible;
+}
+
+.GroupsThread:hover > .gtMessage {
+  right: 40px;
+}

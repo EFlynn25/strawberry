@@ -11,6 +11,7 @@ import Loader from "react-loader-spinner";
 import './MPDMs.css';
 import { ReactComponent as Send } from '../../assets/icons/send.svg';
 import { ReactComponent as ChatBubble } from '../../assets/icons/chat_bubble.svg';
+import { ReactComponent as Close } from '../../assets/icons/close.svg';
 import {
   setOpenedDM,
   // addChatMessage,
@@ -173,12 +174,13 @@ class MPDMs extends React.Component {
       }
     }
 
-    let title = "404";
-    if (this.props.openedDM in this.props.chats && this.props.openedDM in this.props.getknownPeople) {
-      title = getUser(this.props.openedDM).name;
+    if (this.props.popout != true) {
+      let title = "404";
+      if (this.props.openedDM in this.props.chats) {
+        title = getUser(this.props.openedDM).name;
+      }
+      this.props.setCurrentPage(title);
     }
-
-    this.props.setCurrentPage(title);
 
     window.addEventListener("focus", this.handleWindowFocus);
     window.addEventListener("blur", this.handleWindowBlur);
@@ -250,7 +252,6 @@ class MPDMs extends React.Component {
     if (this.props.popout != true) {
       let title = "404";
       if (this.props.openedDM in this.props.chats) {
-        // title = this.props.getknownPeople[this.props.openedDM].name;
         title = getUser(this.props.openedDM).name;
       }
       this.props.setCurrentPage(title);
@@ -495,6 +496,10 @@ class MPDMs extends React.Component {
           <div className="mpPopoutHandle">
             <ChatBubble style={{fill: "#2052b6"}} />
             <h1>{ getUser(this.props.openedDM).name }</h1>
+            <Close
+              className="ghSettingsIcon"
+              style={{padding: "0"}}
+              onClick={() => this.props.changePopout("chat", this.props.openedDM, false)} />
           </div>
         }
         { children }

@@ -170,3 +170,30 @@
   transform: translateX(-4px);
   transition: transform .1s;
 }
+
+.dmChatPopout {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  right: 15px;
+  bottom: 15px;
+
+  transform: rotateZ(90deg);
+  fill: #888;
+  visibility: hidden;
+}
+
+.dmChatPopout:hover {
+  fill: #bbb;
+}
+.dmChatPopout:active {
+  fill: #555;
+}
+
+.DMChat:hover > .dmChatPopout {
+  visibility: visible;
+}
+
+.DMChat:hover > .dmChatMessage {
+  right: 40px;
+}
