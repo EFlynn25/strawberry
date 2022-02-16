@@ -20,6 +20,8 @@ class MainPanel extends React.Component {
       specialEasing: true,
       panelType: "", // Type of panel (announcements, settings, etc.)
       panelData: "", // Special data passed to MPPopup, like a user's email when opening a user's profile
+      popoutWidths: {},
+      popoutHeights: {},
     };
 
     this.enableShrink = this.enableShrink.bind(this);
@@ -27,6 +29,33 @@ class MainPanel extends React.Component {
 
     this.openPanel = this.openPanel.bind(this);
     this.closePanel = this.closePanel.bind(this);
+
+    this.popoutRefs = {}
+  }
+
+  componentDidMount() {
+    this.updateRefs();
+  }
+
+  componentDidUpdate(prevProps) {
+    this.updateRefs();
+  }
+
+  updateRefs() {
+    this.popoutRefs = {};
+    const refCreator = (item) => {
+      this.popoutRefs[item] = React.createRef();
+      if (!Object.keys(this.state.popoutWidths).includes(item) || !Object.keys(this.state.popoutHeights).includes(item)) {
+        const newWidths = this.state.popoutWidths;
+        const newHeights = this.state.popoutHeights;
+        newWidths[item] = 350;
+        newHeights[item] = 450;
+        this.setState({ popoutWidths: newWidths, popoutHeights: newHeights });
+      }
+    };
+
+    this.props.chatPopouts.forEach(refCreator);
+    this.props.threadPopouts.forEach(refCreator);
   }
 
   enableShrink() { // Enables shrinking MainPanel when opening the MainPanel popup (MPPopup)
@@ -67,6 +96,30 @@ class MainPanel extends React.Component {
     this.props.setCloseButton(false);
   }
 
+  resizePopout(e, direction, ref, d) {
+    const newWidths = this.state.popoutWidths;
+    const newHeights = this.state.popoutHeights;
+
+    let currentWidth = 0;
+    Object.keys(newWidths).forEach((item) => {
+      currentWidth += 20;
+      currentWidth += newWidths[item];
+    });
+
+    let newWidth = d.width;
+    const maxWidth = window.innerWidth - 340;
+    if (currentWidth + newWidth > maxWidth) {
+      newWidth = maxWidth - currentWidth;
+    }
+    // newWidths[ref.className] += newWidth;
+    newWidths[ref.className] += d.width;
+    newHeights[ref.className] += d.height;
+    this.setState({
+      popoutWidths: newWidths,
+      popoutHeights: newHeights,
+    });
+  }
+
   render() {
     return (
       <div className={this.state.mpClass} style={this.state.specialEasing ? {transition: "opacity .3s cubic-bezier(0.65, 0, 0.35, 1), transform .3s cubic-bezier(0.65, 0, 0.35, 1)"} : null}>
@@ -95,15 +148,28 @@ class MainPanel extends React.Component {
         <div className="mpPopouts">
           {
             this.props.chatPopouts.map((item) => {
+              let width = 350;
+              let height = 450;
+              if (Object.keys(this.state.popoutWidths).includes(item)) {
+                width = this.state.popoutWidths[item];
+              }
+              if (Object.keys(this.state.popoutHeights).includes(item)) {
+                height = this.state.popoutHeights[item];
+              }
+
+              return null;
               return (
                 <Resizable
+                  className={item}
                   style={{marginRight: "20px"}}
-                  defaultSize={{width: 350, height: 450}}
+                  size={{ width: width, height: height }}
                   minWidth={250}
                   minHeight={340}
                   bounds="parent"
                   boundsByDirection={true}
-                  enable={{top: true, right: false, bottom: false, left: true, topRight: false, bottomRight: false, bottomLeft: false, topLeft: true}}>
+                  enable={{top: true, right: false, bottom: false, left: true, topRight: false, bottomRight: false, bottomLeft: false, topLeft: true}}
+                  ref={this.popoutRefs[item]}
+                  onResizeStop={(e, direction, ref, d) => this.resizePopout(e, direction, ref, d)} >
 
                   <MPDMs openedDM={item} changePopout={this.props.changePopout} popout={true} />
                 </Resizable>
@@ -112,15 +178,28 @@ class MainPanel extends React.Component {
           }
           {
             this.props.threadPopouts.map((item) => {
+              let width = 350;
+              let height = 450;
+              if (Object.keys(this.state.popoutWidths).includes(item)) {
+                width = this.state.popoutWidths[item];
+              }
+              if (Object.keys(this.state.popoutHeights).includes(item)) {
+                height = this.state.popoutHeights[item];
+              }
+
+              return null;
               return (
                 <Resizable
+                  className={item}
                   style={{marginRight: "20px"}}
-                  defaultSize={{width: 350, height: 450}}
+                  size={{ width: width, height: height }}
                   minWidth={250}
                   minHeight={340}
                   bounds="parent"
                   boundsByDirection={true}
-                  enable={{top: true, right: false, bottom: false, left: true, topRight: false, bottomRight: false, bottomLeft: false, topLeft: true}}>
+                  enable={{top: true, right: false, bottom: false, left: true, topRight: false, bottomRight: false, bottomLeft: false, topLeft: true}}
+                  ref={this.popoutRefs[item]}
+                  onResizeStop={(e, direction, ref, d) => this.resizePopout(e, direction, ref, d)} >
 
                   <MPGroups openedThread={item} opendialog={this.openPanel} changePopout={this.props.changePopout} popout={true} />
                 </Resizable>

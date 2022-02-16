@@ -91,7 +91,7 @@ class App extends React.Component {
     const stateName = type + "Popouts";
     let newArray = this.state[stateName];
     if (add) {
-      if (this.state.chatPopouts.length + this.state.threadPopouts.length < 3 && !newArray.includes(data)) {
+      if (this.state.chatPopouts.length + this.state.threadPopouts.length < 5 && !newArray.includes(data)) {
         newArray.unshift(data);
       }
     } else {
