@@ -452,7 +452,7 @@ class MPGroups extends React.Component {
       const ot = this.props.openedThread;
       groups_send_message(ot, iv);
       groups_typing(ot, false);
-      this.props.addSendingThreadMessage({message: iv});
+      this.props.addSendingThreadMessage({message: iv, thread_id: this.props.openedThread});
       this.setState({inputValue: ''});
     }
   }
@@ -558,7 +558,7 @@ class MPGroups extends React.Component {
             <Close
               className="ghSettingsIcon"
               style={{paddingLeft: "5px"}}
-              onClick={() => this.props.changePopout("thread", this.props.openedThread, false)} />
+              onClick={() => this.props.changePopout(this.props.openedThread, false)} />
           </div>
         }
         { children }

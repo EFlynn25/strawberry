@@ -41,7 +41,7 @@ class GroupsThread extends React.Component {
     e.preventDefault();
     console.log("[from " + this.props.threadID + "] clicked");
     if (e.target.parentElement.className.baseVal == "dmChatPopout" || e.target.className.baseVal == "dmChatPopout") {
-      this.props.changePopout("thread", this.props.threadID)
+      this.props.changePopout(this.props.threadID);
     } else {
       this.props.setOpenedThread(this.props.threadID);
       this.props.history.push("/groups/" + this.props.threadID);

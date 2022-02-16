@@ -61,7 +61,7 @@ class DMChat extends React.Component {
     e.preventDefault();
     console.log("[from " + this.props.chatEmail + "] clicked");
     if (e.target.parentElement.className.baseVal == "dmChatPopout" || e.target.className.baseVal == "dmChatPopout") {
-      this.props.changePopout("chat", this.props.chatEmail)
+      this.props.changePopout(this.props.chatEmail);
     } else {
       this.props.setOpenedDM(this.props.chatEmail);
       this.props.history.push("/dms/" + this.props.chatEmail);

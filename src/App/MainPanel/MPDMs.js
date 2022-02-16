@@ -432,7 +432,7 @@ class MPDMs extends React.Component {
       const oc = this.props.openedDM;
       dms_send_message(oc, iv);
       dms_typing(this.props.openedDM, false);
-      this.props.addSendingChatMessage({message: iv});
+      this.props.addSendingChatMessage({message: iv, chat: this.props.openedDM});
       this.setState({inputValue: ''});
     }
   }
@@ -499,7 +499,7 @@ class MPDMs extends React.Component {
             <Close
               className="ghSettingsIcon"
               style={{padding: "0"}}
-              onClick={() => this.props.changePopout("chat", this.props.openedDM, false)} />
+              onClick={() => this.props.changePopout(this.props.openedDM, false)} />
           </div>
         }
         { children }

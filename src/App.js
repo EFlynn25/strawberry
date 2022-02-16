@@ -30,6 +30,7 @@ class App extends React.Component {
       mobile: false,
       chatPopouts: [],
       threadPopouts: [],
+      popouts: []
     };
 
     this.checkMobile = this.checkMobile.bind(this);
@@ -87,9 +88,8 @@ class App extends React.Component {
     }
   }
 
-  changePopout(type, data, add=true) {
-    const stateName = type + "Popouts";
-    let newArray = this.state[stateName];
+  changePopout(data, add=true) {
+    let newArray = this.state.popouts;
     if (add) {
       if (this.state.chatPopouts.length + this.state.threadPopouts.length < 5 && !newArray.includes(data)) {
         newArray.unshift(data);
@@ -101,9 +101,7 @@ class App extends React.Component {
       }
     }
 
-    let stateObject = {}
-    stateObject[stateName] = newArray;
-    this.setState(stateObject);
+    this.setState({popouts: newArray});
   }
 
   render() {
@@ -161,8 +159,7 @@ class App extends React.Component {
                     changePopout={this.changePopout} />
                   <MainPanel
                     setCloseButton={(value) => {this.setState({showCloseButton: value})} /* Shows close button when MPPopup is open */}
-                    chatPopouts={this.state.chatPopouts}
-                    threadPopouts={this.state.threadPopouts}
+                    popouts={this.state.mobile ? [] : this.state.popouts}
                     changePopout={this.changePopout} />
                 </Fragment>
 
