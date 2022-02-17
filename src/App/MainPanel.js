@@ -20,6 +20,7 @@ class MainPanel extends React.Component {
       specialEasing: true,
       panelType: "", // Type of panel (announcements, settings, etc.)
       panelData: "", // Special data passed to MPPopup, like a user's email when opening a user's profile
+      panelShrink: true, // Should the panel shrink?
       popoutWidths: {},
       popoutHeights: {},
     };
@@ -84,7 +85,8 @@ class MainPanel extends React.Component {
     if (this.state.panelType != newType || this.state.panelData != newData) {
       this.setState({
         panelType: newType,
-        panelData: newData
+        panelData: newData,
+        panelShrink: shrink
       });
     }
 
@@ -128,7 +130,7 @@ class MainPanel extends React.Component {
     return (
       <div className={this.state.mpClass} style={this.state.specialEasing ? {transition: "opacity .3s cubic-bezier(0.65, 0, 0.35, 1), transform .3s cubic-bezier(0.65, 0, 0.35, 1)"} : null}>
         <Switch>
-          <Route path="/dms/:chatEmail" render={routeProps => (<MPDMs openedDM={this.props.openedDM} {...routeProps} />)} />
+          <Route path="/dms/:chatEmail" render={routeProps => (<MPDMs openedDM={this.props.openedDM} opendialog={this.openPanel} {...routeProps} />)} />
           <Route path="/dms">
             <div style={{position: "absolute", display: "table", width: "100%", height: "100%"}}>
               <h1 style={{position: "relative", display: "table-cell", margin: "0", textAlign: "center", verticalAlign: "middle", color: "#fff5", fontSize: "20px", userSelect: "none"}}>
@@ -136,7 +138,7 @@ class MainPanel extends React.Component {
               </h1>
             </div>
           </Route>
-          <Route path="/groups/:threadID" render={routeProps => (<MPGroups opendialog={this.openPanel} openedThread={this.props.openedThread} {...routeProps} />)} />
+          <Route path="/groups/:threadID" render={routeProps => (<MPGroups openedThread={this.props.openedThread} opendialog={this.openPanel} {...routeProps} />)} />
           <Route path="/groups">
             <div style={{position: "absolute", display: "table", width: "100%", height: "100%"}}>
               <h1 style={{position: "relative", display: "table-cell", margin: "0", textAlign: "center", verticalAlign: "middle", color: "#fff5", fontSize: "20px", userSelect: "none"}}>
@@ -162,12 +164,12 @@ class MainPanel extends React.Component {
               }
 
               const mpObject = item.includes("@") ?
-                <MPDMs openedDM={item} changePopout={this.props.changePopout} popout={true} />
+                <MPDMs openedDM={item} opendialog={this.openPanel} changePopout={this.props.changePopout} popout={true} />
                 : <MPGroups openedThread={item} opendialog={this.openPanel} changePopout={this.props.changePopout} popout={true} />;
               return (
                 <Resizable
                   className={item}
-                  style={{marginRight: "20px"}}
+                  style={{marginRight: "20px", zIndex: "2"}}
                   size={{ width: width, height: height }}
                   minWidth={250}
                   minHeight={340}
@@ -184,7 +186,7 @@ class MainPanel extends React.Component {
           }
         </div>
 
-        <MPPopup type={this.state.panelType} data={this.state.panelData} shrink={this.props.history.location.pathname.startsWith("/groups") ? false : true} onclose={this.closePanel} />
+        <MPPopup type={this.state.panelType} data={this.state.panelData} shrink={this.state.panelShrink/*this.props.history.location.pathname.startsWith("/groups") ? false : true*/} onclose={this.closePanel} />
       </div>
     );
   }

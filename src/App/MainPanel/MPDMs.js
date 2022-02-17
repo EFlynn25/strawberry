@@ -243,7 +243,7 @@ class MPDMs extends React.Component {
       }
     }
 
-    if (this.state.loaded && prevProps.currentPage != this.props.currentPage && propsOpenedDM in this.props.chats) {
+    if (this.state.loaded && prevProps.currentPage != this.props.currentPage && propsOpenedDM in this.props.chats && window.innerWidth > 880) {
       this.inputRef.current.focus();
     }
 
@@ -361,7 +361,8 @@ class MPDMs extends React.Component {
             onUpdate={this.scrollToBottom}
             editing={this.state.editing}
             setMessageEditing={this.setMessageEditing}
-            openedDM={this.props.openedDM} />
+            openedDM={this.props.openedDM}
+            opendialog={this.props.opendialog} />
           );
         tempMessages.push(newMessage);
       }

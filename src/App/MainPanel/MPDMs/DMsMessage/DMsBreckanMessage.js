@@ -8,6 +8,7 @@ import { ReactComponent as Edit } from '../../../../assets/icons/edit.svg';
 import { getUser } from '../../../../GlobalComponents/getUser.js';
 import { parseDate } from '../../../../GlobalComponents/parseDate.js';
 import { dms_edit_message } from '../../../../socket.js';
+import ProfilePicture from '../../../../GlobalComponents/ProfilePicture';
 
 class DMsBreckanMessage extends React.Component {
   constructor(props) {
@@ -98,7 +99,13 @@ class DMsBreckanMessage extends React.Component {
 
     return (
       <div className="DMsBreckanMessage" style={parentStyles}>
-        <img src={this.props.picture} className={"breckanMessagePFP" + classExtension} alt={this.props.name} />
+        {/*<img src={this.props.picture} className={"breckanMessagePFP" + classExtension} alt={this.props.name} />*/}
+        <ProfilePicture
+          email={this.props.email}
+          picture={this.props.picture}
+          name={this.props.name}
+          opendialog={this.props.email != this.props.myEmail ? this.props.opendialog : null}
+          className={"breckanMessagePFP" + classExtension} />
         <h1 className={"breckanMessageName" + classExtension}>{this.props.name}</h1>
         <div className={"breckanMessageGroup" + classExtension}>
           { this.props.messages == null ? null :
@@ -135,7 +142,7 @@ class DMsBreckanMessage extends React.Component {
                 const lastReadElement = <img src={thisUser.picture} className={lrClasses} alt={thisUser.name} />;
                 const editedElement = item.edited == false ? null : <span title={"Edited on " + parseDate(item.edited, "basic")} className="defaultMessageEditSpan">(edited)</span>;
                 let editIconElement = null;
-                if (this.props.email == this.props.myEmail) {
+                if (this.props.email == this.props.myEmail && window.innerWidth > 880) {
                   editIconElement = <Edit className="breckanMessageEditIcon" onClick={() => this.props.setMessageEditing(item.id)} />;
                 }
                 return (

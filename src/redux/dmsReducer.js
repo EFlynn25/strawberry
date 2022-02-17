@@ -130,9 +130,6 @@ export const dmsSlice = createSlice({
         myChatEmail = action.payload["chat"];
       }
 
-      console.debug(myChatEmail)
-      console.debug(state.chats[myChatEmail])
-
       let mySendingMessages = state.chats[myChatEmail]["sendingMessages"];
       if (mySendingMessages != null) {
         mySendingMessages.push(action.payload["message"]);

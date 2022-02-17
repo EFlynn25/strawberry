@@ -211,7 +211,8 @@ class GroupsMessage extends React.Component {
           onUpdate={this.props.onUpdate}
           editing={this.props.editing}
           setMessageEditing={this.props.setMessageEditing}
-          openedThread={this.props.openedThread} />
+          openedThread={this.props.openedThread}
+          opendialog={this.props.opendialog} />
       </div>
     );
   }

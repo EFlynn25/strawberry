@@ -248,7 +248,7 @@ class MPGroups extends React.Component {
       }
     }
 
-    if (this.state.loaded && prevProps.currentPage != this.props.currentPage && propsOpenedThread in this.props.threads) {
+    if (this.state.loaded && prevProps.currentPage != this.props.currentPage && propsOpenedThread in this.props.threads && window.innerWidth > 880) {
       this.inputRef.current.focus();
     }
 
@@ -376,7 +376,8 @@ class MPGroups extends React.Component {
             onUpdate={this.scrollToBottom}
             editing={this.state.editing}
             setMessageEditing={this.setMessageEditing}
-            openedThread={this.props.openedThread} />
+            openedThread={this.props.openedThread}
+            opendialog={this.props.opendialog} />
         );
         // console.debug(newMessage);
         tempMessages.push(newMessage);

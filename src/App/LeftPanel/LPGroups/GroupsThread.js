@@ -163,7 +163,7 @@ class GroupsThread extends React.Component {
         <p className={read ? "gtMessage" : "gtMessage gtUnread"} title={myThreadMessages != null && myThreadMessages.length > 0 ? threadMessage : null} style={systemMessage ? {fontStyle: "italic"} : null}>{threadMessage}</p>
         <div className="gtSelected" style={{transform: opened ? "none" : ""}} />
         {read ? null : <div className="gtUnreadNotify" />}
-        <Popout className="dmChatPopout" />
+        { window.innerWidth > 880 ? <Popout className="dmChatPopout" /> : null }
       </div>
     );
   }

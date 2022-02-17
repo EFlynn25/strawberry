@@ -118,8 +118,8 @@ class DMChat extends React.Component {
         </div>
         <p className={read ? "dmChatMessage" : "dmChatMessage dmChatUnread"} title={chatMessage}>{chatMessage}</p>
         <div className="dmChatSelected" style={{transform: opened ? "none" : ""}} />
-        {read ? null : <div className="dmChatUnreadNotify" />}
-        <Popout className="dmChatPopout" />
+        { read ? null : <div className="dmChatUnreadNotify" /> }
+        { window.innerWidth > 880 ? <Popout className="dmChatPopout" /> : null }
       </div>
     );
   }

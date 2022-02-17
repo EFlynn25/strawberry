@@ -220,7 +220,8 @@ class DMsMessage extends React.Component {
           onUpdate={this.props.onUpdate}
           editing={this.props.editing}
           setMessageEditing={this.props.setMessageEditing}
-          openedDM={this.props.openedDM} />
+          openedDM={this.props.openedDM}
+          opendialog={this.props.opendialog} />
       </div>
     );
   }

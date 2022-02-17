@@ -11,6 +11,7 @@ import { ReactComponent as Join } from '../../../../assets/icons/join.svg';
 import { getUser } from '../../../../GlobalComponents/getUser.js';
 import { parseDate } from '../../../../GlobalComponents/parseDate.js';
 import { groups_edit_message } from '../../../../socket.js';
+import ProfilePicture from '../../../../GlobalComponents/ProfilePicture';
 
 class GroupsBreckanMessage extends React.Component {
   constructor(props) {
@@ -215,7 +216,13 @@ class GroupsBreckanMessage extends React.Component {
       <div className="DMsBreckanMessage" style={parentStyles}>
         { this.props.email == "system" ? null :
           <Fragment>
-            <img src={this.props.picture} className={"breckanMessagePFP" + classExtension} alt={this.props.name} />
+            {/*<img src={this.props.picture} className={"breckanMessagePFP" + classExtension} alt={this.props.name} />*/}
+            <ProfilePicture
+              email={this.props.email}
+              picture={this.props.picture}
+              name={this.props.name}
+              opendialog={this.props.email != this.props.myEmail ? this.props.opendialog : null}
+              className={"breckanMessagePFP" + classExtension} />
             <h1 className={"breckanMessageName" + classExtension}>{this.props.name}</h1>
           </Fragment>
         }
@@ -354,7 +361,7 @@ class GroupsBreckanMessage extends React.Component {
                 // const lastReadElement = <img src={thisUser.picture} className={lrClasses} alt={thisUser.name} />;
                 const editedElement = item.edited == false ? null : <span title={"Edited on " + parseDate(item.edited, "basic")} className="defaultMessageEditSpan">(edited)</span>;
                 let editIconElement = null;
-                if (this.props.email == this.props.myEmail) {
+                if (this.props.email == this.props.myEmail && window.innerWidth > 880) {
                   editIconElement = <Edit className="breckanMessageEditIcon" onClick={() => this.props.setMessageEditing(item.id)} />;
                 }
 

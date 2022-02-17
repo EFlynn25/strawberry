@@ -10,6 +10,7 @@ import { ReactComponent as Join } from '../../../../assets/icons/join.svg';
 import { getUser } from '../../../../GlobalComponents/getUser.js';
 import { parseDate } from '../../../../GlobalComponents/parseDate.js';
 import { groups_edit_message } from '../../../../socket.js';
+import ProfilePicture from '../../../../GlobalComponents/ProfilePicture';
 
 class GroupsDefaultMessage extends React.Component {
   constructor(props) {
@@ -207,7 +208,13 @@ class GroupsDefaultMessage extends React.Component {
 
         { this.props.email == "system" ? null :
           <Fragment>
-            <img src={this.props.picture} className="defaultMessagePFP" alt={this.props.name} />
+            {/*<img src={this.props.picture} className="defaultMessagePFP" alt={this.props.name} />*/}
+            <ProfilePicture
+              email={this.props.email}
+              picture={this.props.picture}
+              name={this.props.name}
+              opendialog={this.props.email != this.props.myEmail ? this.props.opendialog : null}
+              className="defaultMessagePFP" />
             <div className="defaultMessageName">
             {this.props.name}
             {this.props.messages.length > 0 && this.props.messages[this.props.messages.length - 1].sending ? <h1 className="defaultMessageSendingText">Sending...</h1> : null}
@@ -293,7 +300,7 @@ class GroupsDefaultMessage extends React.Component {
                 // const lastReadElement = <img src={thisUser.picture} className={lrClasses} alt={thisUser.name} />;
                 const editedElement = item.edited == false ? null : <span title={"Edited on " + parseDate(item.edited, "basic")} className="defaultMessageEditSpan">(edited)</span>;
                 let editIconElement = null;
-                if (this.props.email == this.props.myEmail) {
+                if (this.props.email == this.props.myEmail && window.innerWidth > 880) {
                   editIconElement = <Edit className="defaultMessageEditIcon" onClick={() => this.props.setMessageEditing(item.id)} />;
                 }
                 return (
