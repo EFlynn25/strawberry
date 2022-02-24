@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import './HomePeople.css';
 import { ReactComponent as Search } from '../../../assets/icons/search.svg';
 import { getUser } from '../../../GlobalComponents/getUser.js';
+import { alphabetizePeople, searchPeople } from '../../../GlobalComponents/peopleFunctions.js';
 
 class HomePeople extends React.Component {
   constructor(props) {
@@ -28,42 +29,27 @@ class HomePeople extends React.Component {
     let people = [];
     const selectedPeopleList = this.state.searchInputVal == "" ? this.props.chats : this.props.knownPeople;
 
-    let alphabeticalPeople = [];
-    if (selectedPeopleList != null && Object.keys(selectedPeopleList).length > 0) {
-      Object.keys(selectedPeopleList).forEach(function (item, index) {
-        alphabeticalPeople.push([item, getUser(item).name]);
-      });
-      alphabeticalPeople.sort((a,b) => a[1].toUpperCase().localeCompare(b[1].toUpperCase()));
-      const newPeople = alphabeticalPeople.map(function(x) {
-          return x[0];
-      });
+    let searchedPeople = searchPeople(Object.keys(selectedPeopleList) || [], this.state.searchInputVal);
+    let alphabeticalPeople = alphabetizePeople(searchedPeople);
 
-      newPeople.forEach((item) => {
-        const myPerson = getUser(item);
-        const personName = myPerson.name;
-        const personPicture = myPerson.picture;
-        const status = myPerson.status;
-        const online = myPerson.online;
+    const peopleElements = alphabeticalPeople.map((item) => {
+      const myPerson = getUser(item);
+      const personName = myPerson.name;
+      const personPicture = myPerson.picture;
+      const status = myPerson.status;
+      const online = myPerson.online;
 
-        people.push(
-          <div className="hpPerson" key={item} onClick={() => this.props.opendialog("profile", item)}>
-            <img src={personPicture} className="hpPFP" alt={personName} />
-            { online ? <div className="hpOnline"></div> : null }
-            <h1 className="hpName" style={status == null ? {lineHeight: "50px", bottom: "", top: "15px", height: "50px"} : null}>{personName}</h1>
-            { status == null ? null :
-              <p className="hpStatus" title={status}>{status}</p>
-            }
-          </div>
-        );
-      });
-
-      people = people.filter((element) => {
-        const myKey = element.key.toUpperCase();
-        const myName = element.props.children[2].props.children.toUpperCase();
-        const iv = this.state.searchInputVal.toUpperCase();
-        return myKey.indexOf(iv) > -1 || myName.indexOf(iv) > -1;
-      });
-    }
+      return (
+        <div className="hpPerson" key={item} onClick={() => this.props.opendialog("profile", item)}>
+          <img src={personPicture} className="hpPFP" alt={personName} />
+          { online ? <div className="hpOnline"></div> : null }
+          <h1 className="hpName" style={status == null ? {lineHeight: "50px", bottom: "", top: "15px", height: "50px"} : null}>{personName}</h1>
+          { status == null ? null :
+            <p className="hpStatus" title={status}>{status}</p>
+          }
+        </div>
+      );
+    });
 
     return (
       <div className={this.props.classes}>
@@ -72,7 +58,7 @@ class HomePeople extends React.Component {
           <Search />
         </div>
         {
-          people.length == 0 ?
+          peopleElements.length == 0 ?
 
           <div style={{display: "flex", width: "100%", height: "100%", alignItems: "center", justifyContent: "center"}}>
             <h1 style={{margin: "0", color: "#fff5", fontSize: "16px"}}>No people</h1>
@@ -80,7 +66,7 @@ class HomePeople extends React.Component {
           :
           null
         }
-        { people }
+        { peopleElements }
       </div>
     );
   }
