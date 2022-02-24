@@ -178,3 +178,35 @@
     height: 32px;
   }
 }
+
+@media screen and (max-width: 404px) {
+  .HPSWrapperHideUp {
+    transform: translateX(-40px) !important;
+  }
+  .HPSWrapperHideDown {
+    transform: translateX(40px) !important;
+  }
+  .HPSWrapperHideUp .hpsaLogoBg, .HPSWrapperHideDown .hpsaLogoBg {
+    transform: translateX(-25px) !important;
+  }
+  .hpsHeader > p, .hpsHeader > div {
+    display: none;
+  }
+
+  .hpsSections {
+    width: calc(100% - 60px) !important;
+    height: 52px;
+    top: 100px;
+    display: flex;
+  }
+  .hpsSection {
+    width: 32px;
+    margin: 0;
+  }
+  .hpsContent {
+    width: 100%;
+    height: calc(100% - 172px);
+    top: 172px;
+    left: 0;
+  }
+}

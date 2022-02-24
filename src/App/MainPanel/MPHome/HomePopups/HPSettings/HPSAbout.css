@@ -67,7 +67,13 @@
 
 /* RESPONSIVE DESIGN */
 
-@media screen and (max-width: 686px), (min-width: 881px) and (max-width: 1157px), (min-width: 1290px) and (max-width: 1443px) {
+@media screen and (max-width: 376px),
+                  (min-width: 405px) and (max-width: 502px),
+                  (min-width: 880px) and (max-width: 898px),
+                  (min-width: 961px) and (max-width: 1047px),
+                  (min-width: 1061px) and (max-width: 1135px),
+                  (min-width: 1291px) and (max-width: 1400px),
+                  (min-width: 1451px) and (max-width: 1483px) {
   .hpsaSmoothie {
     bottom: 70px;
   }

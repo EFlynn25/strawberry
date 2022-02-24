@@ -1,24 +1,34 @@
 import React from 'react';
+import { Switch, Route, withRouter } from "react-router-dom";
 import ReactMarkdown from 'react-markdown';
 import { connect } from 'react-redux';
 import Loader from "react-loader-spinner";
 
 import './HPUserProfile.css';
+import { ReactComponent as AddPerson } from '../../../../assets/icons/add_person.svg';
+import { ReactComponent as Join } from '../../../../assets/icons/join.svg';
 import { ReactComponent as ThumbUp } from '../../../../assets/icons/thumb_up.svg';
 import { ReactComponent as ThumbUpFilled } from '../../../../assets/icons/thumb_up_filled.svg';
-import { get_posts, like_post } from '../../../../socket.js';
+import { get_posts, like_post, dms_request_to_chat } from '../../../../socket.js';
 import { addLoadingPosts } from '../../../../redux/peopleReducer.js';
 import { getUser } from '../../../../GlobalComponents/getUser.js';
 import { parseDate } from '../../../../GlobalComponents/parseDate.js';
+
+import ProfilePicture from '../../../../GlobalComponents/ProfilePicture';
 
 class HPUserProfile extends React.Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      requesting: false
+    };
+
     this.postListRef = React.createRef()
 
     this.handleScroll = this.handleScroll.bind(this);
     this.loadMorePosts = this.loadMorePosts.bind(this);
+    this.addToDMs = this.addToDMs.bind(this);
   }
 
   componentDidMount() {
@@ -50,6 +60,15 @@ class HPUserProfile extends React.Component {
     }
   }
 
+  addToDMs() {
+    this.setState({ requesting: true });
+
+    const email = this.props.email;
+    if (!this.props.dmsRequested.includes(email)) {
+      // dms_request_to_chat(email);
+    }
+  }
+
   render() {
     const item = this.props.email;
     const myPerson = getUser(item);
@@ -74,13 +93,46 @@ class HPUserProfile extends React.Component {
       postStatus = "Retrieving posts..."
     }
 
+    let bottomAction;
+    if (Object.keys(this.props.chats).includes(item)) {
+      bottomAction = (
+        <div className="pplBottomAction" onClick={() => { this.props.history.push("/dms/" + item); this.props.closedialog(); }}>
+          <Join />
+          <h1>Go to DM</h1>
+        </div>
+      );
+    }/* else if (this.state.requesting || this.props.dmsRequested.includes(item)) {
+      let text = "Requesting...";
+      text = "Requesting... (not really)"; // Remove this when requesting is ready.
+      if (this.props.dmsRequested.includes(item)) {
+        text = "Pending request...";
+      }
+      bottomAction = (
+        <div className="pplBottomAction pplBottomActionStatus">
+          <h1>{text}</h1>
+        </div>
+      );
+    } else {
+      bottomAction = (
+        <div className="pplBottomAction pplBottomActionButton" onClick={this.addToDMs}>
+          <AddPerson />
+          <h1>Add to DMs</h1>
+        </div>
+      );
+    }*/
+
     return ( // "pp" probably stands for "PersonProfile"... otherwise it would be "upLeft" for "UserProfile", which is confusing
       <div className="HPUserProfile">
         <div className="ppLeft">
-          <img src={picture} className="pplPFP" alt={name} />
+          {/*<img src={picture} className="pplPFP" alt={name} />*/}
+          <ProfilePicture
+            email={item}
+            picture={picture}
+            className="pplPFP" />
           <h1 className="pplName">{name}</h1>
           <p className="pplStatus">{status}</p>
           { online ? <div className="pplOnline"></div> : null }
+          { bottomAction }
         </div>
         <div className="ppRight">
           <h3>Posts</h3>
@@ -141,12 +193,14 @@ class HPUserProfile extends React.Component {
 
 const mapStateToProps = (state) => ({
   knownPeople: state.people.knownPeople,
+  chats: state.dms.chats,
+  dmsRequested: state.dms.requested,
   loadingPosts: state.people.loadingPosts,
-  likedPosts: state.app.likedPosts
+  likedPosts: state.app.likedPosts,
 });
 
 const mapDispatchToProps = {
   addLoadingPosts
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(HPUserProfile);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(HPUserProfile));

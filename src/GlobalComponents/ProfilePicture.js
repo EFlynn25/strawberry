@@ -9,29 +9,35 @@ class ProfilePicture extends React.Component {
   }
 
   render() {
-    const myUser = getUser(this.props.email);
+    const email = this.props.email;
+    const myUser = getUser(email);
+
     const picture = this.props.picture != null ? this.props.picture : myUser.picture;
     const name = this.props.name != null ? this.props.name : myUser.name;
+
+    const title = this.props.showTitle != false ? name + " (" + email + ")" : null;
+
     let className = "profilePicture ";
+    let onClick = null;
     if (this.props.opendialog != null) {
       className += "profilePictureSpecial "
+      onClick = () => this.props.opendialog("profile", this.props.email, false);
     }
     if (this.props.className != null) {
       className += this.props.className
     }
-    const onClick = this.props.opendialog != null ? () => this.props.opendialog("profile", this.props.email, false) : null;
+
     const style = this.props.style != null ? this.props.style : null;
 
-    return(
-      <div className="ProfilePicture">
-        <img
-          src={picture}
-          alt={name}
-          className={className}
-          onClick={onClick}
-          style={style} />
-      </div>
-    )
+    return (
+      <img
+        src={picture}
+        alt={name}
+        title={title}
+        className={className}
+        onClick={onClick}
+        style={style} />
+    );
   }
 }
 

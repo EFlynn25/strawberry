@@ -57,7 +57,7 @@ class GroupSettings extends React.Component {
           <div className={this.state.tab == 1 ? "gsTab gsTabSelected" : "gsTab"} onClick={this.state.tab == 1 ? null : this.toggleTab}><Settings /></div>
         </div>
         <div className={this.state.tab == 0 ? "gsContent" : "gsContent gsPeopleHide"}>
-          <GSPeople myThreadID={this.props.myThreadID} />
+          <GSPeople myThreadID={this.props.myThreadID} opendialog={this.props.opendialog} />
         </div>
 
         <div className={this.state.tab == 1 ? "gsContent" : "gsContent gsSettingsHide"}>

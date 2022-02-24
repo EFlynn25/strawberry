@@ -139,15 +139,18 @@ class DMsBreckanMessage extends React.Component {
                   this.editingID = null;
                 }
 
-                const lastReadElement = <img src={thisUser.picture} className={lrClasses} alt={thisUser.name} />;
+                // const lastReadElement = <img src={thisUser.picture} className={lrClasses} alt={thisUser.name} />;
+                const lastReadElement = <ProfilePicture
+                                          email={this.props.openedDM}
+                                          className={lrClasses} />;
                 const editedElement = item.edited == false ? null : <span title={"Edited on " + parseDate(item.edited, "basic")} className="defaultMessageEditSpan">(edited)</span>;
                 let editIconElement = null;
                 if (this.props.email == this.props.myEmail && window.innerWidth > 880) {
                   editIconElement = <Edit className="breckanMessageEditIcon" onClick={() => this.props.setMessageEditing(item.id)} />;
                 }
                 return (
-                  <div className={"breckanMessageTextWrap" + classExtension}>
-                    <div key={"id" + item.id} title={item.basicTimestamp} className={"breckanMessageText" + classExtension}>
+                  <div className={"breckanMessageTextWrap" + classExtension} key={"id" + item.id}>
+                    <div title={item.basicTimestamp} className={"breckanMessageText" + classExtension}>
                       {item.sending ? <h1 className={"defaultMessageSendingText breckanMessageSendingText" + classExtension}>Sending...</h1> : null}
                       <p>{item.message}{editedElement}</p>
                       {lastReadElement}

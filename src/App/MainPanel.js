@@ -94,6 +94,12 @@ class MainPanel extends React.Component {
   }
 
   closePanel() { // Closes MPPopup...
+    setTimeout(function() {
+      if (this.updater.isMounted(this)) {
+        this.setState({ panelShrink: true });
+      }
+    }.bind(this), 300);
+
     this.disableShrink();
     this.setState({
       panelType: ""
@@ -169,6 +175,7 @@ class MainPanel extends React.Component {
               return (
                 <Resizable
                   className={item}
+                  key={item}
                   style={{marginRight: "20px", zIndex: "2"}}
                   size={{ width: width, height: height }}
                   minWidth={250}
@@ -186,7 +193,7 @@ class MainPanel extends React.Component {
           }
         </div>
 
-        <MPPopup type={this.state.panelType} data={this.state.panelData} shrink={this.state.panelShrink/*this.props.history.location.pathname.startsWith("/groups") ? false : true*/} onclose={this.closePanel} />
+        <MPPopup type={this.state.panelType} data={this.state.panelData} shrink={this.state.panelShrink/*this.props.history.location.pathname.startsWith("/groups") ? false : true*/} onclose={this.closePanel} opendialog={this.openPanel} />
       </div>
     );
   }

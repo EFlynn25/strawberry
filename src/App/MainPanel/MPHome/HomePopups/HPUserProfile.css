@@ -51,6 +51,82 @@
   z-index: 1;
 }
 
+.pplBottomAction {
+  position: absolute;
+  left: 40px;
+  bottom: 40px;
+
+  transition: transform .1s, background .1s;
+  display: flex;
+  align-items: center;
+}
+
+.pplBottomAction svg {
+  fill: #336fe8;
+  user-select: none;
+}
+
+.pplBottomAction h1 {
+  margin-left: 10px;
+  font-size: 20px;
+  color: #336fe8;
+  user-select: none;
+}
+
+.pplBottomAction:hover {
+  cursor: pointer;
+  transform: scale(1.02);
+}
+
+.pplBottomAction:active {
+  transform: scale(.95);
+}
+
+.pplBottomAction:hover svg, .pplBottomAction:hover h1 {
+  color: #588fff;
+  fill: #588fff;
+}
+
+.pplBottomAction:active svg, .pplBottomAction:active h1 {
+  color: #406abf;
+  fill: #406abf;
+}
+
+.pplBottomActionButton {
+  left: 25px;
+  bottom: 25px;
+  padding: 15px;
+
+  border-radius: 20px;
+  background: #195de6;
+}
+
+.pplBottomActionButton svg, .pplBottomActionButton h1, .pplBottomActionButton:hover svg, .pplBottomActionButton:hover h1 {
+  color: white;
+  fill: white;
+}
+
+.pplBottomActionButton:hover {
+  background: #336fe8;
+}
+
+.pplBottomActionButton:active {
+  background: #1754cf;
+}
+
+.pplBottomActionStatus h1 {
+  color: white;
+}
+
+.pplBottomActionStatus:hover {
+  cursor: default;
+  transform: none;
+}
+
+.pplBottomActionStatus:hover h1, .pplBottomActionStatus:active h1 {
+  color: white;
+}
+
 
 
 /* ...right side */
@@ -173,9 +249,6 @@
 
 /* RESPONSIVE DESIGN */
 
-/* @media screen and (max-width: 1060px) { */
-/* @media screen and (max-width: 880px) { */
-/* @media screen and (max-width: 960px) { */
 @media screen and (max-width: 720px), (min-width: 880px) and (max-width: 960px) {
   .ppLeft {
     width: calc(100% - 80px);
@@ -198,5 +271,16 @@
   }
   .pplOnline {
     top: 140px;
+  }
+
+  .pplBottomAction {
+    bottom: unset;
+    left: unset;
+    top: 40px;
+    right: 40px;
+  }
+  .pplBottomActionButton {
+    top: 25px;
+    right: 25px;
   }
 }

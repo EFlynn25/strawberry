@@ -93,10 +93,12 @@ class MPPopup extends React.Component {
   }
 
   checkMobile() {
-    if (window.innerWidth <= 880 && !this.state.mobile) {
-      this.setState({ mobile: true });
-    } else if (window.innerWidth > 880 && this.state.mobile) {
-      this.setState({ mobile: false });
+    if (this.updater.isMounted(this)) {
+      if (window.innerWidth <= 880 && !this.state.mobile) {
+        this.setState({ mobile: true });
+      } else if (window.innerWidth > 880 && this.state.mobile) {
+        this.setState({ mobile: false });
+      }
     }
   }
 
@@ -105,13 +107,13 @@ class MPPopup extends React.Component {
 
     let child = null;
     if (this.state.type == "profile") {
-      child = <HPUserProfile email={this.state.data} />;
+      child = <HPUserProfile email={this.state.data} closedialog={this.props.onclose} />;
     } else if (this.state.type == "announcements") {
       child = <HPAnnouncements openAnnouncement={this.state.data} />;
     } else if (this.state.type == "settings") {
       child = <HPSettings />;
     } else if (this.state.type == "groupSettings") {
-      child = <GroupSettings myThreadID={this.state.data} closedialog={this.props.onclose} />;
+      child = <GroupSettings myThreadID={this.state.data} closedialog={this.props.onclose} opendialog={this.props.opendialog} />;
       if (this.state.mobile) {
         panelStyles.height = "100%";
         panelStyles.paddingTop = "unset";

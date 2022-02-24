@@ -5,6 +5,7 @@ import "./GSPeople.css"
 import { groups_request_to_thread, groups_remove_person, groups_deny_request } from '../../../../../socket.js';
 import { addThreadPeople, removeThreadPerson } from '../../../../../redux/groupsReducer.js';
 import PersonPicker from '../../../../../GlobalComponents/PersonPicker.js';
+import ProfilePicture from '../../../../../GlobalComponents/ProfilePicture.js';
 import { getUser } from '../../../../../GlobalComponents/getUser.js';
 
 import { ReactComponent as Close } from '../../../../../assets/icons/close.svg';
@@ -109,7 +110,12 @@ class GSPeople extends React.Component {
 
       peopleElements.push(
         <div className="gspPerson" key={item} style={this.state.personRemoving == item ? {background: "#1D954522"} : null}>
-          <img src={thisUser.picture} className="gspPFP" alt={thisUser.name} />
+          {/*<img src={thisUser.picture} className="gspPFP" alt={thisUser.name} />*/}
+          <ProfilePicture
+            email={item}
+            picture={thisUser.picture}
+            name={thisUser.name}
+            className="gspPFP" />
           { thisUser.online ? <div className="gspOnline"></div> : null }
           <h1 className="gspName" style={personRemoving == item ? {width: "calc(100% - 85px)"} : null}>{thisUser.name}</h1>
           <Close className="gspRemove" onClick={() => {this.setState({personRemoving: item})}} style={this.state.personRemoving == item ? {visibility: "visible"} : null} />

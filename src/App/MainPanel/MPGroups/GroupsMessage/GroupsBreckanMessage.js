@@ -165,7 +165,11 @@ class GroupsBreckanMessage extends React.Component {
         if (hereIndex < here.length) {
           const item = here[hereIndex];
           const thisUser = getUser(item);
-          const myElement = <img src={thisUser.picture} className={"defaultInChat"} alt={thisUser.name} style={this.props.messages.length > 0 && this.props.messages[this.props.messages.length - 1].sending ? {bottom: "-15px"} : {"transform": `translateX(${this.state.hereTransforms[item]}px)`}} />;
+          // const myElement = <img src={thisUser.picture} className={"defaultInChat"} alt={thisUser.name} style={this.props.messages.length > 0 && this.props.messages[this.props.messages.length - 1].sending ? {bottom: "-15px"} : {"transform": `translateX(${this.state.hereTransforms[item]}px)`}} />;
+          const myElement = <ProfilePicture
+                                    email={item}
+                                    className={"defaultInChat"}
+                                    style={this.props.messages.length > 0 && this.props.messages[this.props.messages.length - 1].sending ? {bottom: "-15px"} : {"transform": `translateX(${this.state.hereTransforms[item]}px)`}} />;
           inThreadElements.push(myElement);
           const typingElement = (
             <div className={this.props.inThreadTyping.includes(item) ? "gdefaultInChatTyping" : "gdefaultInChatTyping gdefaultInChatTypingHide"} style={{"transform": `translateX(${this.state.hereTransforms[item]}px)`}}>
@@ -190,7 +194,11 @@ class GroupsBreckanMessage extends React.Component {
         const hereIndicatorCompensate = Object.keys(this.state.hereTransforms).length == 0 ? 0 : this.state.hereTransforms[here[0]] + 45 + (hereTimes == here.length + 1 ? 20 : 0);
         const thisUser = getUser(item);
         if (goneIndex < gone.length) {
-          const myElement = <img src={thisUser.picture} className={"defaultInChat defaultInChatGone"} alt={thisUser.name} style={this.props.messages.length > 0 && this.props.messages[this.props.messages.length - 1].sending ? {bottom: "-15px"} : {"transform": `translateX(${this.state.goneTransforms[item] + hereIndicatorCompensate}px)`}} />;
+          // const myElement = <img src={thisUser.picture} className={"defaultInChat defaultInChatGone"} alt={thisUser.name} style={this.props.messages.length > 0 && this.props.messages[this.props.messages.length - 1].sending ? {bottom: "-15px"} : {"transform": `translateX(${this.state.goneTransforms[item] + hereIndicatorCompensate}px)`}} />;
+          const myElement = <ProfilePicture
+                                    email={item}
+                                    className={"defaultInChat defaultInChatGone"}
+                                    style={this.props.messages.length > 0 && this.props.messages[this.props.messages.length - 1].sending ? {bottom: "-15px"} : {"transform": `translateX(${this.state.goneTransforms[item] + hereIndicatorCompensate}px)`}} />;
           inThreadElements.push(myElement);
         } else {
           const additionalPeopleStr = "+" + this.state.extraGone.toString();
@@ -310,7 +318,11 @@ class GroupsBreckanMessage extends React.Component {
                     // console.log("YAY, ", item.lastRead[i]);
                     const myPerson = getUser(item.lastRead[i]);
                     const negative = who == "me" ? "-" : "";
-                    lastReadElementPictures.push(<img style={ i == 0 ? null : {transform: "translateX(" + negative + transformPX + "px)"}} src={myPerson.picture} className={lrClasses} alt={myPerson.name} title={myPerson.name + " (" + item.lastRead[i] + ")"} />);
+                    // lastReadElementPictures.push(<img style={ i == 0 ? null : {transform: "translateX(" + negative + transformPX + "px)"}} src={myPerson.picture} className={lrClasses} alt={myPerson.name} title={myPerson.name + " (" + item.lastRead[i] + ")"} />);
+                    lastReadElementPictures.push(<ProfilePicture
+                                                  email={item.lastRead[i]}
+                                                  className={lrClasses}
+                                                  style={ i == 0 ? null : {transform: "translateX(" + negative + transformPX + "px)"}} />);
                     transformPX += tpxIncrement;
                   }
                 }
@@ -366,9 +378,9 @@ class GroupsBreckanMessage extends React.Component {
                 }
 
                 return (
-                  <div className={this.props.email != "system" ? "breckanMessageTextWrap" + classExtension : "defaultMessageText breckanSystemMessage"}>
+                  <div className={this.props.email != "system" ? "breckanMessageTextWrap" + classExtension : "defaultMessageText breckanSystemMessage"} key={"id" + item.id}>
                     { this.props.email != "system" ?
-                      <div key={"id" + item.id} title={item.basicTimestamp} className={"breckanMessageText" + classExtension}>
+                      <div title={item.basicTimestamp} className={"breckanMessageText" + classExtension}>
                         {item.sending ? <h1 className={"defaultMessageSendingText breckanMessageSendingText" + classExtension}>Sending...</h1> : null}
                         <p>{item.message}{editedElement}</p>
                         {lastReadElement}

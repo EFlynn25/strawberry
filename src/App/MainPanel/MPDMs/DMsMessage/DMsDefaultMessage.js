@@ -141,7 +141,10 @@ class DMsDefaultMessage extends React.Component {
                   this.editingID = null;
                 }
 
-                const lastReadElement = <img src={thisUser.picture} className={lrClasses} alt={thisUser.name} />;
+                // const lastReadElement = <img src={thisUser.picture} className={lrClasses} alt={thisUser.name} />;
+                const lastReadElement = <ProfilePicture
+                                          email={this.props.openedDM}
+                                          className={lrClasses} />;
                 const editedElement = item.edited == false ? null : <span title={"Edited on " + parseDate(item.edited, "basic")} className="defaultMessageEditSpan">(edited)</span>;
                 let editIconElement = null;
                 if (this.props.email == this.props.myEmail && window.innerWidth > 880) {

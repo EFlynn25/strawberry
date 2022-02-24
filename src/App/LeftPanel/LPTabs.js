@@ -15,6 +15,14 @@ class LPTabs extends React.Component {
     this.groupsHandleClick = this.groupsHandleClick.bind(this);
   }
 
+  componentDidUpdate() {
+    if (this.props.history.location.pathname.startsWith("/dms") && this.props.dmsOrGroups != "dms") {
+      this.props.setdmsOrGroups("dms");
+    } else if (this.props.history.location.pathname.startsWith("/groups") && this.props.dmsOrGroups != "groups") {
+      this.props.setdmsOrGroups("groups");
+    }
+  }
+
   dmsHandleClick(e) {
     e.preventDefault();
     if (this.props.history.location.pathname != "/home") {
