@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import './HomePeople.css';
+import { ReactComponent as Search } from '../../../assets/icons/search.svg';
 import { getUser } from '../../../GlobalComponents/getUser.js';
 
 class HomePeople extends React.Component {
@@ -10,17 +11,26 @@ class HomePeople extends React.Component {
 
     this.state = {
       profileEmail: "",
-      showProfileViewer: true
+      showProfileViewer: true,
+      searchInputVal: "",
     };
+
+    this.onSearchInputChange = this.onSearchInputChange.bind(this);
+  }
+
+  onSearchInputChange(event) {
+    this.setState({
+      searchInputVal: event.target.value
+    });
   }
 
   render() {
     let people = [];
+    const selectedPeopleList = this.state.searchInputVal == "" ? this.props.chats : this.props.knownPeople;
 
     let alphabeticalPeople = [];
-    const localKnownPeople = this.props.knownPeople;
-    if (localKnownPeople != null && Object.keys(localKnownPeople).length > 0) {
-      Object.keys(localKnownPeople).forEach(function (item, index) {
+    if (selectedPeopleList != null && Object.keys(selectedPeopleList).length > 0) {
+      Object.keys(selectedPeopleList).forEach(function (item, index) {
         alphabeticalPeople.push([item, getUser(item).name]);
       });
       alphabeticalPeople.sort((a,b) => a[1].toUpperCase().localeCompare(b[1].toUpperCase()));
@@ -46,10 +56,21 @@ class HomePeople extends React.Component {
           </div>
         );
       });
+
+      people = people.filter((element) => {
+        const myKey = element.key.toUpperCase();
+        const myName = element.props.children[2].props.children.toUpperCase();
+        const iv = this.state.searchInputVal.toUpperCase();
+        return myKey.indexOf(iv) > -1 || myName.indexOf(iv) > -1;
+      });
     }
 
     return (
       <div className={this.props.classes}>
+        <div className="hpSearch">
+          <input value={this.state.searchInputVal} onChange={this.onSearchInputChange} placeholder="Search people" />
+          <Search />
+        </div>
         {
           people.length == 0 ?
 

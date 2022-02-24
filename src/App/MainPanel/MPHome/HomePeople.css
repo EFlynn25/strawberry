@@ -1,3 +1,38 @@
+/* Input */
+
+.hpSearch {
+  position: sticky;
+  top: 10px;
+  margin-bottom: 20px;
+  z-index: 1;
+}
+
+.hpSearch > svg {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  top: 7.5px;
+  left: 7.5px;
+}
+
+.hpSearch > input {
+  width: calc(100% - 60px);
+  padding: 15px;
+  padding-left: 45px;
+
+  background: #2A2B2D;
+  border-radius: 15px;
+  outline: none;
+  border: none;
+}
+
+@supports ((-webkit-backdrop-filter: blur(6px)) or (backdrop-filter: blur(6px))) {
+  .hpSearch > input {
+    background: #2A2B2DBB;
+    backdrop-filter: blur(6px);
+  }
+}
+
 /* Person Classes */
 
 .hpPerson {
