@@ -11,15 +11,17 @@
   position: absolute;
   width: 30px;
   height: 30px;
-  top: 7.5px;
-  left: 7.5px;
+  top: 8.5px;
+  left: 8.5px;
 }
 
 .hpSearch > input {
-  width: calc(100% - 60px);
+  width: calc(100% - 62px);
   padding: 15px;
-  padding-left: 45px;
+  padding-left: 47px;
 
+  font-family: Inter;
+  font-size: 14px;
   background: #2A2B2D;
   border-radius: 15px;
   outline: none;
@@ -151,5 +153,17 @@
 @media screen and (max-height: 720px) and (max-width: 475px) {
   .hpName {
     font-size: 20px;
+  }
+}
+
+@media screen and (max-width: 880px) {
+  .hpSearch > input {
+    width: calc(100% - 75px);
+    padding-left: 50px;
+    font-size: 16px;
+  }
+  .hpSearch > input {
+    top: 10px;
+    left: 10px;
   }
 }
