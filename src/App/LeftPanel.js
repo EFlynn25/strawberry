@@ -23,7 +23,7 @@ class LeftPanel extends React.Component {
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.setList = this.setList.bind(this);
 
-    document.addEventListener("keydown", this.handleKeyDown);
+    window.addEventListener("keydown", this.handleKeyDown);
 
     this.dmsList = [];
     this.groupsList = [];
