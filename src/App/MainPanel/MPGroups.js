@@ -21,7 +21,7 @@ import {
   setLoadingMessages
 } from '../../redux/groupsReducer';
 import {
-  setCurrentPage
+  setAppState
 } from '../../redux/appReducer';
 import {
   groups_get_messages,
@@ -184,7 +184,7 @@ class MPGroups extends React.Component {
       if (this.props.openedThread in this.props.threads) {
         title = this.props.threads[this.props.openedThread].name;
       }
-      this.props.setCurrentPage(title);
+      this.props.setAppState({ currentPage: title });
     }
 
     window.addEventListener("focus", this.handleWindowFocus);
@@ -259,7 +259,7 @@ class MPGroups extends React.Component {
       if (this.props.openedThread in this.props.threads) {
         title = this.props.threads[this.props.openedThread].name;
       }
-      this.props.setCurrentPage(title);
+      this.props.setAppState({ currentPage: title });
     }
   }
 
@@ -585,7 +585,7 @@ const mapDispatchToProps = {
   addSendingThreadMessage,
   setTempMessageInput,
   setLoadingMessages,
-  setCurrentPage,
+  setAppState,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(MPGroups);

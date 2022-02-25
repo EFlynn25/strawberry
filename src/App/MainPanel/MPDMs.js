@@ -21,7 +21,7 @@ import {
   setLoadingMessages
 } from '../../redux/dmsReducer';
 import {
-  setCurrentPage
+  setAppState
 } from '../../redux/appReducer';
 import {
   dms_get_messages,
@@ -179,7 +179,7 @@ class MPDMs extends React.Component {
       if (this.props.openedDM in this.props.chats) {
         title = getUser(this.props.openedDM).name;
       }
-      this.props.setCurrentPage(title);
+      this.props.setAppState({ currentPage: title });
     }
 
     window.addEventListener("focus", this.handleWindowFocus);
@@ -254,7 +254,7 @@ class MPDMs extends React.Component {
       if (this.props.openedDM in this.props.chats) {
         title = getUser(this.props.openedDM).name;
       }
-      this.props.setCurrentPage(title);
+      this.props.setAppState({ currentPage: title });
     }
   }
 
@@ -526,7 +526,7 @@ const mapDispatchToProps = {
   setTempMessageInput,
   setChatLastRead,
   setLoadingMessages,
-  setCurrentPage,
+  setAppState,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(MPDMs);

@@ -3,8 +3,8 @@ import { createSlice } from '@reduxjs/toolkit';
 export const appSlice = createSlice({
   name: 'app',
   initialState: {
-    name: "",
     email: "",
+    name: "",
     picture: "",
     status: null,
     posts: null,
@@ -31,18 +31,12 @@ export const appSlice = createSlice({
     announcementsRead: []
   },
   reducers: {
-    setUserName: (state, action) => {
-      state.name = action.payload;
+    setAppState: (state, action) => {
+      Object.keys(action.payload).forEach((item) => {
+        state[item] = action.payload[item];
+      });
     },
-    setUserEmail: (state, action) => {
-      state.email = action.payload;
-    },
-    setUserPicture: (state, action) => {
-      state.picture = action.payload;
-    },
-    setUserStatus: (state, action) => {
-      state.status = action.payload;
-    },
+
     addUserPost: (state, action) => {
       if (state.posts == null) {
         state.posts = []
@@ -56,9 +50,6 @@ export const appSlice = createSlice({
         delete action.payload.email
         state.posts.push(action.payload);
       }
-    },
-    setUserFirstPost: (state, action) => {
-      state.firstPost = action.payload;
     },
     setUserLikedPost: (state, action) => {
       if (Array.isArray(action.payload["post_id"])) {
@@ -98,9 +89,6 @@ export const appSlice = createSlice({
         state.posts[postIndex].likes--;
       }
     },
-    setUserLoadingPosts: (state, action) => {
-      state.loadingPosts = action.payload;
-    },
     editUserPost: (state, action) => {
       state.posts.some((item, i) => {
         if (item.post_id == action.payload["post_id"]) {
@@ -120,35 +108,8 @@ export const appSlice = createSlice({
         return false;
       });
     },
-    setdmsOrGroups: (state, action) => {
-      state.dmsOrGroups = action.payload;
-    },
-    sethideRightPanel: (state, action) => {
-      state.hideRightPanel = action.payload;
-    },
-    setdmsLoaded: (state, action) => {
-      state.dmsLoaded = action.payload;
-    },
-    setgroupsLoaded: (state, action) => {
-      state.groupsLoaded = action.payload;
-    },
-    setpeopleLoaded: (state, action) => {
-      state.peopleLoaded = action.payload;
-    },
-    setSocket: (state, action) => {
-      state.socket = action.payload;
-    },
-    setMultipleTabs: (state, action) => {
-      state.multipleTabs = action.payload;
-    },
-    setCurrentPage: (state, action) => {
-      state.currentPage = action.payload;
-    },
     setNotificationCount: (state, action) => {
       state.notificationCount[action.payload.type] = action.payload.count;
-    },
-    setMessageStyle: (state, action) => {
-      state.messageStyle = action.payload;
     },
     setAnnouncement: (state, action) => {
       state.announcements[action.payload.id] = {title: action.payload.title, content: action.payload.content, timestamp: action.payload.timestamp};
@@ -160,13 +121,9 @@ export const appSlice = createSlice({
 });
 
 export const {
-  setUserName, setUserEmail, setUserPicture, setUserStatus,
-  addUserPost, setUserFirstPost, setUserLikedPost, setLikedPost, setUserLoadingPosts, editUserPost, deleteUserPost,
-  setdmsOrGroups, sethideRightPanel,
-  setdmsLoaded, setgroupsLoaded, setpeopleLoaded,
-  setSocket, setMultipleTabs,
-  setCurrentPage, setNotificationCount,
-  setMessageStyle,
+  setAppState,
+  addUserPost, setUserLikedPost, setLikedPost, setUserLoadingPosts, editUserPost, deleteUserPost,
+  setNotificationCount,
   setAnnouncement, setAnnouncementRead
 } = appSlice.actions;
 

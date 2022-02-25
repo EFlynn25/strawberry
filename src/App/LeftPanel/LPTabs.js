@@ -4,7 +4,7 @@ import { withRouter } from "react-router-dom";
 
 import './LPTabs.css';
 import {
-  setdmsOrGroups
+  setAppState
 } from "../../redux/appReducer"
 
 class LPTabs extends React.Component {
@@ -17,9 +17,9 @@ class LPTabs extends React.Component {
 
   componentDidUpdate() {
     if (this.props.history.location.pathname.startsWith("/dms") && this.props.dmsOrGroups != "dms") {
-      this.props.setdmsOrGroups("dms");
+      this.props.setAppState({ dmsOrGroups: "dms" });
     } else if (this.props.history.location.pathname.startsWith("/groups") && this.props.dmsOrGroups != "groups") {
-      this.props.setdmsOrGroups("groups");
+      this.props.setAppState({ dmsOrGroups: "groups" });
     }
   }
 
@@ -32,7 +32,7 @@ class LPTabs extends React.Component {
         this.props.history.push("/dms");
       }
     }
-    this.props.setdmsOrGroups("dms");
+    this.props.setAppState({ dmsOrGroups: "dms" });
   }
 
   groupsHandleClick(e) {
@@ -44,7 +44,7 @@ class LPTabs extends React.Component {
         this.props.history.push("/groups");
       }
     }
-    this.props.setdmsOrGroups("groups");
+    this.props.setAppState({ dmsOrGroups: "groups" });
   }
 
   render() {
@@ -134,7 +134,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
-  setdmsOrGroups
+  setAppState
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(LPTabs));

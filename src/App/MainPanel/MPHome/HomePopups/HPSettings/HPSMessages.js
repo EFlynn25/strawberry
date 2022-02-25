@@ -5,7 +5,8 @@ import './HPSMessages.css'
 import defaultPreview from '../../../../../assets/images/default_message_preview.png';
 import breckanPreview from '../../../../../assets/images/breckan_message_preview.png';
 import {
-  setMessageStyle
+  // setMessageStyle,
+  setAppState
 } from '../../../../../redux/appReducer';
 import { set_setting } from '../../../../../socket.js';
 
@@ -36,7 +37,8 @@ class HPSMessages extends React.Component {
 
   setStyle(style) {
     set_setting("message_style", style)
-    this.props.setMessageStyle(style)
+    // this.props.setMessageStyle(style)
+    this.props.setAppState({ messageStyle: style });
   }
 
   render() {
@@ -70,7 +72,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
-  setMessageStyle
+  setAppState
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(HPSMessages);

@@ -7,9 +7,7 @@ import Div100vh from 'react-div-100vh';
 
 import './App.css';
 import {
-  setUserName,
-  setUserEmail,
-  setUserPicture
+  setAppState,
 } from './redux/appReducer';
 
 import Overlay from './App/Overlay';
@@ -45,13 +43,11 @@ class App extends React.Component {
         this.props.history.push("/welcome");
       } else {
         startSocket();
-        this.props.setUserName(user.displayName);
-        this.props.setUserEmail(user.email);
         let picture = user.photoURL
         if (picture == null) {
           picture = "/assets/images/default_profile_pic.png"; // Set default PFP
         }
-        this.props.setUserPicture(picture);
+        this.props.setAppState({ email: user.email, name: user.displayName, picture: picture });
       }
     });
 
@@ -195,9 +191,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
-    setUserName,
-    setUserEmail,
-    setUserPicture
+  setAppState,
 }
 
 //export default withRouter(App);

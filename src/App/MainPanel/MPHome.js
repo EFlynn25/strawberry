@@ -10,8 +10,7 @@ import { ReactComponent as Settings } from '../../assets/icons/settings.svg';
 import { ReactComponent as Announcements } from '../../assets/icons/announcements.svg';
 import './MPHome.css';
 import {
-  sethideRightPanel,
-  setCurrentPage
+  setAppState
 } from '../../redux/appReducer';
 import { get_announcements } from '../../socket.js';
 
@@ -34,7 +33,7 @@ class MPHome extends React.Component {
   }
 
   componentDidMount() {
-    this.props.setCurrentPage("Home");
+    this.props.setAppState({ currentPage: "Home" });
     if (!this.props.announcements || Object.keys(this.props.announcements).length <= 0) { // Load announcements if not already loaded
       get_announcements();
     }
@@ -120,8 +119,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
-  sethideRightPanel,
-  setCurrentPage
+  setAppState
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(MPHome));

@@ -4,7 +4,7 @@ import firebase from 'firebase/app';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import { Line } from 'rc-progress';
 import { useDispatch } from 'react-redux'
-import { setCurrentPage } from '../redux/appReducer';
+import { setAppState } from '../redux/appReducer';
 
 // import wlogo from '../assets/icons/swhite.svg';
 import { ReactComponent as SLogo } from '../assets/icons/strawberry.svg';
@@ -25,7 +25,7 @@ function Overlay(props) {
       }
     });
 
-    dispatch(setCurrentPage("Welcome")); // Sets the title of the page to "Welcome - Strawberry" with App.js
+    dispatch(setAppState({ currentPage: "Welcome" })); // Sets the title of the page to "Welcome - Strawberry" with App.js
 
     overlayContent =
       <div className="overlayPanel">

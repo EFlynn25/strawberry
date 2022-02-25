@@ -5,11 +5,8 @@
 
 import firebase from 'firebase/app';
 import {
-  setUserStatus,
-  addUserPost, setUserFirstPost, setUserLikedPost, setLikedPost, setUserLoadingPosts, editUserPost, deleteUserPost,
-  setdmsLoaded, setgroupsLoaded, setpeopleLoaded,
-  setSocket, setMultipleTabs,
-  setMessageStyle,
+  setAppState,
+  addUserPost, setUserLikedPost, setLikedPost, setUserLoadingPosts, editUserPost, deleteUserPost,
   setAnnouncement, setAnnouncementRead
 } from './redux/appReducer.js'
 import {
@@ -55,7 +52,7 @@ export function startSocket() {
 
 
       if (com == "multiple_tabs") { // Used when user has Strawberry open in another tab
-        mainStore.dispatch(setMultipleTabs(jsonData["data"]));
+        mainStore.dispatch(setAppState({ multipleTabs: jsonData["data"] }));
       }
 
 
@@ -106,18 +103,18 @@ export function startSocket() {
       /* Set functions */
 
       else if (com == "add_user") { // add_user is run in every product on startup to ensure the user has an entry in the database (and to get basic info)
-        mainStore.dispatch(setUserStatus(jsonData.status));
+        mainStore.dispatch(setAppState({ status: jsonData.status }));
         mainStore.dispatch(addUserPost(jsonData.posts));
-        mainStore.dispatch(setUserFirstPost(jsonData.first_post));
+        mainStore.dispatch(setAppState({ firstPost: jsonData.first_post }));
         mainStore.dispatch(setUserLikedPost({post_id: jsonData.liked_posts, data: true}));
-        mainStore.dispatch(setMessageStyle(jsonData.settings.message_style));
+        mainStore.dispatch(setAppState({ messageStyle: jsonData.settings.message_style }));
       } else if (com == "set_setting") {
         if (jsonData.setting == "message_style") {
-          mainStore.dispatch(setMessageStyle(jsonData.value));
+          mainStore.dispatch(setAppState({ messageStyle: jsonData.value }));
         }
       } else if (com == "set_status") {
         if (jsonData.response == true) {
-          mainStore.dispatch(setUserStatus(jsonData.status));
+          mainStore.dispatch(setAppState({ status: jsonData.status }));
         } else if (jsonData.response == "receive_set_status") {
           mainStore.dispatch(setpersonStatus({"email": jsonData.email, "status": jsonData.status}));
         }
@@ -174,7 +171,7 @@ export function startSocket() {
           const item = jsonData.chat;
           get_chat_info(item);
         } else if (jsonData.response == "no_chats") {
-          mainStore.dispatch(setdmsLoaded(true));
+          mainStore.dispatch(setAppState({ dmsLoaded: true }));
         }
       } else if (com == "get_messages") {
         if (jsonData.response == true) {
@@ -217,7 +214,7 @@ export function startSocket() {
             }
           });
           if (!missingMessages || jsonData.response == "no_messages") {
-            mainStore.dispatch(setdmsLoaded(true));
+            mainStore.dispatch(setAppState({ dmsLoaded: true }));
           }
         }
       } else if (com == "get_chat_created") { // Get the timestamp that a chat was created (used to sort the chat in LPDMs if it has no messages)
@@ -300,7 +297,7 @@ export function startSocket() {
             get_thread_info(item);
           });
         } else if (jsonData.response == "no_threads") {
-          mainStore.dispatch(setgroupsLoaded(true));
+          mainStore.dispatch(setAppState({ groupsLoaded: true }));
         }
       } else if (com == "get_thread_info") { // Retrieves thread name, people, and other basic info
         if (jsonData.response == true && jsonData.requested.includes(myEmail)) {
@@ -352,7 +349,7 @@ export function startSocket() {
             }
           });
           if (!missingMessages || jsonData.response == "no_messages") {
-            mainStore.dispatch(setgroupsLoaded(true));
+            mainStore.dispatch(setAppState({ groupsLoaded: true }));
           }
         }
 
@@ -471,7 +468,7 @@ export function startSocket() {
     }).catch(function(error) {
       // Handle error
     });
-    mainStore.dispatch(setSocket(true));
+    mainStore.dispatch(setAppState({ socket: true }));
   }
 
   socket.onclose = function(event) {
@@ -480,7 +477,7 @@ export function startSocket() {
     } else {
       console.warn("WebSocket closed uncleanly, code=" + event.code);
     }
-    mainStore.dispatch(setSocket(false));
+    mainStore.dispatch(setAppState({ socket: false }));
   };
 
   socket.onerror = function(error) {

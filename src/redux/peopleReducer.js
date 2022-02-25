@@ -15,7 +15,6 @@ export const peopleSlice = createSlice({
         state.knownPeople[action.payload["email"]].status = action.payload.status;
       } else {
         state.knownPeople[action.payload["email"]] = {name: action.payload["name"], picture: action.payload["picture"], status: action.payload["status"], firstPost: action.payload["first_post"], posts: null}
-        // , posts: [{post_id: 0, message: "Today sucked.", likes: 10, timestamp: 0}, {post_id: 12, message: "Today was great!", likes: 0, timestamp: 700350}]
       }
     },
     setpersonName: (state, action) => {

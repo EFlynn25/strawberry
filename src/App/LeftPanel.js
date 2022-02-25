@@ -11,7 +11,7 @@ import LPTabs from './LeftPanel/LPTabs'
 import LPGroups from './LeftPanel/LPGroups'
 import LPDMs from './LeftPanel/LPDMs'
 import {
-  setdmsOrGroups
+  setAppState
 } from "../redux/appReducer"
 
 // import { Switch, Route } from "react-router-dom";
@@ -33,7 +33,7 @@ class LeftPanel extends React.Component {
     if (this.props.history.location.pathname.startsWith("/groups")) {
       setTo = "groups";
     }
-    this.props.setdmsOrGroups(setTo);
+    this.props.setAppState({ dmsOrGroups: setTo });
 
     this.checkMobile()
   }
@@ -78,7 +78,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
-    setdmsOrGroups
+  setAppState
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(LeftPanel));
