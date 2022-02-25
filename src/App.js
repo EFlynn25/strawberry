@@ -78,10 +78,10 @@ class App extends React.Component {
 
   checkMobile() {
     if (this.updater.isMounted(this)) {
-      if (window.innerWidth <= 880 && !this.state.mobile) {
-        this.setState({ mobile: true });
-      } else if (window.innerWidth > 880 && this.state.mobile) {
-        this.setState({ mobile: false });
+      if (window.innerWidth <= 880 && !this.props.mobile) {
+        this.props.setAppState({ mobile: true });
+      } else if (window.innerWidth > 880 && this.props.mobile) {
+        this.props.setAppState({ mobile: false });
       }
     }
   }
@@ -144,7 +144,7 @@ class App extends React.Component {
               {  this.state.pageLoaded ?
 
                 <Fragment>
-                  { this.state.mobile != true ? null :
+                  { this.props.mobile != true ? null :
                     <div className="appHamburgerIcon" style={appHamburgerIconStyles}>
                       <div className="ahiMenuTrigger" onClick={() => {this.setState({showLeftPanel: true})}}></div>
                       <Menu />
@@ -157,7 +157,7 @@ class App extends React.Component {
                     changePopout={this.changePopout} />
                   <MainPanel
                     setCloseButton={(value) => {this.setState({showCloseButton: value})} /* Shows close button when MPPopup is open */}
-                    popouts={this.state.mobile ? [] : this.state.popouts}
+                    popouts={this.props.mobile ? [] : this.state.popouts}
                     changePopout={this.changePopout} />
                 </Fragment>
 
@@ -187,7 +187,8 @@ const mapStateToProps = (state) => ({
   multipleTabs: state.app.multipleTabs,
 
   currentPage: state.app.currentPage,
-  notificationCount: state.app.notificationCount
+  notificationCount: state.app.notificationCount,
+  mobile: state.app.mobile
 });
 
 const mapDispatchToProps = {

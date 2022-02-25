@@ -20,10 +20,6 @@ class LPGroups extends React.Component {
       faviconHref: "/favicon_package/favicon.ico",
       children: []
     };
-
-    this.listOfEmails = [];
-
-    this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
   componentDidMount() {
@@ -32,18 +28,12 @@ class LPGroups extends React.Component {
     }
 
     this.reloadThreads();
-
-    // document.addEventListener("keydown", this.handleKeyDown);
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.threads != prevProps.threads) {
       this.reloadThreads();
     }
-  }
-
-  componentWillUnmount() {
-    // document.removeEventListener("keydown", this.handleKeyDown);
   }
 
   reloadThreads() {
@@ -82,7 +72,7 @@ class LPGroups extends React.Component {
     let newChildren = null;
     if (Array.isArray(threadKeys) && threadKeys.length) {
       newChildren = [];
-      this.listOfEmails = threadKeys;
+      this.props.setList("groups", threadKeys);
       threadKeys.forEach(item => {
         const threadElement = <GroupsThread key={"id" + item} threadID={item} hideLeftPanel={this.props.hideLeftPanel} changePopout={this.props.changePopout} />;
         newChildren.push(threadElement);
@@ -99,44 +89,6 @@ class LPGroups extends React.Component {
     });
 
     this.props.setNotificationCount({type: "groups", count: unreadThreads});
-  }
-
-  handleKeyDown(e) { // This method sets up the Ctrl+UpArrow and Ctrl+DownArrow shortcuts
-    if (e.ctrlKey && e.which === 38) {
-      e.preventDefault();
-      e.stopPropagation();
-
-      if (!this.props.history.location.pathname.startsWith("/home")) {
-        const myIndex = this.listOfEmails.indexOf(this.props.openedGroups);
-
-        if (myIndex != 0) {
-          const newThread = this.listOfEmails[myIndex - 1];
-          this.props.setOpenedThread(newThread);
-          this.props.history.push("/groups/" + newThread);
-        } else {
-          this.props.history.push("/home");
-        }
-      }
-
-    } else if (e.ctrlKey && e.which === 40) {
-      e.preventDefault();
-      e.stopPropagation();
-
-      if (this.props.history.location.pathname.startsWith("/home")) {
-        const newThread = this.listOfEmails[0];
-        this.props.setOpenedThread(newThread);
-        this.props.history.push("/groups/" + newThread);
-      } else {
-        const myIndex = this.listOfEmails.indexOf(this.props.openedGroups);
-
-        if (myIndex != this.listOfEmails.length - 1) {
-          const newThread = this.listOfEmails[myIndex + 1];
-          this.props.setOpenedThread(newThread);
-          this.props.history.push("/groups/" + newThread);
-        }
-      }
-
-    }
   }
 
   render() {

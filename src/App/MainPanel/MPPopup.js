@@ -22,9 +22,6 @@ class MPPopup extends React.Component {
 
     this.setWrapperRef = this.setWrapperRef.bind(this);
     this.handleClickOutside = this.handleClickOutside.bind(this);
-    this.checkMobile = this.checkMobile.bind(this);
-
-    window.addEventListener("resize", this.checkMobile);
 
     this.mousePressedDown = false; // Has the user already pressed down outside of the panel?
   }
@@ -33,7 +30,6 @@ class MPPopup extends React.Component {
     this.reloadData();
     document.addEventListener('mouseup', this.handleClickOutside);
     document.addEventListener('mousedown', this.handleClickOutside);
-    this.checkMobile();
   }
 
   componentDidUpdate() {
@@ -41,7 +37,6 @@ class MPPopup extends React.Component {
   }
 
   componentWillUnmount() {
-    document.removeEventListener('resize', this.checkMobile);
     document.removeEventListener('mouseup', this.handleClickOutside);
     document.removeEventListener('mousedown', this.handleClickOutside);
   }
@@ -92,16 +87,6 @@ class MPPopup extends React.Component {
     }
   }
 
-  checkMobile() {
-    if (this.updater.isMounted(this)) {
-      if (window.innerWidth <= 880 && !this.state.mobile) {
-        this.setState({ mobile: true });
-      } else if (window.innerWidth > 880 && this.state.mobile) {
-        this.setState({ mobile: false });
-      }
-    }
-  }
-
   render() {
     let panelStyles = {};
 
@@ -114,7 +99,7 @@ class MPPopup extends React.Component {
       child = <HPSettings />;
     } else if (this.state.type == "groupSettings") {
       child = <GroupSettings myThreadID={this.state.data} closedialog={this.props.onclose} opendialog={this.props.opendialog} />;
-      if (this.state.mobile) {
+      if (this.props.mobile) {
         panelStyles.height = "100%";
         panelStyles.paddingTop = "unset";
       }
@@ -141,7 +126,8 @@ class MPPopup extends React.Component {
 
 const mapStateToProps = (state) => ({
   announcements: state.app.announcements,
-  announcementsRead: state.app.announcementsRead
+  announcementsRead: state.app.announcementsRead,
+  mobile: state.app.mobile
 });
 
 export default connect(mapStateToProps, null)(MPPopup);

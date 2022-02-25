@@ -24,6 +24,7 @@ export const appSlice = createSlice({
 
     currentPage: "",
     notificationCount: {},
+    mobile: false,
 
     messageStyle: "default",
 

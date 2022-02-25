@@ -20,10 +20,6 @@ class LPDMs extends React.Component {
       faviconHref: "/favicon_package/favicon.ico",
       children: []
     };
-
-    this.listOfEmails = [];
-
-    this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
   componentDidMount() {
@@ -32,18 +28,12 @@ class LPDMs extends React.Component {
     }
 
     this.reloadChats();
-
-    document.addEventListener("keydown", this.handleKeyDown);
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.chats != prevProps.chats) {
       this.reloadChats();
     }
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener("keydown", this.handleKeyDown);
   }
 
   reloadChats() {
@@ -82,7 +72,7 @@ class LPDMs extends React.Component {
     let newChildren = null;
     if (Array.isArray(chatKeys) && chatKeys.length) {
       newChildren = [];
-      this.listOfEmails = chatKeys;
+      this.props.setList("dms", chatKeys);
       chatKeys.forEach(item => {
         const chatElement = <DMChat key={"id" + item} chatEmail={item} hideLeftPanel={this.props.hideLeftPanel} changePopout={this.props.changePopout} />;
         newChildren.push(chatElement);
@@ -99,48 +89,6 @@ class LPDMs extends React.Component {
     });
 
     this.props.setNotificationCount({type: "dms", count: unreadChats});
-  }
-
-  handleKeyDown(e) { // This method sets up the Ctrl+UpArrow and Ctrl+DownArrow shortcuts
-    if (this.props.dmsOrGroups != "dms") {
-      return false;
-    }
-
-    if (e.ctrlKey && e.which === 38) {
-      e.preventDefault();
-      e.stopPropagation();
-
-      if (!this.props.history.location.pathname.startsWith("/home")) {
-        const myIndex = this.listOfEmails.indexOf(this.props.openedDM);
-
-        if (myIndex != 0) {
-          const newChat = this.listOfEmails[myIndex - 1];
-          this.props.setOpenedDM(newChat);
-          this.props.history.push("/dms/" + newChat);
-        } else {
-          this.props.history.push("/home");
-        }
-      }
-
-    } else if (e.ctrlKey && e.which === 40) {
-      e.preventDefault();
-      e.stopPropagation();
-
-      if (this.props.history.location.pathname.startsWith("/home")) {
-        const newChat = this.listOfEmails[0];
-        this.props.setOpenedDM(newChat);
-        this.props.history.push("/dms/" + newChat);
-      } else {
-        const myIndex = this.listOfEmails.indexOf(this.props.openedDM);
-
-        if (myIndex != this.listOfEmails.length - 1) {
-          const newChat = this.listOfEmails[myIndex + 1];
-          this.props.setOpenedDM(newChat);
-          this.props.history.push("/dms/" + newChat);
-        }
-      }
-
-    }
   }
 
   render() {
