@@ -10,6 +10,7 @@ import { ReactComponent as Leave } from '../../../../assets/icons/leave.svg';
 import { ReactComponent as Join } from '../../../../assets/icons/join.svg';
 import { getUser } from '../../../../GlobalComponents/getUser.js';
 import { parseDate } from '../../../../GlobalComponents/parseDate.js';
+import { isEmail, parseEmailToName } from '../../../../GlobalComponents/smallFunctions.js';
 import { groups_edit_message } from '../../../../socket.js';
 import ProfilePicture from '../../../../GlobalComponents/ProfilePicture';
 
@@ -335,6 +336,7 @@ class GroupsBreckanMessage extends React.Component {
               }
 
               const lastReadElement = <div>{lastReadElementPictures}</div>;
+              let myMessage = item.message;
               let MyIcon = null;
               let top = "0";
               if (this.props.email == "system") {
@@ -347,6 +349,7 @@ class GroupsBreckanMessage extends React.Component {
                   MyIcon = Join;
                   top = "1px";
                 }
+                myMessage = parseEmailToName(myMessage);
               }
 
               if (this.props.editing === item.id) {
@@ -382,14 +385,14 @@ class GroupsBreckanMessage extends React.Component {
                     { this.props.email != "system" ?
                       <div title={item.basicTimestamp} className={"breckanMessageText" + classExtension}>
                         {item.sending ? <h1 className={"defaultMessageSendingText breckanMessageSendingText" + classExtension}>Sending...</h1> : null}
-                        <p>{item.message}{editedElement}</p>
+                        <p>{myMessage}{editedElement}</p>
                         {lastReadElement}
                         {editIconElement}
                       </div>
                       :
                       <Fragment>
                         {MyIcon != null ? <MyIcon style={{position: "absolute", width: "15px", height: "15px", marginLeft: "-20px", fill: "#999", top: top}} /> : null}
-                        <p>{item.message}{editedElement}</p>
+                        <p>{myMessage}{editedElement}</p>
                         {lastReadElement}
                         {editIconElement}
                       </Fragment>

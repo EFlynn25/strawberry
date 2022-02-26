@@ -16,4 +16,5 @@ export function getUser(user) {
 }
 
 
-// This is one of my favorite files. Concise, useful, and handles null errors for me.
+// This is one of my favorite files. It's concise, can be used everywhere,
+// and has helped me with so many null errors.

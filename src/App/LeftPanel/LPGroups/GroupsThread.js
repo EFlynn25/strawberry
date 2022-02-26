@@ -10,6 +10,7 @@ import {
 } from "../../../redux/groupsReducer"
 import { getUser } from '../../../GlobalComponents/getUser.js';
 import { parseDate } from '../../../GlobalComponents/parseDate.js';
+import { isEmail, parseEmailToName } from '../../../GlobalComponents/smallFunctions.js';
 
 class GroupsThread extends React.Component {
   constructor(props) {
@@ -138,6 +139,7 @@ class GroupsThread extends React.Component {
 
       if (lastMessage.from == "system") {
         systemMessage = true; // Used for special system message styling
+        threadMessage = parseEmailToName(threadMessage);
       }
 
       threadTime = parseDate(lastMessage.timestamp, "time");

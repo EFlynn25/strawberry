@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import './HomePeople.css';
 import { ReactComponent as Search } from '../../../assets/icons/search.svg';
 import { getUser } from '../../../GlobalComponents/getUser.js';
+import { isEmail } from '../../../GlobalComponents/smallFunctions.js';
 import { alphabetizePeople, searchPeople } from '../../../GlobalComponents/peopleFunctions.js';
 
 class HomePeople extends React.Component {
@@ -29,8 +30,7 @@ class HomePeople extends React.Component {
   onSearchInputKeyPress(e) {
     let code = e.keyCode || e.which;
     if (code === 13 && !e.shiftKey) {
-      if (/(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/
-        .test(this.state.searchInputVal)) {
+      if (isEmail(this.state.searchInputVal)) {
         this.props.opendialog("profile", this.state.searchInputVal);
       }
     }
@@ -68,12 +68,11 @@ class HomePeople extends React.Component {
       </div>
     );
     if (this.state.searchInputVal != "") {
-      const isEmail = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/
-        .test(this.state.searchInputVal);
-      const text = isEmail ? "Go to profile: " + this.state.searchInputVal : "Finish email to search: " + this.state.searchInputVal;
+      const isEmailVar = isEmail(this.state.searchInputVal);
+      const text = isEmailVar ? "Go to profile: " + this.state.searchInputVal : "Finish email to search: " + this.state.searchInputVal;
       noPeopleElement = (
         <div style={{display: "flex", justifyContent: "center", width: "100%"}}>
-          <div className={isEmail ? "hpSearchButton" : "hpSearchButton hpSearchButtonDisabled"} onClick={isEmail ? () => this.props.opendialog("profile", this.state.searchInputVal) : null}>
+          <div className={isEmailVar ? "hpSearchButton" : "hpSearchButton hpSearchButtonDisabled"} onClick={isEmailVar ? () => this.props.opendialog("profile", this.state.searchInputVal) : null}>
             <h1>{ text }</h1>
           </div>
         </div>

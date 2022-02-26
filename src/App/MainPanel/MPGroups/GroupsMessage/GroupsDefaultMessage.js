@@ -9,6 +9,7 @@ import { ReactComponent as Leave } from '../../../../assets/icons/leave.svg';
 import { ReactComponent as Join } from '../../../../assets/icons/join.svg';
 import { getUser } from '../../../../GlobalComponents/getUser.js';
 import { parseDate } from '../../../../GlobalComponents/parseDate.js';
+import { isEmail, parseEmailToName } from '../../../../GlobalComponents/smallFunctions.js';
 import { groups_edit_message } from '../../../../socket.js';
 import ProfilePicture from '../../../../GlobalComponents/ProfilePicture';
 
@@ -279,6 +280,7 @@ class GroupsDefaultMessage extends React.Component {
               }
 
               const lastReadElement = <div>{lastReadElementPictures}</div>;
+              let myMessage = item.message;
               let MyIcon = null;
               let top = "0";
               if (this.props.email == "system") {
@@ -291,6 +293,7 @@ class GroupsDefaultMessage extends React.Component {
                   MyIcon = Join;
                   top = "1px";
                 }
+                myMessage = parseEmailToName(myMessage);
               }
 
               if (this.props.editing === item.id) {
@@ -318,7 +321,7 @@ class GroupsDefaultMessage extends React.Component {
                 return (
                   <div key={"id" + item.id} title={item.basicTimestamp} className={messageClass}>
                     {MyIcon != null ? <MyIcon style={{position: "absolute", width: "15px", height: "15px", marginLeft: "-20px", fill: "#999", top: top}} /> : null}
-                    <p>{item.message}</p>
+                    <p>{myMessage}</p>
                     {editedElement}
                     {editIconElement}
                     {lastReadElement}

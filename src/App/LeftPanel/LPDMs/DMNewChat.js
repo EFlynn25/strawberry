@@ -6,6 +6,7 @@ import { ReactComponent as AddPerson } from '../../../assets/icons/add_person.sv
 import './DMNewChat.css';
 import { dms_request_to_chat } from '../../../socket.js';
 import { addChatRequest } from '../../../redux/dmsReducer.js'
+import { isEmail } from '../../../GlobalComponents/smallFunctions.js'
 
 class DMNewChat extends React.Component {
   constructor(props) {
@@ -134,8 +135,7 @@ class DMNewChat extends React.Component {
       event.stopPropagation();
 
       // Why is this regex so long... I just wanted to be as precise as possible...
-      if (/(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/
-        .test(this.state.inputValue)) {
+      if (isEmail(this.state.inputValue)) {
         if (this.props.requested.includes(this.state.inputValue) || this.props.already_requested.includes(this.state.inputValue)) {
           this.setState({
             status: "You already requested that person!"
