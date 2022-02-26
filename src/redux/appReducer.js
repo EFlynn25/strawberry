@@ -59,14 +59,22 @@ export const appSlice = createSlice({
       if (state.posts == null) {
         state.posts = []
       }
-      if (Array.isArray(action.payload)) {
-        action.payload.forEach((item, i) => {
+      const ids = state.posts.map((item, i) => {
+        return item.post_id;
+      });
+      const addThisPost = (item) => {
+        if (!ids.includes(item.post_id)) {
           delete item.email
           state.posts.push(item);
+        }
+      };
+
+      if (Array.isArray(action.payload)) {
+        action.payload.forEach((item, i) => {
+          addThisPost(item);
         });
       } else {
-        delete action.payload.email
-        state.posts.push(action.payload);
+        addThisPost(action.payload);
       }
     },
     setUserLikedPost: (state, action) => {
