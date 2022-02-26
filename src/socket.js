@@ -66,7 +66,6 @@ export function startSocket() {
         if (jsonData.response === true || jsonData.response === "receive_new_announcement") {
           jsonData.announcements.forEach((announcement) => {
             if (!Object.keys(mainStore.getState().app.announcements).includes(announcement.id)) {
-              // mainStore.dispatch(setAnnouncement({"id": announcement.id, "title": announcement.title, "content": announcement.content, "timestamp": announcement.timestamp}));
               mainStore.dispatch(setAppState({ ["announcements." + announcement.id]: {"title": announcement.title, "content": announcement.content, "timestamp": announcement.timestamp} }));
             }
           });
@@ -176,6 +175,12 @@ export function startSocket() {
         } else if (jsonData.response == "no_chats") {
           mainStore.dispatch(setAppState({ dmsLoaded: true }));
         }
+      } else if (com == "get_requests") {
+        if (jsonData.response === true) {
+          if (jsonData.type === "received") {
+            mainStore.dispatch(addChatRequest({"type": "requests", "email": jsonData.requested}));
+          }
+        }
       } else if (com == "get_messages") {
         if (jsonData.response == true) {
           let myMessages = jsonData.messages;
@@ -230,7 +235,9 @@ export function startSocket() {
       /* Set Functions */
       else if (com == "add_user") {
         dms_get_chats();
-        dms_request_to_chat("get_requests");
+        // dms_request_to_chat("get_requests");
+        dms_get_requests("sent");
+        dms_get_requests("received");
       } else if (com == "request_to_chat") {
         if (jsonData.response === "receive_request") {
           mainStore.dispatch(addChatRequest({"type": "requests", "email": jsonData.requested}));
@@ -599,6 +606,11 @@ export function set_announcement_read(ids) {
 
 export function dms_get_chats() {
   let jsonObj = {"product": "dms", "command": "get_chats"}
+  send_websocket_message(jsonObj);
+}
+
+export function dms_get_requests(type) {
+  let jsonObj = {"product": "dms", "command": "get_requests", "type": type}
   send_websocket_message(jsonObj);
 }
 

@@ -22,14 +22,23 @@ class DMChat extends React.Component {
     this.updateData();
   }
 
-  shouldComponentUpdate(nextProps, nextState) { // I need to implement more of these throughout the app for performance.
+  shouldComponentUpdate(nextProps, nextState) {
     const openedDMChanged = (this.props.chatEmail == nextProps.openedDM && this.props.chatEmail != this.props.openedDM) || (this.props.chatEmail != nextProps.openedDM && this.props.chatEmail == this.props.openedDM);
 
-    const thisChat = this.props.chats[this.props.chatEmail];
-    const nextChat = nextProps.chats[this.props.chatEmail];
+    const thisChat = this.props.thisChat;
+    const nextChat = nextProps.thisChat;
     let thisChatChanged = false;
     if (thisChat.messages && nextChat.messages) {
-      thisChatChanged = thisChat.messages[thisChat.messages.length - 1].id != nextChat.messages[nextChat.messages.length - 1].id;
+      // thisChatChanged = thisChat.messages[thisChat.messages.length - 1].id != nextChat.messages[nextChat.messages.length - 1].id;
+      if (this.props.chatEmail == "fireno656@yahoo.com") {
+        console.log(this.props);
+        console.log(nextProps);
+        console.log(thisChat);
+        console.log(nextChat);
+        console.log(thisChat.messages.length);
+        console.log(nextChat.messages.length);
+      }
+      thisChatChanged = thisChat.messages.length != nextChat.messages.length;
     }
     if (thisChat.lastRead.me != nextChat.lastRead.me) {
       thisChatChanged = true;
@@ -49,8 +58,9 @@ class DMChat extends React.Component {
   }
 
   updateData() {
-    const myChat =  this.props.chats[this.props.chatEmail];
-    const myChatMessages = myChat.messages;
+    // const myChat = this.props.chats[this.props.chatEmail];
+    const thisChat = this.props.thisChat;
+    const myChatMessages = thisChat.messages;
 
     if (this.props.chatEmail == this.props.openedDM && myChatMessages != null && myChatMessages.length > 0) {
       this.props.setChatLastRead({"who": "me", "chat": this.props.chatEmail, "lastRead": myChatMessages[myChatMessages.length - 1].id});
@@ -71,8 +81,9 @@ class DMChat extends React.Component {
   }
 
   render() {
-    const myChat =  this.props.chats[this.props.chatEmail];
-    const myChatMessages = myChat.messages;
+    // const myChat =  this.props.chats[this.props.chatEmail];
+    const thisChat = this.props.thisChat;
+    const myChatMessages = thisChat.messages;
 
     let opened = false;
     if (this.props.chatEmail == this.props.openedDM) {
@@ -100,7 +111,7 @@ class DMChat extends React.Component {
 
     let read = true;
     if (myChatMessages != null && myChatMessages.length > 0) {
-      if (myChat.lastRead.me < myChatMessages[myChatMessages.length - 1].id || myChat.lastRead.me == null) {
+      if (thisChat.lastRead.me < myChatMessages[myChatMessages.length - 1].id || thisChat.lastRead.me == null) {
         read = false;
       }
     } else {
@@ -127,7 +138,7 @@ class DMChat extends React.Component {
 
 const mapStateToProps = (state) => ({
   openedDM: state.dms.openedDM,
-  chats: state.dms.chats,
+  // chats: state.dms.chats,
   knownPeople: state.people.knownPeople,
 });
 

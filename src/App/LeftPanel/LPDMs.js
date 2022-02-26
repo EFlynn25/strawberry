@@ -72,7 +72,7 @@ class LPDMs extends React.Component {
       newChildren = [];
       this.props.setList("dms", chatKeys);
       chatKeys.forEach(item => {
-        const chatElement = <DMChat key={"id" + item} chatEmail={item} hideLeftPanel={this.props.hideLeftPanel} changePopout={this.props.changePopout} />;
+        const chatElement = <DMChat key={"id" + item} chatEmail={item} thisChat={this.props.chats[item]} hideLeftPanel={this.props.hideLeftPanel} changePopout={this.props.changePopout} />;
         newChildren.push(chatElement);
       });
     } else {
@@ -90,6 +90,8 @@ class LPDMs extends React.Component {
   }
 
   render() {
+    console.log("LPDMs render")
+
     return (
       <div className={this.props.mainClasses}>
         <div className="lpdmChats" style={this.state.children.key == "id_no_chats" ? {overflow: "hidden"} : null}>
