@@ -86,12 +86,12 @@ class LPDMs extends React.Component {
       children: newChildren
     });
 
-    this.props.setAppState({ "notificationCount.dms": unreadChats });
+    if (this.props.notificationCount.dms != unreadChats) {
+      this.props.setAppState({ "notificationCount.dms": unreadChats });
+    }
   }
 
   render() {
-    console.log("LPDMs render")
-
     return (
       <div className={this.props.mainClasses}>
         <div className="lpdmChats" style={this.state.children.key == "id_no_chats" ? {overflow: "hidden"} : null}>
@@ -106,7 +106,8 @@ class LPDMs extends React.Component {
 const mapStateToProps = (state) => ({
   openedDM: state.dms.openedDM,
   chats: state.dms.chats,
-  dmsOrGroups: state.app.dmsOrGroups
+  dmsOrGroups: state.app.dmsOrGroups,
+  notificationCount: state.app.notificationCount,
 });
 
 const mapDispatchToProps = {

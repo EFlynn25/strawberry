@@ -22,6 +22,7 @@ class DMChat extends React.Component {
     this.updateData();
   }
 
+  /*
   shouldComponentUpdate(nextProps, nextState) {
     const openedDMChanged = (this.props.chatEmail == nextProps.openedDM && this.props.chatEmail != this.props.openedDM) || (this.props.chatEmail != nextProps.openedDM && this.props.chatEmail == this.props.openedDM);
 
@@ -50,15 +51,16 @@ class DMChat extends React.Component {
       return true;
     }
 
+    return true;
     return false;
   }
+  */
 
   componentDidUpdate() {
     this.updateData();
   }
 
   updateData() {
-    // const myChat = this.props.chats[this.props.chatEmail];
     const thisChat = this.props.thisChat;
     const myChatMessages = thisChat.messages;
 
@@ -81,7 +83,6 @@ class DMChat extends React.Component {
   }
 
   render() {
-    // const myChat =  this.props.chats[this.props.chatEmail];
     const thisChat = this.props.thisChat;
     const myChatMessages = thisChat.messages;
 
@@ -138,14 +139,12 @@ class DMChat extends React.Component {
 
 const mapStateToProps = (state) => ({
   openedDM: state.dms.openedDM,
-  // chats: state.dms.chats,
   knownPeople: state.people.knownPeople,
 });
 
 const mapDispatchToProps = {
-    setOpenedDM,
-    setChatLastRead
+  setOpenedDM,
+  setChatLastRead
 }
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(DMChat));

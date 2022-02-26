@@ -64,8 +64,8 @@ class HPUserProfile extends React.Component {
     this.setState({ requesting: true });
 
     const email = this.props.email;
-    if (!this.props.dmsRequested.includes(email)) {
-      // dms_request_to_chat(email);
+    if (!this.props.dmsRequested.includes(email) && !Object.keys(this.props.chats).includes(email)) {
+      dms_request_to_chat(email);
     }
   }
 
@@ -101,9 +101,8 @@ class HPUserProfile extends React.Component {
           <h1>Go to DM</h1>
         </div>
       );
-    }/* else if (this.state.requesting || this.props.dmsRequested.includes(item)) {
+    } else if (this.state.requesting || this.props.dmsRequested.includes(item)) {
       let text = "Requesting...";
-      text = "Requesting... (not really)"; // Remove this when requesting is ready.
       if (this.props.dmsRequested.includes(item)) {
         text = "Pending request...";
       }
@@ -119,7 +118,7 @@ class HPUserProfile extends React.Component {
           <h1>Add to DMs</h1>
         </div>
       );
-    }*/
+    }
 
     return ( // "pp" probably stands for "PersonProfile"... otherwise it would be "upLeft" for "UserProfile", which is confusing
       <div className="HPUserProfile">

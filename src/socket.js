@@ -5,9 +5,8 @@
 
 import firebase from 'firebase/app';
 import {
-  setAppState, setAppDictKey,
+  setAppState, pushAppArrayValue,
   addUserPost, setUserLikedPost, setLikedPost, setUserLoadingPosts, editUserPost, deleteUserPost,
-  setAnnouncementRead
 } from './redux/appReducer.js'
 import {
   addChat, addChatMessage, editChatMessage, addLoadedChatMessages, removeSendingChatMessage, setChatCreated, setChatLastRead, setChatTyping, setInChat, setLoadingMessages, addChatRequest, removeChatRequest
@@ -73,7 +72,8 @@ export function startSocket() {
           if (jsonData.response !== "receive_new_announcement") {
             jsonData.announcements_read.forEach((id) => {
               if (!mainStore.getState().app.announcementsRead.includes(id)) {
-                mainStore.dispatch(setAnnouncementRead(id));
+                // mainStore.dispatch(setAnnouncementRead(id));
+                mainStore.dispatch(pushAppArrayValue({ announcementsRead: id }));
               }
             });
           }
@@ -124,7 +124,8 @@ export function startSocket() {
         if (jsonData.response == true) {
           jsonData.ids.forEach((id) => {
             if (!mainStore.getState().app.announcementsRead.includes(id)) {
-              mainStore.dispatch(setAnnouncementRead(id));
+              // mainStore.dispatch(setAnnouncementRead(id));
+              mainStore.dispatch(pushAppArrayValue({ announcementsRead: id }));
             }
           });
         }
@@ -179,6 +180,8 @@ export function startSocket() {
         if (jsonData.response === true) {
           if (jsonData.type === "received") {
             mainStore.dispatch(addChatRequest({"type": "requests", "email": jsonData.requested}));
+          } else if (jsonData.type === "sent") {
+            mainStore.dispatch(addChatRequest({"type": "requested", "email": jsonData.requested}));
           }
         }
       } else if (com == "get_messages") {

@@ -27,7 +27,10 @@ export const peopleSlice = createSlice({
       state.knownPeople[action.payload["email"]].status = action.payload["status"];
     },
     setpersonOnline: (state, action) => {
-      state.knownPeople[action.payload["email"]].online = action.payload["online"];
+      let myRef = state.knownPeople[action.payload["email"]];
+      if (myRef != null) {
+        myRef.online = action.payload["online"];
+      }
     },
     addpersonPost: (state, action) => {
       const myPerson = state.knownPeople[action.payload["email"]];

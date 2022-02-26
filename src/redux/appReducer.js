@@ -49,6 +49,11 @@ export const appSlice = createSlice({
         }
       });
     },
+    pushAppArrayValue: (state, action) => {
+      Object.keys(action.payload).forEach((item) => {
+        state[item].push(action.payload[item]);
+      });
+    },
 
     addUserPost: (state, action) => {
       if (state.posts == null) {
@@ -121,16 +126,12 @@ export const appSlice = createSlice({
         return false;
       });
     },
-    setAnnouncementRead: (state, action) => {
-      state.announcementsRead.push(action.payload);
-    }
   },
 });
 
 export const {
-  setAppState,
+  setAppState, pushAppArrayValue,
   addUserPost, setUserLikedPost, setLikedPost, setUserLoadingPosts, editUserPost, deleteUserPost,
-  setAnnouncementRead
 } = appSlice.actions;
 
 // The function below is called a selector and allows us to select a value from
