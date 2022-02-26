@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 
 import './HomePeople.css';
@@ -63,8 +63,16 @@ class HomePeople extends React.Component {
     });
 
     let noPeopleElement = (
-      <div style={{display: "flex", width: "100%", height: "100%", alignItems: "center", justifyContent: "center"}}>
-        <h1 style={{margin: "0", color: "#fff5", fontSize: "16px"}}>No people</h1>
+      <div style={{position: "absolute", display: "flex", width: "100%", height: "calc(100% - 67px)", left: "0", top: "67px", alignItems: "center", justifyContent: "center"}}>
+        <h1 style={{margin: "20%", color: "#fff5", fontSize: "16px", textAlign: "center"}}>
+          No people
+          { Object.keys(this.props.threads).length <= 0 ? null :
+            <Fragment>
+              <br/>
+              <span style={{color: "#fff3", fontSize: "14px"}}>Type in the search bar to view all your known people.</span>
+            </Fragment>
+          }
+        </h1>
       </div>
     );
     if (this.state.searchInputVal != "") {
@@ -101,6 +109,7 @@ class HomePeople extends React.Component {
 const mapStateToProps = (state) => ({
   knownPeople: state.people.knownPeople,
   chats: state.dms.chats,
+  threads: state.groups.threads,
 });
 
 export default connect(mapStateToProps, null)(HomePeople);
