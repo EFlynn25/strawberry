@@ -19,6 +19,7 @@ import {
   addRequested, removeRequested
 } from './redux/groupsReducer.js'
 import {
+  pushPeopleArrayValue,
   addPerson, setpersonStatus, setpersonOnline,
   addpersonPost, setpersonLikedPost, editpersonPost, deletepersonPost, addLoadingPosts
 } from './redux/peopleReducer.js'
@@ -60,6 +61,8 @@ export function startSocket() {
         if (jsonData.response === true) {
           mainStore.dispatch(addPerson({"email": jsonData.email, "name": jsonData.name, "picture": jsonData.picture, "status": jsonData.status, "first_post": jsonData.first_post}));
           get_online(jsonData.email);
+        } else if (jsonData.response === "no_user") {
+          mainStore.dispatch(pushPeopleArrayValue({ notUsers: jsonData.email }));
         }
       } else if (com == "get_announcements") {
         if (jsonData.response === true || jsonData.response === "receive_new_announcement") {

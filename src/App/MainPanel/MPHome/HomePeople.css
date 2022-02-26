@@ -35,6 +35,51 @@
   }
 }
 
+.hpSearchButton {
+  width: fit-content;
+  max-height: 21px;
+  max-width: calc(100% - 100px);
+  padding: 10px;
+  margin: 40px;
+
+  border-radius: 10px;
+  background: #195de6;
+  transition: transform .1s, background .1s;
+}
+
+.hpSearchButton > h1 {
+  font-size: 18px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hpSearchButton:hover {
+  cursor: pointer;
+  background: #336fe8;
+  transform: scale(1.02);
+}
+
+.hpSearchButton:active {
+  background: #1754cf;
+  transform: scale(.98);
+}
+
+.hpSearchButtonDisabled {
+  background: #336fe8;
+}
+
+.hpSearchButtonDisabled:hover {
+  cursor: default;
+  transform: none;
+  background: #336fe8;
+}
+
+.hpSearchButtonDisabled:active {
+  transform: none;
+  background: #336fe8;
+}
+
 /* Person Classes */
 
 .hpPerson {

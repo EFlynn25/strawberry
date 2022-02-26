@@ -17,12 +17,23 @@ class HomePeople extends React.Component {
     };
 
     this.onSearchInputChange = this.onSearchInputChange.bind(this);
+    this.onSearchInputKeyPress = this.onSearchInputKeyPress.bind(this);
   }
 
-  onSearchInputChange(event) {
+  onSearchInputChange(e) {
     this.setState({
-      searchInputVal: event.target.value
+      searchInputVal: e.target.value
     });
+  }
+
+  onSearchInputKeyPress(e) {
+    let code = e.keyCode || e.which;
+    if (code === 13 && !e.shiftKey) {
+      if (/(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/
+        .test(this.state.searchInputVal)) {
+        this.props.opendialog("profile", this.state.searchInputVal);
+      }
+    }
   }
 
   render() {
@@ -51,18 +62,34 @@ class HomePeople extends React.Component {
       );
     });
 
+    let noPeopleElement = (
+      <div style={{display: "flex", width: "100%", height: "100%", alignItems: "center", justifyContent: "center"}}>
+        <h1 style={{margin: "0", color: "#fff5", fontSize: "16px"}}>No people</h1>
+      </div>
+    );
+    if (this.state.searchInputVal != "") {
+      const isEmail = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/
+        .test(this.state.searchInputVal);
+      const text = isEmail ? "Go to profile: " + this.state.searchInputVal : "Finish email to search: " + this.state.searchInputVal;
+      noPeopleElement = (
+        <div style={{display: "flex", justifyContent: "center", width: "100%"}}>
+          <div className={isEmail ? "hpSearchButton" : "hpSearchButton hpSearchButtonDisabled"} onClick={isEmail ? () => this.props.opendialog("profile", this.state.searchInputVal) : null}>
+            <h1>{ text }</h1>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className={this.props.classes}>
         <div className="hpSearch">
-          <input value={this.state.searchInputVal} onChange={this.onSearchInputChange} placeholder="Search people" />
+          <input value={this.state.searchInputVal} onChange={this.onSearchInputChange} onKeyPress={this.onSearchInputKeyPress} placeholder="Search people" />
           <Search />
         </div>
         {
           peopleElements.length == 0 ?
 
-          <div style={{display: "flex", width: "100%", height: "100%", alignItems: "center", justifyContent: "center"}}>
-            <h1 style={{margin: "0", color: "#fff5", fontSize: "16px"}}>No people</h1>
-          </div>
+          noPeopleElement
           :
           null
         }

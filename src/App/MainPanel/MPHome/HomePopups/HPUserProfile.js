@@ -72,6 +72,25 @@ class HPUserProfile extends React.Component {
   render() {
     const item = this.props.email;
     const myPerson = getUser(item);
+    if (!Object.keys(this.props.knownPeople).includes(item)) {
+      if (this.props.notUsers.includes(item)) {
+        return (
+          <div className="HPUserProfile">
+            <div style={{display: "table", width: "100%", height: "100%"}}>
+              <h1 style={{position: "relative", display: "table-cell", margin: "0", textAlign: "center", verticalAlign: "middle", color: "#fff5", fontSize: "16px"}}>This user does not exist...</h1>
+            </div>
+          </div>
+        );
+      }
+      return (
+        <div className="HPUserProfile">
+          <div style={{display: "table", width: "100%", height: "100%"}}>
+            <h1 style={{position: "relative", display: "table-cell", margin: "0", textAlign: "center", verticalAlign: "middle", color: "#fff5", fontSize: "16px"}}>Retrieving user...</h1>
+          </div>
+        </div>
+      );
+    }
+
     const name = myPerson.name;
     let picture = myPerson.picture;
     const status = myPerson.status;
@@ -123,7 +142,6 @@ class HPUserProfile extends React.Component {
     return ( // "pp" probably stands for "PersonProfile"... otherwise it would be "upLeft" for "UserProfile", which is confusing
       <div className="HPUserProfile">
         <div className="ppLeft">
-          {/*<img src={picture} className="pplPFP" alt={name} />*/}
           <ProfilePicture
             email={item}
             picture={picture}
@@ -177,12 +195,6 @@ class HPUserProfile extends React.Component {
                 <h1 style={{display: "table-cell", textAlign: "center", verticalAlign: "middle", color: "#fff5", fontSize: "16px", userSelect: "none"}}>{postStatus}</h1>
               </div>
             }
-
-            {/*
-              <div key="id_no_posts" style={{display: "table", width: "100%", height: "100%"}}>
-                <h1 style={{position: "relative", display: "table-cell", margin: "0", textAlign: "center", verticalAlign: "middle", color: "#fff5", fontSize: "16px"}}>No posts</h1>
-              </div>
-            */}
           </div>
         </div>
       </div>
@@ -192,6 +204,7 @@ class HPUserProfile extends React.Component {
 
 const mapStateToProps = (state) => ({
   knownPeople: state.people.knownPeople,
+  notUsers: state.people.notUsers,
   chats: state.dms.chats,
   dmsRequested: state.dms.requested,
   loadingPosts: state.people.loadingPosts,

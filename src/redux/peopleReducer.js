@@ -4,9 +4,16 @@ export const peopleSlice = createSlice({
   name: 'people',
   initialState: {
     knownPeople: {},
-    loadingPosts: []
+    loadingPosts: [],
+    notUsers: [],
   },
   reducers: {
+    pushPeopleArrayValue: (state, action) => {
+      Object.keys(action.payload).forEach((item) => {
+        state[item].push(action.payload[item]);
+      });
+    },
+
     addPerson: (state, action) => {
       console.log("add person ", action.payload)
       if (Object.keys(state.knownPeople).includes(action.payload["email"])) {
@@ -113,7 +120,9 @@ export const peopleSlice = createSlice({
   },
 });
 
-export const { addPerson, setpersonName, setpersonPicture, setpersonStatus, setpersonOnline,
+export const {
+  pushPeopleArrayValue,
+  addPerson, setpersonName, setpersonPicture, setpersonStatus, setpersonOnline,
   addpersonPost, setpersonLikedPost, addLoadingPosts, editpersonPost, deletepersonPost
 } = peopleSlice.actions;
 
