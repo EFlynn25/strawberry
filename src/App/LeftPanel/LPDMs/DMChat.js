@@ -64,7 +64,7 @@ class DMChat extends React.Component {
     const thisChat = this.props.thisChat;
     const myChatMessages = thisChat.messages;
 
-    if (this.props.chatEmail == this.props.openedDM && myChatMessages != null && myChatMessages.length > 0) {
+    if (this.props.chatEmail == this.props.openedDM && this.props.dmsOrGroups == "dms" && myChatMessages != null && myChatMessages.length > 0) {
       this.props.setChatLastRead({"who": "me", "chat": this.props.chatEmail, "lastRead": myChatMessages[myChatMessages.length - 1].id});
     }
   }
@@ -139,6 +139,7 @@ class DMChat extends React.Component {
 
 const mapStateToProps = (state) => ({
   openedDM: state.dms.openedDM,
+  dmsOrGroups: state.app.dmsOrGroups,
   knownPeople: state.people.knownPeople,
 });
 

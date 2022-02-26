@@ -30,7 +30,7 @@ class GroupsThread extends React.Component {
     const myThread =  this.props.threads[this.props.threadID];
     const myThreadMessages = myThread.messages;
 
-    if (this.props.threadID == this.props.openedThread && myThreadMessages != null && myThreadMessages.length > 0) {
+    if (this.props.threadID == this.props.openedThread && this.props.dmsOrGroups == "groups" && myThreadMessages != null && myThreadMessages.length > 0) {
       let myDict = {};
       myDict[this.props.email] = myThreadMessages[myThreadMessages.length - 1].id;
       this.props.setThreadLastRead({"thread_id": this.props.threadID, "last_read": myDict});
@@ -172,6 +172,7 @@ class GroupsThread extends React.Component {
 const mapStateToProps = (state) => ({
   email: state.app.email,
   openedThread: state.groups.openedThread,
+  dmsOrGroups: state.app.dmsOrGroups,
   threads: state.groups.threads,
   getknownPeople: state.people.knownPeople,
 });

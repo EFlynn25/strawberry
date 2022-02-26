@@ -201,16 +201,13 @@ export function startSocket() {
           mainStore.dispatch(addLoadedChatMessages({"chat": jsonData.chat, "messages": myMessages}));
 
         } else if (jsonData.response == "receive_message") {
-            let myFrom = "them";
+            // let myFrom = "them";
             const item = jsonData.message;
-            mainStore.dispatch(addChatMessage({chat: jsonData.chat, message: item.message, from: myFrom, id: item.id, timestamp: item.timestamp}));
+            mainStore.dispatch(addChatMessage({chat: jsonData.chat, message: item.message, from: "them", id: item.id, timestamp: item.timestamp}));
 
             const openedDM = mainStore.getState().dms.openedDM;
             const dmsOrGroups = mainStore.getState().app.dmsOrGroups;
-            console.log(openedDM);
-            console.log(dmsOrGroups);
             if (openedDM != jsonData.chat || dmsOrGroups != "dms" || !document.hasFocus()) {
-              console.log("NOTIFY NOW!!");
               textTone.play();
             }
         } else if (jsonData.response == "no_messages") {
