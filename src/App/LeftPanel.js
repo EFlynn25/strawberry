@@ -46,18 +46,40 @@ class LeftPanel extends React.Component {
   }
 
   handleKeyDown(e) { // This method sets up the Ctrl+UpArrow and Ctrl+DownArrow shortcuts
-    const dmsOrGroupsReady = this.props.dmsOrGroups == "dms" || this.props.dmsOrGroups == "groups";
-    if (e.repeat || !dmsOrGroupsReady) {
+    const dmsOrGroups = this.props.dmsOrGroups;
+    const dmsOrGroupsReady = dmsOrGroups == "dms" || dmsOrGroups == "groups";
+    if (!e.ctrlKey || e.repeat || !dmsOrGroupsReady) {
       return false;
     }
+    const which = e.which;
 
-    let myList = this[this.props.dmsOrGroups + "List"];
-    const openedExtension = this.props.dmsOrGroups == "dms" ? "DM" : "Thread";
-    let opened = this.props["opened" + openedExtension];
+    const leftOrRight = which === 37 || which === 39;
+    if (leftOrRight) {
+      e.preventDefault();
+      e.stopPropagation();
+      const newLink = dmsOrGroups === "dms" ? "groups" : "dms";
+      const nextOne = which === 37 ? "dms" : "groups";
+      if (newLink == nextOne) {
+        const openedExtension = newLink == "dms" ? "DM" : "Thread";
+        const opened = this.props["opened" + openedExtension];
+        if (this.props.history.location.pathname != "/home") {
+          if (opened != null && opened != "") {
+            this.props.history.push("/" + newLink + "/" + opened);
+          } else {
+            this.props.history.push("/" + newLink);
+          }
+        }
+        this.props.setAppState({ dmsOrGroups: newLink });
+      }
+    }
+
+    let myList = this[dmsOrGroups + "List"];
+    const openedExtension = dmsOrGroups == "dms" ? "DM" : "Thread";
+    const opened = this.props["opened" + openedExtension];
 
     let newConversation;
 
-    if (e.ctrlKey && e.which === 38) {
+    if (which === 38) {
       e.preventDefault();
       e.stopPropagation();
 
@@ -71,7 +93,7 @@ class LeftPanel extends React.Component {
         }
       }
 
-    } else if (e.ctrlKey && e.which === 40) {
+    } else if (which === 40) {
       e.preventDefault();
       e.stopPropagation();
 
@@ -79,10 +101,7 @@ class LeftPanel extends React.Component {
         newConversation = myList[0];
       } else {
         const myIndex = myList.indexOf(opened);
-        console.log(myIndex)
-
         if (myIndex != myList.length - 1) {
-          console.log(myList[myIndex])
           newConversation = myList[myIndex + 1];
         }
       }
@@ -91,10 +110,10 @@ class LeftPanel extends React.Component {
     if (newConversation == null) {
       return false;
     }
-    if (this.props.dmsOrGroups == "dms") {
+    if (dmsOrGroups == "dms") {
       this.props.setOpenedDM(newConversation);
       this.props.history.push("/dms/" + newConversation);
-    } else if (this.props.dmsOrGroups == "groups") {
+    } else if (dmsOrGroups == "groups") {
       this.props.setOpenedThread(newConversation);
       this.props.history.push("/groups/" + newConversation);
     }
