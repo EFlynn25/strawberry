@@ -6,11 +6,13 @@ import Loader from "react-loader-spinner";
 
 import './HPUserProfile.css';
 import { ReactComponent as AddPerson } from '../../../../assets/icons/add_person.svg';
+import { ReactComponent as Close } from '../../../../assets/icons/close.svg';
 import { ReactComponent as Join } from '../../../../assets/icons/join.svg';
 import { ReactComponent as ThumbUp } from '../../../../assets/icons/thumb_up.svg';
 import { ReactComponent as ThumbUpFilled } from '../../../../assets/icons/thumb_up_filled.svg';
-import { get_posts, like_post, dms_request_to_chat } from '../../../../socket.js';
+import { get_posts, like_post, dms_request_to_chat, dms_deny_request } from '../../../../socket.js';
 import { addLoadingPosts } from '../../../../redux/peopleReducer.js';
+import { addChatRequest } from '../../../../redux/dmsReducer.js';
 import { getUser } from '../../../../GlobalComponents/getUser.js';
 import { parseDate } from '../../../../GlobalComponents/parseDate.js';
 
@@ -24,11 +26,12 @@ class HPUserProfile extends React.Component {
       requesting: false
     };
 
-    this.postListRef = React.createRef()
+    this.postListRef = React.createRef();
 
     this.handleScroll = this.handleScroll.bind(this);
     this.loadMorePosts = this.loadMorePosts.bind(this);
     this.addToDMs = this.addToDMs.bind(this);
+    this.cancelRequest = this.cancelRequest.bind(this);
   }
 
   componentDidMount() {
@@ -61,11 +64,19 @@ class HPUserProfile extends React.Component {
   }
 
   addToDMs() {
-    this.setState({ requesting: true });
-
+    // this.setState({ requesting: true });
     const email = this.props.email;
+    this.props.addChatRequest({type: "requesting", email: email})
     if (!this.props.dmsRequested.includes(email) && !Object.keys(this.props.chats).includes(email)) {
       dms_request_to_chat(email);
+    }
+  }
+
+  cancelRequest() {
+    // this.setState({ requesting: false });
+    const email = this.props.email;
+    if (this.props.dmsRequested.includes(email)) {
+      dms_deny_request(email, "me");
     }
   }
 
@@ -120,14 +131,19 @@ class HPUserProfile extends React.Component {
           <h1>Go to DM</h1>
         </div>
       );
-    } else if (this.state.requesting || this.props.dmsRequested.includes(item)) {
+    // } else if (this.state.requesting && !this.props.dmsRequested.includes(item)) {
+    } else if (this.props.dmsRequesting.includes(item)) {
       let text = "Requesting...";
-      if (this.props.dmsRequested.includes(item)) {
-        text = "Pending request...";
-      }
       bottomAction = (
         <div className="pplBottomAction pplBottomActionStatus">
           <h1>{text}</h1>
+        </div>
+      );
+    } else if (this.props.dmsRequested.includes(item)) {
+      bottomAction = (
+        <div className="pplBottomAction pplBottomActionButton pplBottomActionButtonRed" onClick={this.cancelRequest}>
+        <Close />
+        <h1>Cancel request</h1>
         </div>
       );
     } else {
@@ -206,13 +222,15 @@ const mapStateToProps = (state) => ({
   knownPeople: state.people.knownPeople,
   notUsers: state.people.notUsers,
   chats: state.dms.chats,
+  dmsRequesting: state.dms.requesting,
   dmsRequested: state.dms.requested,
   loadingPosts: state.people.loadingPosts,
   likedPosts: state.app.likedPosts,
 });
 
 const mapDispatchToProps = {
-  addLoadingPosts
+  addLoadingPosts,
+  addChatRequest
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(HPUserProfile));

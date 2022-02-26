@@ -29,7 +29,7 @@
   width: 10px;
   height: 10px;
 
-  background: var(--darker-accent-color);
+  background: var(--darkest-accent-color);
   border-radius: 10px;
   z-index: 2;
 }
@@ -217,15 +217,18 @@
 
 .htSelected {
   border-bottom: 2px solid var(--accent-color) !important;
+  border-bottom: 2px solid var(--lighter-accent-color) !important;
 }
 
 .httSelected {
   filter: unset !important;
   color: var(--accent-color) !important;
+  color: var(--lighter-accent-color) !important;
 }
 
 .htiSelected {
   fill: var(--accent-color)  !important;
+  fill: var(--lighter-accent-color) !important;
 }
 
 

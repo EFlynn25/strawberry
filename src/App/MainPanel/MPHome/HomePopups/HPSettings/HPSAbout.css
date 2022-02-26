@@ -51,7 +51,7 @@
   bottom: 50px;
 
   color: transparent;
-  text-shadow: 0 0 0 var(--accent-color);
+  text-shadow: 0 0 0 var(--lighter-accent-color);
   font-size: 22px;
 
   user-select: none;

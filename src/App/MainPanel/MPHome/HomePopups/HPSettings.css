@@ -85,8 +85,8 @@
 }
 
 .hpsSectionSelected svg, .hpsSectionSelected h1 {
-  fill: var(--accent-color) !important;
-  color: var(--accent-color) !important;
+  fill: var(--lighter-accent-color) !important;
+  color: var(--lighter-accent-color) !important;
 }
 
 /* ...hover */

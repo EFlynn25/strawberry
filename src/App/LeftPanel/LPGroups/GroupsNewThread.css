@@ -6,7 +6,7 @@
   margin: 0 20px;
 
   border-radius: 20px;
-  background: var(--darker-accent-color);
+  background: var(--darkest-accent-color);
 
   transition: filter .1s, opacity .1s, transform .1s;
 }

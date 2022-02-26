@@ -256,10 +256,8 @@ export function startSocket() {
           }
         }
       } else if (com == "deny_request") {
-        if (jsonData.response == true) {
-          mainStore.dispatch(removeChatRequest({"type": "requests", "email": jsonData.requested}));
-        } else if (jsonData.response == "receive_denied_request") {
-          mainStore.dispatch(removeChatRequest({"type": "requested", "email": jsonData.requested}));
+        if (jsonData.response == true || jsonData.response == "receive_denied_request") {
+          mainStore.dispatch(removeChatRequest({"type": jsonData.whose_req == "me" ? "requested" : "requests", "email": jsonData.requested}));
         }
       } else if (com == "send_message") {
         const myMessage = jsonData.message;
@@ -639,8 +637,8 @@ export function dms_request_to_chat(email) {
   send_websocket_message(jsonObj);
 }
 
-export function dms_deny_request(email) {
-  let jsonObj = {"product": "dms", "command": "deny_request", "requested": email}
+export function dms_deny_request(email, whoseReq="them") {
+  let jsonObj = {"product": "dms", "command": "deny_request", "requested": email, "whose_req": whoseReq}
   send_websocket_message(jsonObj);
 }
 

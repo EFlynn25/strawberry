@@ -79,7 +79,7 @@
 }
 
 .pplBottomAction:active {
-  transform: scale(.95);
+  transform: scale(.98);
 }
 
 .pplBottomAction:hover svg, .pplBottomAction:hover h1 {
@@ -101,7 +101,10 @@
   background: #195de6;
 }
 
-.pplBottomActionButton svg, .pplBottomActionButton h1, .pplBottomActionButton:hover svg, .pplBottomActionButton:hover h1 {
+.pplBottomActionButton svg, .pplBottomActionButton h1,
+.pplBottomActionButton:hover svg, .pplBottomActionButton:hover h1,
+.pplBottomActionButton:active svg, .pplBottomActionButton:active h1,
+.pplBottomActionStatus h1 {
   color: white;
   fill: white;
 }
@@ -114,8 +117,16 @@
   background: #1754cf;
 }
 
-.pplBottomActionStatus h1 {
-  color: white;
+.pplBottomActionButtonRed {
+  background: var(--darker-accent-color) !important;
+}
+
+.pplBottomActionButtonRed:hover {
+  background: var(--accent-color) !important;
+}
+
+.pplBottomActionButtonRed:active {
+  background: var(--darkest-accent-color) !important;
 }
 
 .pplBottomActionStatus:hover {
