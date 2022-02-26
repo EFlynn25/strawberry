@@ -3,9 +3,7 @@ import { withRouter } from "react-router-dom";
 import { connect } from 'react-redux';
 
 import './LPDMs.css';
-import {
-  setNotificationCount
-} from '../../redux/appReducer';
+import { setAppState } from '../../redux/appReducer';
 import {
   setOpenedDM
 } from "../../redux/dmsReducer"
@@ -88,7 +86,7 @@ class LPDMs extends React.Component {
       children: newChildren
     });
 
-    this.props.setNotificationCount({type: "dms", count: unreadChats});
+    this.props.setAppState({ "notificationCount.dms": unreadChats });
   }
 
   render() {
@@ -110,8 +108,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
-  setNotificationCount,
-  setOpenedDM
+  setOpenedDM,
+  setAppState
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(LPDMs));

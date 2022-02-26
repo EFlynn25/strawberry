@@ -5,9 +5,9 @@
 
 import firebase from 'firebase/app';
 import {
-  setAppState,
+  setAppState, setAppDictKey,
   addUserPost, setUserLikedPost, setLikedPost, setUserLoadingPosts, editUserPost, deleteUserPost,
-  setAnnouncement, setAnnouncementRead
+  setAnnouncementRead
 } from './redux/appReducer.js'
 import {
   addChat, addChatMessage, editChatMessage, addLoadedChatMessages, removeSendingChatMessage, setChatCreated, setChatLastRead, setChatTyping, setInChat, setLoadingMessages, addChatRequest, removeChatRequest
@@ -58,17 +58,20 @@ export function startSocket() {
 
       /* Get functions */
       else if (com == "get_user_info") {
-        mainStore.dispatch(addPerson({"email": jsonData.email, "name": jsonData.name, "picture": jsonData.picture, "status": jsonData.status, "first_post": jsonData.first_post}));
-        get_online(jsonData.email);
+        if (jsonData.response === true) {
+          mainStore.dispatch(addPerson({"email": jsonData.email, "name": jsonData.name, "picture": jsonData.picture, "status": jsonData.status, "first_post": jsonData.first_post}));
+          get_online(jsonData.email);
+        }
       } else if (com == "get_announcements") {
-        if (jsonData.response == true || jsonData.response == "receive_new_announcement") {
+        if (jsonData.response === true || jsonData.response === "receive_new_announcement") {
           jsonData.announcements.forEach((announcement) => {
             if (!Object.keys(mainStore.getState().app.announcements).includes(announcement.id)) {
-              mainStore.dispatch(setAnnouncement({"id": announcement.id, "title": announcement.title, "content": announcement.content, "timestamp": announcement.timestamp}));
+              // mainStore.dispatch(setAnnouncement({"id": announcement.id, "title": announcement.title, "content": announcement.content, "timestamp": announcement.timestamp}));
+              mainStore.dispatch(setAppState({ ["announcements." + announcement.id]: {"title": announcement.title, "content": announcement.content, "timestamp": announcement.timestamp} }));
             }
           });
 
-          if (jsonData.response != "receive_new_announcement") {
+          if (jsonData.response !== "receive_new_announcement") {
             jsonData.announcements_read.forEach((id) => {
               if (!mainStore.getState().app.announcementsRead.includes(id)) {
                 mainStore.dispatch(setAnnouncementRead(id));

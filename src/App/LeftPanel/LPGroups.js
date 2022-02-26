@@ -3,9 +3,7 @@ import { withRouter } from "react-router-dom";
 import { connect } from 'react-redux';
 
 import './LPGroups.css';
-import {
-  setNotificationCount
-} from '../../redux/appReducer';
+import { setAppState } from '../../redux/appReducer';
 import {
   setOpenedThread
 } from "../../redux/groupsReducer"
@@ -88,7 +86,7 @@ class LPGroups extends React.Component {
       children: newChildren
     });
 
-    this.props.setNotificationCount({type: "groups", count: unreadThreads});
+    this.props.setAppState({ "notificationCount.groups": unreadThreads });
   }
 
   render() {
@@ -110,8 +108,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
-  setNotificationCount,
-  setOpenedThread
+  setOpenedThread,
+  setAppState
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(LPGroups));

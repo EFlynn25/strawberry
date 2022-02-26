@@ -34,7 +34,19 @@ export const appSlice = createSlice({
   reducers: {
     setAppState: (state, action) => {
       Object.keys(action.payload).forEach((item) => {
-        state[item] = action.payload[item];
+        if (item.includes(".")) {
+          let currentReference = state;
+          const dotSplit = item.split(".");
+          const dsLastIndex = dotSplit.length - 1;
+          dotSplit.forEach((item, i) => {
+            if (i < dsLastIndex) {
+              currentReference = currentReference[item];
+            }
+          });
+          currentReference[dotSplit[dsLastIndex]] = action.payload[item];
+        } else {
+          state[item] = action.payload[item];
+        }
       });
     },
 
@@ -109,12 +121,6 @@ export const appSlice = createSlice({
         return false;
       });
     },
-    setNotificationCount: (state, action) => {
-      state.notificationCount[action.payload.type] = action.payload.count;
-    },
-    setAnnouncement: (state, action) => {
-      state.announcements[action.payload.id] = {title: action.payload.title, content: action.payload.content, timestamp: action.payload.timestamp};
-    },
     setAnnouncementRead: (state, action) => {
       state.announcementsRead.push(action.payload);
     }
@@ -124,8 +130,7 @@ export const appSlice = createSlice({
 export const {
   setAppState,
   addUserPost, setUserLikedPost, setLikedPost, setUserLoadingPosts, editUserPost, deleteUserPost,
-  setNotificationCount,
-  setAnnouncement, setAnnouncementRead
+  setAnnouncementRead
 } = appSlice.actions;
 
 // The function below is called a selector and allows us to select a value from
