@@ -9,6 +9,7 @@
   background: var(--darkest-accent-color);
 
   transition: filter .1s, opacity .1s, transform .1s;
+  z-index: 2;
 }
 
 .GroupsNewThread:hover {

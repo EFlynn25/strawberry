@@ -8,7 +8,7 @@ export function getUser(user) {
   if (Object.keys(localKnownPeople).includes(user)) {
     return localKnownPeople[user];
   }
-  if (user != null && !fetchingUsers.includes(user) && user.includes("@")) {
+  if (user != null && !fetchingUsers.includes(user) && user.includes("@") && user != mainStore.getState().app.email) {
     get_user_info(user);
     fetchingUsers.push(user);
   }
