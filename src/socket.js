@@ -24,6 +24,7 @@ import {
   addpersonPost, setpersonLikedPost, editpersonPost, deletepersonPost, addLoadingPosts
 } from './redux/peopleReducer.js'
 import mainStore from './redux/mainStore.js';
+import { setupPushNotifications } from './setupMobileFunctions.js';
 
 import defaultTextTone from './assets/audio/text-tone/default.wav';
 
@@ -476,6 +477,7 @@ export function startSocket() {
       add_user(idToken);
       dms_add_user(idToken);
       groups_add_user(idToken);
+      setupPushNotifications();
     }).catch(function(error) {
       // Handle error
     });
@@ -517,7 +519,7 @@ function get_thread_info(thread_id) {
 }
 
 function send_websocket_message(jsonData) {
-  let jsonString = JSON.stringify(jsonData);
+  const jsonString = JSON.stringify(jsonData);
   console.log("WebSocket message sending: " + jsonString);
   socket.send(jsonString);
 }
@@ -556,6 +558,11 @@ export function get_posts(requested, amount, already_have) {
 
 export function add_user(idToken) {
   let jsonObj = {"product": "app", "command": "add_user", "idToken": idToken}
+  send_websocket_message(jsonObj);
+}
+
+export function add_device(fcm_token, timezone) {
+  let jsonObj = {"product": "app", "command": "add_device", "fcm_token": fcm_token, "timezone": timezone}
   send_websocket_message(jsonObj);
 }
 

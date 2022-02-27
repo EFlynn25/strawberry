@@ -2,5 +2,15 @@
   "appId": "com.neonblacknetwork.strawberry",
   "appName": "Strawberry",
   "webDir": "build",
-  "bundledWebRuntime": false
+  "bundledWebRuntime": false,
+  "plugins": {
+    "PushNotifications": {
+      "presentationOptions": ["badge", "sound", "alert"]
+    },
+    "LocalNotifications": {
+      "smallIcon": "ic_launcher",
+      "iconColor": "#D65C6A",
+      "sound": "notify.wav"
+    }
+  }
 }

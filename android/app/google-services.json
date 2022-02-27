@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "57430125686",
+    "firebase_url": "https://strawberry-5dd4a.firebaseio.com",
+    "project_id": "strawberry-5dd4a",
+    "storage_bucket": "strawberry-5dd4a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:57430125686:android:6d26905cfdc717f3cf0357",
+        "android_client_info": {
+          "package_name": "com.neonblacknetwork.strawberry"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "57430125686-955957rfgf82d73lmu4mgrrb6j8hlg7s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBCx1X4aopKWLWRW1RS8Kd6CsrWVpzivHc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "57430125686-955957rfgf82d73lmu4mgrrb6j8hlg7s.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "57430125686-hbt7bole2gkkk79lpcpq7vl7m7cud2gm.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.neonblacknetwork.strawberryMobile"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
