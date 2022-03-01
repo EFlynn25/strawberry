@@ -212,10 +212,6 @@ class GroupsBreckanMessage extends React.Component {
 
 
     let parentStyles = {};
-    // if (this.props.messages.length > 0 && this.props.messages[this.props.messages.length - 1].sending && this.props.messages[0].sending) {
-    //   parentStyles.marginTop = "40px";
-    // }
-
     let classExtension = "R";
     if (who == "me") {
       parentStyles.paddingBottom = "40px";
@@ -226,7 +222,6 @@ class GroupsBreckanMessage extends React.Component {
       <div className="DMsBreckanMessage" style={parentStyles}>
         { this.props.email == "system" ? null :
           <Fragment>
-            {/*<img src={this.props.picture} className={"breckanMessagePFP" + classExtension} alt={this.props.name} />*/}
             <ProfilePicture
               email={this.props.email}
               picture={this.props.picture}
@@ -237,56 +232,6 @@ class GroupsBreckanMessage extends React.Component {
           </Fragment>
         }
         <div className={this.props.email != "system" ? "breckanMessageGroup" + classExtension : "defaultSystemMessage"}>
-          {/* this.props.messages == null ? null :
-            this.props.messages.map(item => {
-              let lrClasses = "defaultLastRead defaultIndicatorHide"
-              if (item.lastRead) {
-                lrClasses = "defaultLastRead";
-              }
-              if (item.noTransition) {
-                lrClasses += " noTransition";
-              }
-
-              if (this.props.editing === item.id) {
-                this.editingID = item.id;
-                this.editingIDOriginal = item.message;
-                return (
-                  <div className={"breckanMessageTextWrap" + classExtension}>
-                    <TextareaAutosize
-                        key={"id" + item.id}
-                        value={this.state.editingInputVal}
-                        onChange={(event) => this.setState({ editingInputVal: event.target.value })}
-                        onKeyDown={this.inputEnterPressed}
-                        className="breckanMessageTextS defaultMessageEditInput"
-                        maxLength={1000}
-                        ref={this.inputRef}
-                        style={{width: "calc(100% - 14px)"}} />
-                  </div>
-                );
-              } else {
-                if (this.props.editing - this.props.messages[0].id < 0 || this.props.messages[this.props.messages.length - 1].id < this.props.editing) {
-                  this.editingID = null;
-                }
-
-                // const lastReadElement = <img src={thisUser.picture} className={lrClasses} alt={thisUser.name}  style={who == "me" ? {right: "unset", left: "-40px"} : null} />;
-                const editedElement = item.edited == false ? null : <span title={"Edited on " + parseDate(item.edited, "basic")} className="defaultMessageEditSpan">(edited)</span>;
-                let editIconElement = null;
-                if (this.props.email == this.props.myEmail) {
-                  editIconElement = <Edit className="breckanMessageEditIcon" onClick={() => this.props.setMessageEditing(item.id)} />;
-                }
-                return (
-                  <div className={"breckanMessageTextWrap" + classExtension}>
-                    <p key={"id" + item.id} title={item.basicTimestamp} className={"breckanMessageText" + classExtension}>
-                      {item.sending ? <h1 className={"defaultMessageSendingText breckanMessageSendingText" + classExtension}>Sending...</h1> : null}
-                      <p>{item.message}{editedElement}</p>
-                      {editIconElement}
-                    </p>
-                  </div>
-                );
-              }
-
-            })*/
-          }
           { this.props.messages == null ? null :
             this.props.messages.map(item => {
               let lrClasses = "defaultLastRead gDefaultLastRead defaultIndicatorHide"
@@ -296,11 +241,6 @@ class GroupsBreckanMessage extends React.Component {
               if (item.noTransition) {
                 lrClasses += " noTransition";
               }
-
-              // let messageClass = "defaultMessageText";
-              // if (item.sending) {
-              //   messageClass = "defaultMessageText defaultMessageSending";
-              // }
 
               let lastReadElementPictures = [];
               if (item.lastRead != null) {
@@ -317,10 +257,8 @@ class GroupsBreckanMessage extends React.Component {
 
                 for (let i = 0; i < peopleToShow; i++) {
                   if (item.lastRead[i] != null && item.lastRead[i] != this.props.myEmail) {
-                    // console.log("YAY, ", item.lastRead[i]);
                     const myPerson = getUser(item.lastRead[i]);
                     const negative = who == "me" ? "-" : "";
-                    // lastReadElementPictures.push(<img style={ i == 0 ? null : {transform: "translateX(" + negative + transformPX + "px)"}} src={myPerson.picture} className={lrClasses} alt={myPerson.name} title={myPerson.name + " (" + item.lastRead[i] + ")"} />);
                     lastReadElementPictures.push(<ProfilePicture
                                                   email={item.lastRead[i]}
                                                   className={lrClasses}
@@ -411,13 +349,6 @@ class GroupsBreckanMessage extends React.Component {
             {this.props.messages == null || this.props.messages.length == 0 ? "" : this.props.messages[this.props.messages.length - 1].timestamp}
           </h1>
         }
-        {/*
-        <img src={thisUser.picture} className={inThreadClasses} alt={thisUser.name} style={this.props.messages.length > 0 && this.props.messages[this.props.messages.length - 1].sending ? {bottom: "-15px"} : {bottom: "-35px"}} />
-        <div style={this.props.messages.length > 0 && this.props.messages[this.props.messages.length - 1].sending ? {bottom: "-15px"} : {bottom: "-35px"}} className={inThreadTypingClasses}>
-          <div className="defaultInChatTypingDot"></div>
-          <div className="defaultInChatTypingDot" style={{left: "15px", animationDelay: ".25s"}}></div>
-          <div className="defaultInChatTypingDot" style={{left: "24px", animationDelay: ".5s"}}></div>
-        </div>*/}
         { inThreadElements }
       </div>
     );
@@ -426,7 +357,6 @@ class GroupsBreckanMessage extends React.Component {
 
 const mapStateToProps = (state) => ({
   myEmail: state.app.email,
-  knownPeople: state.people.knownPeople
 });
 
 export default connect(mapStateToProps, null)(GroupsBreckanMessage);

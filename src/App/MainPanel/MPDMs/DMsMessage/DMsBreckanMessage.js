@@ -179,7 +179,6 @@ class DMsBreckanMessage extends React.Component {
 
 const mapStateToProps = (state) => ({
   myEmail: state.app.email,
-  knownPeople: state.people.knownPeople,
 });
 
 export default connect(mapStateToProps, null)(DMsBreckanMessage);

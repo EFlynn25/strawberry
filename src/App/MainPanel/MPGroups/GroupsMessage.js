@@ -38,14 +38,13 @@ class GroupsMessage extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const propsOpenedThread = this.props.openedThread;
-    const thisThread = this.props.threads[propsOpenedThread];
-    const prevCurrentThread = prevProps.threads[propsOpenedThread];
+    const thisThread = this.props.thisThread;
+    const prevCurrentThread = prevProps.thisThread;
 
     const messagesExist = thisThread.messages != null && thisThread.messages.length > 0;
     // const sentNewMessage = prevCurrentThread.messages != thisThread.messages && prevCurrentThread.messages[prevCurrentThread.messages.length - 1].id == this.state.myIDs[this.state.myIDs.length - 1];
     const chatChanged = !equal(prevCurrentThread.messages, thisThread.messages);
-    const openedThreadChanged = prevProps.openedThread != propsOpenedThread;
+    const openedThreadChanged = prevProps.openedThread != this.props.openedThread;
 
     const idsChanged = prevState.myIDs != this.state.myIDs;
     const themLastReadChanged = !equal(prevCurrentThread.lastRead, thisThread.lastRead);
@@ -68,7 +67,7 @@ class GroupsMessage extends React.Component {
     const propsOpenedThread = this.props.openedThread;
     const myID = this.props.id;
 
-    const thisThread = this.props.threads[propsOpenedThread];
+    const thisThread = this.props.thisThread;
     const thisThreadMessages = thisThread.messages;
     const firstMessageID = thisThreadMessages[0].id;
 
@@ -114,7 +113,7 @@ class GroupsMessage extends React.Component {
 
   reloadMessage(prevProps) {
     let newMessageObjects = [];
-    const thisThread = this.props.threads[this.props.openedThread];
+    const thisThread = this.props.thisThread;
 
     if (thisThread.lastRead != null) {
       this.myLastRead = {};
@@ -220,8 +219,6 @@ class GroupsMessage extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  // openedThread: state.groups.openedThread,
-  threads: state.groups.threads,
   myName: state.app.name,
   myEmail: state.app.email,
   myPicture: state.app.picture,

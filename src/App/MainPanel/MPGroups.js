@@ -71,7 +71,6 @@ class MPGroups extends React.Component {
   }
 
   handleScroll() {
-    let logtext = "scrolling!! " + this.scrollsToIgnore;
     if (this.scrollsToIgnore > 0) {
       this.scrollsToIgnore--;
     } else {
@@ -96,7 +95,7 @@ class MPGroups extends React.Component {
 
   loadMoreMessages() {
     const openedThread = this.props.openedThread;
-    const thisThread = this.props.threads[openedThread];
+    const thisThread = this.props.thisThread;
 
     if (thisThread != null) {
 
@@ -134,14 +133,14 @@ class MPGroups extends React.Component {
 
   handleWindowFocus() {
     console.log("window focused.");
-    if (this.props.openedThread in this.props.threads) {
+    if (this.props.thisThread) {
       groups_in_thread(this.props.openedThread, true);
     }
   }
 
   handleWindowBlur() {
     console.log("window blurred.");
-    if (this.props.openedThread in this.props.threads) {
+    if (this.props.thisThread) {
       groups_in_thread(this.props.openedThread, false);
     }
   }
@@ -156,8 +155,8 @@ class MPGroups extends React.Component {
     console.log("[MPGroups]: componentDidMount with thread ID " + this.props.openedThread);
 
     const propsOpenedThread = this.props.openedThread;
-    const thisThread = this.props.threads[propsOpenedThread];
-    if (propsOpenedThread in this.props.threads) {
+    const thisThread = this.props.thisThread;
+    if (this.props.thisThread) {
       this.reloadMessages(null);
       groups_in_thread(propsOpenedThread, true);
       groups_in_thread(propsOpenedThread, "get_in_thread");
@@ -183,8 +182,8 @@ class MPGroups extends React.Component {
 
     if (this.props.popout != true) {
       let title = "404";
-      if (this.props.openedThread in this.props.threads) {
-        title = this.props.threads[this.props.openedThread].name;
+      if (this.props.thisThread) {
+        title = this.props.thisThread.name;
       }
       this.props.setAppState({ currentPage: title });
     }
@@ -199,14 +198,14 @@ class MPGroups extends React.Component {
     const propsOpenedThread = this.props.openedThread;
 
     if (prevProps.openedThread == propsOpenedThread) {
-      if (!equal(prevProps.threads[propsOpenedThread], this.props.threads[propsOpenedThread]) || prevState.editing != this.state.editing) {
+      if (!equal(prevProps.thisThread, this.props.thisThread) || prevState.editing != this.state.editing) {
         this.reloadMessages(prevProps);
       }
     } else {
       this.setState({inputValue: '', loaded: false});
-      if (propsOpenedThread in this.props.threads) {
+      if (this.props.thisThread) {
         this.reloadMessages(prevProps);
-        if (prevProps.openedThread in this.props.threads) {
+        if (prevProps.thisThread) {
           groups_in_thread(prevProps.openedThread, false);
           groups_typing(this.props.openedThread, false);
         }
@@ -217,19 +216,19 @@ class MPGroups extends React.Component {
       }
     }
 
-    if (!(propsOpenedThread in prevProps.threads) && propsOpenedThread in this.props.threads) {
+    if (prevProps.thisThread && this.props.thisThread) {
       groups_in_thread(propsOpenedThread, true);
       groups_in_thread(propsOpenedThread, "get_in_thread");
       groups_typing(propsOpenedThread, "get_typing");
       groups_last_read(propsOpenedThread);
     }
 
-    const thisThread = this.props.threads[propsOpenedThread];
+    const thisThread = this.props.thisThread;
     if (thisThread != null) {
       const tmi = thisThread.tempMessageInput
       const iv = this.state.inputValue
       if (this.props.openedThread != "" && prevProps.openedThread != propsOpenedThread) {
-        if (prevProps.openedThread in this.props.threads) {
+        if (prevProps.thisThread) {
           this.props.setTempMessageInput({
             thread_id: prevProps.openedThread,
             input: iv
@@ -250,7 +249,7 @@ class MPGroups extends React.Component {
       }
     }
 
-    if (this.state.loaded && prevProps.currentPage != this.props.currentPage && propsOpenedThread in this.props.threads && window.innerWidth > 880) {
+    if (this.state.loaded && prevProps.currentPage != this.props.currentPage && this.props.thisThread && window.innerWidth > 880) {
       this.inputRef.current.focus();
     }
 
@@ -258,8 +257,8 @@ class MPGroups extends React.Component {
 
     if (this.props.popout != true) {
       let title = "404";
-      if (this.props.openedThread in this.props.threads) {
-        title = this.props.threads[this.props.openedThread].name;
+      if (this.props.thisThread) {
+        title = this.props.thisThread.name;
       }
       this.props.setAppState({ currentPage: title });
     }
@@ -267,7 +266,7 @@ class MPGroups extends React.Component {
 
   componentWillUnmount() {
     const iv = this.state.inputValue
-    if (this.props.openedThread in this.props.threads) {
+    if (this.props.thisThread) {
       this.props.setTempMessageInput({
         thread_id: this.props.openedThread,
         input: iv
@@ -280,14 +279,14 @@ class MPGroups extends React.Component {
   }
 
   reloadMessages(prevProps) {
-    if (!(this.props.openedThread in this.props.threads)) {
+    if (this.props.thisThread == null) {
       this.setState({
         messages: []
       });
       return false;
     }
 
-    let thisThread = clone(this.props.threads[this.props.openedThread]);
+    let thisThread = clone(this.props.thisThread);
 
     if (thisThread == null || thisThread["messages"] == null || thisThread["messages"].length <= 0) {
       if (thisThread["sendingMessages"] == null || thisThread["sendingMessages"].length <= 0) {
@@ -370,6 +369,7 @@ class MPGroups extends React.Component {
 
         const newMessage = (
           <GroupsMessage
+            thisThread={this.props.thisThread}
             inThread={/*inThread*/null}
             typing={/*thisThread.typing*/null}
             id={messageIDs}
@@ -468,7 +468,7 @@ class MPGroups extends React.Component {
   }
 
   render() {
-    if (this.props.threads[this.props.openedThread] == null) {
+    if (this.props.thisThread == null) {
       if (this.props.openedThread != null && !this.acceptedRequest) {
         console.log("reload no thread");
         this.acceptedRequest = true;
@@ -482,8 +482,8 @@ class MPGroups extends React.Component {
     }
 
     let amountOfPeopleText = "";
-    if (this.props.threads[this.props.openedThread].people != null) {
-      const amountOfPeople = this.props.threads[this.props.openedThread].people.length;
+    if (this.props.thisThread.people != null) {
+      const amountOfPeople = this.props.thisThread.people.length;
       if (amountOfPeople == 0) {
         amountOfPeopleText = "with nobody";
       } else if (amountOfPeople == 1) {
@@ -499,16 +499,16 @@ class MPGroups extends React.Component {
         <Fragment>
           { this.props.popout ? null :
             <div className="groupsHeader">
-              <h1 className="ghName">{this.props.threads[this.props.openedThread].name}</h1>
+              <h1 className="ghName">{this.props.thisThread.name}</h1>
               <Settings className="ghSettingsIcon" onClick={() => this.props.opendialog("groupSettings", this.props.openedThread, false)} />
             </div>
           }
 
           <div className="mpMessages" ref={this.messagesRef} onScroll={this.handleScroll}>
             {
-              (this.props.threads[this.props.openedThread].messages == null)
-              || (this.props.openedThread != "" && this.props.openedThread in this.props.threads && this.props.threads[this.props.openedThread].messages.length > 0 && this.props.threads[this.props.openedThread].messages[0].id == 0)
-              || (this.props.openedThread != "" && this.props.openedThread in this.props.threads && this.props.threads[this.props.openedThread].messages.length <= 0) ?
+              (this.props.thisThread.messages == null)
+              || (this.props.openedThread != "" && this.props.thisThread && this.props.thisThread.messages.length > 0 && this.props.thisThread.messages[0].id == 0)
+              || (this.props.openedThread != "" && this.props.thisThread && this.props.thisThread.messages.length <= 0) ?
 
               <div className="mpTopTextDiv">
                 <h1 className="mpStartConversationText">This is the start of your thread {amountOfPeopleText}</h1>
@@ -552,7 +552,7 @@ class MPGroups extends React.Component {
         { this.props.popout != true ? null :
           <div className="mpPopoutHandle">
             <Forum style={{fill: "#1D9545"}} />
-            <h1>{ this.props.threads[this.props.openedThread].name }</h1>
+            <h1>{ this.props.thisThread.name }</h1>
             <Settings
               className="ghSettingsIcon"
               style={/*{position: "absolute", right: "10px"}*/{paddingLeft: "5px"}}
@@ -570,8 +570,7 @@ class MPGroups extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  // openedThread: state.groups.openedThread,
-  threads: state.groups.threads,
+  // threads: state.groups.threads,
   myName: state.app.name,
   myEmail: state.app.email,
   myPicture: state.app.picture,

@@ -36,13 +36,12 @@ class DMsMessage extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const propsOpenedDM = this.props.openedDM;
-    const thisChat = this.props.chats[propsOpenedDM];
-    const prevCurrentChat = prevProps.chats[propsOpenedDM];
+    const thisChat = this.props.thisChat;
+    const prevCurrentChat = prevProps.thisChat;
 
     const messagesExist = thisChat.messages != null && thisChat.messages.length > 0;
     const chatChanged = !equal(prevCurrentChat.messages, thisChat.messages);
-    const openedDMChanged = prevProps.openedDM != propsOpenedDM;
+    const openedDMChanged = prevProps.openedDM != this.props.openedDM;
 
     const idsChanged = prevState.myIDs != this.state.myIDs;
     const themLastReadChanged = prevCurrentChat.lastRead.them != thisChat.lastRead.them;
@@ -62,7 +61,7 @@ class DMsMessage extends React.Component {
     const propsOpenedDM = this.props.openedDM;
     const myID = this.props.id;
 
-    const myChat = this.props.chats[propsOpenedDM];
+    const myChat = this.props.thisChat;
     const myChatMessages = myChat.messages;
     const firstMessageID = myChatMessages[0].id;
 
@@ -109,10 +108,10 @@ class DMsMessage extends React.Component {
   reloadMessage(prevProps) {
     let myOldMessages;
     if (prevProps != null) {
-      myOldMessages = prevProps.chats[this.props.openedDM].messages;
+      myOldMessages = prevProps.thisChat.messages;
     }
     let newMessageObjects = [];
-    const thisChat = this.props.chats[this.props.openedDM];
+    const thisChat = this.props.thisChat;
     const lastRead = thisChat.lastRead.them;
     this.state.myIDs.filter(item => {
       const message = thisChat.messages.find( ({ id }) => id === item );
@@ -229,8 +228,6 @@ class DMsMessage extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  // openedDM: state.dms.openedDM,
-  chats: state.dms.chats,
   myName: state.app.name,
   myEmail: state.app.email,
   myPicture: state.app.picture,

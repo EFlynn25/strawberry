@@ -69,8 +69,6 @@ class DMsDefaultMessage extends React.Component {
   }
 
   render() {
-    // const thisChat = this.props.chats[this.props.openedDM];
-
     let inChatClasses = "defaultInChat defaultIndicatorHide noTransition";
     let nt = true;
     if (this.props.inChat[0] == "here") {
@@ -177,7 +175,6 @@ class DMsDefaultMessage extends React.Component {
 
 const mapStateToProps = (state) => ({
   myEmail: state.app.email,
-  knownPeople: state.people.knownPeople
 });
 
 export default connect(mapStateToProps, null)(DMsDefaultMessage);

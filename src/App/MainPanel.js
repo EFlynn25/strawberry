@@ -137,7 +137,7 @@ class MainPanel extends React.Component {
     return (
       <div className={this.state.mpClass} style={this.state.specialEasing ? {transition: "opacity .3s cubic-bezier(0.65, 0, 0.35, 1), transform .3s cubic-bezier(0.65, 0, 0.35, 1)"} : null}>
         <Switch>
-          <Route path="/dms/:chatEmail" render={routeProps => (<MPDMs openedDM={this.props.openedDM} opendialog={this.openPanel} {...routeProps} />)} />
+          <Route path="/dms/:chatEmail" render={routeProps => (<MPDMs openedDM={this.props.openedDM} thisChat={this.props.chats[this.props.openedDM]} opendialog={this.openPanel} {...routeProps} />)} />
           <Route path="/dms">
             <div style={{position: "absolute", display: "table", width: "100%", height: "100%"}}>
               <h1 style={{position: "relative", display: "table-cell", margin: "0", textAlign: "center", verticalAlign: "middle", color: "#fff5", fontSize: "20px", userSelect: "none"}}>
@@ -145,7 +145,7 @@ class MainPanel extends React.Component {
               </h1>
             </div>
           </Route>
-          <Route path="/groups/:threadID" render={routeProps => (<MPGroups openedThread={this.props.openedThread} opendialog={this.openPanel} {...routeProps} />)} />
+          <Route path="/groups/:threadID" render={routeProps => (<MPGroups openedThread={this.props.openedThread} thisThread={this.props.threads[this.props.openedThread]} opendialog={this.openPanel} {...routeProps} />)} />
           <Route path="/groups">
             <div style={{position: "absolute", display: "table", width: "100%", height: "100%"}}>
               <h1 style={{position: "relative", display: "table-cell", margin: "0", textAlign: "center", verticalAlign: "middle", color: "#fff5", fontSize: "20px", userSelect: "none"}}>
@@ -171,8 +171,8 @@ class MainPanel extends React.Component {
               }
 
               const mpObject = item.includes("@") ?
-                <MPDMs openedDM={item} opendialog={this.openPanel} changePopout={this.props.changePopout} popout={true} />
-                : <MPGroups openedThread={item} opendialog={this.openPanel} changePopout={this.props.changePopout} popout={true} />;
+                <MPDMs openedDM={item} thisChat={this.props.chats[item]} opendialog={this.openPanel} changePopout={this.props.changePopout} popout={true} />
+                : <MPGroups openedThread={item} thisThread={this.props.threads[item]} opendialog={this.openPanel} changePopout={this.props.changePopout} popout={true} />;
               return (
                 <Resizable
                   className={item}
@@ -194,7 +194,7 @@ class MainPanel extends React.Component {
           }
         </div>
 
-        <MPPopup type={this.state.panelType} data={this.state.panelData} shrink={this.state.panelShrink/*this.props.history.location.pathname.startsWith("/groups") ? false : true*/} onclose={this.closePanel} opendialog={this.openPanel} />
+        <MPPopup type={this.state.panelType} data={this.state.panelData} shrink={this.state.panelShrink} onclose={this.closePanel} opendialog={this.openPanel} />
       </div>
     );
   }
@@ -204,6 +204,8 @@ const mapStateToProps = (state) => ({
   hideRightPanel: state.app.hideRightPanel,
   openedDM: state.dms.openedDM,
   openedThread: state.groups.openedThread,
+  chats: state.dms.chats,
+  threads: state.groups.threads,
 });
 
 export default connect(mapStateToProps, null)(withRouter(MainPanel));
