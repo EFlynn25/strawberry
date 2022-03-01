@@ -6,6 +6,7 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
+import equal from 'fast-deep-equal/react';
 
 import './DMsMessage.css';
 import { getUser } from '../../../GlobalComponents/getUser.js';
@@ -40,7 +41,7 @@ class DMsMessage extends React.Component {
     const prevCurrentChat = prevProps.chats[propsOpenedDM];
 
     const messagesExist = thisChat.messages != null && thisChat.messages.length > 0;
-    const chatChanged = JSON.stringify(prevCurrentChat.messages) != JSON.stringify(thisChat.messages);
+    const chatChanged = !equal(prevCurrentChat.messages, thisChat.messages);
     const openedDMChanged = prevProps.openedDM != propsOpenedDM;
 
     const idsChanged = prevState.myIDs != this.state.myIDs;

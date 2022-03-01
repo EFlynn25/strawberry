@@ -154,7 +154,6 @@ class GroupsNewThread extends React.Component {
 const mapStateToProps = (state) => ({
   threadsCreating: state.groups.threadsCreating,
   threadsCreated: state.groups.threadsCreated,
-  threads: state.groups.threads
 });
 
 const mapDispatchToProps = {

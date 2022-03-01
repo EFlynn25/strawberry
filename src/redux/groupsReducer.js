@@ -190,24 +190,16 @@ export const groupsSlice = createSlice({
       state.threads[action.payload.thread].created = action.payload.created;
     },
     setTempMessageInput: (state, action) => {
-      // console.log("state: ", JSON.stringify(state));
-      console.log("payload: ", action.payload);
       state.threads[action.payload["thread_id"]].tempMessageInput = action.payload["input"];
     },
     setThreadLastRead: (state, action) => {
-      // console.log("payload: ", action.payload);
       if (action.payload["last_read"] != null) {
         Object.keys(action.payload["last_read"]).forEach(item => {
-          // console.log(item);
           state.threads[action.payload["thread_id"]].lastRead[item] = action.payload["last_read"][item];
-          // state.threads[action.payload["thread_id"]].lastRead[item] = null;
         });
       }
-      // state.threads[action.payload["thread_id"]].lastRead[action.payload["who"]] = action.payload["lastRead"];
     },
     setThreadTyping: (state, action) => {
-      // state.threads[action.payload["thread_id"]].typing[action.payload["who"]] = action.payload["data"];
-
       let myTyping = state.threads[action.payload["thread_id"]].typing;
       if (Array.isArray(action.payload["people"])) {
         action.payload["people"].forEach(item => {

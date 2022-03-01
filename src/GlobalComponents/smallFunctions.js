@@ -1,8 +1,7 @@
 // This file just contains mini functions so I don't repeat myself.
 
 
-
-
+import mainStore from '../redux/mainStore.js';
 import { getUser } from './getUser.js'
 
 export function isEmail(testingString) {
@@ -14,7 +13,11 @@ export function parseEmailToName(messageString) {
   const spaceSplit = messageString.split(" ");
   spaceSplit.forEach((item, i) => {
     if (isEmail(item)) {
-      spaceSplit[i] = getUser(item).name;
+      if (item == mainStore.getState().app.email) {
+        spaceSplit[i] = "You";
+      } else {
+        spaceSplit[i] = getUser(item).name;
+      }
     }
   });
   return spaceSplit.join(" ");

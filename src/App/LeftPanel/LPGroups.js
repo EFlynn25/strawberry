@@ -1,6 +1,7 @@
 import React from 'react';
 import { withRouter } from "react-router-dom";
 import { connect } from 'react-redux';
+import equal from 'fast-deep-equal/react';
 
 import './LPGroups.css';
 import { setAppState } from '../../redux/appReducer';
@@ -21,15 +22,11 @@ class LPGroups extends React.Component {
   }
 
   componentDidMount() {
-    if (this.props.openedGroups != null) {
-      this.props.history.push("/groups/" + this.props.openedGroups);
-    }
-
     this.reloadThreads();
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.threads != prevProps.threads) {
+    if (!equal(this.props.threads, prevProps.threads) || this.props.openedThread != prevProps.openedThread) {
       this.reloadThreads();
     }
   }
@@ -38,7 +35,7 @@ class LPGroups extends React.Component {
     let unreadThreads = 0;
 
     const noMessageThreads = [];
-    const threads = JSON.parse(JSON.stringify(this.props.threads));
+    const threads = this.props.threads;
     const myEmail = this.props.email;
     let threadTimestampList = Object.keys(threads).filter(function(key) {
       const thisThread = threads[key];
@@ -72,7 +69,13 @@ class LPGroups extends React.Component {
       newChildren = [];
       this.props.setList("groups", threadKeys);
       threadKeys.forEach(item => {
-        const threadElement = <GroupsThread key={"id" + item} threadID={item} hideLeftPanel={this.props.hideLeftPanel} changePopout={this.props.changePopout} />;
+        const threadElement = <GroupsThread
+                                key={"id" + item}
+                                threadID={item}
+                                thisThread={this.props.threads[item]}
+                                hideLeftPanel={this.props.hideLeftPanel}
+                                changePopout={this.props.changePopout}
+                                opened={this.props.openedThread == item} />;
         newChildren.push(threadElement);
       });
     } else {
@@ -102,9 +105,10 @@ class LPGroups extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
+  openedThread: state.groups.openedThread,
+  threads: state.groups.threads,
   email: state.app.email,
-  openedGroups: state.groups.openedGroups,
-  threads: state.groups.threads
+  notificationCount: state.app.notificationCount,
 });
 
 const mapDispatchToProps = {

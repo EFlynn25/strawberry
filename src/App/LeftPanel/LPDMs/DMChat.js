@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from "react-router-dom";
+import equal from 'fast-deep-equal/react';
 
 import './DMChat.css';
 import { ReactComponent as Popout } from '../../../assets/icons/popout.svg';
@@ -22,39 +23,14 @@ class DMChat extends React.Component {
     this.updateData();
   }
 
-  /*
   shouldComponentUpdate(nextProps, nextState) {
-    const openedDMChanged = (this.props.chatEmail == nextProps.openedDM && this.props.chatEmail != this.props.openedDM) || (this.props.chatEmail != nextProps.openedDM && this.props.chatEmail == this.props.openedDM);
-
-    const thisChat = this.props.thisChat;
-    const nextChat = nextProps.thisChat;
-    let thisChatChanged = false;
-    if (thisChat.messages && nextChat.messages) {
-      // thisChatChanged = thisChat.messages[thisChat.messages.length - 1].id != nextChat.messages[nextChat.messages.length - 1].id;
-      if (this.props.chatEmail == "fireno656@yahoo.com") {
-        console.log(this.props);
-        console.log(nextProps);
-        console.log(thisChat);
-        console.log(nextChat);
-        console.log(thisChat.messages.length);
-        console.log(nextChat.messages.length);
-      }
-      thisChatChanged = thisChat.messages.length != nextChat.messages.length;
-    }
-    if (thisChat.lastRead.me != nextChat.lastRead.me) {
-      thisChatChanged = true;
-    }
-
-    const onlineChanged = this.props.chatEmail in this.props.knownPeople && nextProps.knownPeople[nextProps.chatEmail].online != this.props.knownPeople[this.props.chatEmail].online;
-
-    if (openedDMChanged || thisChatChanged || onlineChanged) {
-      return true;
-    }
-
-    return true;
-    return false;
+    // if (!equal(this.props, nextProps)) {
+    //   return true;
+    // }
+    //
+    // return false;
+    return !equal(this.props, nextProps);
   }
-  */
 
   componentDidUpdate() {
     this.updateData();
@@ -64,7 +40,7 @@ class DMChat extends React.Component {
     const thisChat = this.props.thisChat;
     const myChatMessages = thisChat.messages;
 
-    if (this.props.chatEmail == this.props.openedDM && this.props.dmsOrGroups == "dms" && myChatMessages != null && myChatMessages.length > 0) {
+    if (this.props.opened && this.props.dmsOrGroups == "dms" && myChatMessages != null && myChatMessages.length > 0) {
       this.props.setChatLastRead({"who": "me", "chat": this.props.chatEmail, "lastRead": myChatMessages[myChatMessages.length - 1].id});
     }
   }
@@ -85,11 +61,7 @@ class DMChat extends React.Component {
   render() {
     const thisChat = this.props.thisChat;
     const myChatMessages = thisChat.messages;
-
-    let opened = false;
-    if (this.props.chatEmail == this.props.openedDM) {
-      opened = true;
-    }
+    const opened = this.props.opened;
 
     const myPerson = getUser(this.props.chatEmail);
     const chatName = myPerson.name;
@@ -138,9 +110,7 @@ class DMChat extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  openedDM: state.dms.openedDM,
   dmsOrGroups: state.app.dmsOrGroups,
-  knownPeople: state.people.knownPeople,
 });
 
 const mapDispatchToProps = {

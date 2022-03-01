@@ -3,6 +3,7 @@ import { Switch, Route, withRouter } from "react-router-dom";
 import ReactMarkdown from 'react-markdown';
 import { connect } from 'react-redux';
 import Loader from "react-loader-spinner";
+import clone from 'just-clone';
 
 import './HPUserProfile.css';
 import { ReactComponent as AddPerson } from '../../../../assets/icons/add_person.svg';
@@ -106,7 +107,7 @@ class HPUserProfile extends React.Component {
     let picture = myPerson.picture;
     const status = myPerson.status;
     const online = myPerson.online;
-    const posts = JSON.parse(JSON.stringify(myPerson.posts));
+    let posts = clone(myPerson.posts);
     let postsExist = posts != null && posts.length > 0 ? true : false;
 
     const splitPic = picture.split("=")[0];

@@ -3,6 +3,7 @@ import TextareaAutosize from 'react-autosize-textarea';
 import ReactMarkdown from 'react-markdown';
 import { connect } from 'react-redux';
 import Loader from "react-loader-spinner";
+import clone from 'just-clone';
 
 import './HomeProfile.css';
 import { ReactComponent as Edit } from '../../../assets/icons/edit.svg';
@@ -123,7 +124,7 @@ class HomeProfile extends React.Component {
       picture = splitPic + "=s150";
     }
 
-    const posts = JSON.parse(JSON.stringify(this.props.posts));
+    let posts = clone(this.props.posts);
     let postsExist = posts != null && posts.length > 0 ? true : false;
     if (postsExist) {
       posts.sort((a, b) => b.timestamp - a.timestamp);

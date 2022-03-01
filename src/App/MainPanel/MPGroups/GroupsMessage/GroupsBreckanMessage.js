@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import TextareaAutosize from 'react-autosize-textarea';
+import equal from 'fast-deep-equal/react';
 
 // import './GroupsDefaultMessage.css';
 import './GroupsBreckanMessage.css';
@@ -114,8 +115,8 @@ class GroupsBreckanMessage extends React.Component {
       transformPX -= tpxIncrement;
     }
 
-    if (JSON.stringify(this.state.hereTransforms) !== JSON.stringify(myHere) ||
-        JSON.stringify(this.state.goneTransforms) !== JSON.stringify(myGone) ||
+    if (!equal(this.state.hereTransforms, myHere) ||
+        !equal(this.state.goneTransforms, myGone) ||
         this.state.extraHere !== myExtraHere ||
         this.state.extraGone !== myExtraGone) {
       this.setState({

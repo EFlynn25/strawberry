@@ -8,6 +8,8 @@ import { connect } from 'react-redux';
 import { Switch, Route } from "react-router-dom";
 import TextareaAutosize from 'react-autosize-textarea';
 import Loader from "react-loader-spinner";
+import clone from 'just-clone';
+import equal from 'fast-deep-equal/react';
 
 import './MPGroups.css';
 import { ReactComponent as Settings } from '../../assets/icons/settings.svg';
@@ -197,7 +199,7 @@ class MPGroups extends React.Component {
     const propsOpenedThread = this.props.openedThread;
 
     if (prevProps.openedThread == propsOpenedThread) {
-      if (JSON.stringify(prevProps.threads[propsOpenedThread]) != JSON.stringify(this.props.threads[propsOpenedThread]) || prevState.editing != this.state.editing) {
+      if (!equal(prevProps.threads[propsOpenedThread], this.props.threads[propsOpenedThread]) || prevState.editing != this.state.editing) {
         this.reloadMessages(prevProps);
       }
     } else {
@@ -285,8 +287,7 @@ class MPGroups extends React.Component {
       return false;
     }
 
-    const thisThreadReference = this.props.threads[this.props.openedThread];
-    const thisThread = JSON.parse(JSON.stringify(thisThreadReference));
+    let thisThread = clone(this.props.threads[this.props.openedThread]);
 
     if (thisThread == null || thisThread["messages"] == null || thisThread["messages"].length <= 0) {
       if (thisThread["sendingMessages"] == null || thisThread["sendingMessages"].length <= 0) {

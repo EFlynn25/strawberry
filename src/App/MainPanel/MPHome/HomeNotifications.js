@@ -11,6 +11,8 @@ import { ReactComponent as ChatOutline } from '../../../assets/icons/chat_bubble
 import { ReactComponent as ForumOutline } from '../../../assets/icons/forum_outline.svg';
 import { dms_request_to_chat, dms_deny_request, groups_join_thread, groups_deny_request, set_announcement_read } from '../../../socket.js';
 
+import ThreadImages from '../../../GlobalComponents/ThreadImages';
+
 class HomeNotifications extends React.Component {
   render() {
     const dmsRequestsExist = this.props.dms_requests.length > 0;
@@ -43,67 +45,13 @@ class HomeNotifications extends React.Component {
             }
             {
               Object.keys(this.props.groups_requests).map((item) => {
-                // const myUser = getUser(item);
                 const myThread = this.props.groups_requests[item];
-                let name = myThread.name;
-
-                let profilesDiv = null;
-                if (myThread.people != null && myThread.people.length > 0) { // I hate this if statement. ~50 lines just for Groups images.
-                  const person1 = getUser(myThread.people[0]);
-                  const person2 = getUser(myThread.people[1]);
-                  const person3 = getUser(myThread.people[2]);
-                  const person4 = getUser(myThread.people[3]);
-
-                  if (myThread.people.length == 1) {
-                    profilesDiv = (
-                      <div className="gtProfilesDiv">
-                        <img src={person1.picture} className="gtpdPFP" alt={person1.name} />
-                      </div>
-                    );
-                  } else if (myThread.people.length == 2) {
-                    profilesDiv = (
-                      <div className="gtProfilesDiv">
-                        <img src={person1.picture} className="gtpdPFP gtpd2people1" alt={person1.name} />
-                        <img src={person2.picture} className="gtpdPFP gtpd2people2" alt={person2.name} />
-                      </div>
-                    );
-                  } else if (myThread.people.length == 3) {
-                    profilesDiv = (
-                      <div className="gtProfilesDiv">
-                        <img src={person1.picture} className="gtpdPFP gtpd3people1" alt={person1.name} />
-                        <img src={person2.picture} className="gtpdPFP gtpd3people2" alt={person2.name} />
-                        <img src={person3.picture} className="gtpdPFP gtpd3people3" alt={person3.name} />
-                      </div>
-                    );
-                  } else if (myThread.people.length == 4) {
-                    profilesDiv = (
-                      <div className="gtProfilesDiv">
-                        <img src={person1.picture} className="gtpdPFP gtpd4people1" alt={person1.name} />
-                        <img src={person2.picture} className="gtpdPFP gtpd4people2" alt={person2.name} />
-                        <img src={person3.picture} className="gtpdPFP gtpd4people3" alt={person3.name} />
-                        <img src={person4.picture} className="gtpdPFP gtpd4people4" alt={person4.name} />
-                      </div>
-                    );
-                  } else if (myThread.people.length > 4) {
-                    let numberOfExtra = myThread.people.length - 3;
-                    profilesDiv = (
-                      <div className="gtProfilesDiv">
-                        <img src={person1.picture} className="gtpdPFP gtpd4people1" alt={person1.name} />
-                        <img src={person2.picture} className="gtpdPFP gtpd4people2" alt={person2.name} />
-                        <img src={person3.picture} className="gtpdPFP gtpd4people3" alt={person3.name} />
-                        <div className="gtpdPFP gtpd4people4 gtpdExtraDiv" style={{background: "#18191B"}}>
-                          <p className="gtpdExtraText" style={{position: "static", fontSize: "9px", color: "white"}}>+{numberOfExtra}</p>
-                        </div>
-                      </div>
-                    );
-                  }
-                }
 
                 return (
                   <div className="hnCategoryContentDiv hnRequestDiv" key={item}>
                     <ForumOutline className="hnRequestTypeIcon" style={{fill: "#1D9545"}} />
-                    { profilesDiv }
-                    <h1>{name}</h1>
+                    { myThread.people != null && myThread.people.length > 0 ? <ThreadImages people={myThread.people} /> : null }
+                    <h1>{ myThread.name }</h1>
                     <p>You have been requested to join this Thread.</p>
                     <Done className="hwTopRightIcon hnAcceptIcon" onClick={() => groups_join_thread(item)} />
                     <Close className="hwTopRightIcon hnDeclineIcon" onClick={() => groups_deny_request(item)} />

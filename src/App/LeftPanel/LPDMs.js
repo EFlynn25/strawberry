@@ -1,6 +1,7 @@
 import React from 'react';
 import { withRouter } from "react-router-dom";
 import { connect } from 'react-redux';
+import equal from 'fast-deep-equal/react';
 
 import './LPDMs.css';
 import { setAppState } from '../../redux/appReducer';
@@ -21,25 +22,20 @@ class LPDMs extends React.Component {
   }
 
   componentDidMount() {
-    if (this.props.openedDM != "") {
-      this.props.history.push("/dms/" + this.props.openedDM);
-    }
-
     this.reloadChats();
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.chats != prevProps.chats) {
+    if (!equal(this.props.chats, prevProps.chats) || this.props.openedDM != prevProps.openedDM || !equal(this.props.knownPeople, prevProps.knownPeople)) {
       this.reloadChats();
     }
   }
 
   reloadChats() {
-    // let children = [];
     let unreadChats = 0;
 
     const noMessageChats = [];
-    const chats = JSON.parse(JSON.stringify(this.props.chats));
+    const chats = this.props.chats;
     let chatTimestampList = Object.keys(chats).filter(function(key) {
       const thisChat = chats[key];
       const thisChatMessages = thisChat.messages;
@@ -72,7 +68,14 @@ class LPDMs extends React.Component {
       newChildren = [];
       this.props.setList("dms", chatKeys);
       chatKeys.forEach(item => {
-        const chatElement = <DMChat key={"id" + item} chatEmail={item} thisChat={this.props.chats[item]} hideLeftPanel={this.props.hideLeftPanel} changePopout={this.props.changePopout} />;
+        const chatElement = <DMChat
+                              key={"id" + item}
+                              chatEmail={item}
+                              thisChat={this.props.chats[item]}
+                              hideLeftPanel={this.props.hideLeftPanel}
+                              changePopout={this.props.changePopout}
+                              opened={this.props.openedDM == item}
+                              online={this.props.knownPeople[item].online} />;
         newChildren.push(chatElement);
       });
     } else {
@@ -97,7 +100,7 @@ class LPDMs extends React.Component {
         <div className="lpdmChats" style={this.state.children.key == "id_no_chats" ? {overflow: "hidden"} : null}>
           { this.state.children }
         </div>
-        <DMNewChat />
+        <DMNewChat chatList={Object.keys(this.props.chats)} />
       </div>
     );
   }
@@ -106,8 +109,8 @@ class LPDMs extends React.Component {
 const mapStateToProps = (state) => ({
   openedDM: state.dms.openedDM,
   chats: state.dms.chats,
-  dmsOrGroups: state.app.dmsOrGroups,
   notificationCount: state.app.notificationCount,
+  knownPeople: state.people.knownPeople
 });
 
 const mapDispatchToProps = {

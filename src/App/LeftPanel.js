@@ -128,7 +128,6 @@ class LeftPanel extends React.Component {
         <div className="LeftPanel" style={this.props.showLeftPanel ? {transform: "none"} : null}>
           <LPHome hideLeftPanel={this.props.hideLeftPanel} />
           <LPSeparator />
-          {/*this.props.dmsOrGroups == "dms" ? <LPDMs /> : <LPGroups />*/}
           <div className="lpConversations">
             <LPTabs />
             <LPDMs
@@ -150,9 +149,9 @@ class LeftPanel extends React.Component {
 
 const mapStateToProps = (state) => ({
   dmsOrGroups: state.app.dmsOrGroups,
-  mobile: state.app.mobile,
   openedDM: state.dms.openedDM,
   openedThread: state.groups.openedThread,
+  mobile: state.app.mobile,
 });
 
 const mapDispatchToProps = {

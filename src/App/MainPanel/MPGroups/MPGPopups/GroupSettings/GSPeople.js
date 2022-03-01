@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 
 import "./GSPeople.css"
@@ -144,7 +144,21 @@ class GSPeople extends React.Component {
           <PersonPicker callback={this.addPerson} noShow={newPeople.concat(newRequested)} />
         </div>
         <div className="gspPeopleList">
-          {peopleElements}
+          { peopleElements }
+          { peopleElements == null || peopleElements.length == 0 ?
+            <div style={{position: "absolute", display: "flex", width: "100%", height: "calc(100% - 67px)", left: "0", top: "67px", alignItems: "center", justifyContent: "center"}}>
+              <h1 style={{margin: "20%", color: "#fff5", fontSize: "16px", textAlign: "center"}}>
+                No people
+                { Object.keys(this.props.threads).length <= 0 ? null :
+                  <Fragment>
+                    <br/>
+                    <span style={{color: "#fff3", fontSize: "14px"}}>Use the Add Person button to add your friends!</span>
+                  </Fragment>
+                }
+              </h1>
+            </div>
+            : null
+          }
         </div>
       </div>
     )

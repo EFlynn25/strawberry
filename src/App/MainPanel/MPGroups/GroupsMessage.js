@@ -6,6 +6,7 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
+import equal from 'fast-deep-equal/react';
 
 import './GroupsMessage.css';
 import { getUser } from '../../../GlobalComponents/getUser.js';
@@ -43,16 +44,16 @@ class GroupsMessage extends React.Component {
 
     const messagesExist = thisThread.messages != null && thisThread.messages.length > 0;
     // const sentNewMessage = prevCurrentThread.messages != thisThread.messages && prevCurrentThread.messages[prevCurrentThread.messages.length - 1].id == this.state.myIDs[this.state.myIDs.length - 1];
-    const chatChanged = JSON.stringify(prevCurrentThread.messages) != JSON.stringify(thisThread.messages);
+    const chatChanged = !equal(prevCurrentThread.messages, thisThread.messages);
     const openedThreadChanged = prevProps.openedThread != propsOpenedThread;
 
     const idsChanged = prevState.myIDs != this.state.myIDs;
-    const themLastReadChanged = JSON.stringify(prevCurrentThread.lastRead) != JSON.stringify(thisThread.lastRead);
+    const themLastReadChanged = !equal(prevCurrentThread.lastRead, thisThread.lastRead);
 
     const otherUserStateChanged = prevCurrentThread.inThread != thisThread.inThread || prevCurrentThread.typing != thisThread.typing;
     const newSentMessage = prevCurrentThread.sendingMessages != thisThread.sendingMessages;
 
-    const newKnownPeople = JSON.stringify(prevProps.knownPeople) != JSON.stringify(this.props.knownPeople);
+    const newKnownPeople = !equal(prevProps.knownPeople, this.props.knownPeople);
     if (messagesExist && (/*sentNewMessage*/ chatChanged || openedThreadChanged || newKnownPeople)) {
       this.reloadData();
       this.reloadMessage(prevProps);

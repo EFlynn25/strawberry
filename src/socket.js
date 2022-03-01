@@ -170,8 +170,7 @@ export function startSocket() {
       /* Get Functions */
       if (com == "get_chats") {
         if (jsonData.response == true) {
-          const chatsList = jsonData.chats;
-          chatsList.forEach(item => {
+          jsonData.chats.forEach(item => {
             get_chat_info(item);
           });
         } else if (jsonData.response == "accepted_request") {

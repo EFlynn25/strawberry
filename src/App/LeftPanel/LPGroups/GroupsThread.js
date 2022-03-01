@@ -12,6 +12,8 @@ import { getUser } from '../../../GlobalComponents/getUser.js';
 import { parseDate } from '../../../GlobalComponents/parseDate.js';
 import { isEmail, parseEmailToName } from '../../../GlobalComponents/smallFunctions.js';
 
+import ThreadImages from '../../../GlobalComponents/ThreadImages';
+
 class GroupsThread extends React.Component {
   constructor(props) {
     super(props);
@@ -28,10 +30,10 @@ class GroupsThread extends React.Component {
   }
 
   updateData() {
-    const myThread =  this.props.threads[this.props.threadID];
+    const myThread = this.props.thisThread;
     const myThreadMessages = myThread.messages;
 
-    if (this.props.threadID == this.props.openedThread && this.props.dmsOrGroups == "groups" && myThreadMessages != null && myThreadMessages.length > 0) {
+    if (this.props.opened && this.props.dmsOrGroups == "groups" && myThreadMessages != null && myThreadMessages.length > 0) {
       let myDict = {};
       myDict[this.props.email] = myThreadMessages[myThreadMessages.length - 1].id;
       this.props.setThreadLastRead({"thread_id": this.props.threadID, "last_read": myDict});
@@ -52,13 +54,9 @@ class GroupsThread extends React.Component {
   }
 
   render() {
-    const myThread =  this.props.threads[this.props.threadID];
+    const myThread = this.props.thisThread;
     const myThreadMessages = myThread.messages;
-
-    let opened = false;
-    if (this.props.threadID == this.props.openedThread) {
-      opened = true;
-    }
+    const opened = this.props.opened;
 
     let threadName = "";
     if (myThread.name != null && myThread.name != "") {
@@ -71,57 +69,10 @@ class GroupsThread extends React.Component {
       }
     }
 
-    let profilesDiv = null;
-    if (myThread.people != null && myThread.people.length > 0) { // This if statement is also used in HomeNotifications...
-      const person1 = getUser(myThread.people[0]);
-      const person2 = getUser(myThread.people[1]);
-      const person3 = getUser(myThread.people[2]);
-      const person4 = getUser(myThread.people[3]);
-
-      if (myThread.people.length == 1) {
-        profilesDiv = (
-          <div className="gtProfilesDiv">
-            <img src={person1.picture} className="gtpdPFP" alt={person1.name} />
-          </div>
-        );
-      } else if (myThread.people.length == 2) {
-        profilesDiv = (
-          <div className="gtProfilesDiv">
-            <img src={person1.picture} className="gtpdPFP gtpd2people1" alt={person1.name} />
-            <img src={person2.picture} className="gtpdPFP gtpd2people2" alt={person2.name} />
-          </div>
-        );
-      } else if (myThread.people.length == 3) {
-        profilesDiv = (
-          <div className="gtProfilesDiv">
-            <img src={person1.picture} className="gtpdPFP gtpd3people1" alt={person1.name} />
-            <img src={person2.picture} className="gtpdPFP gtpd3people2" alt={person2.name} />
-            <img src={person3.picture} className="gtpdPFP gtpd3people3" alt={person3.name} />
-          </div>
-        );
-      } else if (myThread.people.length == 4) {
-        profilesDiv = (
-          <div className="gtProfilesDiv">
-            <img src={person1.picture} className="gtpdPFP gtpd4people1" alt={person1.name} />
-            <img src={person2.picture} className="gtpdPFP gtpd4people2" alt={person2.name} />
-            <img src={person3.picture} className="gtpdPFP gtpd4people3" alt={person3.name} />
-            <img src={person4.picture} className="gtpdPFP gtpd4people4" alt={person4.name} />
-          </div>
-        );
-      } else if (myThread.people.length > 4) {
-        let numberOfExtra = myThread.people.length - 3;
-        profilesDiv = (
-          <div className="gtProfilesDiv">
-            <img src={person1.picture} className="gtpdPFP gtpd4people1" alt={person1.name} />
-            <img src={person2.picture} className="gtpdPFP gtpd4people2" alt={person2.name} />
-            <img src={person3.picture} className="gtpdPFP gtpd4people3" alt={person3.name} />
-            <div className="gtpdPFP gtpd4people4 gtpdExtraDiv">
-              <p className="gtpdExtraText">+{numberOfExtra}</p>
-            </div>
-          </div>
-        );
-      }
-    }
+    // let profilesDiv = null;
+    // if (myThread.people != null && myThread.people.length > 0) {
+    //   <ThreadImages people={myThread.people} />
+    // }
 
     let threadMessage = "";
     let threadTime = "";
@@ -157,7 +108,7 @@ class GroupsThread extends React.Component {
 
     return (
       <div className="GroupsThread" onClick={this.handleClick} style={{backgroundPositionX: opened ? "0" : ""}}>
-        { profilesDiv }
+        { myThread.people != null && myThread.people.length > 0 ? <ThreadImages people={myThread.people} /> : null }
         <div className="gtTitleTimeFlexbox">
           <h1 className={read ? "gtTitle" : "gtTitle gtTitleUnread"}>{threadName}</h1>
           <h1 className={read ? "gtTime" : "gtTime gtUnread"}>{threadTime}</h1>
@@ -173,10 +124,7 @@ class GroupsThread extends React.Component {
 
 const mapStateToProps = (state) => ({
   email: state.app.email,
-  openedThread: state.groups.openedThread,
   dmsOrGroups: state.app.dmsOrGroups,
-  threads: state.groups.threads,
-  getknownPeople: state.people.knownPeople,
 });
 
 const mapDispatchToProps = {

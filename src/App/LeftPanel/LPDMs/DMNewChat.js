@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
+import equal from 'fast-deep-equal/react';
 
 import { ReactComponent as Add } from '../../../assets/icons/add.svg';
 import { ReactComponent as AddPerson } from '../../../assets/icons/add_person.svg';
@@ -66,6 +67,10 @@ class DMNewChat extends React.Component {
         });
       }
     }
+  }
+
+  shouldComponentUpdate(nextProps) {
+    return !equal(this.props, nextProps);
   }
 
   setWrapperRef(node) {
@@ -140,7 +145,7 @@ class DMNewChat extends React.Component {
           this.setState({
             status: "You already requested that person!"
           });
-        } else if (this.props.chat_exists.includes(this.state.inputValue) || Object.keys(this.props.chats).includes(this.state.inputValue)) {
+        } else if (this.props.chat_exists.includes(this.state.inputValue) || this.props.chatList.includes(this.state.inputValue)) {
           this.setState({
             status: "You already have a chat with that person!"
           });
@@ -187,7 +192,6 @@ const mapStateToProps = (state) => ({
   requested_me: state.dms.requested_me,
   already_requested: state.dms.already_requested,
   chat_exists: state.dms.chat_exists,
-  chats: state.dms.chats
 });
 
 const mapDispatchToProps = {

@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Switch, Route, withRouter } from "react-router-dom";
 import { Resizable } from "re-resizable";
+import equal from 'fast-deep-equal/react';
 
 import './MainPanel.css';
 import './MainPanel/MPConversation.css';
@@ -58,9 +59,9 @@ class MainPanel extends React.Component {
     };
 
     this.props.popouts.forEach(refCreator);
-    if (JSON.stringify(this.state.popoutWidths) != JSON.stringify(newWidths) ||
-        JSON.stringify(this.state.popoutHeights) != JSON.stringify(newHeights))
-    this.setState({ popoutWidths: newWidths, popoutHeights: newHeights });
+    if (!equal(this.state.popoutWidths, newWidths) || !equal(this.state.popoutHeights, newHeights)) {
+      this.setState({ popoutWidths: newWidths, popoutHeights: newHeights });
+    }
   }
 
   enableShrink() { // Enables shrinking MainPanel when opening the MainPanel popup (MPPopup)

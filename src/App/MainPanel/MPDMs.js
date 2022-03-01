@@ -7,6 +7,8 @@ import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import TextareaAutosize from 'react-autosize-textarea';
 import Loader from "react-loader-spinner";
+import clone from 'just-clone';
+import equal from 'fast-deep-equal/react';
 
 import './MPDMs.css';
 import { ReactComponent as Send } from '../../assets/icons/send.svg';
@@ -192,7 +194,7 @@ class MPDMs extends React.Component {
     const propsOpenedDM = this.props.openedDM;
 
     if (prevProps.openedDM == propsOpenedDM) {
-      if (JSON.stringify(prevProps.chats[propsOpenedDM]) != JSON.stringify(this.props.chats[propsOpenedDM]) || prevState.editing != this.state.editing) {
+      if (!equal(prevProps.chats[propsOpenedDM], this.props.chats[propsOpenedDM]) || prevState.editing != this.state.editing) {
         this.reloadMessages(prevProps);
       }
     } else {
@@ -280,8 +282,7 @@ class MPDMs extends React.Component {
       return false;
     }
 
-    const thisChatReference = this.props.chats[this.props.openedDM];
-    const thisChat = JSON.parse(JSON.stringify(thisChatReference));
+    let thisChat = clone(this.props.chats[this.props.openedDM]);
 
     if (thisChat == null || thisChat["messages"] == null || thisChat["messages"].length <= 0) {
       this.setState({
