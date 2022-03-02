@@ -231,34 +231,38 @@ export const groupsSlice = createSlice({
       }
     },
     setInThread: (state, action) => {
-      let myInThread = state.threads[action.payload["thread_id"]].inThread;
-      if (Array.isArray(action.payload["people"])) {
-        action.payload["people"].forEach(item => {
-          if (!myInThread.includes(item)) {
-            myInThread.push(item);
-          }
-        });
-        myInThread.forEach(item => {
-          if (!action.payload["people"].includes(item)) {
-            const index = myInThread.indexOf(item);
-            if (index > -1) {
-              myInThread.splice(index, 1);
+      if (Object.keys(state.threads).includes(action.payload["thread_id"])) {
+        
+        let myInThread = state.threads[action.payload["thread_id"]].inThread;
+        if (Array.isArray(action.payload["people"])) {
+          action.payload["people"].forEach(item => {
+            if (!myInThread.includes(item)) {
+              myInThread.push(item);
             }
-          }
-        });
-      } else {
-        if (action.payload["data"]) {
-          if (!myInThread.includes(action.payload["people"])) {
-            myInThread.push(action.payload["people"]);
-          }
+          });
+          myInThread.forEach(item => {
+            if (!action.payload["people"].includes(item)) {
+              const index = myInThread.indexOf(item);
+              if (index > -1) {
+                myInThread.splice(index, 1);
+              }
+            }
+          });
         } else {
-          if (myInThread.includes(action.payload["people"])) {
-            const index = myInThread.indexOf(action.payload["people"]);
-            if (index > -1) {
-              myInThread.splice(index, 1);
+          if (action.payload["data"]) {
+            if (!myInThread.includes(action.payload["people"])) {
+              myInThread.push(action.payload["people"]);
+            }
+          } else {
+            if (myInThread.includes(action.payload["people"])) {
+              const index = myInThread.indexOf(action.payload["people"]);
+              if (index > -1) {
+                myInThread.splice(index, 1);
+              }
             }
           }
         }
+
       }
     },
     setLoadingMessages: (state, action) => {

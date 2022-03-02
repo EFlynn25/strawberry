@@ -126,7 +126,9 @@ class DMsMessage extends React.Component {
       let lr = false;
       let nt = true;
       if (lastRead != null && item == lastRead) {
-        if (!this.props.inChat && lastRead != thisChat.messages[thisChat.messages.length - 1].id) {
+        const sendingMessagesExist = thisChat.sendingMessages && thisChat.sendingMessages.length > 0;
+        const simpleConditions = lastRead != thisChat.messages[thisChat.messages.length - 1].id || sendingMessagesExist;
+        if (!this.props.inChat && simpleConditions) {
           lr = true;
         }
       }

@@ -26,10 +26,6 @@ class DMsDefaultMessage extends React.Component {
     this.editingIDOriginal = "";
   }
 
-  componentDidMount() {
-
-  }
-
   componentDidUpdate(prevProps) {
     if (this.props.onUpdate != null) {
       this.props.onUpdate();
@@ -69,22 +65,6 @@ class DMsDefaultMessage extends React.Component {
   }
 
   render() {
-    let inChatClasses = "defaultInChat defaultIndicatorHide noTransition";
-    let nt = true;
-    if (this.props.inChat[0] == "here") {
-      inChatClasses = "defaultInChat";
-    } else if (this.props.inChat[0] == "gone") {
-      inChatClasses = "defaultInChat defaultInChatGone";
-    }
-    if (this.props.inChat[1]) {
-      inChatClasses += " noTransition";
-    }
-
-    let inChatTypingClasses = "defaultInChatTyping defaultInChatTypingHide";
-    if (this.props.inChatTyping) {
-      inChatTypingClasses = "defaultInChatTyping";
-    }
-
     let parentStyles = null;
     if (this.props.messages.length > 0 && this.props.messages[this.props.messages.length - 1].sending && this.props.messages[0].sending) {
       parentStyles = {marginTop: "40px"};
@@ -139,7 +119,6 @@ class DMsDefaultMessage extends React.Component {
                   this.editingID = null;
                 }
 
-                // const lastReadElement = <img src={thisUser.picture} className={lrClasses} alt={thisUser.name} />;
                 const lastReadElement = <ProfilePicture
                                           email={this.props.openedDM}
                                           className={lrClasses} />;
@@ -159,14 +138,7 @@ class DMsDefaultMessage extends React.Component {
             })
           }
         </div>
-        <h1 className="defaultMessageTimestamp">{this.props.messages == null || this.props.messages.length == 0 ? "" : this.props.messages[this.props.messages.length - 1].timestamp/*"time lol"*/}</h1>
-        <img src={thisUser.picture} className={inChatClasses} alt={thisUser.name} style={this.props.messages.length > 0 && this.props.messages[this.props.messages.length - 1].sending ? {bottom: "-15px"} : null} />
-        <div style={this.props.messages.length > 0 && this.props.messages[this.props.messages.length - 1].sending ? {bottom: "-15px"} : null} className={inChatTypingClasses}>
-          <div className="defaultInChatTypingDot"></div>
-          <div className="defaultInChatTypingDot" style={{left: "15px", animationDelay: ".25s"}}></div>
-          <div className="defaultInChatTypingDot" style={{left: "24px", animationDelay: ".5s"}}></div>
-        </div>
-
+        <h1 className="defaultMessageTimestamp">{this.props.messages == null || this.props.messages.length == 0 ? "" : this.props.messages[this.props.messages.length - 1].timestamp}</h1>
 
       </div>
     );

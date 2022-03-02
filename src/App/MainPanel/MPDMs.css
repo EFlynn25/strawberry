@@ -7,6 +7,94 @@
 
 
 
+/* in_chat */
+
+.mpInChat {
+  filter: brightness(100%);
+  position: absolute;
+  top: -15px;
+  left: 50px;
+  /* left: 5%;
+  bottom: 90px; */
+  width: 30px;
+  height: 30px;
+  border-radius: 15px;
+
+  transition: filter .3s, opacity .1s, transform .1s;
+  opacity: 1;
+
+  user-select: none;
+}
+
+.mpInChatGone {
+  filter: brightness(50%);
+}
+
+.mpInChatHide {
+  transition: opacity .1s, transform .1s, visibility 0s .1s;
+  visibility: hidden;
+  transform: translateX(-10px);
+  opacity: 0 !important;
+}
+
+
+
+/* typing */
+
+.mpTyping {
+  position: absolute;
+  margin: 4px;
+  top: -15px;
+  left: 82px;
+  width: 35px;
+  height: 20px;
+  border-radius: 20px;
+  border: 1px solid;
+  border-color: #37383A;
+
+  transition: filter .5s, opacity .1s, transform .1s;
+  opacity: 1;
+
+  background: #2A2B2DBB;
+}
+
+.mpTypingDot {
+  position: absolute;
+  left: 6px;
+  top: 7px;
+  width: 5px;
+  height: 5px;
+  border-radius: 10px;
+
+  background: #FFF8;
+
+  animation: typingDotSequential 2s linear infinite;
+}
+
+@keyframes typingDotSequential {
+  0% {
+    background: #FFF8;
+  }
+  20% {
+    background: #FFF4;
+  }
+  30% {
+    background: #FFFF;
+  }
+  40% {
+    background: #FFF8;
+  }
+}
+
+.mpTypingHide {
+  transition: opacity .1s, transform .1s, visibility 0s .1s !important;
+  visibility: hidden;
+  transform: translateX(-5px);
+  opacity: 0 !important;
+}
+
+
+
 /* Send button */
 
 .dmsSendMessage {

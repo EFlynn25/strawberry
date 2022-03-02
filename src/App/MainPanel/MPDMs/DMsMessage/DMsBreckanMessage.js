@@ -166,12 +166,6 @@ class DMsBreckanMessage extends React.Component {
         <h1 className="defaultMessageTimestamp" style={who == "me" ? {left: "unset", right: "50px"} : null}>
           {this.props.messages == null || this.props.messages.length == 0 ? "" : this.props.messages[this.props.messages.length - 1].timestamp}
         </h1>
-        <img src={thisUser.picture} className={inChatClasses} alt={thisUser.name} style={this.props.messages.length > 0 && this.props.messages[this.props.messages.length - 1].sending ? {bottom: "-15px"} : {bottom: "-35px"}} />
-        <div style={this.props.messages.length > 0 && this.props.messages[this.props.messages.length - 1].sending ? {bottom: "-15px"} : {bottom: "-35px"}} className={inChatTypingClasses}>
-          <div className="defaultInChatTypingDot"></div>
-          <div className="defaultInChatTypingDot" style={{left: "15px", animationDelay: ".25s"}}></div>
-          <div className="defaultInChatTypingDot" style={{left: "24px", animationDelay: ".5s"}}></div>
-        </div>
       </div>
     );
   }

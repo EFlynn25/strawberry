@@ -64,6 +64,8 @@ class MPDMs extends React.Component {
     this.scrollsToIgnore = 0;
     this.isLoadingMessages = {};
     this.heightBeforeLoading = {};
+    this.inChatOpenedDM = props.openedDM;
+    this.inChatNoTransition = true;
   }
 
   handleScroll() {
@@ -326,7 +328,6 @@ class MPDMs extends React.Component {
         const messageFrom = message["from"];
         while (true) {
           const localNextID = messageIDs[messageIDs.length - 1] + 1;
-          // const findNextID = thisChat["messages"].find( ({ id }) => id === localNextID );
           const findNextID = thisChat.messages[localNextID - thisChat.messages[0].id];
 
           if (findNextID == null) {
@@ -364,7 +365,7 @@ class MPDMs extends React.Component {
             setMessageEditing={this.setMessageEditing}
             openedDM={this.props.openedDM}
             opendialog={this.props.opendialog} />
-          );
+        );
         tempMessages.push(newMessage);
       }
     });
@@ -429,6 +430,7 @@ class MPDMs extends React.Component {
   }
 
   sendMessage() {
+    this.inputRef.current.focus();
     const iv = this.state.inputValue;
     if (iv != null && iv != "") {
       const oc = this.props.openedDM;
@@ -448,7 +450,27 @@ class MPDMs extends React.Component {
   }
 
   render() {
-    const otherName = getUser(this.props.openedDM).name;
+    const thisChat = this.props.thisChat;
+    const thisUser = getUser(this.props.openedDM);
+
+    // in_chat class calculations
+    let inChatClasses = "mpInChat";
+    if (thisChat) {
+      if (!thisChat.inChat) {
+        if (thisChat.messages == null || thisChat.lastRead.them < thisChat.messages[thisChat.messages.length - 1].id) {
+          inChatClasses += " mpInChatHide";
+        } else {
+          if (thisChat.sendingMessages && thisChat.sendingMessages.length > 0) {
+            inChatClasses += " mpInChatHide noTransition";
+          }
+          inChatClasses += " mpInChatGone";
+        }
+      }
+      if (this.inChatOpenedDM != this.props.openedDM) {
+        this.inChatOpenedDM = this.props.openedDM;
+        inChatClasses += " noTransition";
+      }
+    }
 
     let children = (<h1 className="mpCenterText">Loading...</h1>);
     if (this.state.loaded) {
@@ -461,7 +483,7 @@ class MPDMs extends React.Component {
               || (this.props.openedDM != "" && this.props.thisChat && this.props.thisChat.messages.length <= 0) ?
 
               <div className="mpTopTextDiv">
-                <h1 className="mpStartConversationText">This is the start of your conversation with {otherName}</h1>
+                <h1 className="mpStartConversationText">This is the start of your conversation with {thisUser.name}</h1>
               </div>
 
               :
@@ -481,6 +503,14 @@ class MPDMs extends React.Component {
               null
             }
             {this.state.messages}
+            <div style={{position: "relative"}}>
+              <img src={thisUser.picture} className={inChatClasses} alt={thisUser.name} style={/*this.props.messages.length > 0 && this.props.messages[this.props.messages.length - 1].sending ? {bottom: "-15px"} : */null} />
+              <div className={this.props.thisChat.typing ? "mpTyping" : "mpTyping mpTypingHide"} style={/*this.props.messages.length > 0 && this.props.messages[this.props.messages.length - 1].sending ? {bottom: "-15px"} : */null}>
+                <div className="mpTypingDot"></div>
+                <div className="mpTypingDot" style={{left: "15px", animationDelay: ".25s"}}></div>
+                <div className="mpTypingDot" style={{left: "24px", animationDelay: ".5s"}}></div>
+              </div>
+            </div>
           </div>
           {this.state.messages.length > 0 ? null : <h1 className="mpNoMessageText">No messages.<br/>Try sending one!</h1>}
           <TextareaAutosize value={this.state.inputValue} onChange={this.handleInputChange} onKeyPress={this.inputEnterPressed} placeholder="Type message here" className="mpMessagesInput" maxLength={1000} ref={this.inputRef} />

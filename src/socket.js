@@ -437,20 +437,25 @@ export function startSocket() {
         if (jsonData.response == true) {
           // do nothing (Then why is it here??)
         } else if (jsonData.response == "receive_in_thread") {
-          mainStore.dispatch(setInThread({"thread_id": jsonData.thread_id, "people": jsonData.in_thread, "data": jsonData.data}));
-          if (jsonData.data === false && jsonData.lastRead != null) {
-            let myLastReadDict = {};
-            myLastReadDict[jsonData.in_thread] = jsonData.lastRead;
-            mainStore.dispatch(setThreadLastRead({"thread_id": jsonData.thread_id, "last_read": myLastReadDict}));
-          }
-          if (jsonData.lastRead == null) {
-            const myMessages = mainStore.getState().groups.threads[jsonData.thread_id].messages;
-            if (myMessages != null && myMessages.length > 0) {
+          const threads = mainStore.getState().groups.threads;
+
+          if (Object.keys(threads).includes(jsonData.thread_id)) {
+            mainStore.dispatch(setInThread({"thread_id": jsonData.thread_id, "people": jsonData.in_thread, "data": jsonData.data}));
+            if (jsonData.data === false && jsonData.lastRead != null) {
               let myLastReadDict = {};
-              myLastReadDict[jsonData.in_thread] = myMessages[myMessages.length - 1].id;
+              myLastReadDict[jsonData.in_thread] = jsonData.lastRead;
               mainStore.dispatch(setThreadLastRead({"thread_id": jsonData.thread_id, "last_read": myLastReadDict}));
             }
+            if (jsonData.lastRead == null) {
+              const myMessages = threads[jsonData.thread_id].messages;
+              if (myMessages != null && myMessages.length > 0) {
+                let myLastReadDict = {};
+                myLastReadDict[jsonData.in_thread] = myMessages[myMessages.length - 1].id;
+                mainStore.dispatch(setThreadLastRead({"thread_id": jsonData.thread_id, "last_read": myLastReadDict}));
+              }
+            }
           }
+
         } else if (jsonData.response == "get_in_thread") {
           if (jsonData.in_thread != null) {
             mainStore.dispatch(setInThread({"thread_id": jsonData.thread_id, "people": jsonData.in_thread, "data": jsonData.data}));

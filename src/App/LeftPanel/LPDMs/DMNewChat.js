@@ -69,8 +69,8 @@ class DMNewChat extends React.Component {
     }
   }
 
-  shouldComponentUpdate(nextProps) {
-    return !equal(this.props, nextProps);
+  shouldComponentUpdate(nextProps, nextState) {
+    return !equal(this.props, nextProps) || !equal(this.state, nextState);
   }
 
   setWrapperRef(node) {
@@ -139,7 +139,6 @@ class DMNewChat extends React.Component {
       event.preventDefault();
       event.stopPropagation();
 
-      // Why is this regex so long... I just wanted to be as precise as possible...
       if (isEmail(this.state.inputValue)) {
         if (this.props.requested.includes(this.state.inputValue) || this.props.already_requested.includes(this.state.inputValue)) {
           this.setState({
@@ -178,7 +177,15 @@ class DMNewChat extends React.Component {
           <AddPerson className="ntdIcon" />
           <h1 className="ncdTitle">Create Chat</h1>
           <h1 className="ncdText">Email:</h1>
-          <input value={this.state.inputValue} onChange={this.handleInputChange} onKeyPress={this.inputEnterPressed} className="ncdInput" placeholder="Type email here" ref={this.inputRef} disabled={this.state.emailRequested == "" ? "" : "disabled"} />
+          <input
+            value={this.state.inputValue}
+            onChange={this.handleInputChange}
+            onKeyPress={this.inputEnterPressed}
+            className="ncdInput"
+            placeholder="Type email here"
+            ref={this.inputRef}
+            disabled={this.state.emailRequested == "" ? "" : "disabled"}
+            inputmode="email" />
           <h1 className="ncdStatus">{this.state.status}</h1>
         </div>
       </Fragment>
