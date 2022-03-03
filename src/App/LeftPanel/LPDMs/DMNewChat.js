@@ -185,7 +185,7 @@ class DMNewChat extends React.Component {
             placeholder="Type email here"
             ref={this.inputRef}
             disabled={this.state.emailRequested == "" ? "" : "disabled"}
-            inputmode="email" />
+            inputMode="email" />
           <h1 className="ncdStatus">{this.state.status}</h1>
         </div>
       </Fragment>

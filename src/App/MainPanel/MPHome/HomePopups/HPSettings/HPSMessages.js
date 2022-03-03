@@ -36,8 +36,7 @@ class HPSMessages extends React.Component {
   }
 
   setStyle(style) {
-    set_setting("message_style", style)
-    // this.props.setMessageStyle(style)
+    set_setting("message_style", style);
     this.props.setAppState({ messageStyle: style });
   }
 

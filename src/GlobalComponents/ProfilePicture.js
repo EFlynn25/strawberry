@@ -28,6 +28,7 @@ function ProfilePicture(props) {
     <img
       src={picture}
       alt={name}
+      key={"key" in Object.keys(props) ? props.key : null}
       title={title}
       className={className}
       onClick={onClick}

@@ -434,12 +434,10 @@ export function startSocket() {
       /* Hybrid functions */
 
       else if (com == "in_thread") {
-        if (jsonData.response == true) {
-          // do nothing (Then why is it here??)
-        } else if (jsonData.response == "receive_in_thread") {
+        if (jsonData.response == "receive_in_thread") {
           const threads = mainStore.getState().groups.threads;
 
-          if (Object.keys(threads).includes(jsonData.thread_id)) {
+          if (Object.keys(threads).includes(jsonData.thread_id.toString())) {
             mainStore.dispatch(setInThread({"thread_id": jsonData.thread_id, "people": jsonData.in_thread, "data": jsonData.data}));
             if (jsonData.data === false && jsonData.lastRead != null) {
               let myLastReadDict = {};

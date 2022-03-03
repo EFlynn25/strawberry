@@ -94,9 +94,6 @@ class DMsDefaultMessage extends React.Component {
               if (item.lastRead) {
                 lrClasses = "defaultLastRead";
               }
-              if (item.noTransition) {
-                lrClasses += " noTransition";
-              }
 
               let messageClass = "defaultMessageText";
               if (item.sending) {

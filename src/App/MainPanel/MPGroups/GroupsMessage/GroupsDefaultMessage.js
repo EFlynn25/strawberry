@@ -167,6 +167,7 @@ class GroupsDefaultMessage extends React.Component {
           // const myElement = <img src={thisUser.picture} className={"defaultInChat"} alt={thisUser.name} style={this.props.messages.length > 0 && this.props.messages[this.props.messages.length - 1].sending ? {bottom: "-15px"} : {"transform": `translateX(${this.state.hereTransforms[item]}px)`}} />;
           const myElement = <ProfilePicture
                                     email={item}
+                                    key={item}
                                     className={"defaultInChat"}
                                     style={this.props.messages.length > 0 && this.props.messages[this.props.messages.length - 1].sending ? {bottom: "-15px"} : {"transform": `translateX(${this.state.hereTransforms[item]}px)`}} />;
           inThreadElements.push(myElement);
@@ -196,6 +197,7 @@ class GroupsDefaultMessage extends React.Component {
           // const myElement = <img src={thisUser.picture} className={"defaultInChat defaultInChatGone"} alt={thisUser.name} style={this.props.messages.length > 0 && this.props.messages[this.props.messages.length - 1].sending ? {bottom: "-15px"} : {"transform": `translateX(${this.state.goneTransforms[item] + hereIndicatorCompensate}px)`}} />;
           const myElement = <ProfilePicture
                                     email={item}
+                                    key={item}
                                     className={"defaultInChat defaultInChatGone"}
                                     style={this.props.messages.length > 0 && this.props.messages[this.props.messages.length - 1].sending ? {bottom: "-15px"} : {"transform": `translateX(${this.state.goneTransforms[item] + hereIndicatorCompensate}px)`}} />;
           inThreadElements.push(myElement);
@@ -264,10 +266,12 @@ class GroupsDefaultMessage extends React.Component {
                 for (let i = 0; i < peopleToShow; i++) {
                   if (item.lastRead[i] != null && item.lastRead[i] != this.props.myEmail) {
                     // console.log("YAY, ", item.lastRead[i]);
-                    const myPerson = getUser(item.lastRead[i]);
+                    const email = item.lastRead[i];
+                    const myPerson = getUser(email);
                     // lastReadElementPictures.push(<img style={ i == 0 ? null : {transform: "translateX(" + transformPX + "px)"}} src={myPerson.picture} className={lrClasses} alt={myPerson.name} title={myPerson.name + " (" + item.lastRead[i] + ")"} />);
                     lastReadElementPictures.push(<ProfilePicture
-                                                  email={item.lastRead[i]}
+                                                  email={email}
+                                                  key={email}
                                                   className={lrClasses}
                                                   style={ i == 0 ? null : {transform: "translateX(" + transformPX + "px)"}} />);
                     transformPX += tpxIncrement;

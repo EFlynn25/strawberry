@@ -389,8 +389,6 @@ class MPDMs extends React.Component {
                             name={this.props.myName}
                             picture={this.props.myPicture}
                             messages={mySendingMessages}
-                            inChat={["no", true]}
-                            inChatTyping={false}
                             onUpdate={this.props.onUpdate}
                             openedDM={this.props.openedDM} />;
       // console.debug(newMessage);

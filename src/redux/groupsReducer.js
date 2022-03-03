@@ -231,8 +231,8 @@ export const groupsSlice = createSlice({
       }
     },
     setInThread: (state, action) => {
-      if (Object.keys(state.threads).includes(action.payload["thread_id"])) {
-        
+      if (Object.keys(state.threads).includes(action.payload["thread_id"].toString())) {
+
         let myInThread = state.threads[action.payload["thread_id"]].inThread;
         if (Array.isArray(action.payload["people"])) {
           action.payload["people"].forEach(item => {
