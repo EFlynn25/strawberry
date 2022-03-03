@@ -4,13 +4,17 @@
 // messages in the future. The "...DefaultMessage.js" files JUST display what
 // "...Message.js" files give them. (not really, but that was the hope)
 
+// UPDATE: The system above is changing. I want Message files to just process
+// IDs and pass down message arrays. All in_chat and typing stuff will be
+// removed.
+
+
 import React from 'react';
 import { connect } from 'react-redux';
 import equal from 'fast-deep-equal/react';
 
 import './DMsMessage.css';
 import { getUser } from '../../../GlobalComponents/getUser.js';
-import { parseDate } from '../../../GlobalComponents/parseDate.js';
 import DMsDefaultMessage from './DMsMessage/DMsDefaultMessage';
 import DMsBreckanMessage from './DMsMessage/DMsBreckanMessage';
 
@@ -25,9 +29,6 @@ class DMsMessage extends React.Component {
       messagePicture: "",
       messageList: [],
       messageElements: [],
-      inChat: "no",
-      inChatNoTransition: true,
-      inChatTyping: false,
     };
   }
 
@@ -45,13 +46,13 @@ class DMsMessage extends React.Component {
 
     const idsChanged = prevState.myIDs != this.state.myIDs;
     const themLastReadChanged = prevCurrentChat.lastRead.them != thisChat.lastRead.them;
-    const otherUserStateChanged = prevProps.inChat != this.props.inChat || prevProps.typing != this.props.typing;
+    const inChatChanged = prevProps.inChat != this.props.inChat;
     const newSentMessage = prevCurrentChat.sendingMessages != thisChat.sendingMessages;
     if (messagesExist && (chatChanged || openedDMChanged)) {
       this.reloadData();
       this.reloadMessage(prevProps);
     } else {
-      if (idsChanged || themLastReadChanged || otherUserStateChanged || newSentMessage) {
+      if (idsChanged || themLastReadChanged || inChatChanged || newSentMessage) {
         this.reloadMessage(prevProps);
       }
     }
@@ -106,100 +107,62 @@ class DMsMessage extends React.Component {
   }
 
   reloadMessage(prevProps) {
-    let myOldMessages;
-    if (prevProps != null) {
-      myOldMessages = prevProps.thisChat.messages;
-    }
     let newMessageObjects = [];
     const thisChat = this.props.thisChat;
     const lastRead = thisChat.lastRead.them;
-    this.state.myIDs.filter(item => {
-      const message = thisChat.messages.find( ({ id }) => id === item );
-      if (message == null) {
-        return false;
-      }
-      return true;
-    }).map(item => {
-      const message = thisChat.messages.find( ({ id }) => id === item );
+    const firstMessageID = thisChat.messages[0].id;
+    // Only time will tell if we need the code below...
+
+    // this.state.myIDs.filter(item => {
+    //   const message = thisChat.messages[item - firstMessageID];
+    //   if (message == null) {
+    //     return false;
+    //   }
+    //   return true;
+    // }).forEach(item => {
+    this.state.myIDs.forEach(item => {
+      const message = thisChat.messages[item - firstMessageID];
       const messageKey = "id" + item;
 
       let lr = false;
-      let nt = true;
+      let nt = false;
+      const sendingMessagesExist = thisChat.sendingMessages && thisChat.sendingMessages.length > 0;
       if (lastRead != null && item == lastRead) {
-        const sendingMessagesExist = thisChat.sendingMessages && thisChat.sendingMessages.length > 0;
         const simpleConditions = lastRead != thisChat.messages[thisChat.messages.length - 1].id || sendingMessagesExist;
         if (!this.props.inChat && simpleConditions) {
           lr = true;
         }
       }
-      if (this.state.inChat == "no" && this.props.inChat) {
-        nt = false;
+      if (sendingMessagesExist) {
+        nt = true;
       }
 
-      let edited = message.edited != null ? message.edited : false;
-
-      let messageObject;
-      messageObject = {message: message.message, timestamp: parseDate(message.timestamp), basicTimestamp: parseDate(message.timestamp, "basic"), lastRead: lr, noTransition: nt, id: item, edited: edited};
-
+      const edited = message.edited != null ? message.edited : false;
+      const messageObject = {
+        message: message.message,
+        timestamp: message.timestamp,
+        lastRead: lr,
+        noTransition: nt,
+        id: item,
+        edited: edited
+      };
       newMessageObjects.push(messageObject);
     });
 
-    let newInChat = "no";
-    let icnt = true;
-    let newICT = false;
     const lastMessageID = thisChat.messages[thisChat.messages.length - 1].id;
-    if (newMessageObjects[newMessageObjects.length - 1].id == lastMessageID/* && prevProps.openedDM == this.props.openedDM*/) {
-      if (this.props.inChat) {
-        newInChat = "here";
-      } else if (lastRead == lastMessageID && this.state.myIDs[this.state.myIDs.length - 1] == lastMessageID) {
-        newInChat = "gone";
-      }
+    if (newMessageObjects[newMessageObjects.length - 1].id == lastMessageID
+      && thisChat.sendingMessages != null && thisChat.sendingMessages.length > 0
+      && this.state.messageEmail == this.props.myEmail) {
 
-      const oldStateMessages = this.state.messageList;
-      if (oldStateMessages != null && oldStateMessages.length > 0 && oldStateMessages[oldStateMessages.length - 1].id == thisChat.messages[thisChat.messages.length - 1].id) {
-        if (this.state.inChat == "here" && !this.props.inChat) {
-          newInChat = "gone";
-          icnt = false;
-        }
-        if (this.state.inChat == "gone" && newInChat == "here") {
-          icnt = false;
-        }
-        if (this.state.inChat == "no" && newInChat == "here") {
-          icnt = false;
-        }
-      }
-
-
-
-      if (newInChat == "here" && this.props.typing) {
-        newICT = true;
-      }
-
-
-
-      if (thisChat.sendingMessages != null && thisChat.sendingMessages.length > 0 && this.state.messageEmail == this.props.myEmail) {
-        let currentSendingID = 0;
-        thisChat["sendingMessages"].map(item => {
-          const messageObject = {message: item, lastRead: false, noTransition: true, sending: true, id: "sending" + currentSendingID, edited: false};
-          newMessageObjects.push(messageObject);
-          currentSendingID++;
-        });
-      }
-    }
-
-
-
-    const message = thisChat.messages.find( ({ id }) => id === this.state.myIDs[0] );
-    if (message.from == "me" && this.state.myIDs.includes(thisChat.messages[thisChat.messages.length - 1].id) && thisChat.sendingMessages != null) {
-      thisChat.sendingMessages.map(item => {
-        console.log(item);
-        let messageElement;
-        messageElement = <p key={"key" + item} className="defaultMessageText defaultMessageSending">{item}</p>;
-        //newMessages.push(messageElement);
+      let currentSendingID = 0;
+      thisChat["sendingMessages"].forEach(item => {
+        const messageObject = {message: item, lastRead: false, noTransition: true, sending: true, id: "sending" + currentSendingID, edited: false};
+        newMessageObjects.push(messageObject);
+        currentSendingID++;
       });
     }
 
-    this.setState({messageList: newMessageObjects, inChat: newInChat, inChatNoTransition: icnt, inChatTyping: newICT});
+    this.setState({ messageList: newMessageObjects });
   }
 
   render() {
@@ -213,16 +176,14 @@ class DMsMessage extends React.Component {
     return (
       <div className="DMsMessage">
         <MessageType
+          openedDM={this.props.openedDM}
           email={this.state.messageEmail}
           name={this.state.messageName}
           picture={this.state.messagePicture}
           messages={this.state.messageList}
-          inChat={[this.state.inChat, this.state.inChatNoTransition]}
-          inChatTyping={this.state.inChatTyping}
           onUpdate={this.props.onUpdate}
           editing={this.props.editing}
           setMessageEditing={this.props.setMessageEditing}
-          openedDM={this.props.openedDM}
           opendialog={this.props.opendialog} />
       </div>
     );

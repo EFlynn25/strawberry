@@ -9,7 +9,7 @@ import { ReactComponent as Edit } from '../../../../assets/icons/edit.svg';
 import { ReactComponent as Leave } from '../../../../assets/icons/leave.svg';
 import { ReactComponent as Join } from '../../../../assets/icons/join.svg';
 import { getUser } from '../../../../GlobalComponents/getUser.js';
-import { parseDate } from '../../../../GlobalComponents/parseDate.js';
+import { parseDate, ParseDateLive } from '../../../../GlobalComponents/parseDate.js';
 import { isEmail, parseEmailToName } from '../../../../GlobalComponents/smallFunctions.js';
 import { groups_edit_message } from '../../../../socket.js';
 import ProfilePicture from '../../../../GlobalComponents/ProfilePicture';
@@ -215,6 +215,8 @@ class GroupsDefaultMessage extends React.Component {
       parentStyles = {marginTop: "40px"};
     }
 
+    const lastMessage = this.props.messages[this.props.messages.length - 1];
+
     return (
       <div className="GroupsDefaultMessage" style={parentStyles}>
 
@@ -339,7 +341,9 @@ class GroupsDefaultMessage extends React.Component {
         </div>
 
         { this.props.email == "system" ? null :
-          <h1 className="defaultMessageTimestamp">{this.props.messages == null || this.props.messages.length == 0 ? "" : this.props.messages[this.props.messages.length - 1].timestamp}</h1>
+          <h1 className="defaultMessageTimestamp">
+            {this.props.messages == null || this.props.messages.length == 0 || lastMessage.sending ? "" : <ParseDateLive timestamp={lastMessage.timestamp} format="long" />}
+          </h1>
         }
         { inThreadElements }
 

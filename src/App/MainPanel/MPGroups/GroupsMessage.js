@@ -4,13 +4,17 @@
 // messages in the future. The "...DefaultMessage.js" files JUST display what
 // "...Message.js" files give them. (not really, but that was the hope)
 
+// UPDATE: The system above is changing. I want Message files to just process
+// IDs and pass down message arrays. All in_chat and typing stuff will be
+// removed.
+
+
 import React from 'react';
 import { connect } from 'react-redux';
 import equal from 'fast-deep-equal/react';
 
 import './GroupsMessage.css';
 import { getUser } from '../../../GlobalComponents/getUser.js';
-import { parseDate } from '../../../GlobalComponents/parseDate.js';
 import GroupsDefaultMessage from './GroupsMessage/GroupsDefaultMessage';
 import GroupsBreckanMessage from './GroupsMessage/GroupsBreckanMessage';
 
@@ -151,7 +155,13 @@ class GroupsMessage extends React.Component {
       let edited = message.edited != null ? message.edited : false;
 
       let messageObject;
-      messageObject = {message: message.message, timestamp: parseDate(message.timestamp), basicTimestamp: parseDate(message.timestamp, "basic"), lastRead: lr, noTransition: /*nt*/null, id: item, edited: edited};
+      messageObject = {
+        message: message.message,
+        timestamp: message.timestamp,
+        lastRead: lr,
+        id: item,
+        edited: edited
+      };
 
       newMessageObjects.push(messageObject);
     });

@@ -2,6 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Router } from "react-router-dom";
 import { Provider } from 'react-redux';
+import TimeAgo from 'javascript-time-ago';
+import en from 'javascript-time-ago/locale/en.json';
 
 import './index.css';
 import App from './App';
@@ -10,6 +12,23 @@ import reportWebVitals from './reportWebVitals';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 
 import history from "./history";
+
+TimeAgo.addDefaultLocale(en);
+const customLabels = {
+  minute: {
+    past: {
+      one: "{0} min ago",
+      other: "{0} mins ago"
+    }
+  },
+  hour: {
+    past: {
+      one: "{0} hour ago",
+      other: "{0} hours ago"
+    }
+  },
+}
+TimeAgo.addLabels('en', 'custom', customLabels);
 
 ReactDOM.render(
   <React.StrictMode>

@@ -12,7 +12,7 @@ import { ReactComponent as ThumbUp } from '../../../assets/icons/thumb_up.svg';
 import { ReactComponent as Delete } from '../../../assets/icons/delete.svg';
 import { set_status, get_posts, add_post, edit_post, delete_post } from '../../../socket.js';
 import { setUserLoadingPosts } from '../../../redux/appReducer.js';
-import { parseDate } from '../../../GlobalComponents/parseDate.js';
+import { parseDate, ParseDateLive } from '../../../GlobalComponents/parseDate.js';
 
 class HomeProfile extends React.Component {
   constructor(props) {
@@ -192,7 +192,7 @@ class HomeProfile extends React.Component {
                             className="pprPostTimestamp"
                             title={item.edited != null ? "Edited on " + parseDate(item.edited, "basic") : "Original post"} >
                             { item.edited != null ? <span>(edited)</span> : null }
-                            { parseDate(item.timestamp) }
+                            <ParseDateLive timestamp={item.timestamp} format="long" />
                           </p>
                         </div>
                       </div>

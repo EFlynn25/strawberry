@@ -6,7 +6,7 @@ import './DMsDefaultMessage.css';
 import '../../MessageStyles/DefaultMessage.css';
 import { ReactComponent as Edit } from '../../../../assets/icons/edit.svg';
 import { getUser } from '../../../../GlobalComponents/getUser.js';
-import { parseDate } from '../../../../GlobalComponents/parseDate.js';
+import { parseDate, ParseDateLive } from '../../../../GlobalComponents/parseDate.js';
 import { dms_edit_message } from '../../../../socket.js';
 import ProfilePicture from '../../../../GlobalComponents/ProfilePicture';
 
@@ -65,18 +65,14 @@ class DMsDefaultMessage extends React.Component {
   }
 
   render() {
-    let parentStyles = null;
-    if (this.props.messages.length > 0 && this.props.messages[this.props.messages.length - 1].sending && this.props.messages[0].sending) {
-      parentStyles = {marginTop: "40px"};
-    }
-
     const thisUser = getUser(this.props.openedDM);
+    const lastMessage = this.props.messages[this.props.messages.length - 1];
+    // console.log(lastMessage);
+    // console.log(lastMessage.timestamp);
 
     return (
-      <div className="DMsDefaultMessage" style={parentStyles}>
+      <div className="DMsDefaultMessage">
 
-
-        {/*<img src={this.props.picture} className="defaultMessagePFP" alt={this.props.name} />*/}
         <ProfilePicture
           email={this.props.email}
           picture={this.props.picture}
@@ -85,7 +81,7 @@ class DMsDefaultMessage extends React.Component {
           className="defaultMessagePFP" />
         <div className="defaultMessageName">
           {this.props.name}
-          {this.props.messages.length > 0 && this.props.messages[this.props.messages.length - 1].sending ? <h1 className="defaultMessageSendingText">Sending...</h1> : null}
+          {this.props.messages.length > 0 && lastMessage.sending ? <h1 className="defaultMessageSendingText">Sending...</h1> : null}
         </div>
         <div className="defaultMessageGroup">
           { this.props.messages == null ? null :
@@ -93,6 +89,9 @@ class DMsDefaultMessage extends React.Component {
               let lrClasses = "defaultLastRead defaultIndicatorHide"
               if (item.lastRead) {
                 lrClasses = "defaultLastRead";
+              }
+              if (item.noTransition) {
+                lrClasses += " noTransition";
               }
 
               let messageClass = "defaultMessageText";
@@ -112,7 +111,7 @@ class DMsDefaultMessage extends React.Component {
                           maxLength={1000}
                           ref={this.inputRef} />;
               } else {
-                if (this.props.editing - this.props.messages[0].id < 0 || this.props.messages[this.props.messages.length - 1].id < this.props.editing) {
+                if (this.props.editing - this.props.messages[0].id < 0 || lastMessage.id < this.props.editing) {
                   this.editingID = null;
                 }
 
@@ -125,7 +124,7 @@ class DMsDefaultMessage extends React.Component {
                   editIconElement = <Edit className="defaultMessageEditIcon" onClick={() => this.props.setMessageEditing(item.id)} />;
                 }
                 return (
-                  <div key={"id" + item.id} title={item.basicTimestamp} className={messageClass}>
+                  <div key={"id" + item.id} title={parseDate(item.timestamp, "basic")} className={messageClass}>
                     <p>{item.message}{editedElement}</p>
                     {lastReadElement}
                     {editIconElement}
@@ -135,8 +134,10 @@ class DMsDefaultMessage extends React.Component {
             })
           }
         </div>
-        <h1 className="defaultMessageTimestamp">{this.props.messages == null || this.props.messages.length == 0 ? "" : this.props.messages[this.props.messages.length - 1].timestamp}</h1>
 
+        <h1 className="defaultMessageTimestamp">
+          {this.props.messages == null || this.props.messages.length == 0 || lastMessage.sending ? "" : <ParseDateLive timestamp={lastMessage.timestamp} format="long" />}
+        </h1>
       </div>
     );
   }

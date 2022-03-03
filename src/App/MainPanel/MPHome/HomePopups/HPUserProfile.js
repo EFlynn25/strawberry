@@ -15,7 +15,7 @@ import { get_posts, like_post, dms_request_to_chat, dms_deny_request } from '../
 import { addLoadingPosts } from '../../../../redux/peopleReducer.js';
 import { addChatRequest } from '../../../../redux/dmsReducer.js';
 import { getUser } from '../../../../GlobalComponents/getUser.js';
-import { parseDate } from '../../../../GlobalComponents/parseDate.js';
+import { parseDate, ParseDateLive } from '../../../../GlobalComponents/parseDate.js';
 
 import ProfilePicture from '../../../../GlobalComponents/ProfilePicture';
 
@@ -197,7 +197,7 @@ class HPUserProfile extends React.Component {
                         className="pprPostTimestamp"
                         title={item.edited != null ? "Edited on " + parseDate(item.edited, "basic") : "Original post"} >
                         { item.edited != null ? <span>(edited)</span> : null }
-                        { parseDate(item.timestamp) }
+                        <ParseDateLive timestamp={item.timestamp} format="long" />
                       </p>
                     </div>
                   </div>

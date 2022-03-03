@@ -130,8 +130,9 @@
   height: 20px;
   bottom: 0;
   left: 50px;
+}
 
-
+.defaultMessageTimestamp > *, .defaultMessageTimestamp {
   font-style: normal;
   font-weight: 400;
   font-size: 12px;

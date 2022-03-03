@@ -10,7 +10,7 @@ import {
   setChatLastRead
 } from "../../../redux/dmsReducer"
 import { getUser } from '../../../GlobalComponents/getUser.js';
-import { parseDate } from '../../../GlobalComponents/parseDate.js';
+import { ParseDateLive } from '../../../GlobalComponents/parseDate.js';
 
 class DMChat extends React.Component {
   constructor(props) {
@@ -69,7 +69,7 @@ class DMChat extends React.Component {
     const chatOnline = myPerson.online;
 
     let chatMessage = "";
-    let chatTime = "";
+    let timestamp;
     if (Array.isArray(myChatMessages) && myChatMessages.length) { // Checks if messages exist
       const lastMessage = myChatMessages[myChatMessages.length - 1];
       let you = "";
@@ -79,7 +79,7 @@ class DMChat extends React.Component {
       }
       chatMessage = you + lastMessage["message"];
 
-      chatTime = parseDate(lastMessage.timestamp, "time");
+      timestamp = lastMessage.timestamp;
     }
 
     let read = true;
@@ -89,7 +89,6 @@ class DMChat extends React.Component {
       }
     } else {
       chatMessage = <i>No messages</i>;
-      chatTime = null;
     }
 
     return (
@@ -98,7 +97,7 @@ class DMChat extends React.Component {
         { chatOnline ? <div className="dmChatOnline"></div> : null }
         <div className="dmChatTitleTimeFlexbox">
           <h1 className={read ? "dmChatTitle" : "dmChatTitle dmChatTitleUnread"}>{chatName}</h1>
-          <h1 className={read ? "dmChatTime" : "dmChatTime dmChatUnread"}>{chatTime}</h1>
+          <h1 className={read ? "dmChatTime" : "dmChatTime dmChatUnread"}>{timestamp ? <ParseDateLive timestamp={timestamp} format="short" /> : null}</h1>
         </div>
         <p className={read ? "dmChatMessage" : "dmChatMessage dmChatUnread"} title={chatMessage}>{chatMessage}</p>
         <div className="dmChatSelected" style={{transform: opened ? "none" : ""}} />

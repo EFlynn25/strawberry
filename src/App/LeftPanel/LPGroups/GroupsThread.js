@@ -9,7 +9,7 @@ import {
   setThreadLastRead
 } from "../../../redux/groupsReducer"
 import { getUser } from '../../../GlobalComponents/getUser.js';
-import { parseDate } from '../../../GlobalComponents/parseDate.js';
+import { ParseDateLive } from '../../../GlobalComponents/parseDate.js';
 import { isEmail, parseEmailToName } from '../../../GlobalComponents/smallFunctions.js';
 
 import ThreadImages from '../../../GlobalComponents/ThreadImages';
@@ -75,7 +75,7 @@ class GroupsThread extends React.Component {
     // }
 
     let threadMessage = "";
-    let threadTime = "";
+    let timestamp;
     let systemMessage = false;
     if (Array.isArray(myThreadMessages) && myThreadMessages.length) { // If messages exist...
       const lastMessage = myThreadMessages[myThreadMessages.length - 1];
@@ -93,7 +93,7 @@ class GroupsThread extends React.Component {
         threadMessage = parseEmailToName(threadMessage);
       }
 
-      threadTime = parseDate(lastMessage.timestamp, "time");
+      timestamp = lastMessage.timestamp;
     }
 
     let read = true;
@@ -103,7 +103,6 @@ class GroupsThread extends React.Component {
       }
     } else {
       threadMessage = <i>No messages</i>;
-      threadTime = null;
     }
 
     return (
@@ -111,7 +110,7 @@ class GroupsThread extends React.Component {
         { myThread.people != null && myThread.people.length > 0 ? <ThreadImages people={myThread.people} /> : null }
         <div className="gtTitleTimeFlexbox">
           <h1 className={read ? "gtTitle" : "gtTitle gtTitleUnread"}>{threadName}</h1>
-          <h1 className={read ? "gtTime" : "gtTime gtUnread"}>{threadTime}</h1>
+          <h1 className={read ? "gtTime" : "gtTime gtUnread"}>{timestamp ? <ParseDateLive timestamp={timestamp} format="short"/> : null}</h1>
         </div>
         <p className={read ? "gtMessage" : "gtMessage gtUnread"} title={myThreadMessages != null && myThreadMessages.length > 0 ? threadMessage : null} style={systemMessage ? {fontStyle: "italic"} : null}>{threadMessage}</p>
         <div className="gtSelected" style={{transform: opened ? "none" : ""}} />

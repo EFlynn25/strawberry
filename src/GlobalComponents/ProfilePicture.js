@@ -1,11 +1,12 @@
-import React from 'react';
-
 import "./ProfilePicture.css"
 import { getUser } from "./getUser.js"
 
 function ProfilePicture(props) {
   const email = props.email;
-  const myUser = getUser(email);
+  let myUser;
+  if (email) {
+    myUser = getUser(email);
+  }
 
   const picture = props.picture != null ? props.picture : myUser.picture;
   const name = props.name != null ? props.name : myUser.name;

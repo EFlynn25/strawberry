@@ -357,7 +357,6 @@ class MPDMs extends React.Component {
           <DMsMessage
             thisChat={this.props.thisChat}
             inChat={inChat}
-            typing={thisChat.typing}
             id={messageIDs}
             key={messageIDs[0]}
             onUpdate={this.scrollToBottom}

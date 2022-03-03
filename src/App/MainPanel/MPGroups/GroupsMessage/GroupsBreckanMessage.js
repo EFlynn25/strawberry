@@ -3,14 +3,13 @@ import { connect } from 'react-redux';
 import TextareaAutosize from 'react-autosize-textarea';
 import equal from 'fast-deep-equal/react';
 
-// import './GroupsDefaultMessage.css';
 import './GroupsBreckanMessage.css';
 import '../../MessageStyles/BreckanMessage.css';
 import { ReactComponent as Edit } from '../../../../assets/icons/edit.svg';
 import { ReactComponent as Leave } from '../../../../assets/icons/leave.svg';
 import { ReactComponent as Join } from '../../../../assets/icons/join.svg';
 import { getUser } from '../../../../GlobalComponents/getUser.js';
-import { parseDate } from '../../../../GlobalComponents/parseDate.js';
+import { parseDate, ParseDateLive } from '../../../../GlobalComponents/parseDate.js';
 import { isEmail, parseEmailToName } from '../../../../GlobalComponents/smallFunctions.js';
 import { groups_edit_message } from '../../../../socket.js';
 import ProfilePicture from '../../../../GlobalComponents/ProfilePicture';
@@ -218,6 +217,8 @@ class GroupsBreckanMessage extends React.Component {
       classExtension = "S";
     }
 
+    const lastMessage = this.props.messages[this.props.messages.length - 1];
+
     return (
       <div className="DMsBreckanMessage" style={parentStyles}>
         { this.props.email == "system" ? null :
@@ -346,7 +347,7 @@ class GroupsBreckanMessage extends React.Component {
 
         { this.props.email == "system" ? null :
           <h1 className="defaultMessageTimestamp" style={who == "me" ? {left: "unset", right: "50px"} : null}>
-            {this.props.messages == null || this.props.messages.length == 0 ? "" : this.props.messages[this.props.messages.length - 1].timestamp}
+            {this.props.messages == null || this.props.messages.length == 0 || lastMessage.sending ? "" : <ParseDateLive timestamp={lastMessage.timestamp} format="long" />}
           </h1>
         }
         { inThreadElements }

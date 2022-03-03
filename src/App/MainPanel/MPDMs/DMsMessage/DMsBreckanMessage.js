@@ -6,7 +6,7 @@ import './DMsBreckanMessage.css';
 import '../../MessageStyles/BreckanMessage.css';
 import { ReactComponent as Edit } from '../../../../assets/icons/edit.svg';
 import { getUser } from '../../../../GlobalComponents/getUser.js';
-import { parseDate } from '../../../../GlobalComponents/parseDate.js';
+import { parseDate, ParseDateLive } from '../../../../GlobalComponents/parseDate.js';
 import { dms_edit_message } from '../../../../socket.js';
 import ProfilePicture from '../../../../GlobalComponents/ProfilePicture';
 
@@ -72,22 +72,6 @@ class DMsBreckanMessage extends React.Component {
   render() {
     const who = this.props.email == this.props.myEmail ? "me" : "them";
 
-    let inChatClasses = "defaultInChat defaultIndicatorHide noTransition";
-    let nt = true;
-    if (this.props.inChat[0] == "here") {
-      inChatClasses = "defaultInChat";
-    } else if (this.props.inChat[0] == "gone") {
-      inChatClasses = "defaultInChat defaultInChatGone";
-    }
-    if (this.props.inChat[1]) {
-      inChatClasses += " noTransition";
-    }
-
-    let inChatTypingClasses = "defaultInChatTyping defaultInChatTypingHide";
-    if (this.props.inChatTyping) {
-      inChatTypingClasses = "defaultInChatTyping";
-    }
-
     let parentStyles = {};
     let classExtension = "R";
     if (who == "me") {
@@ -96,10 +80,11 @@ class DMsBreckanMessage extends React.Component {
     }
 
     const thisUser = getUser(this.props.openedDM);
+    const lastMessage = this.props.messages[this.props.messages.length - 1];
 
     return (
       <div className="DMsBreckanMessage" style={parentStyles}>
-        {/*<img src={this.props.picture} className={"breckanMessagePFP" + classExtension} alt={this.props.name} />*/}
+
         <ProfilePicture
           email={this.props.email}
           picture={this.props.picture}
@@ -150,7 +135,7 @@ class DMsBreckanMessage extends React.Component {
                 }
                 return (
                   <div className={"breckanMessageTextWrap" + classExtension} key={"id" + item.id}>
-                    <div title={item.basicTimestamp} className={"breckanMessageText" + classExtension}>
+                    <div title={parseDate(item.timestamp, "basic")} className={"breckanMessageText" + classExtension}>
                       {item.sending ? <h1 className={"defaultMessageSendingText breckanMessageSendingText" + classExtension}>Sending...</h1> : null}
                       <p>{item.message}{editedElement}</p>
                       {lastReadElement}
@@ -163,9 +148,11 @@ class DMsBreckanMessage extends React.Component {
             })
           }
         </div>
+
         <h1 className="defaultMessageTimestamp" style={who == "me" ? {left: "unset", right: "50px"} : null}>
-          {this.props.messages == null || this.props.messages.length == 0 ? "" : this.props.messages[this.props.messages.length - 1].timestamp}
+          {this.props.messages == null || this.props.messages.length == 0 || lastMessage.sending ? "" : <ParseDateLive timestamp={lastMessage.timestamp} format="long" />}
         </h1>
+
       </div>
     );
   }

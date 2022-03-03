@@ -1,6 +1,8 @@
 .profilePicture {
   border-radius: 20px;
+}
 
+.profilePictureSpecial {
   transition: transform .2s;
 }
 

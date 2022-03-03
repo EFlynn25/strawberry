@@ -7,6 +7,8 @@ export function getUser(user) {
   const localKnownPeople = mainStore.getState().people.knownPeople;
   if (Object.keys(localKnownPeople).includes(user)) {
     return localKnownPeople[user];
+  } else if (user == mainStore.getState().app.email) {
+    return {"name": mainStore.getState().app.name, "picture": mainStore.getState().app.picture, "status": mainStore.getState().app.status, "online": true};
   }
   if (user != null && !fetchingUsers.includes(user) && user.includes("@") && user != mainStore.getState().app.email) {
     get_user_info(user);
