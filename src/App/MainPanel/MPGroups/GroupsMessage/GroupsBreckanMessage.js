@@ -28,15 +28,10 @@ class GroupsBreckanMessage extends React.Component {
 
     this.inputRef = React.createRef();
 
-    this.reloadInThread = this.reloadInThread.bind(this);
     this.inputEnterPressed = this.inputEnterPressed.bind(this);
 
     this.editingID = null;
     this.editingIDOriginal = "";
-  }
-
-  componentDidMount() {
-    this.reloadInThread();
   }
 
   componentDidUpdate(prevProps) {
@@ -53,77 +48,6 @@ class GroupsBreckanMessage extends React.Component {
 
     if (prevProps.openedDM != this.props.openedDM) {
       this.props.setMessageEditing(false);
-    }
-
-    this.reloadInThread();
-  }
-
-  reloadInThread() {
-    const maxPeople = 14;
-
-    let herePeople = [];
-    let gonePeople = [];
-    let myExtraHere = 0;
-    let myExtraGone = 0;
-    let conditionalInThread = this.props.inThread == null ? [] : Object.keys(this.props.inThread[0]);
-    conditionalInThread.forEach(item => {
-      if (this.props.inThread[0][item] == "here") {
-        herePeople.push(item);
-      } else if (this.props.inThread[0][item] == "gone") {
-        gonePeople.push(item);
-      }
-    });
-    const totalPeople = herePeople.length + gonePeople.length;
-    const excessPeople = totalPeople - maxPeople;
-
-    let myHere = {};
-    let tpxIncrement = 22.5;
-    let peopleToShow = herePeople.length;
-
-    if (excessPeople > 0 && herePeople.length > maxPeople / 2) {
-      if (gonePeople.length > maxPeople / 2) {
-        peopleToShow = maxPeople / 2;
-      } else {
-        peopleToShow = maxPeople - gonePeople.length;
-      }
-    }
-    myExtraHere = herePeople.length > peopleToShow ? herePeople.length - peopleToShow : 0;
-
-    let transformPX = tpxIncrement * (peopleToShow - 1);
-    for (let i = 0; i < peopleToShow; i++) {
-      myHere[herePeople[i]] = transformPX;
-      transformPX -= tpxIncrement;
-    }
-
-    let myGone = {};
-    tpxIncrement = 22.5;
-    peopleToShow = gonePeople.length;
-
-    if (excessPeople > 0 && gonePeople.length > maxPeople / 2) {
-      if (herePeople.length > maxPeople / 2) {
-        peopleToShow = maxPeople / 2;
-      } else {
-        peopleToShow = maxPeople - herePeople.length;
-      }
-    }
-    myExtraGone = gonePeople.length > peopleToShow ? gonePeople.length - peopleToShow : 0;
-
-    transformPX = tpxIncrement * (peopleToShow - 1);
-    for (let i = 0; i < peopleToShow; i++) {
-      myGone[gonePeople[i]] = transformPX;
-      transformPX -= tpxIncrement;
-    }
-
-    if (!equal(this.state.hereTransforms, myHere) ||
-        !equal(this.state.goneTransforms, myGone) ||
-        this.state.extraHere !== myExtraHere ||
-        this.state.extraGone !== myExtraGone) {
-      this.setState({
-        hereTransforms: myHere,
-        goneTransforms: myGone,
-        extraHere: myExtraHere,
-        extraGone: myExtraGone,
-      });
     }
   }
 
@@ -150,65 +74,6 @@ class GroupsBreckanMessage extends React.Component {
 
   render() {
     const who = this.props.email == this.props.myEmail ? "me" : "them";
-
-    let inThreadElements = [];
-    let here = Object.keys(this.state.hereTransforms);
-    let gone = Object.keys(this.state.goneTransforms);
-
-    let hereIndex = 0;
-    const hereTimes = here.length + (this.state.extraHere > 0 ? 1 : 0);
-    let separatorPushed = false;
-    let goneIndex = 0;
-    const goneTimes = gone.length + (this.state.extraGone > 0 ? 1 : 0);
-    let i = hereTimes + (here.length > 0 && gone.length > 0 ? 1 : 0) + goneTimes;
-    for (i; i > 0; i -= 1) {
-      if (hereIndex < hereTimes) {
-        if (hereIndex < here.length) {
-          const item = here[hereIndex];
-          const thisUser = getUser(item);
-          // const myElement = <img src={thisUser.picture} className={"defaultInChat"} alt={thisUser.name} style={this.props.messages.length > 0 && this.props.messages[this.props.messages.length - 1].sending ? {bottom: "-15px"} : {"transform": `translateX(${this.state.hereTransforms[item]}px)`}} />;
-          const myElement = <ProfilePicture
-                                    email={item}
-                                    className={"defaultInChat"}
-                                    style={this.props.messages.length > 0 && this.props.messages[this.props.messages.length - 1].sending ? {bottom: "-15px"} : {"transform": `translateX(${this.state.hereTransforms[item]}px)`}} />;
-          inThreadElements.push(myElement);
-          const typingElement = (
-            <div className={this.props.inThreadTyping.includes(item) ? "gdefaultInChatTyping" : "gdefaultInChatTyping gdefaultInChatTypingHide"} style={{"transform": `translateX(${this.state.hereTransforms[item]}px)`}}>
-              <div className="gdefaultInChatTypingInner">
-                <div className="defaultInChatTypingDot" style={{left: "3px", top: "11.75px"}}></div>
-                <div className="defaultInChatTypingDot" style={{left: "12px", top: "11.75px", animationDelay: ".25s"}}></div>
-                <div className="defaultInChatTypingDot" style={{left: "21px", top: "11.75px", animationDelay: ".5s"}}></div>
-              </div>
-            </div>
-          )
-          inThreadElements.push(typingElement);
-        } else {
-          const additionalPeopleStr = "+" + this.state.extraHere.toString();
-          inThreadElements.push(<h1 style={{transform: "translateX(" + (this.state.hereTransforms[here[0]] + 30) + "px)"}} className="gExtraInThread" title={this.state.extraHere == 1 ? "+1 person" : additionalPeopleStr + " people"}>•••</h1>);
-        }
-        hereIndex++;
-      } else if (here.length > 0 && gone.length > 0 && !separatorPushed) {
-        inThreadElements.push(<h1 style={{position: "absolute", left: "50px", width: "15px", textAlign: "center", fontSize: "14px", transform: `translateX(${this.state.hereTransforms[here[0]] + 30 + (hereTimes == here.length + 1 ? 20 : 0)}px)`, color: "#555", margin: 0, marginTop: "6px"}}>|</h1>)
-        separatorPushed = true;
-      } else {
-        const item = gone[goneIndex];
-        const hereIndicatorCompensate = Object.keys(this.state.hereTransforms).length == 0 ? 0 : this.state.hereTransforms[here[0]] + 45 + (hereTimes == here.length + 1 ? 20 : 0);
-        const thisUser = getUser(item);
-        if (goneIndex < gone.length) {
-          // const myElement = <img src={thisUser.picture} className={"defaultInChat defaultInChatGone"} alt={thisUser.name} style={this.props.messages.length > 0 && this.props.messages[this.props.messages.length - 1].sending ? {bottom: "-15px"} : {"transform": `translateX(${this.state.goneTransforms[item] + hereIndicatorCompensate}px)`}} />;
-          const myElement = <ProfilePicture
-                                    email={item}
-                                    className={"defaultInChat defaultInChatGone"}
-                                    style={this.props.messages.length > 0 && this.props.messages[this.props.messages.length - 1].sending ? {bottom: "-15px"} : {"transform": `translateX(${this.state.goneTransforms[item] + hereIndicatorCompensate}px)`}} />;
-          inThreadElements.push(myElement);
-        } else {
-          const additionalPeopleStr = "+" + this.state.extraGone.toString();
-          inThreadElements.push(<h1 style={{transform: "translateX(" + (this.state.goneTransforms[gone[0]] + hereIndicatorCompensate + 30) + "px)"}} className="gExtraInThread" title={this.state.extraGone == 1 ? "+1 person" : additionalPeopleStr + " people"}>•••</h1>);
-        }
-        goneIndex++;
-      }
-    }
-
 
     let parentStyles = {};
     let classExtension = "R";
@@ -350,7 +215,6 @@ class GroupsBreckanMessage extends React.Component {
             {this.props.messages == null || this.props.messages.length == 0 || lastMessage.sending ? "" : <ParseDateLive timestamp={lastMessage.timestamp} format="long" />}
           </h1>
         }
-        { inThreadElements }
       </div>
     );
   }

@@ -118,6 +118,7 @@ class GroupsMessage extends React.Component {
   reloadMessage(prevProps) {
     let newMessageObjects = [];
     const thisThread = this.props.thisThread;
+    const firstMessageID = thisThread.messages[0].id;
 
     if (thisThread.lastRead != null) {
       this.myLastRead = {};
@@ -133,23 +134,35 @@ class GroupsMessage extends React.Component {
       });
     }
 
-    this.state.myIDs.filter(item => {
-      const message = thisThread.messages.find( ({ id }) => id === item );
-      if (message == null) {
-        return false;
-      }
-      return true;
-    }).forEach(item => {
-      const message = thisThread.messages.find( ({ id }) => id === item );
+    this.state.myIDs.forEach(item => {
+      const message = thisThread.messages[item - firstMessageID];
+
+
+      // let lr = false;
+      // let nt = false;
+      // const sendingMessagesExist = thisChat.sendingMessages && thisChat.sendingMessages.length > 0;
+      // if (lastRead != null && item == lastRead) {
+      //   const simpleConditions = lastRead != thisChat.messages[thisChat.messages.length - 1].id || sendingMessagesExist;
+      //   if (!this.props.inChat && simpleConditions) {
+      //     lr = true;
+      //   }
+      // }
+      // if (sendingMessagesExist) {
+      //   nt = true;
+      // }
+
 
       const unrefinedLR = this.myLastRead[message.id];
       let lr = [];
       if (unrefinedLR != null) {
-        unrefinedLR.forEach((item, i) => {
-          if (!thisThread.inThread.includes(item) && message.id != thisThread.messages[thisThread.messages.length - 1].id) {
-            lr.push(item);
-          }
-        });
+        const simpleConditions = message.id != thisThread.messages[thisThread.messages.length - 1].id || thisThread.sendingMessages && thisThread.sendingMessages.length > 0;
+        if (simpleConditions) {
+          unrefinedLR.forEach((item, i) => {
+            if (!thisThread.inThread.includes(item)) {
+              lr.push(item);
+            }
+          });
+        }
       }
 
       let edited = message.edited != null ? message.edited : false;
@@ -166,27 +179,27 @@ class GroupsMessage extends React.Component {
       newMessageObjects.push(messageObject);
     });
 
-    let newInThread = {};
-    let newTyping = [];
-    const lastMessageID = thisThread.messages[thisThread.messages.length - 1].id;
-    if (newMessageObjects[newMessageObjects.length - 1].id == lastMessageID) {
-      let myLR = this.myLastRead[lastMessageID];
-      if (myLR != null) {
-        myLR.forEach((item, i) => {
-          if (!thisThread.inThread.includes(item)) {
-            newInThread[item] = "gone";
-          }
-        });
-      }
-
-      thisThread.inThread.forEach((item, i) => {
-        newInThread[item] = "here";
-      });
-
-      thisThread.typing.forEach((item, i) => {
-        newTyping.push(item);
-      });
-    }
+    // let newInThread = {};
+    // let newTyping = [];
+    // const lastMessageID = thisThread.messages[thisThread.messages.length - 1].id;
+    // if (newMessageObjects[newMessageObjects.length - 1].id == lastMessageID) {
+    //   let myLR = this.myLastRead[lastMessageID];
+    //   if (myLR != null) {
+    //     myLR.forEach((item, i) => {
+    //       if (!thisThread.inThread.includes(item)) {
+    //         newInThread[item] = "gone";
+    //       }
+    //     });
+    //   }
+    //
+    //   thisThread.inThread.forEach((item, i) => {
+    //     newInThread[item] = "here";
+    //   });
+    //
+    //   thisThread.typing.forEach((item, i) => {
+    //     newTyping.push(item);
+    //   });
+    // }
 
 
 
@@ -198,7 +211,7 @@ class GroupsMessage extends React.Component {
       });
     }
 
-    this.setState({messageList: newMessageObjects, inThread: newInThread, inThreadNoTransition: /*itnt*/null, inThreadTyping: newTyping});
+    this.setState({ messageList: newMessageObjects });
   }
 
   render() {

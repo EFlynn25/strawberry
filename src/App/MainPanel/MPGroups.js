@@ -38,6 +38,7 @@ import { getUser } from '../../GlobalComponents/getUser.js';
 import GroupsMessage from './MPGroups/GroupsMessage';
 import GroupsDefaultMessage from './MPGroups/GroupsMessage/GroupsDefaultMessage';
 import GroupsBreckanMessage from './MPGroups/GroupsMessage/GroupsBreckanMessage';
+import GroupsInThread from './MPGroups/GroupsInThread';
 
 class MPGroups extends React.Component {
   constructor(props) {
@@ -216,7 +217,7 @@ class MPGroups extends React.Component {
       }
     }
 
-    if (prevProps.thisThread && this.props.thisThread) {
+    if (!prevProps.thisThread && this.props.thisThread) {
       groups_in_thread(propsOpenedThread, true);
       groups_in_thread(propsOpenedThread, "get_in_thread");
       groups_typing(propsOpenedThread, "get_typing");
@@ -288,8 +289,8 @@ class MPGroups extends React.Component {
 
     let thisThread = clone(this.props.thisThread);
 
-    if (thisThread == null || thisThread["messages"] == null || thisThread["messages"].length <= 0) {
-      if (thisThread["sendingMessages"] == null || thisThread["sendingMessages"].length <= 0) {
+    if (thisThread == null || thisThread.messages == null || thisThread.messages.length <= 0) {
+      if (thisThread.sendingMessages == null || thisThread.sendingMessages.length <= 0) {
         this.setState({
           messages: [],
           loaded: true
@@ -301,13 +302,13 @@ class MPGroups extends React.Component {
     let hasSending = false;
     let handledSending = false;
 
-    if ("sendingMessages" in thisThread && thisThread["sendingMessages"].length > 0) {
+    if ("sendingMessages" in thisThread && thisThread.sendingMessages.length > 0) {
       hasSending = true;
       let myID = 0;
       if (thisThread.messages != null && thisThread.messages.length > 0) {
         myID = thisThread.messages[thisThread.messages.length - 1].id + 1;
       }
-      thisThread["sendingMessages"].forEach(item => {
+      thisThread.sendingMessages.forEach(item => {
         const myMessage = {message: item, sending: true, id: myID};
         if (thisThread.messages != null) {
           thisThread.messages.push(myMessage);
@@ -388,10 +389,10 @@ class MPGroups extends React.Component {
 
     if (hasSending && !handledSending) {
 
-      let mySendingMessages = [];
-      thisThread["sendingMessages"].map(item => {
-        const messageObject = {message: item, /*lastRead: false,*/ noTransition: true, sending: true, id: "sending" + mySendingMessages.length, edited: false};
-        mySendingMessages.push(messageObject);
+      let sendingID = -1;
+      let mySendingMessages = thisThread.sendingMessages.map(item => {
+        sendingID++;
+        return {message: item, /*lastRead: false,*/ noTransition: true, sending: true, id: "sending" + sendingID, edited: false};
       });
 
       let MessageType;
@@ -532,6 +533,9 @@ class MPGroups extends React.Component {
               null
             }
             {this.state.messages}
+            <div style={{position: "relative"}}>
+              <GroupsInThread thisThread={this.props.thisThread} openedThread={this.props.openedThread} myEmail={this.props.myEmail} />
+            </div>
           </div>
           {this.state.messages.length > 0 ? null : <h1 className="mpNoMessageText">No messages.<br/>Try sending one!</h1>}
           <TextareaAutosize value={this.state.inputValue} onChange={this.handleInputChange} onKeyPress={this.inputEnterPressed} placeholder="Type message here" className="mpMessagesInput" maxLength={1000} ref={this.inputRef} />

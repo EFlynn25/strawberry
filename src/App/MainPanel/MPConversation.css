@@ -29,6 +29,7 @@
 
   outline: none;
   resize: none;
+  z-index: 9;
 }
 
 .mpSendMessage {
