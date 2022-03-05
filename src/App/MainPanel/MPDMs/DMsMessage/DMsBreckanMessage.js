@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import TextareaAutosize from 'react-autosize-textarea';
+import Linkify from 'react-linkify';
 
 import './DMsBreckanMessage.css';
 import '../../MessageStyles/BreckanMessage.css';
@@ -137,7 +138,7 @@ class DMsBreckanMessage extends React.Component {
                   <div className={"breckanMessageTextWrap" + classExtension} key={"id" + item.id}>
                     <div title={parseDate(item.timestamp, "basic")} className={"breckanMessageText" + classExtension}>
                       {item.sending ? <h1 className={"defaultMessageSendingText breckanMessageSendingText" + classExtension}>Sending...</h1> : null}
-                      <p>{item.message}{editedElement}</p>
+                      <Linkify><p>{item.message}{editedElement}</p></Linkify>
                       {lastReadElement}
                       {editIconElement}
                     </div>

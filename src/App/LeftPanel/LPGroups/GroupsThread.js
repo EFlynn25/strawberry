@@ -124,6 +124,7 @@ class GroupsThread extends React.Component {
 const mapStateToProps = (state) => ({
   email: state.app.email,
   dmsOrGroups: state.app.dmsOrGroups,
+  knownPeople: state.people.knownPeople
 });
 
 const mapDispatchToProps = {

@@ -2,6 +2,7 @@ import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import TextareaAutosize from 'react-autosize-textarea';
 import equal from 'fast-deep-equal/react';
+import Linkify from 'react-linkify';
 
 import './GroupsBreckanMessage.css';
 import '../../MessageStyles/BreckanMessage.css';
@@ -190,7 +191,7 @@ class GroupsBreckanMessage extends React.Component {
                     { this.props.email != "system" ?
                       <div title={item.basicTimestamp} className={"breckanMessageText" + classExtension}>
                         {item.sending ? <h1 className={"defaultMessageSendingText breckanMessageSendingText" + classExtension}>Sending...</h1> : null}
-                        <p>{myMessage}{editedElement}</p>
+                        <Linkify><p>{myMessage}{editedElement}</p></Linkify>
                         {lastReadElement}
                         {editIconElement}
                       </div>

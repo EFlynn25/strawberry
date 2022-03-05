@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import TextareaAutosize from 'react-autosize-textarea';
+import Linkify from 'react-linkify';
 
 import './DMsDefaultMessage.css';
 import '../../MessageStyles/DefaultMessage.css';
@@ -125,7 +126,7 @@ class DMsDefaultMessage extends React.Component {
                 }
                 return (
                   <div key={"id" + item.id} title={parseDate(item.timestamp, "basic")} className={messageClass}>
-                    <p>{item.message}{editedElement}</p>
+                    <Linkify><p>{item.message}{editedElement}</p></Linkify>
                     {lastReadElement}
                     {editIconElement}
                   </div>

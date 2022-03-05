@@ -2,6 +2,7 @@ import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import TextareaAutosize from 'react-autosize-textarea';
 import equal from 'fast-deep-equal/react';
+import Linkify from 'react-linkify';
 
 import './GroupsDefaultMessage.css';
 import '../../MessageStyles/DefaultMessage.css';
@@ -187,7 +188,7 @@ class GroupsDefaultMessage extends React.Component {
                 return (
                   <div key={"id" + item.id} title={item.basicTimestamp} className={messageClass}>
                     {MyIcon != null ? <MyIcon style={{position: "absolute", width: "15px", height: "15px", marginLeft: "-20px", fill: "#999", top: top}} /> : null}
-                    <p>{myMessage}</p>
+                    <Linkify><p>{myMessage}</p></Linkify>
                     {editedElement}
                     {editIconElement}
                     {lastReadElement}
