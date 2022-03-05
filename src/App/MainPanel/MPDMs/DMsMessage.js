@@ -122,6 +122,9 @@ class DMsMessage extends React.Component {
     // }).forEach(item => {
     this.state.myIDs.forEach(item => {
       const message = thisChat.messages[item - firstMessageID];
+      if (!message) {
+        return false;
+      }
       const messageKey = "id" + item;
 
       let lr = false;
@@ -137,7 +140,7 @@ class DMsMessage extends React.Component {
         nt = true;
       }
 
-      const edited = message.edited != null ? message.edited : false;
+      const edited = message.edited ? message.edited : false;
       const messageObject = {
         message: message.message,
         timestamp: message.timestamp,

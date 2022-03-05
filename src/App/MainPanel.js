@@ -177,7 +177,7 @@ class MainPanel extends React.Component {
                 <Resizable
                   className={item}
                   key={item}
-                  style={{marginRight: "20px", zIndex: "2"}}
+                  style={{marginRight: "20px", zIndex: "9"}}
                   size={{ width: width, height: height }}
                   minWidth={250}
                   minHeight={340}

@@ -68,8 +68,6 @@ class DMsDefaultMessage extends React.Component {
   render() {
     const thisUser = getUser(this.props.openedDM);
     const lastMessage = this.props.messages[this.props.messages.length - 1];
-    // console.log(lastMessage);
-    // console.log(lastMessage.timestamp);
 
     return (
       <div className="DMsDefaultMessage">

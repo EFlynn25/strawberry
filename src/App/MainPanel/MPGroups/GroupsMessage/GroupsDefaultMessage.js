@@ -127,10 +127,8 @@ class GroupsDefaultMessage extends React.Component {
 
                 for (let i = 0; i < peopleToShow; i++) {
                   if (item.lastRead[i] != null && item.lastRead[i] != this.props.myEmail) {
-                    // console.log("YAY, ", item.lastRead[i]);
                     const email = item.lastRead[i];
                     const myPerson = getUser(email);
-                    // lastReadElementPictures.push(<img style={ i == 0 ? null : {transform: "translateX(" + transformPX + "px)"}} src={myPerson.picture} className={lrClasses} alt={myPerson.name} title={myPerson.name + " (" + item.lastRead[i] + ")"} />);
                     lastReadElementPictures.push(<ProfilePicture
                                                   email={email}
                                                   key={email}

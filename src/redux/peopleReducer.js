@@ -15,7 +15,6 @@ export const peopleSlice = createSlice({
     },
 
     addPerson: (state, action) => {
-      console.log("add person ", action.payload)
       if (Object.keys(state.knownPeople).includes(action.payload["email"])) {
         state.knownPeople[action.payload["email"]].name = action.payload.name;
         state.knownPeople[action.payload["email"]].picture = action.payload.picture;
@@ -97,7 +96,6 @@ export const peopleSlice = createSlice({
     },
     editpersonPost: (state, action) => {
       const myPerson = state.knownPeople[action.payload["email"]];
-      console.log(myPerson)
       myPerson.posts.some((item, i) => {
         if (item.post_id == action.payload["post_id"]) {
           state.knownPeople[action.payload["email"]].posts[i].message = action.payload["message"];

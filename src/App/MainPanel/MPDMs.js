@@ -150,7 +150,7 @@ class MPDMs extends React.Component {
       this.props.setOpenedDM(this.props.match.params.chatEmail);
     }
 
-    console.log("[MPDMs]: componentDidMount with thread ID " + this.props.openedDM);
+    console.log("[MPDMs]: componentDidMount with email " + this.props.openedDM);
 
     const propsOpenedDM = this.props.openedDM;
     const thisChat = this.props.thisChat;
@@ -190,7 +190,7 @@ class MPDMs extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    console.log("[MPDMs]: componentDidUpdate with thread ID " + this.props.openedDM);
+    console.log("[MPDMs]: componentDidUpdate with email " + this.props.openedDM);
 
     const propsOpenedDM = this.props.openedDM;
     const thisChat = this.props.thisChat;

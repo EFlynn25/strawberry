@@ -81,7 +81,6 @@ export const groupsSlice = createSlice({
 
 
 
-        // console.log(current(state).chats[myChatEmail]);
 
         if (myMessages == null || myMessages.length == 0 || myMessages[myMessages.length - 1].id < myID) {
           myMessages.push(newMessage);
@@ -121,7 +120,6 @@ export const groupsSlice = createSlice({
           }
         }
 
-        // console.log(current(state).chats[myChatEmail]);
 
 
 

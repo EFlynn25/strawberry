@@ -324,7 +324,6 @@ export function startSocket() {
                 get_user_info(item);
               }
             });
-            console.log(people)
           }
         }
       } else if (com == "get_messages") {
@@ -383,7 +382,6 @@ export function startSocket() {
           get_thread_info(jsonData.thread);
         }
       } else if (com == "rename_thread") {
-        console.log(jsonData);
         mainStore.dispatch(setThreadName({"thread_id": jsonData.thread_id, "new_name": jsonData.new_name}));
       } else if (com == "send_message") {
         const myMessage = jsonData.message;

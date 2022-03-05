@@ -165,7 +165,6 @@ class MPGroups extends React.Component {
       groups_last_read(propsOpenedThread);
 
       const tmi = thisThread.tempMessageInput;
-      console.log(tmi);
       if (tmi != "") {
         this.setState({
           inputValue: tmi
@@ -472,7 +471,6 @@ class MPGroups extends React.Component {
   render() {
     if (this.props.thisThread == null) {
       if (this.props.openedThread != null && !this.acceptedRequest) {
-        console.log("reload no thread");
         this.acceptedRequest = true;
         groups_join_thread(this.props.openedThread);
       }
@@ -543,14 +541,6 @@ class MPGroups extends React.Component {
         </Fragment>
       );
     }
-    // if (!(this.props.openedThread in this.props.threads)) {
-    //   children = (<h1 className="groupsCenterText">That thread doesn't exist...</h1>);
-    //   if (this.props.openedThread != null && !this.acceptedRequest) {
-    //     console.log("reload no thread");
-    //     this.acceptedRequest = true;
-    //     groups_join_thread(this.props.openedThread);
-    //   }
-    // }
 
     return (
       <div className={this.props.popout == true ? "MPGroups mpPopoutConversation" : "MPGroups"}>
@@ -560,7 +550,7 @@ class MPGroups extends React.Component {
             <h1>{ this.props.thisThread.name }</h1>
             <Settings
               className="ghSettingsIcon"
-              style={/*{position: "absolute", right: "10px"}*/{paddingLeft: "5px"}}
+              style={{paddingLeft: "5px"}}
               onClick={() => this.props.opendialog("groupSettings", this.props.openedThread, false)} />
             <Close
               className="ghSettingsIcon"
