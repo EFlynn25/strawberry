@@ -45,10 +45,10 @@ class LeftPanel extends React.Component {
     this[type + "List"] = list;
   }
 
-  handleKeyDown(e) { // This method sets up the Ctrl+UpArrow and Ctrl+DownArrow shortcuts
+  handleKeyDown(e) { // This method sets up the Alt+UpArrow and Alt+DownArrow shortcuts
     const dmsOrGroups = this.props.dmsOrGroups;
     const dmsOrGroupsReady = dmsOrGroups == "dms" || dmsOrGroups == "groups";
-    if (!e.ctrlKey || e.repeat || !dmsOrGroupsReady) {
+    if (!e.altKey || e.repeat || !dmsOrGroupsReady) {
       return false;
     }
     const which = e.which;

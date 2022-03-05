@@ -38,9 +38,10 @@ function Overlay(props) {
         </div>
       </div>;
   } else if (props.type == "loading") {
-      if (props.hide != null && props.hide) {
+      if (props.hide) {
         ovClass = "OverlayView OverlayViewHide";
       }
+      let translation = 83;
       showBg = false;
       let myProgress = "";
       let hideProgress = false;
@@ -62,9 +63,11 @@ function Overlay(props) {
       if (props.socket == false) {
         myProgress = "Connecting to server...";
         hideProgress = true;
+        translation = 71.5;
       }
       if (props.multipleTabs == true) {
         hideProgress = true;
+        translation = 55;
       }
       let percent = 0;
       let color = "#FAA";
@@ -84,16 +87,18 @@ function Overlay(props) {
 
       overlayContent = (
         <div className="overlayLoading">
-          <SLogo className="oLoadingIcon" />
-          <h1 className={props.multipleTabs == true && props.socket == true ? "oLoadingText" : "oLoadingText oLoadingHide"} style={{width: "80%", padding: "0 10%", fontSize: "24px", color: "#F66"}}>You can only have one tab open at a time</h1>
-          <h1 className={props.socket == false ? "oLoadingText" : "oLoadingText oLoadingHide"}>An error occurred<br/>(server connection closed)</h1>
-          <h1 className={hideProgress ? "oLoadingText oltLoading oLoadingHide" : "oLoadingText oltLoading"}>Loading...</h1>
-          <Line className={hideProgress ? "olProgressBar oLoadingHide" : "olProgressBar"} percent={percent} strokeWidth="1" strokeColor={color} />
-          <h1 className={hideProgress ? "oLoadingText oltProgress oLoadingHide" : "oLoadingText oltProgress"}>{myProgress}</h1>
+          <div className="oLoadingContent" style={{transform: `translateY(-${translation}px)`}}>
+            <SLogo className="oLoadingIcon" />
+            <h1 className={props.multipleTabs == true && props.socket == true ? "oLoadingText" : "oLoadingText oLoadingHide"} style={{width: "80%", padding: "0 10%", fontSize: "24px", color: "#F66"}}>You can only have one tab open at a time</h1>
+            <h1 className={props.socket == false ? "oLoadingText" : "oLoadingText oLoadingHide"}>An error occurred<br/>(server connection closed)</h1>
+            <h1 className={hideProgress ? "oLoadingText oltLoading oLoadingHide" : "oLoadingText oltLoading"}>Loading...</h1>
+            <Line className={hideProgress ? "olProgressBar oLoadingHide" : "olProgressBar"} percent={percent} strokeWidth="1" strokeColor={color} />
+            <h1 className={hideProgress ? "oLoadingText oltProgress oLoadingHide" : "oLoadingText oltProgress"}>{myProgress}</h1>
+          </div>
         </div>
       );
   } else if (props.type == "blur") {
-    if (props.hide != null && props.hide) {
+    if (props.hide) {
       ovClass = "OverlayView OverlayViewHide";
     }
     showBg = false;

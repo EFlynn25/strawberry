@@ -217,7 +217,7 @@
   justify-content: space-between;
 }
 
-.pprPostTimestamp {
+.pprPostTimestamp, .pprPostTimestamp > * {
   color: #888 !important;
   font-size: 12px;
 }
