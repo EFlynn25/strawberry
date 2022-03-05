@@ -250,23 +250,19 @@ class GroupsInThread extends React.Component {
           })
         }
 
-        {
-          this.state.herePeople.length > 0 && this.state.gonePeople.length > 0 ?
-          <h1
-            style={{
-              position: "absolute",
-              left: "50px",
-              width: "15px",
-              textAlign: "center",
-              fontSize: "14px",
-              transform: `translateX(${lastHerePos + 30}px)`,
-              transition: "transform .1s",
-              color: "#555",
-              marginTop: "6px"
-            }}>|</h1>
-
-          : null
-        }
+        <h1
+          style={{
+            position: "absolute",
+            left: "50px",
+            width: "15px",
+            textAlign: "center",
+            fontSize: "14px",
+            transform: `translateX(${lastHerePos + 30}px)`,
+            transition: "transform .1s, opacity .1s",
+            color: "#555",
+            marginTop: "6px",
+            opacity: this.state.herePeople.length > 0 && this.state.gonePeople.length > 0 ? 1 : 0
+          }}>|</h1>
 
         {
           thisThread.people.map((item) => {

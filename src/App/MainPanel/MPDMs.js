@@ -285,12 +285,13 @@ class MPDMs extends React.Component {
 
     let thisChat = clone(this.props.thisChat);
 
-    if (thisChat == null || thisChat["messages"] == null || thisChat["messages"].length <= 0) {
-      this.setState({
-        messages: [],
-        loaded: true
-      });
-      return false;
+    if (thisChat == null || thisChat.messages == null || thisChat.messages.length <= 0) {
+      thisChat.messages = [];
+      // this.setState({
+      //   messages: [],
+      //   loaded: true
+      // });
+      // return false;
     }
 
     let hasSending = false;
@@ -298,76 +299,83 @@ class MPDMs extends React.Component {
 
     if ("sendingMessages" in thisChat && thisChat["sendingMessages"].length > 0) {
       hasSending = true;
-      let myID = thisChat.messages[thisChat.messages.length - 1].id + 1;
-      thisChat["sendingMessages"].forEach(item => {
+      let myID = 0;
+      if (thisChat.messages && thisChat.messages.length > 0) {
+        myID = thisChat.messages[thisChat.messages.length - 1].id + 1;
+      } else {
+        thisChat.messages = [];
+      }
+      thisChat.sendingMessages.forEach(item => {
         const myMessage = {message: item, sending: true, id: myID};
-        thisChat["messages"].push(myMessage);
+        thisChat.messages.push(myMessage);
         myID++;
       });
     }
 
-    let lastRead;
-    if (thisChat.inChat != null) {
-      lastRead = thisChat.lastRead.them;
-    }
+    // let lastRead;
+    // if (thisChat.inChat != null) {
+    //   lastRead = thisChat.lastRead.them;
+    // }
 
     let inChat = false;
     if (thisChat.inChat != null) {
       inChat = thisChat.inChat;
-      if (prevProps != null && prevProps.thisChat && prevProps.thisChat.inChat != null && prevProps.thisChat.inChat && !inChat) {
-        lastRead = thisChat["messages"][thisChat["messages"].length - 1].id;
-      }
+      // if (prevProps != null && prevProps.thisChat && prevProps.thisChat.inChat != null && prevProps.thisChat.inChat && !inChat) {
+      //   lastRead = thisChat["messages"][thisChat["messages"].length - 1].id;
+      // }
     }
 
-    let nextID = thisChat["messages"][0]["id"];
     let tempMessages = [];
-    thisChat["messages"].forEach((message, i) => {
+    if (thisChat.messages && thisChat.messages.length > 0) {
+      let nextID = thisChat.messages[0]["id"];
+      thisChat.messages.forEach((message, i) => {
 
-      if (message["id"] >= nextID && !("sending" in message)) {
-        let messageIDs = [message["id"]];
-        const messageFrom = message["from"];
-        while (true) {
-          const localNextID = messageIDs[messageIDs.length - 1] + 1;
-          const findNextID = thisChat.messages[localNextID - thisChat.messages[0].id];
+        if (message["id"] >= nextID && !("sending" in message)) {
+          let messageIDs = [message["id"]];
+          const messageFrom = message["from"];
+          while (true) {
+            const localNextID = messageIDs[messageIDs.length - 1] + 1;
+            const findNextID = thisChat.messages[localNextID - thisChat.messages[0].id];
 
-          if (findNextID == null) {
-            break;
-          }
-
-          if ("sending" in findNextID && messageFrom == "me") {
-            handledSending = true;
-          }
-
-          if (findNextID["from"] == messageFrom || handledSending) {
-            const currentID = localNextID - thisChat.messages[0].id - 1;
-            if (currentID >= 0) {
-              const minsBetween = 15;
-              const currentIDObject = thisChat.messages[currentID];
-              if (findNextID.timestamp - currentIDObject.timestamp > minsBetween * 60) {
-                break;
-              }
+            if (findNextID == null) {
+              break;
             }
-            messageIDs.push(localNextID);
-            nextID = localNextID + 1;
-          } else {
-            break;
+
+            if ("sending" in findNextID && messageFrom == "me") {
+              handledSending = true;
+            }
+
+            if (findNextID["from"] == messageFrom || handledSending) {
+              const currentID = localNextID - thisChat.messages[0].id - 1;
+              if (currentID >= 0) {
+                const minsBetween = 15;
+                const currentIDObject = thisChat.messages[currentID];
+                if (findNextID.timestamp - currentIDObject.timestamp > minsBetween * 60) {
+                  break;
+                }
+              }
+              messageIDs.push(localNextID);
+              nextID = localNextID + 1;
+            } else {
+              break;
+            }
           }
+          const newMessage = (
+            <DMsMessage
+              thisChat={this.props.thisChat}
+              inChat={inChat}
+              id={messageIDs}
+              key={messageIDs[0]}
+              onUpdate={this.scrollToBottom}
+              editing={this.state.editing}
+              setMessageEditing={this.setMessageEditing}
+              openedDM={this.props.openedDM}
+              opendialog={this.props.opendialog} />
+          );
+          tempMessages.push(newMessage);
         }
-        const newMessage = (
-          <DMsMessage
-            thisChat={this.props.thisChat}
-            inChat={inChat}
-            id={messageIDs}
-            key={messageIDs[0]}
-            onUpdate={this.scrollToBottom}
-            editing={this.state.editing}
-            setMessageEditing={this.setMessageEditing}
-            openedDM={this.props.openedDM}
-            opendialog={this.props.opendialog} />
-        );
-        tempMessages.push(newMessage);
-      }
-    });
+      });
+    }
 
     if (hasSending && !handledSending) {
       let mySendingMessages = [];
@@ -454,13 +462,15 @@ class MPDMs extends React.Component {
     let inChatClasses = "mpInChat";
     if (thisChat) {
       if (!thisChat.inChat) {
-        if (thisChat.messages == null || thisChat.lastRead.them < thisChat.messages[thisChat.messages.length - 1].id) {
-          inChatClasses += " mpInChatHide";
-        } else {
+        const onLastMessage = thisChat.messages && thisChat.lastRead.them == thisChat.messages[thisChat.messages.length - 1].id;
+        const noMessageRead = thisChat.lastRead.them == -1 && (!thisChat.messages || thisChat.messages.length == 0);
+        if (onLastMessage || noMessageRead) {
           if (thisChat.sendingMessages && thisChat.sendingMessages.length > 0) {
             inChatClasses += " mpInChatHide noTransition";
           }
           inChatClasses += " mpInChatGone";
+        } else {
+          inChatClasses += " mpInChatHide";
         }
       }
       if (this.inChatOpenedDM != this.props.openedDM) {
