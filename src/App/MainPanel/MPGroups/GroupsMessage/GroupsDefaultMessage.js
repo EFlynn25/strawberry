@@ -186,7 +186,13 @@ class GroupsDefaultMessage extends React.Component {
                 return (
                   <div key={"id" + item.id} title={item.basicTimestamp} className={messageClass}>
                     {MyIcon != null ? <MyIcon style={{position: "absolute", width: "15px", height: "15px", marginLeft: "-20px", fill: "#999", top: top}} /> : null}
-                    <Linkify><p>{myMessage}</p></Linkify>
+                    <Linkify componentDecorator={(decoratedHref: string, decoratedText: string, key: number) => (
+                        <a href={decoratedHref} key={key} target="_blank" rel="noopener noreferrer">
+                          {decoratedText}
+                        </a>
+                      )}>
+                      <p>{myMessage}</p>
+                    </Linkify>
                     {editedElement}
                     {editIconElement}
                     {lastReadElement}

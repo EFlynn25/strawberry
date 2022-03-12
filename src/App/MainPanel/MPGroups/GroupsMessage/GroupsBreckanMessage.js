@@ -191,7 +191,13 @@ class GroupsBreckanMessage extends React.Component {
                     { this.props.email != "system" ?
                       <div title={item.basicTimestamp} className={"breckanMessageText" + classExtension}>
                         {item.sending ? <h1 className={"defaultMessageSendingText breckanMessageSendingText" + classExtension}>Sending...</h1> : null}
-                        <Linkify><p>{myMessage}{editedElement}</p></Linkify>
+                        <Linkify componentDecorator={(decoratedHref: string, decoratedText: string, key: number) => (
+                            <a href={decoratedHref} key={key} target="_blank" rel="noopener noreferrer">
+                              {decoratedText}
+                            </a>
+                          )}>
+                          <p>{myMessage}{editedElement}</p>
+                        </Linkify>
                         {lastReadElement}
                         {editIconElement}
                       </div>

@@ -22,6 +22,7 @@ class MPPopup extends React.Component {
 
     this.setWrapperRef = this.setWrapperRef.bind(this);
     this.handleClickOutside = this.handleClickOutside.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
 
     this.mousePressedDown = false; // Has the user already pressed down outside of the panel?
   }
@@ -30,6 +31,7 @@ class MPPopup extends React.Component {
     this.reloadData();
     document.addEventListener('mouseup', this.handleClickOutside);
     document.addEventListener('mousedown', this.handleClickOutside);
+    document.addEventListener('keydown', this.handleKeyDown);
   }
 
   componentDidUpdate() {
@@ -39,6 +41,7 @@ class MPPopup extends React.Component {
   componentWillUnmount() {
     document.removeEventListener('mouseup', this.handleClickOutside);
     document.removeEventListener('mousedown', this.handleClickOutside);
+    document.removeEventListener('keydown', this.handleKeyDown);
   }
 
   reloadData() {
@@ -65,6 +68,12 @@ class MPPopup extends React.Component {
     }
   }
 
+  setWrapperRef(node) {
+    if (node != null) {
+      this.panelRef = node;
+    }
+  }
+
   handleClickOutside(event) { // Checks if the user has pressed both down and up outside of the panel
     if (this.panelRef && !this.panelRef.contains(event.target) && this.props.type != "") {
       if (event.type == "mousedown") {
@@ -81,9 +90,9 @@ class MPPopup extends React.Component {
     }
   }
 
-  setWrapperRef(node) {
-    if (node != null) {
-      this.panelRef = node;
+  handleKeyDown(e) {
+    if (e.which == 27) {
+      this.props.onclose();
     }
   }
 

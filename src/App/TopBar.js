@@ -53,7 +53,7 @@ class TopBar extends React.Component {
         </div>
         <div className={this.state.tbLogoDivClass}>
           <SLogo className="tbLogoLeft" />
-          { window.location.href.startsWith("https://strawberry.neonblacknetwork.com") ? null :
+          { window.location.href.startsWith("https://strawberry.neonerapowered.com") ? null :
             <h1 className="tbDev">dev</h1>
           }
         </div>

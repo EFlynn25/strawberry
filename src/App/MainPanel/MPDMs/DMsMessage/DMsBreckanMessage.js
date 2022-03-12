@@ -138,7 +138,13 @@ class DMsBreckanMessage extends React.Component {
                   <div className={"breckanMessageTextWrap" + classExtension} key={"id" + item.id}>
                     <div title={parseDate(item.timestamp, "basic")} className={"breckanMessageText" + classExtension}>
                       {item.sending ? <h1 className={"defaultMessageSendingText breckanMessageSendingText" + classExtension}>Sending...</h1> : null}
-                      <Linkify><p>{item.message}{editedElement}</p></Linkify>
+                      <Linkify componentDecorator={(decoratedHref: string, decoratedText: string, key: number) => (
+                          <a href={decoratedHref} key={key} target="_blank" rel="noopener noreferrer">
+                            {decoratedText}
+                          </a>
+                        )}>
+                        <p>{item.message}{editedElement}</p>
+                      </Linkify>
                       {lastReadElement}
                       {editIconElement}
                     </div>

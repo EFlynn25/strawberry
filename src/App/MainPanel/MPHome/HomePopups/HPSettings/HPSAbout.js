@@ -8,7 +8,7 @@ class HPSAbout extends React.Component {
     return (
       <Fragment>
         <SLogo className="hpsaLogoBg" />
-        <h1 className="hpsaTitle">Strawberry <span>v0.2.1 dev</span></h1>
+        <h1 className="hpsaTitle">Strawberry <span>v0.2.1</span></h1>
         <div className="hpsaCredits">
           <h3>Credits:</h3>
           <p>Naomi Nelson - Strawberry's name</p>

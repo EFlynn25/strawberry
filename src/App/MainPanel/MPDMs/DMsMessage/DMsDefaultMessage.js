@@ -124,7 +124,13 @@ class DMsDefaultMessage extends React.Component {
                 }
                 return (
                   <div key={"id" + item.id} title={parseDate(item.timestamp, "basic")} className={messageClass}>
-                    <Linkify><p>{item.message}{editedElement}</p></Linkify>
+                    <Linkify componentDecorator={(decoratedHref: string, decoratedText: string, key: number) => (
+                        <a href={decoratedHref} key={key} target="_blank" rel="noopener noreferrer">
+                          {decoratedText}
+                        </a>
+                      )}>
+                      <p>{item.message}{editedElement}</p>
+                    </Linkify>
                     {lastReadElement}
                     {editIconElement}
                   </div>
