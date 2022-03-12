@@ -168,6 +168,7 @@
   height: 25px;
   top: 20px;
   left: 80px;
+  padding: 0 !important;
 }
 
 /* ...posts */

@@ -503,7 +503,7 @@ class MPDMs extends React.Component {
 
               <div className="mpTopTextDiv">
                 <h1 className="mpLoadingMessagesText">Loading...</h1>
-                <Oval className="mpLoadingMessagesSpinner" color="var(--accent-color)" height={30} width={30} />
+                <Oval wrapperClass="mpLoadingMessagesSpinner" color="var(--accent-color)" secondaryColor="var(--lighter-accent-color)" height={30} width={30} />
               </div>
 
               :

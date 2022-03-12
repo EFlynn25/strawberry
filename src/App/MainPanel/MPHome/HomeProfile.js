@@ -148,7 +148,7 @@ class HomeProfile extends React.Component {
           <div className="ppRight">
             <h3>Posts</h3>
             { this.props.loadingPosts ?
-              <Oval className="pprPostLoading" color="var(--accent-color)" height={25} width={25} />
+              <Oval wrapperClass="pprPostLoading" color="var(--accent-color)" secondaryColor="var(--lighter-accent-color)" height={25} width={25} />
               : null
             }
             <div className="pprPostList" ref={this.postListRef} onScroll={this.handleScroll}>
