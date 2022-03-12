@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import equal from 'fast-deep-equal/react';
 
 import { getUser } from '../../../GlobalComponents/getUser.js';
@@ -230,10 +230,9 @@ class GroupsInThread extends React.Component {
               myTypingClasses += " noTransition";
             }
             return (
-              <>
+              <Fragment key={"here" + item}>
                 <ProfilePicture
                   email={item}
-                  key={"here" + item}
                   className={myClasses}
                   style={myStyles} />
                 <div
@@ -245,7 +244,7 @@ class GroupsInThread extends React.Component {
                     <div className="defaultInChatTypingDot" style={{left: "21px", top: "11.75px", animationDelay: ".5s"}}></div>
                   </div>
                 </div>
-              </>
+              </Fragment>
             );
           })
         }

@@ -1,5 +1,4 @@
 import React, { Fragment } from 'react';
-import { withRouter } from "react-router-dom";
 import { connect } from 'react-redux';
 
 import './LeftPanel.css';
@@ -13,8 +12,9 @@ import LPDMs from './LeftPanel/LPDMs'
 import { setAppState } from "../redux/appReducer"
 import { setOpenedDM } from "../redux/dmsReducer"
 import { setOpenedThread } from "../redux/groupsReducer"
+import withRouter from "../GlobalComponents/withRouter.js";
 
-// import { Switch, Route } from "react-router-dom";
+// import { Routes, Route } from "react-router-dom";
 
 class LeftPanel extends React.Component {
   constructor(props) {
@@ -31,7 +31,7 @@ class LeftPanel extends React.Component {
 
   componentDidMount() {
     let setTo = "dms";
-    if (this.props.history.location.pathname.startsWith("/groups")) {
+    if (this.props.router.location.pathname.startsWith("/groups")) {
       setTo = "groups";
     }
     this.props.setAppState({ dmsOrGroups: setTo });
@@ -62,11 +62,11 @@ class LeftPanel extends React.Component {
       if (newLink == nextOne) {
         const openedExtension = newLink == "dms" ? "DM" : "Thread";
         const opened = this.props["opened" + openedExtension];
-        if (this.props.history.location.pathname != "/home") {
+        if (this.props.router.location.pathname != "/home") {
           if (opened != null && opened != "") {
-            this.props.history.push("/" + newLink + "/" + opened);
+            this.props.router.navigate("/" + newLink + "/" + opened);
           } else {
-            this.props.history.push("/" + newLink);
+            this.props.router.navigate("/" + newLink);
           }
         }
         this.props.setAppState({ dmsOrGroups: newLink });
@@ -83,13 +83,13 @@ class LeftPanel extends React.Component {
       e.preventDefault();
       e.stopPropagation();
 
-      if (!this.props.history.location.pathname.startsWith("/home")) {
+      if (!this.props.router.location.pathname.startsWith("/home")) {
         const myIndex = myList.indexOf(opened);
 
         if (myIndex != 0) {
           newConversation = myList[myIndex - 1];
         } else {
-          this.props.history.push("/home");
+          this.props.router.navigate("/home");
         }
       }
 
@@ -97,7 +97,7 @@ class LeftPanel extends React.Component {
       e.preventDefault();
       e.stopPropagation();
 
-      if (this.props.history.location.pathname.startsWith("/home")) {
+      if (this.props.router.location.pathname.startsWith("/home")) {
         newConversation = myList[0];
       } else {
         const myIndex = myList.indexOf(opened);
@@ -112,10 +112,10 @@ class LeftPanel extends React.Component {
     }
     if (dmsOrGroups == "dms") {
       this.props.setOpenedDM(newConversation);
-      this.props.history.push("/dms/" + newConversation);
+      this.props.router.navigate("/dms/" + newConversation);
     } else if (dmsOrGroups == "groups") {
       this.props.setOpenedThread(newConversation);
-      this.props.history.push("/groups/" + newConversation);
+      this.props.router.navigate("/groups/" + newConversation);
     }
   }
 

@@ -6,7 +6,7 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import TextareaAutosize from 'react-autosize-textarea';
-import Loader from "react-loader-spinner";
+import { Oval } from "react-loader-spinner";
 import clone from 'just-clone';
 import equal from 'fast-deep-equal/react';
 
@@ -32,6 +32,7 @@ import {
   dms_last_read
 } from '../../socket.js';
 import { getUser } from '../../GlobalComponents/getUser.js';
+import withRouter from '../../GlobalComponents/withRouter.js';
 
 import DMsMessage from './MPDMs/DMsMessage';
 import DMsDefaultMessage from './MPDMs/DMsMessage/DMsDefaultMessage';
@@ -147,7 +148,7 @@ class MPDMs extends React.Component {
 
   componentDidMount() {
     if (this.props.popout != true) {
-      this.props.setOpenedDM(this.props.match.params.chatEmail);
+      this.props.setOpenedDM(this.props.router.params.chatEmail);
     }
 
     console.log("[MPDMs]: componentDidMount with email " + this.props.openedDM);
@@ -502,7 +503,7 @@ class MPDMs extends React.Component {
 
               <div className="mpTopTextDiv">
                 <h1 className="mpLoadingMessagesText">Loading...</h1>
-                <Loader className="mpLoadingMessagesSpinner" type="Oval" color="var(--accent-color)" height={30} width={30} />
+                <Oval className="mpLoadingMessagesSpinner" color="var(--accent-color)" height={30} width={30} />
               </div>
 
               :
@@ -564,4 +565,4 @@ const mapDispatchToProps = {
   setAppState,
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(MPDMs);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(MPDMs));

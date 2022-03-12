@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from "react-router-dom";
 import equal from 'fast-deep-equal/react';
 
 import './DMChat.css';
@@ -10,6 +9,7 @@ import {
   setChatLastRead
 } from "../../../redux/dmsReducer"
 import { getUser } from '../../../GlobalComponents/getUser.js';
+import withRouter from "../../../GlobalComponents/withRouter.js";
 import { ParseDateLive } from '../../../GlobalComponents/parseDate.js';
 
 class DMChat extends React.Component {
@@ -52,7 +52,7 @@ class DMChat extends React.Component {
       this.props.changePopout(this.props.chatEmail);
     } else {
       this.props.setOpenedDM(this.props.chatEmail);
-      this.props.history.push("/dms/" + this.props.chatEmail);
+      this.props.router.navigate("/dms/" + this.props.chatEmail);
 
       this.props.hideLeftPanel();
     }

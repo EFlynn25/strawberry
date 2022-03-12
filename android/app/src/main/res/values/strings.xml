@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">Strawberry</string>
     <string name="title_activity_main">Strawberry</string>
-    <string name="package_name">com.neonblacknetwork.strawberry</string>
-    <string name="custom_url_scheme">com.neonblacknetwork.strawberry</string>
+    <string name="package_name">com.neonera.strawberry</string>
+    <string name="custom_url_scheme">com.neonera.strawberry</string>
     <string name="default_notification_channel_id">Default</string>
 </resources>

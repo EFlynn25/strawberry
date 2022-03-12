@@ -14,7 +14,7 @@ class HPSAbout extends React.Component {
           <p>Naomi Nelson - Strawberry's name</p>
         </div>
         <span className="hpsaSmoothie" title="Strawberry Smoothie">🥤</span>
-        <p className="hpsaCopyright">© 2022 Neon Black Network. All Rights Reserved.</p>
+        <p className="hpsaCopyright">© 2022 Neon Era. All Rights Reserved.</p>
       </Fragment>
     )
   }

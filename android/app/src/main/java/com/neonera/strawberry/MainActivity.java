@@ -1,4 +1,4 @@
-package com.neonblacknetwork.strawberry;
+package com.neonera.strawberry;
 
 import com.getcapacitor.BridgeActivity;
 

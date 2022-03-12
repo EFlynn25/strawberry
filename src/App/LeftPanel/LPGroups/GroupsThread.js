@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from "react-router-dom";
 
 import './GroupsThread.css';
 import { ReactComponent as Popout } from '../../../assets/icons/popout.svg';
@@ -8,6 +7,7 @@ import {
   setOpenedThread,
   setThreadLastRead
 } from "../../../redux/groupsReducer"
+import withRouter from "../../../GlobalComponents/withRouter.js";
 import { getUser } from '../../../GlobalComponents/getUser.js';
 import { ParseDateLive } from '../../../GlobalComponents/parseDate.js';
 import { isEmail, parseEmailToName } from '../../../GlobalComponents/smallFunctions.js';
@@ -47,7 +47,7 @@ class GroupsThread extends React.Component {
       this.props.changePopout(this.props.threadID);
     } else {
       this.props.setOpenedThread(this.props.threadID);
-      this.props.history.push("/groups/" + this.props.threadID);
+      this.props.router.navigate("/groups/" + this.props.threadID);
 
       this.props.hideLeftPanel();
     }

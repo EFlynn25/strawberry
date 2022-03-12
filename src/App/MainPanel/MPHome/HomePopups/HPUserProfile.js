@@ -1,8 +1,8 @@
 import React from 'react';
-import { Switch, Route, withRouter } from "react-router-dom";
+// import { Routes, Route } from "react-router-dom";
 import ReactMarkdown from 'react-markdown';
 import { connect } from 'react-redux';
-import Loader from "react-loader-spinner";
+import { Oval } from "react-loader-spinner";
 import clone from 'just-clone';
 
 import './HPUserProfile.css';
@@ -15,6 +15,7 @@ import { get_posts, like_post, dms_request_to_chat, dms_deny_request } from '../
 import { addLoadingPosts } from '../../../../redux/peopleReducer.js';
 import { addChatRequest } from '../../../../redux/dmsReducer.js';
 import { getUser } from '../../../../GlobalComponents/getUser.js';
+import withRouter from "../../../../GlobalComponents/withRouter.js";
 import { parseDate, ParseDateLive } from '../../../../GlobalComponents/parseDate.js';
 
 import ProfilePicture from '../../../../GlobalComponents/ProfilePicture';
@@ -127,7 +128,7 @@ class HPUserProfile extends React.Component {
     let bottomAction;
     if (Object.keys(this.props.chats).includes(item)) {
       bottomAction = (
-        <div className="pplBottomAction" onClick={() => { this.props.history.push("/dms/" + item); this.props.closedialog(); }}>
+        <div className="pplBottomAction" onClick={() => { this.props.router.navigate("/dms/" + item); this.props.closedialog(); }}>
           <Join />
           <h1>Go to DM</h1>
         </div>
@@ -171,7 +172,7 @@ class HPUserProfile extends React.Component {
         <div className="ppRight">
           <h3>Posts</h3>
           { this.props.loadingPosts.includes(this.props.email) ?
-            <Loader className="pprPostLoading" type="Oval" color="var(--accent-color)" height={25} width={25} />
+            <Oval className="pprPostLoading" color="var(--accent-color)" height={25} width={25} />
             : null
           }
           <div className="pprPostList" ref={this.postListRef} onScroll={this.handleScroll}>

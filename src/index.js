@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Router } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 import { Provider } from 'react-redux';
 import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en.json';
@@ -11,7 +11,7 @@ import store from './redux/mainStore';
 import reportWebVitals from './reportWebVitals';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 
-import history from "./history";
+// import history from "./history";
 
 TimeAgo.addDefaultLocale(en);
 const customLabels = {
@@ -32,11 +32,11 @@ TimeAgo.addLabels('en', 'custom', customLabels);
 
 ReactDOM.render(
   <React.StrictMode>
-    <Router history={history}>
+    <BrowserRouter>
       <Provider store={store}>
         <App />
       </Provider>
-    </Router>
+    </BrowserRouter>
   </React.StrictMode>,
   document.getElementById('root')
 );

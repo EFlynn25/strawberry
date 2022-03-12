@@ -1,6 +1,6 @@
 import { Fragment } from 'react';
-import { useHistory } from "react-router-dom";
-import firebase from 'firebase/app';
+import { useNavigate } from "react-router-dom";
+import firebase from 'firebase/compat/app';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import { Line } from 'rc-progress';
 import { useDispatch } from 'react-redux'
@@ -12,7 +12,7 @@ import './Overlay.css';
 import { uiConfig } from '../StartFirebase'
 
 function Overlay(props) {
-  const history = useHistory();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   let ovClass = "OverlayView";
@@ -21,7 +21,7 @@ function Overlay(props) {
   if (props.type == "welcome") { // Overlay has different types, for sign-in page, loading screen, and just blur (unused).
     firebase.auth().onAuthStateChanged(user => {
       if (!!user) {
-        history.push('/');
+        navigate('/');
       }
     });
 

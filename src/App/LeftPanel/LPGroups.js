@@ -1,9 +1,9 @@
 import React from 'react';
-import { withRouter } from "react-router-dom";
 import { connect } from 'react-redux';
 import equal from 'fast-deep-equal/react';
 
 import './LPGroups.css';
+import withRouter from "../../GlobalComponents/withRouter.js";
 import { setAppState } from '../../redux/appReducer';
 import {
   setOpenedThread

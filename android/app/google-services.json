@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:57430125686:android:6d26905cfdc717f3cf0357",
+        "mobilesdk_app_id": "1:57430125686:android:d55ca230bc03161fcf0357",
         "android_client_info": {
-          "package_name": "com.neonblacknetwork.strawberry"
+          "package_name": "com.neonera.strawberry"
         }
       },
       "oauth_client": [
@@ -32,10 +32,10 @@
               "client_type": 3
             },
             {
-              "client_id": "57430125686-hbt7bole2gkkk79lpcpq7vl7m7cud2gm.apps.googleusercontent.com",
+              "client_id": "57430125686-5his8p5163vt72f98ula29vu401nc2jl.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.neonblacknetwork.strawberryMobile"
+                "bundle_id": "com.neonera.strawberry"
               }
             }
           ]

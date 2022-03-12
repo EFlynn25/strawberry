@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import TextareaAutosize from 'react-autosize-textarea';
 import ReactMarkdown from 'react-markdown';
 import { connect } from 'react-redux';
-import Loader from "react-loader-spinner";
+import { Oval } from "react-loader-spinner";
 import clone from 'just-clone';
 
 import './HomeProfile.css';
@@ -148,7 +148,7 @@ class HomeProfile extends React.Component {
           <div className="ppRight">
             <h3>Posts</h3>
             { this.props.loadingPosts ?
-              <Loader className="pprPostLoading" type="Oval" color="var(--accent-color)" height={25} width={25} />
+              <Oval className="pprPostLoading" color="var(--accent-color)" height={25} width={25} />
               : null
             }
             <div className="pprPostList" ref={this.postListRef} onScroll={this.handleScroll}>

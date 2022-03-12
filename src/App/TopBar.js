@@ -1,10 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from "react-router-dom";
 
+import './TopBar.css';
 import { ReactComponent as SLogo } from '../assets/icons/strawberry.svg';
 import { ReactComponent as Close } from '../assets/icons/close.svg';
-import './TopBar.css';
+import withRouter from "../GlobalComponents/withRouter.js";
 
 class TopBar extends React.Component {
   constructor(props) {
@@ -25,7 +25,7 @@ class TopBar extends React.Component {
   }
 
   reloadClasses() {
-    if (this.props.history.location.pathname.startsWith("/home")) {
+    if (this.props.router.location.pathname.startsWith("/home")) {
       if (this.state.tbWelcomeDivClass != "tbWelcomeDiv tbWelcomeDivHide") {
         this.setState({
           tbWelcomeDivClass: "tbWelcomeDiv tbWelcomeDivHide",

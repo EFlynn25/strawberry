@@ -1,14 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from "react-router-dom";
 import VisibilitySensor from 'react-visibility-sensor';
 
+import './MPHome.css';
 import { ReactComponent as People } from '../../assets/icons/people.svg';
 import { ReactComponent as Notify } from '../../assets/icons/notify.svg';
 import { ReactComponent as Profile } from '../../assets/icons/profile.svg';
 import { ReactComponent as Settings } from '../../assets/icons/settings.svg';
 import { ReactComponent as Announcements } from '../../assets/icons/announcements.svg';
-import './MPHome.css';
+import withRouter from "../../GlobalComponents/withRouter.js";
 import {
   setAppState
 } from '../../redux/appReducer';

@@ -1,15 +1,16 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Switch, Route, withRouter } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { Resizable } from "re-resizable";
 import equal from 'fast-deep-equal/react';
 
 import './MainPanel.css';
 import './MainPanel/MPConversation.css';
+import withRouter from "../GlobalComponents/withRouter.js";
+
 import MPDMs from './MainPanel/MPDMs';
 import MPGroups from './MainPanel/MPGroups';
 import MPHome from './MainPanel/MPHome';
-
 import MPPopup from './MainPanel/MPPopup';
 
 class MainPanel extends React.Component {
@@ -136,27 +137,25 @@ class MainPanel extends React.Component {
   render() {
     return (
       <div className={this.state.mpClass} style={this.state.specialEasing ? {transition: "opacity .3s cubic-bezier(0.65, 0, 0.35, 1), transform .3s cubic-bezier(0.65, 0, 0.35, 1)"} : null}>
-        <Switch>
-          <Route path="/dms/:chatEmail" render={routeProps => (<MPDMs openedDM={this.props.openedDM} thisChat={this.props.chats[this.props.openedDM]} opendialog={this.openPanel} {...routeProps} />)} />
-          <Route path="/dms">
+        <Routes>
+          <Route path="/dms/:chatEmail" element={<MPDMs openedDM={this.props.openedDM} thisChat={this.props.chats[this.props.openedDM]} opendialog={this.openPanel} />} />
+          <Route path="/dms" element={
             <div style={{position: "absolute", display: "table", width: "100%", height: "100%"}}>
               <h1 style={{position: "relative", display: "table-cell", margin: "0", textAlign: "center", verticalAlign: "middle", color: "#fff5", fontSize: "20px", userSelect: "none"}}>
                 Welcome to Strawberry DMs
               </h1>
             </div>
-          </Route>
-          <Route path="/groups/:threadID" render={routeProps => (<MPGroups openedThread={this.props.openedThread} thisThread={this.props.threads[this.props.openedThread]} opendialog={this.openPanel} {...routeProps} />)} />
-          <Route path="/groups">
+          } />
+          <Route path="/groups/:threadID" element={<MPGroups openedThread={this.props.openedThread} thisThread={this.props.threads[this.props.openedThread]} opendialog={this.openPanel} />} />
+          <Route path="/groups" element={
             <div style={{position: "absolute", display: "table", width: "100%", height: "100%"}}>
               <h1 style={{position: "relative", display: "table-cell", margin: "0", textAlign: "center", verticalAlign: "middle", color: "#fff5", fontSize: "20px", userSelect: "none"}}>
-                Welcome to Strawberry Groups
+              Welcome to Strawberry Groups
               </h1>
             </div>
-          </Route>
-          <Route path="/home">
-            <MPHome opendialog={this.openPanel} />
-          </Route>
-        </Switch>
+          } />
+          <Route path="/home" element={<MPHome opendialog={this.openPanel} />} />
+        </Routes>
 
         <div className="mpPopouts">
           {

@@ -1,5 +1,4 @@
 import React from 'react';
-import { withRouter } from "react-router-dom";
 import { connect } from 'react-redux';
 import equal from 'fast-deep-equal/react';
 
@@ -8,6 +7,7 @@ import { setAppState } from '../../redux/appReducer';
 import {
   setOpenedDM
 } from "../../redux/dmsReducer"
+import withRouter from "../../GlobalComponents/withRouter.js";
 import DMChat from './LPDMs/DMChat'
 import DMNewChat from './LPDMs/DMNewChat'
 

@@ -5,9 +5,9 @@
 
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
-import { Switch, Route } from "react-router-dom";
+// import { Routes, Route } from "react-router-dom";
 import TextareaAutosize from 'react-autosize-textarea';
-import Loader from "react-loader-spinner";
+import { Oval } from "react-loader-spinner";
 import clone from 'just-clone';
 import equal from 'fast-deep-equal/react';
 
@@ -34,6 +34,7 @@ import {
   groups_last_read
 } from '../../socket.js';
 import { getUser } from '../../GlobalComponents/getUser.js';
+import withRouter from '../../GlobalComponents/withRouter.js';
 
 import GroupsMessage from './MPGroups/GroupsMessage';
 import GroupsDefaultMessage from './MPGroups/GroupsMessage/GroupsDefaultMessage';
@@ -150,7 +151,7 @@ class MPGroups extends React.Component {
 
   componentDidMount() {
     if (this.props.popout != true) {
-      this.props.setOpenedThread(this.props.match.params.threadID);
+      this.props.setOpenedThread(this.props.router.params.threadID);
     }
 
     console.log("[MPGroups]: componentDidMount with thread ID " + this.props.openedThread);
@@ -523,7 +524,7 @@ class MPGroups extends React.Component {
 
               <div className="mpTopTextDiv">
                 <h1 className="mpLoadingMessagesText">Loading...</h1>
-                <Loader className="mpLoadingMessagesSpinner" type="Oval" color="var(--accent-color)" height={30} width={30} />
+                <Oval className="mpLoadingMessagesSpinner" color="var(--accent-color)" height={30} width={30} />
               </div>
 
               :
@@ -583,4 +584,4 @@ const mapDispatchToProps = {
   setAppState,
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(MPGroups);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(MPGroups));

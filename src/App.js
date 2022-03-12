@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
-import { Switch, Route, withRouter } from "react-router-dom";
-import firebase from 'firebase/app';
-import 'firebase/auth';
+import { Routes, Route } from "react-router-dom";
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
 import { connect } from 'react-redux';
 import Div100vh from 'react-div-100vh';
 
@@ -17,6 +17,7 @@ import MainPanel from './App/MainPanel';
 import { ReactComponent as Menu } from './assets/icons/menu.svg';
 import { ReactComponent as Close } from './assets/icons/close.svg';
 import { startSocket } from './socket.js';
+import withRouter from "./GlobalComponents/withRouter.js";
 
 class App extends React.Component {
   constructor(props) {
@@ -40,7 +41,7 @@ class App extends React.Component {
   componentDidMount() {
     firebase.auth().onAuthStateChanged(user => {
       if (!user) {
-        this.props.history.push("/welcome");
+        this.props.router.navigate("/welcome");
       } else {
         startSocket();
         let picture = user.photoURL
@@ -57,8 +58,8 @@ class App extends React.Component {
   componentDidUpdate() {
     if (!this.state.pageLoaded && this.props.dmsLoaded && this.props.groupsLoaded && this.props.peopleLoaded && this.props.socket == true) {
       // All backend data loaded, ready to close overlay and navigate home
-      if (this.props.history.location.pathname == "/") {
-        this.props.history.push("/home");
+      if (this.props.router.location.pathname == "/") {
+        this.props.router.navigate("/home");
       }
       this.setState({
         pageLoaded: true
@@ -136,39 +137,39 @@ class App extends React.Component {
       <Div100vh>
         <div className="App">
 
-          <Switch>
-            <Route path="/welcome">
-              <Overlay type="welcome" />
-            </Route>
-            <Route path="/">
-              {  this.state.pageLoaded ?
+          <Routes>
+            <Route path="/welcome" element={<Overlay type="welcome" />} />
+            <Route path="*" element={
+              <Fragment>
+                {  this.state.pageLoaded ?
 
-                <Fragment>
-                  { this.props.mobile != true ? null :
-                    <div className="appHamburgerIcon" style={appHamburgerIconStyles}>
-                      <div className="ahiMenuTrigger" onClick={() => {this.setState({showLeftPanel: true})}}></div>
-                      <Menu />
-                      {this.state.showCloseButton ? <Close /> : null}
-                    </div>
-                  }
-                  <TopBar showLeftPanel={this.state.showLeftPanel} hideLeftPanel={() => {this.setState({showLeftPanel: false})}} />
-                  <LeftPanel
-                    showLeftPanel={this.state.showLeftPanel} hideLeftPanel={() => {this.setState({showLeftPanel: false})}}
-                    changePopout={this.changePopout} />
-                  <MainPanel
-                    setCloseButton={(value) => {this.setState({showCloseButton: value})} /* Shows close button when MPPopup is open */}
-                    popouts={this.props.mobile ? [] : this.state.popouts}
-                    changePopout={this.changePopout} />
-                </Fragment>
+                  <Fragment>
+                    { this.props.mobile != true ? null :
+                      <div className="appHamburgerIcon" style={appHamburgerIconStyles}>
+                        <div className="ahiMenuTrigger" onClick={() => {this.setState({showLeftPanel: true})}}></div>
+                        <Menu />
+                        {this.state.showCloseButton ? <Close /> : null}
+                      </div>
+                    }
+                    <TopBar showLeftPanel={this.state.showLeftPanel} hideLeftPanel={() => {this.setState({showLeftPanel: false})}} />
+                    <LeftPanel
+                      showLeftPanel={this.state.showLeftPanel} hideLeftPanel={() => {this.setState({showLeftPanel: false})}}
+                      changePopout={this.changePopout} />
+                    <MainPanel
+                      setCloseButton={(value) => {this.setState({showCloseButton: value})} /* Shows close button when MPPopup is open */}
+                      popouts={this.props.mobile ? [] : this.state.popouts}
+                      changePopout={this.changePopout} />
+                  </Fragment>
 
-                :
+                  :
 
-                null
-              }
+                  null
+                }
 
-              <Overlay type="loading" hide={this.state.pageLoaded} socket={this.props.socket} multipleTabs={this.props.multipleTabs} dmsLoaded={this.props.dmsLoaded} groupsLoaded={this.props.groupsLoaded} peopleLoaded={this.props.peopleLoaded} />
-            </Route>
-          </Switch>
+                <Overlay type="loading" hide={this.state.pageLoaded} socket={this.props.socket} multipleTabs={this.props.multipleTabs} dmsLoaded={this.props.dmsLoaded} groupsLoaded={this.props.groupsLoaded} peopleLoaded={this.props.peopleLoaded} />
+              </Fragment>
+            } />
+          </Routes>
         </div>
       </Div100vh>
     );

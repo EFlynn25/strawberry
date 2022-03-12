@@ -3,7 +3,7 @@
 
 
 
-import firebase from 'firebase/app';
+import firebase from 'firebase/compat/app';
 import {
   setAppState, pushAppArrayValue,
   addUserPost, setUserLikedPost, setLikedPost, setUserLoadingPosts, editUserPost, deleteUserPost,

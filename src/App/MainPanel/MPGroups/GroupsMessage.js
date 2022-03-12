@@ -137,46 +137,34 @@ class GroupsMessage extends React.Component {
     this.state.myIDs.forEach(item => {
       const message = thisThread.messages[item - firstMessageID];
 
-
-      // let lr = false;
-      // let nt = false;
-      // const sendingMessagesExist = thisChat.sendingMessages && thisChat.sendingMessages.length > 0;
-      // if (lastRead != null && item == lastRead) {
-      //   const simpleConditions = lastRead != thisChat.messages[thisChat.messages.length - 1].id || sendingMessagesExist;
-      //   if (!this.props.inChat && simpleConditions) {
-      //     lr = true;
-      //   }
-      // }
-      // if (sendingMessagesExist) {
-      //   nt = true;
-      // }
-
-
-      const unrefinedLR = this.myLastRead[message.id];
-      let lr = [];
-      if (unrefinedLR != null) {
-        const simpleConditions = message.id != thisThread.messages[thisThread.messages.length - 1].id || thisThread.sendingMessages && thisThread.sendingMessages.length > 0;
-        if (simpleConditions) {
-          unrefinedLR.forEach((item, i) => {
-            if (!thisThread.inThread.includes(item)) {
-              lr.push(item);
-            }
-          });
+      if (message) {
+        const unrefinedLR = this.myLastRead[message.id];
+        let lr = [];
+        if (unrefinedLR != null) {
+          const simpleConditions = message.id != thisThread.messages[thisThread.messages.length - 1].id || thisThread.sendingMessages && thisThread.sendingMessages.length > 0;
+          if (simpleConditions) {
+            unrefinedLR.forEach((item, i) => {
+              if (!thisThread.inThread.includes(item)) {
+                lr.push(item);
+              }
+            });
+          }
         }
+
+        let edited = message.edited != null ? message.edited : false;
+
+        let messageObject;
+        messageObject = {
+          message: message.message,
+          timestamp: message.timestamp,
+          lastRead: lr,
+          id: item,
+          edited: edited
+        };
+
+        newMessageObjects.push(messageObject);
       }
 
-      let edited = message.edited != null ? message.edited : false;
-
-      let messageObject;
-      messageObject = {
-        message: message.message,
-        timestamp: message.timestamp,
-        lastRead: lr,
-        id: item,
-        edited: edited
-      };
-
-      newMessageObjects.push(messageObject);
     });
 
     // let newInThread = {};
