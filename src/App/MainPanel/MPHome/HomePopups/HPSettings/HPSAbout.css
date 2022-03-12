@@ -1,0 +1,80 @@
+/* Logo BG */
+
+.hpsaLogoBg {
+  position: absolute;
+  width: 130%;
+  height: 170%;
+
+  transition: transform .3s;
+  z-index: 0;
+}
+
+.hpsaLogoBg g, .hpsaLogoBg g path:last-of-type {
+  stroke: #444;
+  fill: #444;
+}
+
+
+
+/* Content */
+
+.hpsaTitle {
+  position: absolute;
+  user-select: none;
+}
+
+.hpsaTitle span {
+  font-size: 22px;
+  color: #888;
+  z-index: 1;
+}
+
+.hpsaCredits {
+  position: absolute;
+  height: calc(100% - 40px);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.hpsaCredits h3 {
+  color: #ddd;
+}
+
+.hpsaCredits p {
+  color: #bbb;
+}
+
+.hpsaSmoothie {
+  position: absolute;
+  bottom: 50px;
+
+  color: transparent;
+  text-shadow: 0 0 0 var(--lighter-accent-color);
+  font-size: 22px;
+
+  user-select: none;
+}
+
+.hpsaCopyright {
+  position: absolute;
+  bottom: 20px;
+  color: #bbb;
+}
+
+
+
+/* RESPONSIVE DESIGN */
+
+@media screen and (max-width: 376px),
+                  (min-width: 405px) and (max-width: 502px),
+                  (min-width: 880px) and (max-width: 898px),
+                  (min-width: 961px) and (max-width: 1047px),
+                  (min-width: 1061px) and (max-width: 1135px),
+                  (min-width: 1291px) and (max-width: 1400px),
+                  (min-width: 1451px) and (max-width: 1483px) {
+  .hpsaSmoothie {
+    bottom: 70px;
+  }
+}

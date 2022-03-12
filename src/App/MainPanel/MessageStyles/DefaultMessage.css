@@ -33,25 +33,74 @@
 
 .defaultMessageText {
   position: relative;
-
   left: -5px;
   margin-bottom: 3px;
+  padding: 0 5px;
 
+  font-size: 14px;
+  font-weight: 400;
+  font-style: normal;
+  overflow-wrap: break-word;
+  color: #ddd;
+
+  border-radius: 5px;
+}
+
+.defaultMessageText > p {
+  display: inline;
+  color: #ddd;
   font-style: normal;
   font-weight: 400;
   font-size: 14px;
-
-  overflow-wrap: break-word;
-
-  color: #FFFFFF;
-  color: #DDD;
-
-  border-radius: 5px;
-  padding: 0 5px;
 }
 
 .defaultMessageText:hover {
   background: #fff1;
+}
+
+.defaultMessageEditIcon {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  margin-bottom: -3px;
+  margin-left: 5px;
+
+  fill: #888;
+  user-select: none;
+  transition: fill .1s, transform .1s;
+  visibility: hidden;
+}
+
+.defaultMessageEditIcon:hover {
+  cursor: pointer;
+  fill: #ddd;
+  transform: scale(1.05);
+}
+
+.defaultMessageEditIcon:active {
+  cursor: pointer;
+  fill: #777;
+  transform: scale(.95);
+}
+
+.defaultMessageText:hover .defaultMessageEditIcon {
+  visibility: visible;
+}
+
+.defaultMessageEditInput {
+  width: calc(100% - 10px);
+  margin-bottom: -1px;
+
+  background: #fff1;
+  border: none;
+  resize: none;
+  outline: none;
+}
+
+.defaultMessageEditSpan {
+  margin-left: 5px;
+  font-size: 12px;
+  color: #888;
 }
 
 .defaultMessageSending {
@@ -81,8 +130,9 @@
   height: 20px;
   bottom: 0;
   left: 50px;
+}
 
-
+.defaultMessageTimestamp > *, .defaultMessageTimestamp {
   font-style: normal;
   font-weight: 400;
   font-size: 12px;

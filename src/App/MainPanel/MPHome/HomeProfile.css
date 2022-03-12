@@ -43,7 +43,7 @@
 
 .hpChangeStatusDiv {
   display: flex;
-  align-items: end;
+  align-items: flex-end;
   gap: 10px;
 }
 
@@ -82,12 +82,6 @@
 
 /* Posts */
 
-.hpPostThumbUp {
-  width: 20px;
-  height: 20px;
-  fill: #bbb;
-}
-
 .hpPostInput {
   width: calc(100% - 30px);
   min-height: 20px;
@@ -101,8 +95,43 @@
   outline: none;
   border: none;
   resize: none;
+}
 
-  user-select: none;
+.hpPostAction {
+  width: 20px;
+  height: 20px;
+  fill: #bbb;
+}
+
+.hpPostAction {
+  width: 20px;
+  height: 20px;
+  fill: #bbb;
+}
+
+.hpPostDeleteIcon:hover {
+  fill: #faa !important;
+}
+
+.hpPostDeleteIcon:active {
+  fill: #faa8 !important;
+}
+
+.hpEditingPost * {
+  color: #bbb !important;
+}
+
+.hpEditPostInput {
+  width: 100%;
+  min-height: 20px;
+  max-height: 120px;
+
+  background: #2A2B2D;
+  font-size: 16px;
+
+  outline: none;
+  border: none;
+  resize: none;
 }
 
 

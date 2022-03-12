@@ -1,18 +1,18 @@
 import { Fragment } from 'react';
-import { useHistory } from "react-router-dom";
-import firebase from 'firebase/app';
+import { useNavigate } from "react-router-dom";
+import firebase from 'firebase/compat/app';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import { Line } from 'rc-progress';
 import { useDispatch } from 'react-redux'
-import { setCurrentPage } from '../redux/appReducer';
+import { setAppState } from '../redux/appReducer';
 
 // import wlogo from '../assets/icons/swhite.svg';
 import { ReactComponent as SLogo } from '../assets/icons/strawberry.svg';
 import './Overlay.css';
-import { uiConfig, signedIn } from '../StartFirebase'
+import { uiConfig } from '../StartFirebase'
 
 function Overlay(props) {
-  const history = useHistory();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   let ovClass = "OverlayView";
@@ -21,11 +21,11 @@ function Overlay(props) {
   if (props.type == "welcome") { // Overlay has different types, for sign-in page, loading screen, and just blur (unused).
     firebase.auth().onAuthStateChanged(user => {
       if (!!user) {
-        history.push('/');
+        navigate('/');
       }
     });
 
-    dispatch(setCurrentPage("Welcome")); // Sets the title of the page to "Welcome - Strawberry" with App.js
+    dispatch(setAppState({ currentPage: "Welcome" })); // Sets the title of the page to "Welcome - Strawberry" with App.js
 
     overlayContent =
       <div className="overlayPanel">
@@ -38,13 +38,14 @@ function Overlay(props) {
         </div>
       </div>;
   } else if (props.type == "loading") {
-      if (props.hide != null && props.hide) {
+      if (props.hide) {
         ovClass = "OverlayView OverlayViewHide";
       }
+      let translation = 83;
       showBg = false;
-      var myProgress = "";
-      var hideProgress = false;
-      var step = 0;
+      let myProgress = "";
+      let hideProgress = false;
+      let step = 0;
       if (props.socket == null) {
         myProgress = "Connecting to server...";
       } else if (props.dmsLoaded == false) {
@@ -62,12 +63,14 @@ function Overlay(props) {
       if (props.socket == false) {
         myProgress = "Connecting to server...";
         hideProgress = true;
+        translation = 71.5;
       }
       if (props.multipleTabs == true) {
         hideProgress = true;
+        translation = 55;
       }
-      var percent = 0;
-      var color = "#FAA";
+      let percent = 0;
+      let color = "#FAA";
       if (step == 1) {
         percent = 25;
         color = "#D88";
@@ -84,16 +87,18 @@ function Overlay(props) {
 
       overlayContent = (
         <div className="overlayLoading">
-          <SLogo className="oLoadingIcon" />
-          <h1 className={props.multipleTabs == true && props.socket == true ? "oLoadingText" : "oLoadingText oLoadingHide"} style={{width: "80%", padding: "0 10%", fontSize: "24px", color: "#F66"}}>You can only have one tab open at a time</h1>
-          <h1 className={props.socket == false ? "oLoadingText" : "oLoadingText oLoadingHide"}>An error occurred<br/>(server connection closed)</h1>
-          <h1 className={hideProgress ? "oLoadingText oltLoading oLoadingHide" : "oLoadingText oltLoading"}>Loading...</h1>
-          <Line className={hideProgress ? "olProgressBar oLoadingHide" : "olProgressBar"} percent={percent} strokeWidth="1" strokeColor={color} />
-          <h1 className={hideProgress ? "oLoadingText oltProgress oLoadingHide" : "oLoadingText oltProgress"}>{myProgress}</h1>
+          <div className="oLoadingContent" style={{transform: `translateY(-${translation}px)`}}>
+            <SLogo className="oLoadingIcon" />
+            <h1 className={props.multipleTabs == true && props.socket == true ? "oLoadingText" : "oLoadingText oLoadingHide"} style={{width: "80%", padding: "0 10%", fontSize: "24px", color: "#F66"}}>You can only have one tab open at a time</h1>
+            <h1 className={props.socket == false ? "oLoadingText" : "oLoadingText oLoadingHide"}>An error occurred<br/>(server connection closed)</h1>
+            <h1 className={hideProgress ? "oLoadingText oltLoading oLoadingHide" : "oLoadingText oltLoading"}>Loading...</h1>
+            <Line className={hideProgress ? "olProgressBar oLoadingHide" : "olProgressBar"} percent={percent} strokeWidth="1" strokeColor={color} />
+            <h1 className={hideProgress ? "oLoadingText oltProgress oLoadingHide" : "oLoadingText oltProgress"}>{myProgress}</h1>
+          </div>
         </div>
       );
   } else if (props.type == "blur") {
-    if (props.hide != null && props.hide) {
+    if (props.hide) {
       ovClass = "OverlayView OverlayViewHide";
     }
     showBg = false;

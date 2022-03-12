@@ -14,13 +14,15 @@ class MPPopup extends React.Component {
     this.state = {
       mainClasses: "MPPopup MPPopupHide",
       type: "",
-      data: ""
+      data: "",
+      mobile: false
     };
 
     this.panelRef = React.createRef();
 
     this.setWrapperRef = this.setWrapperRef.bind(this);
     this.handleClickOutside = this.handleClickOutside.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
 
     this.mousePressedDown = false; // Has the user already pressed down outside of the panel?
   }
@@ -29,6 +31,7 @@ class MPPopup extends React.Component {
     this.reloadData();
     document.addEventListener('mouseup', this.handleClickOutside);
     document.addEventListener('mousedown', this.handleClickOutside);
+    document.addEventListener('keydown', this.handleKeyDown);
   }
 
   componentDidUpdate() {
@@ -38,6 +41,7 @@ class MPPopup extends React.Component {
   componentWillUnmount() {
     document.removeEventListener('mouseup', this.handleClickOutside);
     document.removeEventListener('mousedown', this.handleClickOutside);
+    document.removeEventListener('keydown', this.handleKeyDown);
   }
 
   reloadData() {
@@ -64,6 +68,12 @@ class MPPopup extends React.Component {
     }
   }
 
+  setWrapperRef(node) {
+    if (node != null) {
+      this.panelRef = node;
+    }
+  }
+
   handleClickOutside(event) { // Checks if the user has pressed both down and up outside of the panel
     if (this.panelRef && !this.panelRef.contains(event.target) && this.props.type != "") {
       if (event.type == "mousedown") {
@@ -80,22 +90,28 @@ class MPPopup extends React.Component {
     }
   }
 
-  setWrapperRef(node) {
-    if (node != null) {
-      this.panelRef = node;
+  handleKeyDown(e) {
+    if (e.which == 27) {
+      this.props.onclose();
     }
   }
 
   render() {
+    let panelStyles = {};
+
     let child = null;
     if (this.state.type == "profile") {
-      child = <HPUserProfile email={this.state.data} />;
+      child = <HPUserProfile email={this.state.data} closedialog={this.props.onclose} />;
     } else if (this.state.type == "announcements") {
       child = <HPAnnouncements openAnnouncement={this.state.data} />;
     } else if (this.state.type == "settings") {
       child = <HPSettings />;
     } else if (this.state.type == "groupSettings") {
-      child = <GroupSettings myThreadID={this.state.data} closedialog={this.props.onclose} />;
+      child = <GroupSettings myThreadID={this.state.data} closedialog={this.props.onclose} opendialog={this.props.opendialog} />;
+      if (this.props.mobile) {
+        panelStyles.height = "100%";
+        panelStyles.paddingTop = "unset";
+      }
     } else {
       child = (
         <div style={{display: "flex", width: "100%", height: "100%", flexDirection: "column", justifyContent: "center", alignItems: "center"}}>
@@ -108,7 +124,8 @@ class MPPopup extends React.Component {
 
     return (
       <div className={this.props.shrink ? this.state.mainClasses : this.state.mainClasses + " MPPopupNoShrink"}>
-        <div className={this.state.mainClasses == "MPPopup" ? "mainPanel" : "mainPanel mainPanelHide"} ref={this.setWrapperRef}>
+        <div className="mpDarkenBackground"></div>
+        <div className={this.state.mainClasses == "MPPopup" ? "mainPanel" : "mainPanel mainPanelHide"} ref={this.setWrapperRef} style={panelStyles}>
           { child }
         </div>
       </div>
@@ -118,7 +135,8 @@ class MPPopup extends React.Component {
 
 const mapStateToProps = (state) => ({
   announcements: state.app.announcements,
-  announcementsRead: state.app.announcementsRead
+  announcementsRead: state.app.announcementsRead,
+  mobile: state.app.mobile
 });
 
 export default connect(mapStateToProps, null)(MPPopup);

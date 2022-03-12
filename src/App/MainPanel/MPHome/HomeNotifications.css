@@ -67,7 +67,7 @@
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
-  width: calc(100% - 82.5px);
+  width: calc(100% - 167.5px);
 }
 
 .hnRequestDiv > h1 {
@@ -129,18 +129,19 @@
 
 /* RESPONSIVE DESIGN */
 
-@media screen and (max-width: 680px) {
+@media screen and (max-width: 570px), (min-width: 880px) and (max-width: 1100px) {
   .hnRequestDiv {
     height: 80px;
   }
+  .hnRequestDiv > h1, .hnRequestDiv > p {
+    width: calc(100% - 82.5px);
+  }
   .hnAcceptIcon {
     top: initial;
-    /* left: 72.5px; */
     bottom: 10px;
   }
   .hnDeclineIcon {
     top: initial;
-    /* left: 107.5px; */
     bottom: 10px;
   }
 
@@ -156,11 +157,3 @@
     margin-left: 0;
   }
 }
-
-/* @media screen and (max-width: 475px) {
-  .hnRequestTypeIcon {
-    width: 20px;
-    height: 20px;
-    top: 25px;
-  }
-} */

@@ -1,10 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from "react-router-dom";
 
 import './LPTabs.css';
+import withRouter from "../../GlobalComponents/withRouter.js";
 import {
-  setdmsOrGroups
+  setAppState
 } from "../../redux/appReducer"
 
 class LPTabs extends React.Component {
@@ -15,28 +15,36 @@ class LPTabs extends React.Component {
     this.groupsHandleClick = this.groupsHandleClick.bind(this);
   }
 
+  componentDidUpdate() {
+    if (this.props.router.location.pathname.startsWith("/dms") && this.props.dmsOrGroups != "dms") {
+      this.props.setAppState({ dmsOrGroups: "dms" });
+    } else if (this.props.router.location.pathname.startsWith("/groups") && this.props.dmsOrGroups != "groups") {
+      this.props.setAppState({ dmsOrGroups: "groups" });
+    }
+  }
+
   dmsHandleClick(e) {
     e.preventDefault();
-    if (this.props.history.location.pathname != "/home") {
+    if (this.props.router.location.pathname != "/home") {
       if (this.props.openedDM != "") {
-        this.props.history.push("/dms/" + this.props.openedDM);
+        this.props.router.navigate("/dms/" + this.props.openedDM);
       } else {
-        this.props.history.push("/dms");
+        this.props.router.navigate("/dms");
       }
     }
-    this.props.setdmsOrGroups("dms");
+    this.props.setAppState({ dmsOrGroups: "dms" });
   }
 
   groupsHandleClick(e) {
     e.preventDefault();
-    if (this.props.history.location.pathname != "/home") {
+    if (this.props.router.location.pathname != "/home") {
       if (this.props.openedThread != null) {
-        this.props.history.push("/groups/" + this.props.openedThread);
+        this.props.router.navigate("/groups/" + this.props.openedThread);
       } else {
-        this.props.history.push("/groups");
+        this.props.router.navigate("/groups");
       }
     }
-    this.props.setdmsOrGroups("groups");
+    this.props.setAppState({ dmsOrGroups: "groups" });
   }
 
   render() {
@@ -48,6 +56,7 @@ class LPTabs extends React.Component {
           return true;
         }
       }
+      return false;
     });
 
     const groupsUnread = Object.keys(this.props.threads).some((item) => {
@@ -58,6 +67,7 @@ class LPTabs extends React.Component {
           return true;
         }
       }
+      return false;
     });
 
 
@@ -124,7 +134,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
-  setdmsOrGroups
+  setAppState
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(LPTabs));

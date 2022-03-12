@@ -1,0 +1,16 @@
+.breckanSystemMessage:hover {
+  background: transparent;
+}
+
+.breckanSystemMessage > div > img, .breckanSystemMessage > div > h1 {
+  right: 80px;
+}
+
+.breckanMessageTextS > div > img, .breckanMessageTextS > div > h1 {
+  left: -30px;
+  right: unset;
+}
+
+.breckanMessageTextWrapS:hover > div > div > img, .breckanMessageTextWrapS:hover > div > div > h1 {
+  left: -50px;
+}

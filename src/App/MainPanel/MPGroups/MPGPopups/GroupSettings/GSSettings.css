@@ -67,7 +67,8 @@
   height: 25px;
   top: 25px;
   left: calc(40% + 30px);
-  background: #1D9545;
+  /* background: #1D9545; */
+  background: var(--groups-accent-color);
   border-radius: 8px;
 
   display: flex;
@@ -132,7 +133,7 @@
 
 .gssLeaveGroupIcon {
   height: 40px;
-  fill: var(--darker-accent-color);
+  fill: var(--darkest-accent-color);
 }
 
 .gssLeaveGroupText {
@@ -142,7 +143,7 @@
   font-size: 18px;
   font-weight: 600;
   line-height: 40px;
-  color: var(--darker-accent-color);
+  color: var(--darkest-accent-color);
 
   text-overflow: ellipsis;
   overflow: hidden;
@@ -197,7 +198,7 @@
   line-height: 24px;
   font-size: 18px;
   font-weight: 500;
-  color: var(--darker-accent-color);
+  color: var(--darkest-accent-color);
   filter: brightness(1.3);
 }
 
@@ -229,7 +230,7 @@
 .gssLeavingGroup svg:first-child {
   top: 10px;
   left: 10px;
-  fill: var(--darker-accent-color);
+  fill: var(--darkest-accent-color);
   filter: brightness(1.3);
 }
 
@@ -261,7 +262,7 @@
 .gssLeavingGroup:hover svg:first-child {
   transform: none;
   cursor: auto;
-  fill: var(--darker-accent-color);
+  fill: var(--darkest-accent-color);
 }
 
 
@@ -270,6 +271,6 @@
 
 @media screen and (max-width: 880px) {
   .gsTabs {
-    padding-left: 70px;
+    padding-left: 90px;
   }
 }

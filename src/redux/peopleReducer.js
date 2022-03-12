@@ -4,18 +4,23 @@ export const peopleSlice = createSlice({
   name: 'people',
   initialState: {
     knownPeople: {},
-    loadingPosts: ["fireno656@yahoo.co"]
+    loadingPosts: [],
+    notUsers: [],
   },
   reducers: {
+    pushPeopleArrayValue: (state, action) => {
+      Object.keys(action.payload).forEach((item) => {
+        state[item].push(action.payload[item]);
+      });
+    },
+
     addPerson: (state, action) => {
-      console.log("add person ", action.payload)
       if (Object.keys(state.knownPeople).includes(action.payload["email"])) {
         state.knownPeople[action.payload["email"]].name = action.payload.name;
         state.knownPeople[action.payload["email"]].picture = action.payload.picture;
         state.knownPeople[action.payload["email"]].status = action.payload.status;
       } else {
         state.knownPeople[action.payload["email"]] = {name: action.payload["name"], picture: action.payload["picture"], status: action.payload["status"], firstPost: action.payload["first_post"], posts: null}
-        // , posts: [{post_id: 0, message: "Today sucked.", likes: 10, timestamp: 0}, {post_id: 12, message: "Today was great!", likes: 0, timestamp: 700350}]
       }
     },
     setpersonName: (state, action) => {
@@ -28,7 +33,10 @@ export const peopleSlice = createSlice({
       state.knownPeople[action.payload["email"]].status = action.payload["status"];
     },
     setpersonOnline: (state, action) => {
-      state.knownPeople[action.payload["email"]].online = action.payload["online"];
+      let myRef = state.knownPeople[action.payload["email"]];
+      if (myRef != null) {
+        myRef.online = action.payload["online"];
+      }
     },
     addpersonPost: (state, action) => {
       const myPerson = state.knownPeople[action.payload["email"]];
@@ -86,10 +94,35 @@ export const peopleSlice = createSlice({
         }
       }
     },
+    editpersonPost: (state, action) => {
+      const myPerson = state.knownPeople[action.payload["email"]];
+      myPerson.posts.some((item, i) => {
+        if (item.post_id == action.payload["post_id"]) {
+          state.knownPeople[action.payload["email"]].posts[i].message = action.payload["message"];
+          state.knownPeople[action.payload["email"]].posts[i].edited = action.payload["edited"];
+          return true;
+        }
+        return false;
+      });
+    },
+    deletepersonPost: (state, action) => {
+      const myPerson = state.knownPeople[action.payload["email"]];
+      myPerson.posts.some((item, i) => {
+        if (item.post_id == action.payload["post_id"]) {
+          state.knownPeople[action.payload["email"]].posts.splice(i, 1);
+          return true;
+        }
+        return false;
+      });
+    },
   },
 });
 
-export const { addPerson, setpersonName, setpersonPicture, setpersonStatus, setpersonOnline, addpersonPost, setpersonLikedPost, addLoadingPosts } = peopleSlice.actions;
+export const {
+  pushPeopleArrayValue,
+  addPerson, setpersonName, setpersonPicture, setpersonStatus, setpersonOnline,
+  addpersonPost, setpersonLikedPost, addLoadingPosts, editpersonPost, deletepersonPost
+} = peopleSlice.actions;
 
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of

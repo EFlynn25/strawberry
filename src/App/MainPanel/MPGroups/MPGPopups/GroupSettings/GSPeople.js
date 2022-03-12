@@ -1,14 +1,14 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 
 import "./GSPeople.css"
 import { groups_request_to_thread, groups_remove_person, groups_deny_request } from '../../../../../socket.js';
 import { addThreadPeople, removeThreadPerson } from '../../../../../redux/groupsReducer.js';
 import PersonPicker from '../../../../../GlobalComponents/PersonPicker.js';
+import ProfilePicture from '../../../../../GlobalComponents/ProfilePicture.js';
 import { getUser } from '../../../../../GlobalComponents/getUser.js';
+import { alphabetizePeople } from '../../../../../GlobalComponents/peopleFunctions.js';
 
-import { ReactComponent as People } from '../../../../../assets/icons/people.svg';
-import { ReactComponent as Settings } from '../../../../../assets/icons/settings.svg';
 import { ReactComponent as Close } from '../../../../../assets/icons/close.svg';
 import { ReactComponent as Done } from '../../../../../assets/icons/done.svg';
 import { ReactComponent as AddPerson } from '../../../../../assets/icons/add_person.svg';
@@ -81,41 +81,29 @@ class GSPeople extends React.Component {
   render() {
     let peopleElements = [];
 
-    let alphabeticalPeople = [];
-    let alphabeticalRequested = [];
-
     const myThread = this.props.threads[this.props.myThreadID];
     if (myThread == null) {
       return null
     }
 
-    myThread.people.forEach(function (item, index) {
-      alphabeticalPeople.push([item, getUser(item).name]);
-    });
-    alphabeticalPeople.sort((a,b) => a[1].toUpperCase().localeCompare(b[1].toUpperCase()));
-    const newPeople = alphabeticalPeople.map(function(x) {
-        return x[0];
-    });
-
-    myThread.requested.forEach(function (item, index) {
-      alphabeticalRequested.push([item, getUser(item).name]);
-    });
-    alphabeticalRequested.sort((a,b) => a[1].toUpperCase().localeCompare(b[1].toUpperCase()));
-    const newRequested = alphabeticalRequested.map(function(x) {
-        return x[0];
-    });
+    const newPeople = alphabetizePeople(myThread.people);
+    const newRequested = alphabetizePeople(myThread.requested);
 
     const personRemoving = this.state.personRemoving;
     newPeople.forEach((item, i) => {
       const thisUser = getUser(item);
 
       peopleElements.push(
-        <div className="gspPerson" key={item} style={this.state.personRemoving == item ? {background: "#1D954522"} : null}>
-          <img src={thisUser.picture} className="gspPFP" alt={thisUser.name} />
+        <div className="gspPerson" key={item} style={personRemoving == item ? {background: "#1D954522"} : null}>
+          <ProfilePicture
+            email={item}
+            picture={thisUser.picture}
+            name={thisUser.name}
+            className="gspPFP" />
           { thisUser.online ? <div className="gspOnline"></div> : null }
           <h1 className="gspName" style={personRemoving == item ? {width: "calc(100% - 85px)"} : null}>{thisUser.name}</h1>
-          <Close className="gspRemove" onClick={() => {this.setState({personRemoving: item})}} style={this.state.personRemoving == item ? {visibility: "visible"} : null} />
-          <div className={this.state.personRemoving == item ? "gspRemovingPerson" : "gspRemovingPerson gspRemovingPersonHide"}>
+          <Close className="gspRemove" onClick={() => {this.setState({personRemoving: item})}} style={personRemoving == item ? {visibility: "visible"} : null} />
+          <div className={personRemoving == item ? "gspRemovingPerson" : "gspRemovingPerson gspRemovingPersonHide"}>
             <h1>Are you sure?</h1>
             <div><p>Do you want to remove <i style={{color: "#ddd"}}>{thisUser.name}</i> from this group?</p></div>
             <Done onClick={() => {this.setState({personRemoving: ""}); this.removePerson(item)}} />
@@ -127,16 +115,14 @@ class GSPeople extends React.Component {
 
     newRequested.forEach((item, i) => {
       const thisUser = getUser(item);
-      // const personName = getUser(item).name;
-      // const personPicture = getUser(item).picture;
 
       peopleElements.push(
-        <div className="gspPerson" key={item} style={this.state.personRemoving == item ? {background: "#1D954522"} : null}>
+        <div className="gspPerson" key={item} style={personRemoving == item ? {background: "#1D954522"} : null}>
           <img src={thisUser.picture} className="gspPFP" alt={thisUser.name} />
           <h1 className="gspName" style={{height: "20px", lineHeight: "20px", color: "#ddd", fontSize: "16px"}}>{thisUser.name}</h1>
           <p className="gspPending">Pending request...</p>
-          <Close className="gspRemove" onClick={() => {this.setState({personRemoving: item})}} style={this.state.personRemoving == item ? {visibility: "visible"} : null} />
-          <div className={this.state.personRemoving == item ? "gspRemovingPerson" : "gspRemovingPerson gspRemovingPersonHide"}>
+          <Close className="gspRemove" onClick={() => {this.setState({personRemoving: item})}} style={personRemoving == item ? {visibility: "visible"} : null} />
+          <div className={personRemoving == item ? "gspRemovingPerson" : "gspRemovingPerson gspRemovingPersonHide"}>
             <h1>Are you sure?</h1>
             <div><p>Do you want to remove <i style={{color: "#ddd"}}>{thisUser.name}</i> from this group?</p></div>
             <Done onClick={() => {this.setState({personRemoving: ""}); this.removeRequested(item)}} />
@@ -158,7 +144,21 @@ class GSPeople extends React.Component {
           <PersonPicker callback={this.addPerson} noShow={newPeople.concat(newRequested)} />
         </div>
         <div className="gspPeopleList">
-          {peopleElements}
+          { peopleElements }
+          { peopleElements == null || peopleElements.length == 0 ?
+            <div style={{position: "absolute", display: "flex", width: "100%", height: "calc(100% - 67px)", left: "0", top: "67px", alignItems: "center", justifyContent: "center"}}>
+              <h1 style={{margin: "20%", color: "#fff5", fontSize: "16px", textAlign: "center"}}>
+                No people
+                { Object.keys(this.props.threads).length <= 0 ? null :
+                  <Fragment>
+                    <br/>
+                    <span style={{color: "#fff3", fontSize: "14px"}}>Use the Add Person button to add your friends!</span>
+                  </Fragment>
+                }
+              </h1>
+            </div>
+            : null
+          }
         </div>
       </div>
     )

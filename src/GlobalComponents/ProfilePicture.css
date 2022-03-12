@@ -1,0 +1,17 @@
+.profilePicture {
+  border-radius: 20px;
+}
+
+.profilePictureSpecial {
+  transition: transform .2s;
+}
+
+.profilePictureSpecial:hover {
+  cursor: pointer;
+  transform: translateY(-1px);
+}
+
+.profilePictureSpecial:active {
+  transform: none;
+  filter: brightness(80%);
+}

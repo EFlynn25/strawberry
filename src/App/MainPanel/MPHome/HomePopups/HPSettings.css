@@ -1,4 +1,212 @@
 .HPSettings {
-  width: 100%;
+  width: calc(100% - 40px);
+  height: calc(100% - 40px);
+
+  padding: 20px;
+}
+
+
+
+/* Header */
+
+.hpsHeader {
+  height: 40px;
+  padding: 20px;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  user-select: none;
+}
+
+.hpsHeader > p {
+  font-size: 20px;
+}
+
+.hpsHeader > div {
   height: 100%;
+}
+
+.hpsHeaderPage {
+  position: absolute;
+  color: #bbb;
+  transition: opacity .3s;
+}
+
+
+
+/* Sections (left panel) */
+
+.hpsSections {
+  position: absolute;
+  width: 230px;
+  height: calc(100% - 140px);
+  padding: 10px;
+
+  background: #393a3c;
+  border-radius: 20px;
+  z-index: 2;
+
+  transition: width .15s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.hpsSection {
+  padding: 10px;
+  margin-bottom: 10px;
+
+  border-radius: 20px;
+  user-select: none;
+  overflow: hidden;
+}
+
+.hpsSection div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: transform .15s;
+}
+
+.hpsSection svg {
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+}
+
+.hpsSection h1 {
+  font-size: 22px;
+}
+
+.hpsSectionSelected {
+  background: #fff1 !important;
+}
+
+.hpsSectionSelected div {
+  transform: translateX(10px);
+}
+
+.hpsSectionSelected svg, .hpsSectionSelected h1 {
+  fill: var(--lighter-accent-color) !important;
+  color: var(--lighter-accent-color) !important;
+}
+
+/* ...hover */
+
+.hpsSection:hover {
+  cursor: pointer;
+}
+
+.hpsSection:hover h1, .hpsSection:hover svg {
+  color: #bbb;
+  fill: #bbb;
+}
+
+/* ...active */
+
+.hpsSection:active h1, .hpsSection:active svg {
+  color: #888;
+  fill: #888;
+}
+
+
+
+/* Content */
+
+.hpsContent {
+  position: absolute;
+  width: calc(100% - 310px);
+  height: calc(100% - 119px);
+  top: 99px;
+  left: 290px;
+}
+
+
+
+/* RESPONSIVE DESIGN */
+
+@media screen and (max-width: 1450px) {
+  .hpsSections {
+    width: 180px;
+  }
+  .hpsSection h1 {
+    font-size: 18px;
+  }
+
+  .hpsContent {
+    width: calc(100% - 260px);
+    left: 240px;
+  }
+}
+
+@media screen and (max-width: 960px) {
+  .hpsSections {
+    width: 46px;
+  }
+  .hpsSections:hover {
+    transition: width .15s cubic-bezier(0.65, 0, 0.35, 1) .2s;
+    width: 180px;
+  }
+
+  .hpsSection h1 {
+    transition: opacity .2s, visibility 0s .2s;
+    opacity: 0;
+    visibility: hidden;
+  }
+  .hpsSections:hover h1 {
+    transition: opacity .2s .3s, visibility 0s;
+    opacity: 1;
+    visibility: visible;
+  }
+  .hpsSectionSelected > div {
+    transform: none;
+  }
+
+  .hpsContent {
+    width: calc(100% - 126px);
+    left: 106px;
+  }
+}
+
+@media screen and (max-width: 880px) {
+  .hpsSections, .hpsSections:hover {
+    width: 54px;
+  }
+  .hpsSections:hover h1 {
+    visibility: hidden;
+  }
+  .hpsSection svg {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+@media screen and (max-width: 404px) {
+  .HPSWrapperHideUp {
+    transform: translateX(-40px) !important;
+  }
+  .HPSWrapperHideDown {
+    transform: translateX(40px) !important;
+  }
+  .HPSWrapperHideUp .hpsaLogoBg, .HPSWrapperHideDown .hpsaLogoBg {
+    transform: translateX(-25px) !important;
+  }
+  .hpsHeader > p, .hpsHeader > div {
+    display: none;
+  }
+
+  .hpsSections {
+    width: calc(100% - 60px) !important;
+    height: 52px;
+    top: 100px;
+    display: flex;
+  }
+  .hpsSection {
+    width: 32px;
+    margin: 0;
+  }
+  .hpsContent {
+    width: 100%;
+    height: calc(100% - 172px);
+    top: 172px;
+    left: 0;
+  }
 }

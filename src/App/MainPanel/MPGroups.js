@@ -5,11 +5,17 @@
 
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
-import { Switch, Route } from "react-router-dom";
+// import { Routes, Route } from "react-router-dom";
 import TextareaAutosize from 'react-autosize-textarea';
-import Loader from "react-loader-spinner";
+import { Oval } from "react-loader-spinner";
+import clone from 'just-clone';
+import equal from 'fast-deep-equal/react';
 
 import './MPGroups.css';
+import { ReactComponent as Settings } from '../../assets/icons/settings.svg';
+import { ReactComponent as Send } from '../../assets/icons/send.svg';
+import { ReactComponent as Forum } from '../../assets/icons/forum.svg';
+import { ReactComponent as Close } from '../../assets/icons/close.svg';
 import {
   setOpenedThread,
   addSendingThreadMessage,
@@ -17,7 +23,7 @@ import {
   setLoadingMessages
 } from '../../redux/groupsReducer';
 import {
-  setCurrentPage
+  setAppState
 } from '../../redux/appReducer';
 import {
   groups_get_messages,
@@ -27,10 +33,13 @@ import {
   groups_typing,
   groups_last_read
 } from '../../socket.js';
+import { getUser } from '../../GlobalComponents/getUser.js';
+import withRouter from '../../GlobalComponents/withRouter.js';
+
 import GroupsMessage from './MPGroups/GroupsMessage';
 import GroupsDefaultMessage from './MPGroups/GroupsMessage/GroupsDefaultMessage';
-
-import { ReactComponent as Settings } from '../../assets/icons/settings.svg';
+import GroupsBreckanMessage from './MPGroups/GroupsMessage/GroupsBreckanMessage';
+import GroupsInThread from './MPGroups/GroupsInThread';
 
 class MPGroups extends React.Component {
   constructor(props) {
@@ -38,19 +47,22 @@ class MPGroups extends React.Component {
     this.state = {
       inputValue: '',
       messages: [],
-      loaded: false
+      loaded: false,
+      editing: false
     };
 
     this.messagesRef = React.createRef();
     this.inputRef = React.createRef();
 
-    this.handleInputChange = this.handleInputChange.bind(this);
-    this.inputEnterPressed = this.inputEnterPressed.bind(this);
     this.handleScroll = this.handleScroll.bind(this);
     this.scrollToBottom = this.scrollToBottom.bind(this);
     this.loadMoreMessages = this.loadMoreMessages.bind(this);
     this.handleWindowFocus = this.handleWindowFocus.bind(this);
     this.handleWindowBlur = this.handleWindowBlur.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.inputEnterPressed = this.inputEnterPressed.bind(this);
+    this.sendMessage = this.sendMessage.bind(this);
+    this.setMessageEditing = this.setMessageEditing.bind(this);
 
     this.shouldScroll = true;
     this.scrollsToIgnore = 0;
@@ -61,7 +73,6 @@ class MPGroups extends React.Component {
   }
 
   handleScroll() {
-    let logtext = "scrolling!! " + this.scrollsToIgnore;
     if (this.scrollsToIgnore > 0) {
       this.scrollsToIgnore--;
     } else {
@@ -86,7 +97,7 @@ class MPGroups extends React.Component {
 
   loadMoreMessages() {
     const openedThread = this.props.openedThread;
-    const thisThread = this.props.threads[openedThread];
+    const thisThread = this.props.thisThread;
 
     if (thisThread != null) {
 
@@ -102,7 +113,7 @@ class MPGroups extends React.Component {
         const myFirstID = thisThread.messages[0].id;
         if (myFirstID != 0) {
           let ids = [];
-          for (var i = myFirstID - 20; i <= myFirstID - 1; i++) {
+          for (let i = myFirstID - 20; i <= myFirstID - 1; i++) {
             if (i >= 0) {
               ids.push(i);
             }
@@ -124,14 +135,14 @@ class MPGroups extends React.Component {
 
   handleWindowFocus() {
     console.log("window focused.");
-    if (this.props.openedThread in this.props.threads) {
+    if (this.props.thisThread) {
       groups_in_thread(this.props.openedThread, true);
     }
   }
 
   handleWindowBlur() {
     console.log("window blurred.");
-    if (this.props.openedThread in this.props.threads) {
+    if (this.props.thisThread) {
       groups_in_thread(this.props.openedThread, false);
     }
   }
@@ -139,13 +150,15 @@ class MPGroups extends React.Component {
 
 
   componentDidMount() {
-    this.props.setOpenedThread(this.props.match.params.threadID);
+    if (this.props.popout != true) {
+      this.props.setOpenedThread(this.props.router.params.threadID);
+    }
 
     console.log("[MPGroups]: componentDidMount with thread ID " + this.props.openedThread);
 
     const propsOpenedThread = this.props.openedThread;
-    const thisThread = this.props.threads[propsOpenedThread];
-    if (propsOpenedThread in this.props.threads) {
+    const thisThread = this.props.thisThread;
+    if (this.props.thisThread) {
       this.reloadMessages(null);
       groups_in_thread(propsOpenedThread, true);
       groups_in_thread(propsOpenedThread, "get_in_thread");
@@ -153,7 +166,6 @@ class MPGroups extends React.Component {
       groups_last_read(propsOpenedThread);
 
       const tmi = thisThread.tempMessageInput;
-      console.log(tmi);
       if (tmi != "") {
         this.setState({
           inputValue: tmi
@@ -169,12 +181,13 @@ class MPGroups extends React.Component {
       }
     }
 
-    let title = "404";
-    if (this.props.openedThread in this.props.threads) {
-      title = this.props.threads[this.props.openedThread].name;
+    if (this.props.popout != true) {
+      let title = "404";
+      if (this.props.thisThread) {
+        title = this.props.thisThread.name;
+      }
+      this.props.setAppState({ currentPage: title });
     }
-
-    this.props.setCurrentPage(title);
 
     window.addEventListener("focus", this.handleWindowFocus);
     window.addEventListener("blur", this.handleWindowBlur);
@@ -186,14 +199,14 @@ class MPGroups extends React.Component {
     const propsOpenedThread = this.props.openedThread;
 
     if (prevProps.openedThread == propsOpenedThread) {
-      if (prevProps.threads[propsOpenedThread] != this.props.threads[propsOpenedThread]) {
+      if (!equal(prevProps.thisThread, this.props.thisThread) || prevState.editing != this.state.editing) {
         this.reloadMessages(prevProps);
       }
     } else {
       this.setState({inputValue: '', loaded: false});
-      if (propsOpenedThread in this.props.threads) {
+      if (this.props.thisThread) {
         this.reloadMessages(prevProps);
-        if (prevProps.openedThread in this.props.threads) {
+        if (prevProps.thisThread) {
           groups_in_thread(prevProps.openedThread, false);
           groups_typing(this.props.openedThread, false);
         }
@@ -204,19 +217,19 @@ class MPGroups extends React.Component {
       }
     }
 
-    if (!(propsOpenedThread in prevProps.threads) && propsOpenedThread in this.props.threads) {
+    if (!prevProps.thisThread && this.props.thisThread) {
       groups_in_thread(propsOpenedThread, true);
       groups_in_thread(propsOpenedThread, "get_in_thread");
       groups_typing(propsOpenedThread, "get_typing");
       groups_last_read(propsOpenedThread);
     }
 
-    const thisThread = this.props.threads[propsOpenedThread];
+    const thisThread = this.props.thisThread;
     if (thisThread != null) {
       const tmi = thisThread.tempMessageInput
       const iv = this.state.inputValue
       if (this.props.openedThread != "" && prevProps.openedThread != propsOpenedThread) {
-        if (prevProps.openedThread in this.props.threads) {
+        if (prevProps.thisThread) {
           this.props.setTempMessageInput({
             thread_id: prevProps.openedThread,
             input: iv
@@ -237,23 +250,24 @@ class MPGroups extends React.Component {
       }
     }
 
-    if (this.state.loaded && prevProps.currentPage != this.props.currentPage && propsOpenedThread in this.props.threads) {
+    if (this.state.loaded && prevProps.currentPage != this.props.currentPage && this.props.thisThread && window.innerWidth > 880) {
       this.inputRef.current.focus();
     }
 
     this.loadMoreMessages();
 
-    let title = "404";
-    if (this.props.openedThread in this.props.threads) {
-      title = this.props.threads[this.props.openedThread].name;
+    if (this.props.popout != true) {
+      let title = "404";
+      if (this.props.thisThread) {
+        title = this.props.thisThread.name;
+      }
+      this.props.setAppState({ currentPage: title });
     }
-
-    this.props.setCurrentPage(title);
   }
 
   componentWillUnmount() {
     const iv = this.state.inputValue
-    if (this.props.openedThread in this.props.threads) {
+    if (this.props.thisThread) {
       this.props.setTempMessageInput({
         thread_id: this.props.openedThread,
         input: iv
@@ -266,18 +280,17 @@ class MPGroups extends React.Component {
   }
 
   reloadMessages(prevProps) {
-    if (!(this.props.openedThread in this.props.threads)) {
+    if (this.props.thisThread == null) {
       this.setState({
         messages: []
       });
       return false;
     }
 
-    const thisThreadReference = this.props.threads[this.props.openedThread];
-    const thisThread = JSON.parse(JSON.stringify(thisThreadReference));
+    let thisThread = clone(this.props.thisThread);
 
-    if (thisThread == null || thisThread["messages"] == null || thisThread["messages"].length <= 0) {
-      if (thisThread["sendingMessages"] == null || thisThread["sendingMessages"].length <= 0) {
+    if (thisThread == null || thisThread.messages == null || thisThread.messages.length <= 0) {
+      if (thisThread.sendingMessages == null || thisThread.sendingMessages.length <= 0) {
         this.setState({
           messages: [],
           loaded: true
@@ -289,13 +302,13 @@ class MPGroups extends React.Component {
     let hasSending = false;
     let handledSending = false;
 
-    if ("sendingMessages" in thisThread && thisThread["sendingMessages"].length > 0) {
+    if ("sendingMessages" in thisThread && thisThread.sendingMessages.length > 0) {
       hasSending = true;
       let myID = 0;
       if (thisThread.messages != null && thisThread.messages.length > 0) {
         myID = thisThread.messages[thisThread.messages.length - 1].id + 1;
       }
-      thisThread["sendingMessages"].forEach(item => {
+      thisThread.sendingMessages.forEach(item => {
         const myMessage = {message: item, sending: true, id: myID};
         if (thisThread.messages != null) {
           thisThread.messages.push(myMessage);
@@ -355,7 +368,19 @@ class MPGroups extends React.Component {
           }
         }
 
-        const newMessage = (<GroupsMessage inThread={/*inThread*/null} typing={/*thisThread.typing*/null} id={messageIDs} key={messageIDs[0]} onUpdate={this.scrollToBottom} />);
+        const newMessage = (
+          <GroupsMessage
+            thisThread={this.props.thisThread}
+            inThread={/*inThread*/null}
+            typing={/*thisThread.typing*/null}
+            id={messageIDs}
+            key={messageIDs[0]}
+            onUpdate={this.scrollToBottom}
+            editing={this.state.editing}
+            setMessageEditing={this.setMessageEditing}
+            openedThread={this.props.openedThread}
+            opendialog={this.props.opendialog} />
+        );
         // console.debug(newMessage);
         tempMessages.push(newMessage);
       }
@@ -364,18 +389,29 @@ class MPGroups extends React.Component {
 
     if (hasSending && !handledSending) {
 
-      let mySendingMessages = [];
-      thisThread["sendingMessages"].map(item => {
-        const messageObject = {message: item, /*lastRead: false,*/ noTransition: true, sending: true, id: "sending" + mySendingMessages.length};
-        mySendingMessages.push(messageObject);
+      let sendingID = -1;
+      let mySendingMessages = thisThread.sendingMessages.map(item => {
+        sendingID++;
+        return {message: item, /*lastRead: false,*/ noTransition: true, sending: true, id: "sending" + sendingID, edited: false};
       });
 
       let MessageType;
       if (this.props.messageStyle == "default") {
         MessageType = GroupsDefaultMessage;
+      } else if (this.props.messageStyle == "breckan") {
+        MessageType = GroupsBreckanMessage;
       }
 
-      const newMessage = <MessageType key={mySendingMessages[0].id} email={this.props.myEmail} name={this.props.myName} picture={this.props.myPicture} messages={mySendingMessages} /*inThread={["no", true]null}*/ inThreadTyping={/*false*/null} onUpdate={this.props.onUpdate} />;
+      const newMessage = <MessageType
+                            key={mySendingMessages[0].id}
+                            email={this.props.myEmail}
+                            name={this.props.myName}
+                            picture={this.props.myPicture}
+                            messages={mySendingMessages}
+                            /*inThread={["no", true]null}*/
+                            inThreadTyping={/*false*/null}
+                            onUpdate={this.props.onUpdate}
+                            openedThread={this.props.openedThread} />;
       // console.debug(newMessage);
       tempMessages.push(newMessage);
 
@@ -388,10 +424,10 @@ class MPGroups extends React.Component {
   }
 
   handleInputChange(event) {
-    var val = event.target.value;
-    var iv = this.state.inputValue;
-    var nowEmpty = val == "" || val == null;
-    var pastEmpty = iv == "" || iv == null;
+    let val = event.target.value;
+    let iv = this.state.inputValue;
+    let nowEmpty = val == "" || val == null;
+    let pastEmpty = iv == "" || iv == null;
     if (pastEmpty && !nowEmpty) {
       groups_typing(this.props.openedThread, true);
     } else if (!pastEmpty && nowEmpty) {
@@ -404,42 +440,51 @@ class MPGroups extends React.Component {
   }
 
   inputEnterPressed(event) {
-    var code = event.keyCode || event.which;
-    if (code === 13 && !event.shiftKey) {
+    let code = event.keyCode || event.which;
+    if (code === 13 && !event.shiftKey && window.innerWidth > 880) {
       event.preventDefault();
       event.stopPropagation();
 
-      const iv = this.state.inputValue;
-      if (iv != null && iv != "") {
-        const ot = this.props.openedThread;
-        setTimeout(function() {
-          // groups_send_message(oc, iv);
-        }, 3000);
-        groups_send_message(ot, iv);
-        groups_typing(ot, false);
-        this.props.addSendingThreadMessage({message: iv});
-        this.setState({inputValue: ''});
-      }
+      this.sendMessage();
+    }
+  }
+
+  sendMessage() {
+    this.inputRef.current.focus();
+    const iv = this.state.inputValue;
+    if (iv != null && iv != "") {
+      const ot = this.props.openedThread;
+      groups_send_message(ot, iv);
+      groups_typing(ot, false);
+      this.props.addSendingThreadMessage({message: iv, thread_id: this.props.openedThread});
+      this.setState({inputValue: ''});
+    }
+  }
+
+  setMessageEditing(data) {
+    if (this.state.editing != data) {
+      this.setState({ editing: data })
+    } else if (this.state.editing == data || (data == false && this.state.editing != false)) {
+      this.setState({ editing: false })
     }
   }
 
   render() {
-    if (this.props.threads[this.props.openedThread] == null) {
+    if (this.props.thisThread == null) {
       if (this.props.openedThread != null && !this.acceptedRequest) {
-        console.log("reload no thread");
         this.acceptedRequest = true;
         groups_join_thread(this.props.openedThread);
       }
       return (
         <div className="MPGroups">
-          <h1 className="groupsCenterText">That thread doesn't exist...</h1>
+          <h1 className="mpCenterText">That thread doesn't exist...</h1>
         </div>
       )
     }
 
     let amountOfPeopleText = "";
-    if (this.props.threads[this.props.openedThread].people != null) {
-      const amountOfPeople = this.props.threads[this.props.openedThread].people.length;
+    if (this.props.thisThread.people != null) {
+      const amountOfPeople = this.props.thisThread.people.length;
       if (amountOfPeople == 0) {
         amountOfPeopleText = "with nobody";
       } else if (amountOfPeople == 1) {
@@ -449,23 +494,25 @@ class MPGroups extends React.Component {
       }
     }
 
-    let children = (<h1 className="groupsCenterText">Loading...</h1>);
+    let children = (<h1 className="mpCenterText">Loading...</h1>);
     if (this.state.loaded) {
       children = (
         <Fragment>
-          <div className="groupsHeader">
-            <h1 className="ghName">{this.props.threads[this.props.openedThread].name}</h1>
-            <Settings className="ghSettingsIcon" onClick={() => this.props.opendialog("groupSettings", this.props.openedThread, false)} />
-          </div>
+          { this.props.popout ? null :
+            <div className="groupsHeader">
+              <h1 className="ghName">{this.props.thisThread.name}</h1>
+              <Settings className="ghSettingsIcon" onClick={() => this.props.opendialog("groupSettings", this.props.openedThread, false)} />
+            </div>
+          }
 
-          <div className="groupsMessages" ref={this.messagesRef} onScroll={this.handleScroll}>
+          <div className="mpMessages" ref={this.messagesRef} onScroll={this.handleScroll}>
             {
-              (this.props.threads[this.props.openedThread].messages == null)
-              || (this.props.openedThread != "" && this.props.openedThread in this.props.threads && this.props.threads[this.props.openedThread].messages.length > 0 && this.props.threads[this.props.openedThread].messages[0].id == 0)
-              || (this.props.openedThread != "" && this.props.openedThread in this.props.threads && this.props.threads[this.props.openedThread].messages.length <= 0) ?
+              (this.props.thisThread.messages == null)
+              || (this.props.openedThread != "" && this.props.thisThread && this.props.thisThread.messages.length > 0 && this.props.thisThread.messages[0].id == 0)
+              || (this.props.openedThread != "" && this.props.thisThread && this.props.thisThread.messages.length <= 0) ?
 
-              <div className="groupsTopTextDiv">
-                <h1 className="groupsStartConversationText">This is the start of your thread {amountOfPeopleText}</h1>
+              <div className="mpTopTextDiv">
+                <h1 className="mpStartConversationText">This is the start of your thread {amountOfPeopleText}</h1>
               </div>
 
               :
@@ -475,9 +522,9 @@ class MPGroups extends React.Component {
             {
               this.isLoadingMessages[this.props.openedThread] ?
 
-              <div className="groupsTopTextDiv">
-                <h1 className="groupsLoadingMessagesText">Loading...</h1>
-                <Loader className="groupsLoadingMessagesSpinner" type="Oval" color="var(--accent-color)" height={30} width={30} />
+              <div className="mpTopTextDiv">
+                <h1 className="mpLoadingMessagesText">Loading...</h1>
+                <Oval wrapperClass="mpLoadingMessagesSpinner" color="var(--accent-color)" secondaryColor="var(--lighter-accent-color)" height={30} width={30} />
               </div>
 
               :
@@ -485,23 +532,33 @@ class MPGroups extends React.Component {
               null
             }
             {this.state.messages}
+            <div style={{position: "relative"}}>
+              <GroupsInThread thisThread={this.props.thisThread} openedThread={this.props.openedThread} myEmail={this.props.myEmail} />
+            </div>
           </div>
-          {this.state.messages.length > 0 ? null : <h1 className="groupsNoMessageText">No messages.<br/>Try sending one!</h1>}
-          <TextareaAutosize value={this.state.inputValue} onChange={this.handleInputChange} onKeyPress={this.inputEnterPressed} placeholder="Type message here" className="groupsMessagesInput" maxLength={1000} ref={this.inputRef} />
+          {this.state.messages.length > 0 ? null : <h1 className="mpNoMessageText">No messages.<br/>Try sending one!</h1>}
+          <TextareaAutosize value={this.state.inputValue} onChange={this.handleInputChange} onKeyPress={this.inputEnterPressed} placeholder="Type message here" className="mpMessagesInput" maxLength={1000} ref={this.inputRef} />
+          <div className="mpSendMessage groupsSendMessage" onClick={this.sendMessage}><Send /></div>
         </Fragment>
       );
     }
-    // if (!(this.props.openedThread in this.props.threads)) {
-    //   children = (<h1 className="groupsCenterText">That thread doesn't exist...</h1>);
-    //   if (this.props.openedThread != null && !this.acceptedRequest) {
-    //     console.log("reload no thread");
-    //     this.acceptedRequest = true;
-    //     groups_join_thread(this.props.openedThread);
-    //   }
-    // }
 
     return (
-      <div className="MPGroups">
+      <div className={this.props.popout == true ? "MPGroups mpPopoutConversation" : "MPGroups"}>
+        { this.props.popout != true ? null :
+          <div className="mpPopoutHandle">
+            <Forum style={{fill: "#1D9545"}} />
+            <h1>{ this.props.thisThread.name }</h1>
+            <Settings
+              className="ghSettingsIcon"
+              style={{paddingLeft: "5px"}}
+              onClick={() => this.props.opendialog("groupSettings", this.props.openedThread, false)} />
+            <Close
+              className="ghSettingsIcon"
+              style={{paddingLeft: "5px"}}
+              onClick={() => this.props.changePopout(this.props.openedThread, false)} />
+          </div>
+        }
         { children }
       </div>
     );
@@ -509,8 +566,7 @@ class MPGroups extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  openedThread: state.groups.openedThread,
-  threads: state.groups.threads,
+  // threads: state.groups.threads,
   myName: state.app.name,
   myEmail: state.app.email,
   myPicture: state.app.picture,
@@ -525,7 +581,7 @@ const mapDispatchToProps = {
   addSendingThreadMessage,
   setTempMessageInput,
   setLoadingMessages,
-  setCurrentPage,
+  setAppState,
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(MPGroups);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(MPGroups));

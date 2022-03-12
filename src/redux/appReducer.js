@@ -3,11 +3,10 @@ import { createSlice } from '@reduxjs/toolkit';
 export const appSlice = createSlice({
   name: 'app',
   initialState: {
-    name: "",
     email: "",
+    name: "",
     picture: "",
     status: null,
-    // posts: [{post_id: 0, message: "Today sucked.", likes: 10, timestamp: 0}, {post_id: 12, message: "Today was great!", likes: 0, timestamp: 700350}],
     posts: null,
     firstPost: null,
     likedPosts: [],
@@ -25,6 +24,7 @@ export const appSlice = createSlice({
 
     currentPage: "",
     notificationCount: {},
+    mobile: false,
 
     messageStyle: "default",
 
@@ -32,34 +32,50 @@ export const appSlice = createSlice({
     announcementsRead: []
   },
   reducers: {
-    setUserName: (state, action) => {
-      state.name = action.payload;
+    setAppState: (state, action) => {
+      Object.keys(action.payload).forEach((item) => {
+        if (item.includes(".")) {
+          let currentReference = state;
+          const dotSplit = item.split(".");
+          const dsLastIndex = dotSplit.length - 1;
+          dotSplit.forEach((item, i) => {
+            if (i < dsLastIndex) {
+              currentReference = currentReference[item];
+            }
+          });
+          currentReference[dotSplit[dsLastIndex]] = action.payload[item];
+        } else {
+          state[item] = action.payload[item];
+        }
+      });
     },
-    setUserEmail: (state, action) => {
-      state.email = action.payload;
+    pushAppArrayValue: (state, action) => {
+      Object.keys(action.payload).forEach((item) => {
+        state[item].push(action.payload[item]);
+      });
     },
-    setUserPicture: (state, action) => {
-      state.picture = action.payload;
-    },
-    setUserStatus: (state, action) => {
-      state.status = action.payload;
-    },
+
     addUserPost: (state, action) => {
       if (state.posts == null) {
         state.posts = []
       }
-      if (Array.isArray(action.payload)) {
-        action.payload.forEach((item, i) => {
+      const ids = state.posts.map((item, i) => {
+        return item.post_id;
+      });
+      const addThisPost = (item) => {
+        if (!ids.includes(item.post_id)) {
           delete item.email
           state.posts.push(item);
+        }
+      };
+
+      if (Array.isArray(action.payload)) {
+        action.payload.forEach((item, i) => {
+          addThisPost(item);
         });
       } else {
-        delete action.payload.email
-        state.posts.push(action.payload);
+        addThisPost(action.payload);
       }
-    },
-    setUserFirstPost: (state, action) => {
-      state.firstPost = action.payload;
     },
     setUserLikedPost: (state, action) => {
       if (Array.isArray(action.payload["post_id"])) {
@@ -67,8 +83,6 @@ export const appSlice = createSlice({
           if (action.payload["data"]) {
             state.likedPosts.push(item);
           } else {
-            // state.likedPosts.remove(item);
-
             let index = state.likedPosts.indexOf(item);
             if (index > -1) {
               state.likedPosts.splice(index, 1);
@@ -79,8 +93,6 @@ export const appSlice = createSlice({
         if (action.payload["data"]) {
           state.likedPosts.push(action.payload["post_id"]);
         } else {
-          // state.likedPosts.remove(action.payload["post_id"]);
-
           let index = state.likedPosts.indexOf(action.payload["post_id"]);
           if (index > -1) {
             state.likedPosts.splice(index, 1);
@@ -103,56 +115,31 @@ export const appSlice = createSlice({
         state.posts[postIndex].likes--;
       }
     },
-    setUserLoadingPosts: (state, action) => {
-      state.loadingPosts = action.payload;
+    editUserPost: (state, action) => {
+      state.posts.some((item, i) => {
+        if (item.post_id == action.payload["post_id"]) {
+          state.posts[i].message = action.payload["message"];
+          state.posts[i].edited = action.payload["edited"];
+          return true;
+        }
+        return false;
+      });
     },
-    setdmsOrGroups: (state, action) => {
-      state.dmsOrGroups = action.payload;
+    deleteUserPost: (state, action) => {
+      state.posts.some((item, i) => {
+        if (item.post_id == action.payload["post_id"]) {
+          state.posts.splice(i, 1);
+          return true;
+        }
+        return false;
+      });
     },
-    sethideRightPanel: (state, action) => {
-      state.hideRightPanel = action.payload;
-    },
-    setdmsLoaded: (state, action) => {
-      state.dmsLoaded = action.payload;
-    },
-    setgroupsLoaded: (state, action) => {
-      state.groupsLoaded = action.payload;
-    },
-    setpeopleLoaded: (state, action) => {
-      state.peopleLoaded = action.payload;
-    },
-    setSocket: (state, action) => {
-      state.socket = action.payload;
-    },
-    setMultipleTabs: (state, action) => {
-      state.multipleTabs = action.payload;
-    },
-    setCurrentPage: (state, action) => {
-      state.currentPage = action.payload;
-    },
-    setNotificationCount: (state, action) => {
-      state.notificationCount[action.payload.type] = action.payload.count;
-    },
-    setMessageStyle: (state, action) => {
-      state.messageStyle = action.payload;
-    },
-    setAnnouncement: (state, action) => {
-      state.announcements[action.payload.id] = {title: action.payload.title, content: action.payload.content, timestamp: action.payload.timestamp};
-    },
-    setAnnouncementRead: (state, action) => {
-      state.announcementsRead.push(action.payload);
-    }
   },
 });
 
-export const { setUserName, setUserEmail, setUserPicture, setUserStatus,
-  addUserPost, setUserFirstPost, setUserLikedPost, setLikedPost, setUserLoadingPosts,
-  setdmsOrGroups, sethideRightPanel,
-  setdmsLoaded, setgroupsLoaded, setpeopleLoaded,
-  setSocket, setMultipleTabs,
-  setCurrentPage, setNotificationCount,
-  setMessageStyle,
-  setAnnouncement, setAnnouncementRead
+export const {
+  setAppState, pushAppArrayValue,
+  addUserPost, setUserLikedPost, setLikedPost, setUserLoadingPosts, editUserPost, deleteUserPost,
 } = appSlice.actions;
 
 // The function below is called a selector and allows us to select a value from

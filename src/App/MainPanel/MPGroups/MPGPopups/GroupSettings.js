@@ -7,9 +7,6 @@ import GSSettings from './GroupSettings/GSSettings.js';
 
 import { ReactComponent as People } from '../../../../assets/icons/people.svg';
 import { ReactComponent as Settings } from '../../../../assets/icons/settings.svg';
-import { ReactComponent as Close } from '../../../../assets/icons/close.svg';
-import { ReactComponent as Done } from '../../../../assets/icons/done.svg';
-import { ReactComponent as AddPerson } from '../../../../assets/icons/add_person.svg';
 
 class GroupSettings extends React.Component {
   constructor(props) {
@@ -60,7 +57,7 @@ class GroupSettings extends React.Component {
           <div className={this.state.tab == 1 ? "gsTab gsTabSelected" : "gsTab"} onClick={this.state.tab == 1 ? null : this.toggleTab}><Settings /></div>
         </div>
         <div className={this.state.tab == 0 ? "gsContent" : "gsContent gsPeopleHide"}>
-          <GSPeople myThreadID={this.props.myThreadID} />
+          <GSPeople myThreadID={this.props.myThreadID} opendialog={this.props.opendialog} />
         </div>
 
         <div className={this.state.tab == 1 ? "gsContent" : "gsContent gsSettingsHide"}>

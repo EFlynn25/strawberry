@@ -18,7 +18,7 @@
 
   backdrop-filter: blur(8px);
 
-  z-index: 9;
+  z-index: 20;
 
   background: radial-gradient(circle farthest-corner at 0 0, rgba(255, 255, 255, .08), transparent 40%)
 }
@@ -62,16 +62,8 @@
 }
 
 .oWelcomeText {
-  /* position: absolute;
-  width: 100%;
-  height: 135px; */
-
-
-  /* font-family: inherit; */
   font-style: normal;
-  /*font-weight: 700;*/
   font-size: 28px;
-  /* line-height: 135px; */
   text-align: center;
 
   user-select: none;
@@ -134,7 +126,8 @@
 /* Loading */
 
 .oLoadingHide {
-  transform: translateY(10px) !important;
+  /* transform: translateY(10px) !important; */
+  transform: translateY(40px) !important;
   opacity: 0 !important;
 }
 
@@ -147,7 +140,18 @@
 
   background-color: #1D1E20;
 
-  z-index: 10;
+  z-index: 20;
+}
+
+.oLoadingContent {
+  position: absolute;
+  width: 100%;
+  left: 0;
+  top: calc(50% - 30px);
+  top: 50%;
+
+  transition: transform .5s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateY(-83px);
 }
 
 .oLoadingIcon {
@@ -155,7 +159,6 @@
   width: 60px;
   height: 60px;
   left: calc(50% - 30px);
-  top: calc(50% - 30px);
 
   user-select: none;
 }
@@ -165,6 +168,7 @@
   width: 100%;
 
   top: calc(50% + 60px);
+  top: 90px;
 
   font-style: normal;
   font-size: 20px;
@@ -209,6 +213,7 @@
 
 .oltProgress {
   top: calc(50% + 115px);
+  top: 145px;
 
   font-size: 18px;
   font-weight: normal;
@@ -225,7 +230,7 @@
 .olProgressBar {
   position: absolute;
   width: 200px;
-  top: calc(50% + 100px);
+  top: 130px;
   left: calc(50% - 100px);
 
   transition: stroke-dashoffset 0.3s ease 0s, stroke-dasharray 0.3s ease 0s, stroke 0.3s linear 0s,
@@ -259,8 +264,6 @@
   display: block;
   color: #fff5;
   content: "Email authentication is not recommended";
-  /* font-style: italic; */
-  /* margin: 20px auto; */
   margin-top: 10px;
   font-size: 14px;
   text-align: center;

@@ -1,12 +1,13 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
+import equal from 'fast-deep-equal/react';
 
-import add from '../../../assets/icons/add.svg';
 import { ReactComponent as Add } from '../../../assets/icons/add.svg';
 import { ReactComponent as AddPerson } from '../../../assets/icons/add_person.svg';
 import './DMNewChat.css';
 import { dms_request_to_chat } from '../../../socket.js';
 import { addChatRequest } from '../../../redux/dmsReducer.js'
+import { isEmail } from '../../../GlobalComponents/smallFunctions.js'
 
 class DMNewChat extends React.Component {
   constructor(props) {
@@ -68,6 +69,10 @@ class DMNewChat extends React.Component {
     }
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    return !equal(this.props, nextProps) || !equal(this.state, nextState);
+  }
+
   setWrapperRef(node) {
     if (node != null) {
       if (node.className.startsWith("ncDropdown")) {
@@ -115,7 +120,7 @@ class DMNewChat extends React.Component {
       });
     } else {
       this.setState({dropdown: true});
-      var root = this;
+      let root = this;
       setTimeout(function() {
         root.inputRef.current.focus();
       }, 10);
@@ -129,29 +134,27 @@ class DMNewChat extends React.Component {
   }
 
   inputEnterPressed(event) {
-    var code = event.keyCode || event.which;
+    let code = event.keyCode || event.which;
     if (code === 13 && !event.shiftKey) {
       event.preventDefault();
       event.stopPropagation();
 
-      // Why is this regex so long... I just wanted to be as precise as possible...
-      if (/(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/
-        .test(this.state.inputValue)) {
+      if (isEmail(this.state.inputValue)) {
         if (this.props.requested.includes(this.state.inputValue) || this.props.already_requested.includes(this.state.inputValue)) {
           this.setState({
             status: "You already requested that person!"
           });
-        } else if (this.props.chat_exists.includes(this.state.inputValue) || Object.keys(this.props.chats).includes(this.state.inputValue)) {
+        } else if (this.props.chat_exists.includes(this.state.inputValue) || this.props.chatList.includes(this.state.inputValue)) {
           this.setState({
             status: "You already have a chat with that person!"
           });
         } else {
+          const iv = this.state.inputValue.trim();
           this.setState({
             inputValue: "",
             status: "Sending request to " + this.state.inputValue + "...",
-            emailRequested: this.state.inputValue,
+            emailRequested: iv,
           });
-          const iv = this.state.inputValue;
           this.props.addChatRequest({type: "requesting", email: iv})
           dms_request_to_chat(iv);
         }
@@ -174,7 +177,15 @@ class DMNewChat extends React.Component {
           <AddPerson className="ntdIcon" />
           <h1 className="ncdTitle">Create Chat</h1>
           <h1 className="ncdText">Email:</h1>
-          <input value={this.state.inputValue} onChange={this.handleInputChange} onKeyPress={this.inputEnterPressed} className="ncdInput" placeholder="Type email here" ref={this.inputRef} disabled={this.state.emailRequested == "" ? "" : "disabled"} />
+          <input
+            value={this.state.inputValue}
+            onChange={this.handleInputChange}
+            onKeyPress={this.inputEnterPressed}
+            className="ncdInput"
+            placeholder="Type email here"
+            ref={this.inputRef}
+            disabled={this.state.emailRequested == "" ? "" : "disabled"}
+            inputMode="email" />
           <h1 className="ncdStatus">{this.state.status}</h1>
         </div>
       </Fragment>
@@ -188,7 +199,6 @@ const mapStateToProps = (state) => ({
   requested_me: state.dms.requested_me,
   already_requested: state.dms.already_requested,
   chat_exists: state.dms.chat_exists,
-  chats: state.dms.chats
 });
 
 const mapDispatchToProps = {

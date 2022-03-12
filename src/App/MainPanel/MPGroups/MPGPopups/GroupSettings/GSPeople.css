@@ -254,6 +254,7 @@
 .gspAddPersonIcon {
   height: 40px;
   fill: #1D9545;
+  color: var(--groups-accent-color);
 }
 
 .gspAddPersonText {
@@ -264,6 +265,7 @@
   font-weight: 600;
   line-height: 40px;
   color: #1D9545;
+  color: var(--groups-accent-color);
 
   text-overflow: ellipsis;
   overflow: hidden;

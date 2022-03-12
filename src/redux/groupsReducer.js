@@ -81,7 +81,6 @@ export const groupsSlice = createSlice({
 
 
 
-        // console.log(current(state).chats[myChatEmail]);
 
         if (myMessages == null || myMessages.length == 0 || myMessages[myMessages.length - 1].id < myID) {
           myMessages.push(newMessage);
@@ -121,13 +120,21 @@ export const groupsSlice = createSlice({
           }
         }
 
-        // console.log(current(state).chats[myChatEmail]);
 
 
 
       }
 
 
+    },
+    editThreadMessage: (state, action) => {
+      let myMessages = state.threads[action.payload["thread_id"]].messages;
+      myMessages.some((item, i) => {
+        if (item.id == action.payload["id"]) {
+          state.threads[action.payload["thread_id"]].messages[i].message = action.payload["message"];
+          state.threads[action.payload["thread_id"]].messages[i].edited = action.payload["edited"];
+        }
+      })
     },
     addLoadedThreadMessages: (state, action) => {
       let myThreadID = action.payload.thread_id;
@@ -181,24 +188,16 @@ export const groupsSlice = createSlice({
       state.threads[action.payload.thread].created = action.payload.created;
     },
     setTempMessageInput: (state, action) => {
-      // console.log("state: ", JSON.stringify(state));
-      console.log("payload: ", action.payload);
       state.threads[action.payload["thread_id"]].tempMessageInput = action.payload["input"];
     },
     setThreadLastRead: (state, action) => {
-      console.log("payload: ", action.payload);
       if (action.payload["last_read"] != null) {
         Object.keys(action.payload["last_read"]).forEach(item => {
-          console.log(item);
           state.threads[action.payload["thread_id"]].lastRead[item] = action.payload["last_read"][item];
-          // state.threads[action.payload["thread_id"]].lastRead[item] = null;
         });
       }
-      // state.threads[action.payload["thread_id"]].lastRead[action.payload["who"]] = action.payload["lastRead"];
     },
     setThreadTyping: (state, action) => {
-      // state.threads[action.payload["thread_id"]].typing[action.payload["who"]] = action.payload["data"];
-
       let myTyping = state.threads[action.payload["thread_id"]].typing;
       if (Array.isArray(action.payload["people"])) {
         action.payload["people"].forEach(item => {
@@ -230,34 +229,38 @@ export const groupsSlice = createSlice({
       }
     },
     setInThread: (state, action) => {
-      let myInThread = state.threads[action.payload["thread_id"]].inThread;
-      if (Array.isArray(action.payload["people"])) {
-        action.payload["people"].forEach(item => {
-          if (!myInThread.includes(item)) {
-            myInThread.push(item);
-          }
-        });
-        myInThread.forEach(item => {
-          if (!action.payload["people"].includes(item)) {
-            const index = myInThread.indexOf(item);
-            if (index > -1) {
-              myInThread.splice(index, 1);
+      if (Object.keys(state.threads).includes(action.payload["thread_id"].toString())) {
+
+        let myInThread = state.threads[action.payload["thread_id"]].inThread;
+        if (Array.isArray(action.payload["people"])) {
+          action.payload["people"].forEach(item => {
+            if (!myInThread.includes(item)) {
+              myInThread.push(item);
             }
-          }
-        });
-      } else {
-        if (action.payload["data"]) {
-          if (!myInThread.includes(action.payload["people"])) {
-            myInThread.push(action.payload["people"]);
-          }
+          });
+          myInThread.forEach(item => {
+            if (!action.payload["people"].includes(item)) {
+              const index = myInThread.indexOf(item);
+              if (index > -1) {
+                myInThread.splice(index, 1);
+              }
+            }
+          });
         } else {
-          if (myInThread.includes(action.payload["people"])) {
-            const index = myInThread.indexOf(action.payload["people"]);
-            if (index > -1) {
-              myInThread.splice(index, 1);
+          if (action.payload["data"]) {
+            if (!myInThread.includes(action.payload["people"])) {
+              myInThread.push(action.payload["people"]);
+            }
+          } else {
+            if (myInThread.includes(action.payload["people"])) {
+              const index = myInThread.indexOf(action.payload["people"]);
+              if (index > -1) {
+                myInThread.splice(index, 1);
+              }
             }
           }
         }
+
       }
     },
     setLoadingMessages: (state, action) => {
@@ -308,24 +311,15 @@ export const groupsSlice = createSlice({
       }
     },
     addThreadRequest: (state, action) => {
-      // if (Array.isArray(action.payload)) {
-      //   state.requests = state.requests.concat(action.payload)
-      // } else {
-      //   state.requests.push(action.payload);
-      // }
       Object.assign(state.requests, action.payload)
     },
     removeThreadRequest: (state, action) => {
       delete state.requests[action.payload]
-      // let index = state.requests.indexOf(action.payload);
-      // if (index > -1) {
-      //   state.requests.splice(index, 1);
-      // }
     },
   },
 });
 
-export const { setOpenedThread, addThread, removeThread, setThreadName, addThreadPeople, removeThreadPerson, addThreadMessage, addLoadedThreadMessages, addSendingThreadMessage, removeSendingThreadMessage,
+export const { setOpenedThread, addThread, removeThread, setThreadName, addThreadPeople, removeThreadPerson, addThreadMessage, editThreadMessage, addLoadedThreadMessages, addSendingThreadMessage, removeSendingThreadMessage,
   setThreadCreated, setTempMessageInput, setThreadLastRead, setThreadTyping, setInThread, setLoadingMessages,
   addThreadCreating, removeThreadCreating, addThreadCreated, removeThreadCreated,
   addRequested, removeRequested,

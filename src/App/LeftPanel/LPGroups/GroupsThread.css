@@ -19,100 +19,6 @@
 
 
 
-/* Profiles Div */
-
-.gtpdPFP {
-  position: absolute;
-  width: 40px;
-  height: 40px;
-  left: 20px;
-  top: 17.5px;
-
-  border-radius: 25px;
-
-  user-select: none;
-}
-
-/* ...2 people */
-.gtpd2people1 {
-  width: 25px;
-  height: 25px;
-  top: 25px;
-}
-
-.gtpd2people2 {
-  width: 25px;
-  height: 25px;
-  top: 25px;
-  left: 35px;
-}
-
-/* ...3 people */
-.gtpd3people1 {
-  width: 20px;
-  height: 20px;
-  top: 18.75px;
-}
-
-.gtpd3people2 {
-  width: 20px;
-  height: 20px;
-  top: 18.75px;
-  left: 40px;
-}
-
-.gtpd3people3 {
-  width: 20px;
-  height: 20px;
-  top: 36.25px;
-  left: 30px;
-}
-
-/* ...4 people */
-.gtpd4people1 {
-  width: 20px;
-  height: 20px;
-  top: 17.5px;
-}
-
-.gtpd4people2 {
-  width: 20px;
-  height: 20px;
-  top: 17.5px;
-  left: 40px;
-}
-
-.gtpd4people3 {
-  width: 20px;
-  height: 20px;
-  top: 37.5px;
-  left: 20px;
-}
-
-.gtpd4people4 {
-  width: 20px;
-  height: 20px;
-  top: 37.5px;
-  left: 40px;
-}
-
-/* ...extra */
-.gtpdExtraDiv {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  background: #121314;
-}
-
-.gtpdExtraText {
-
-  font-size: 9px;
-
-}
-
-
-
 /* Text */
 
 .gtTitleTimeFlexbox {
@@ -224,4 +130,12 @@
 
   transform: translateX(-4px);
   transition: transform .1s;
+}
+
+.GroupsThread:hover > .dmChatPopout {
+  visibility: visible;
+}
+
+.GroupsThread:hover > .gtMessage {
+  right: 40px;
 }

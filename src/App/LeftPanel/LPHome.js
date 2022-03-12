@@ -1,8 +1,8 @@
 import React from 'react';
-import { withRouter } from "react-router-dom";
 import { connect } from 'react-redux';
 
 import './LPHome.css';
+import withRouter from "../../GlobalComponents/withRouter.js";
 import { setOpenedDM } from '../../redux/dmsReducer';
 import { setOpenedThread } from '../../redux/groupsReducer';
 
@@ -18,7 +18,7 @@ class LPHome extends React.Component {
   }
 
   componentDidMount() {
-    if (this.props.history.location.pathname == "/home") {
+    if (this.props.router.location.pathname == "/home") {
       this.setState({
         opened: true
       });
@@ -26,13 +26,13 @@ class LPHome extends React.Component {
   }
 
   componentDidUpdate() {
-    if (this.props.history.location.pathname == "/home" && !this.state.opened) {
+    if (this.props.router.location.pathname == "/home" && !this.state.opened) {
       this.setState({
         opened: true
       });
       this.props.setOpenedDM("");
       this.props.setOpenedThread(null);
-    } else if (this.props.history.location.pathname != "/home" && this.state.opened) {
+    } else if (this.props.router.location.pathname != "/home" && this.state.opened) {
       this.setState({
         opened: false
       });
@@ -42,13 +42,13 @@ class LPHome extends React.Component {
   handleClick(e) {
     e.preventDefault();
 
-    this.props.history.push("/home");
+    this.props.router.navigate("/home");
     this.props.hideLeftPanel(); // Obviously, this method does nothing when the user is not in mobile.
   }
 
   render () {
     let opened = false;
-    if (this.props.history.location.pathname == "/home") {
+    if (this.props.router.location.pathname == "/home") {
       opened = true;
     }
 

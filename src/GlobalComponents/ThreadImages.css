@@ -1,0 +1,87 @@
+.tiPFP {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  left: 20px;
+  top: 17.5px;
+
+  border-radius: 25px;
+
+  user-select: none;
+}
+
+/* ...2 people */
+.ti2people1 {
+  width: 25px;
+  height: 25px;
+  top: 25px;
+}
+
+.ti2people2 {
+  width: 25px;
+  height: 25px;
+  top: 25px;
+  left: 35px;
+}
+
+/* ...3 people */
+.ti3people1 {
+  width: 20px;
+  height: 20px;
+  top: 18.75px;
+}
+
+.ti3people2 {
+  width: 20px;
+  height: 20px;
+  top: 18.75px;
+  left: 40px;
+}
+
+.ti3people3 {
+  width: 20px;
+  height: 20px;
+  top: 36.25px;
+  left: 30px;
+}
+
+/* ...4 people */
+.ti4people1 {
+  width: 20px;
+  height: 20px;
+  top: 17.5px;
+}
+
+.ti4people2 {
+  width: 20px;
+  height: 20px;
+  top: 17.5px;
+  left: 40px;
+}
+
+.ti4people3 {
+  width: 20px;
+  height: 20px;
+  top: 37.5px;
+  left: 20px;
+}
+
+.ti4people4 {
+  width: 20px;
+  height: 20px;
+  top: 37.5px;
+  left: 40px;
+}
+
+/* ...extra */
+.tiExtraDiv {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #121314;
+}
+
+.tiExtraText {
+  font-size: 9px;
+}

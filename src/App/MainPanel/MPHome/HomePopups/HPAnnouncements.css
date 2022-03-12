@@ -410,7 +410,7 @@
   margin-right: 35px;
 
   font-size: 16px;
-  background: var(--darker-accent-color);
+  background: var(--darkest-accent-color);
   border: 1px solid var(--accent-color);
   border-radius: 20px;
   font-family: Inter;

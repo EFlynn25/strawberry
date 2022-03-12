@@ -1,10 +1,9 @@
 .MainPanel {
   position: absolute;
-  left: 300px;
+  left: 340px;
   top: 50px;
-  width: calc(100% - 300px);
+  width: calc(100% - 340px);
   height: calc(100% - 50px);
-  background: #18191B;
   background: #131416;
 
   transition: transform .3s;
@@ -19,6 +18,43 @@
 .MainPanelShrink {
   transform: scale(.9);
 }
+
+.mpPopouts {
+  /* width: calc(100% - 40px);
+  height: calc(100% - 20px);
+  padding: 20px 20px 0 20px; */
+  width: 100%;
+  height: calc(100% - 20px);
+  margin-top: 20px;
+
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+}
+
+.mpPopoutConversation {
+  position: relative !important;
+  /* width: 300px !important;
+  height: 450px !important;
+  margin-right: 20px; */
+  /* padding-top: 20px; */
+
+  background: #131416 !important;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+}
+
+.mpPopoutConversation .mpMessages {
+  height: calc(100% - 340px);
+  box-shadow: 0px 4px 16px rgb(0 0 0 / 25%);
+}
+
+@supports ((-webkit-backdrop-filter: blur(30px)) or (backdrop-filter: blur(30px))) {
+  .mpPopoutConversation {
+    background: #13141666 !important;
+    backdrop-filter: blur(30px);
+  }
+ }
 
 
 

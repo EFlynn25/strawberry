@@ -3,23 +3,28 @@
 
 
 
-import firebase from 'firebase/app';
-import { useDispatch } from 'react-redux'
-import { addUserPost, setUserFirstPost, setLikedPost, setdmsLoaded, setgroupsLoaded, setpeopleLoaded, setSocket, setAnnouncement, setAnnouncementRead } from './redux/appReducer.js'
-import { setUserStatus, setMultipleTabs, setUserLikedPost, setUserLoadingPosts } from './redux/appReducer.js'
+import firebase from 'firebase/compat/app';
 import {
-  addChat, addChatMessage, addLoadedChatMessages, removeSendingChatMessage, setChatCreated, setChatLastRead, setChatTyping, setInChat, setLoadingMessages, addChatRequest, removeChatRequest
+  setAppState, pushAppArrayValue,
+  addUserPost, setUserLikedPost, setLikedPost, setUserLoadingPosts, editUserPost, deleteUserPost,
+} from './redux/appReducer.js'
+import {
+  addChat, addChatMessage, editChatMessage, addLoadedChatMessages, removeSendingChatMessage, setChatCreated, setChatLastRead, setChatTyping, setInChat, setLoadingMessages, addChatRequest, removeChatRequest
 } from './redux/dmsReducer.js'
 import {
-  setOpenedThread, addThread, removeThread, setThreadName, addThreadPeople, removeThreadPerson, addThreadMessage, addLoadedThreadMessages, removeSendingThreadMessage,
+  setOpenedThread, addThread, removeThread, setThreadName, addThreadPeople, removeThreadPerson, addThreadMessage, editThreadMessage, addLoadedThreadMessages, removeSendingThreadMessage,
   removeThreadCreating, addThreadCreated,
   setThreadCreated, setThreadTyping, setInThread, setThreadLastRead,
   addThreadRequest, removeThreadRequest,
   addRequested, removeRequested
 } from './redux/groupsReducer.js'
-import { addPerson, setpersonStatus, setpersonOnline, addpersonPost, setpersonLikedPost, addLoadingPosts } from './redux/peopleReducer.js'
+import {
+  pushPeopleArrayValue,
+  addPerson, setpersonStatus, setpersonOnline,
+  addpersonPost, setpersonLikedPost, editpersonPost, deletepersonPost, addLoadingPosts
+} from './redux/peopleReducer.js'
 import mainStore from './redux/mainStore.js';
-import history from "./history";
+import { setupPushNotifications } from './setupMobileFunctions.js';
 
 import defaultTextTone from './assets/audio/text-tone/default.wav';
 
@@ -29,9 +34,8 @@ let socket = null;
 const textTone = new Audio(defaultTextTone);
 
 export function startSocket() {
-  // 2096 - Production, 2053 - Testing
-  socket = new WebSocket('wss://strawberry.neonblacknetwork.com:2096');
-  // socket = new WebSocket('wss://strawberry.neonblacknetwork.com:2053');
+  // PORTS: 2096 - Production, 2053 - Testing
+  socket = new WebSocket('wss://strawberry.neonerapowered.com:2096');
 
   setTimeout(function() {
     if (socket.readyState == 0) {
@@ -41,34 +45,39 @@ export function startSocket() {
 
   socket.onmessage = function(event) {
     console.log("WebSocket message received: ", event);
-    var jsonData = JSON.parse(event.data);
-    var product = jsonData.product;
-    var com = jsonData.command;
+    const jsonData = JSON.parse(event.data);
+    const product = jsonData.product;
+    const com = jsonData.command;
     const myEmail = mainStore.getState().app.email;
     if (product == "app") { // There are three products: app, dms, and groups. They separate methods from each other, like "send_message".
 
 
       if (com == "multiple_tabs") { // Used when user has Strawberry open in another tab
-        mainStore.dispatch(setMultipleTabs(jsonData["data"]));
+        mainStore.dispatch(setAppState({ multipleTabs: jsonData["data"] }));
       }
 
 
       /* Get functions */
       else if (com == "get_user_info") {
-        mainStore.dispatch(addPerson({"email": jsonData.email, "name": jsonData.name, "picture": jsonData.picture, "status": jsonData.status, "first_post": jsonData.first_post}));
-        get_online(jsonData.email);
+        if (jsonData.response === true) {
+          mainStore.dispatch(addPerson({"email": jsonData.email, "name": jsonData.name, "picture": jsonData.picture, "status": jsonData.status, "first_post": jsonData.first_post}));
+          get_online(jsonData.email);
+        } else if (jsonData.response === "no_user") {
+          mainStore.dispatch(pushPeopleArrayValue({ notUsers: jsonData.email }));
+        }
       } else if (com == "get_announcements") {
-        if (jsonData.response == true || jsonData.response == "receive_new_announcement") {
+        if (jsonData.response === true || jsonData.response === "receive_new_announcement") {
           jsonData.announcements.forEach((announcement) => {
             if (!Object.keys(mainStore.getState().app.announcements).includes(announcement.id)) {
-              mainStore.dispatch(setAnnouncement({"id": announcement.id, "title": announcement.title, "content": announcement.content, "timestamp": announcement.timestamp}));
+              mainStore.dispatch(setAppState({ ["announcements." + announcement.id]: {"title": announcement.title, "content": announcement.content, "timestamp": announcement.timestamp} }));
             }
           });
 
-          if (jsonData.response != "receive_new_announcement") {
+          if (jsonData.response !== "receive_new_announcement") {
             jsonData.announcements_read.forEach((id) => {
               if (!mainStore.getState().app.announcementsRead.includes(id)) {
-                mainStore.dispatch(setAnnouncementRead(id));
+                // mainStore.dispatch(setAnnouncementRead(id));
+                mainStore.dispatch(pushAppArrayValue({ announcementsRead: id }));
               }
             });
           }
@@ -100,13 +109,18 @@ export function startSocket() {
       /* Set functions */
 
       else if (com == "add_user") { // add_user is run in every product on startup to ensure the user has an entry in the database (and to get basic info)
-        mainStore.dispatch(setUserStatus(jsonData.status));
+        mainStore.dispatch(setAppState({ status: jsonData.status }));
         mainStore.dispatch(addUserPost(jsonData.posts));
-        mainStore.dispatch(setUserFirstPost(jsonData.first_post));
+        mainStore.dispatch(setAppState({ firstPost: jsonData.first_post }));
         mainStore.dispatch(setUserLikedPost({post_id: jsonData.liked_posts, data: true}));
+        mainStore.dispatch(setAppState({ messageStyle: jsonData.settings.message_style }));
+      } else if (com == "set_setting") {
+        if (jsonData.setting == "message_style") {
+          mainStore.dispatch(setAppState({ messageStyle: jsonData.value }));
+        }
       } else if (com == "set_status") {
         if (jsonData.response == true) {
-          mainStore.dispatch(setUserStatus(jsonData.status));
+          mainStore.dispatch(setAppState({ status: jsonData.status }));
         } else if (jsonData.response == "receive_set_status") {
           mainStore.dispatch(setpersonStatus({"email": jsonData.email, "status": jsonData.status}));
         }
@@ -114,7 +128,8 @@ export function startSocket() {
         if (jsonData.response == true) {
           jsonData.ids.forEach((id) => {
             if (!mainStore.getState().app.announcementsRead.includes(id)) {
-              mainStore.dispatch(setAnnouncementRead(id));
+              // mainStore.dispatch(setAnnouncementRead(id));
+              mainStore.dispatch(pushAppArrayValue({ announcementsRead: id }));
             }
           });
         }
@@ -134,6 +149,18 @@ export function startSocket() {
             mainStore.dispatch(setpersonLikedPost({post_id: jsonData.post_id, data: jsonData.data}));
           }
         }
+      } else if (com == "edit_post") {
+        if (jsonData.response == true) {
+          mainStore.dispatch(editUserPost({post_id: jsonData.post_id, message: jsonData.message, edited: jsonData.edited}));
+        } else if (jsonData.response == "receive_edited_post") {
+          mainStore.dispatch(editpersonPost({email: jsonData.email, post_id: jsonData.post_id, message: jsonData.message, edited: jsonData.edited}));
+        }
+      } else if (com == "delete_post") {
+        if (jsonData.response == true) {
+          mainStore.dispatch(deleteUserPost({post_id: jsonData.post_id}));
+        } else if (jsonData.response == "receive_deleted_post") {
+          mainStore.dispatch(deletepersonPost({email: jsonData.email, post_id: jsonData.post_id}));
+        }
       }
 
 
@@ -143,15 +170,22 @@ export function startSocket() {
       /* Get Functions */
       if (com == "get_chats") {
         if (jsonData.response == true) {
-          const chatsList = jsonData.chats;
-          chatsList.map(item => {
+          jsonData.chats.forEach(item => {
             get_chat_info(item);
           });
         } else if (jsonData.response == "accepted_request") {
           const item = jsonData.chat;
           get_chat_info(item);
         } else if (jsonData.response == "no_chats") {
-          mainStore.dispatch(setdmsLoaded(true));
+          mainStore.dispatch(setAppState({ dmsLoaded: true }));
+        }
+      } else if (com == "get_requests") {
+        if (jsonData.response === true) {
+          if (jsonData.type === "received") {
+            mainStore.dispatch(addChatRequest({"type": "requests", "email": jsonData.requested}));
+          } else if (jsonData.type === "sent") {
+            mainStore.dispatch(addChatRequest({"type": "requested", "email": jsonData.requested}));
+          }
         }
       } else if (com == "get_messages") {
         if (jsonData.response == true) {
@@ -167,16 +201,13 @@ export function startSocket() {
           mainStore.dispatch(addLoadedChatMessages({"chat": jsonData.chat, "messages": myMessages}));
 
         } else if (jsonData.response == "receive_message") {
-            let myFrom = "them";
+            // let myFrom = "them";
             const item = jsonData.message;
-            mainStore.dispatch(addChatMessage({chat: jsonData.chat, message: item.message, from: myFrom, id: item.id, timestamp: item.timestamp}));
+            mainStore.dispatch(addChatMessage({chat: jsonData.chat, message: item.message, from: "them", id: item.id, timestamp: item.timestamp}));
 
             const openedDM = mainStore.getState().dms.openedDM;
             const dmsOrGroups = mainStore.getState().app.dmsOrGroups;
-            console.log(openedDM);
-            console.log(dmsOrGroups);
             if (openedDM != jsonData.chat || dmsOrGroups != "dms" || !document.hasFocus()) {
-              console.log("NOTIFY NOW!!");
               textTone.play();
             }
         } else if (jsonData.response == "no_messages") {
@@ -187,14 +218,14 @@ export function startSocket() {
           let missingMessages = false;
           const chats = mainStore.getState().dms.chats;
           const chatKeys = Object.keys(chats);
-          chatKeys.map(item => {
+          chatKeys.forEach(item => {
             const myMessages = chats[item].messages;
             if (myMessages == null) {
               missingMessages = true;
             }
           });
           if (!missingMessages || jsonData.response == "no_messages") {
-            mainStore.dispatch(setdmsLoaded(true));
+            mainStore.dispatch(setAppState({ dmsLoaded: true }));
           }
         }
       } else if (com == "get_chat_created") { // Get the timestamp that a chat was created (used to sort the chat in LPDMs if it has no messages)
@@ -207,7 +238,9 @@ export function startSocket() {
       /* Set Functions */
       else if (com == "add_user") {
         dms_get_chats();
-        dms_request_to_chat("get_requests");
+        // dms_request_to_chat("get_requests");
+        dms_get_requests("sent");
+        dms_get_requests("received");
       } else if (com == "request_to_chat") {
         if (jsonData.response === "receive_request") {
           mainStore.dispatch(addChatRequest({"type": "requests", "email": jsonData.requested}));
@@ -223,15 +256,17 @@ export function startSocket() {
           }
         }
       } else if (com == "deny_request") {
-        if (jsonData.response == true) {
-          mainStore.dispatch(removeChatRequest({"type": "requests", "email": jsonData.requested}));
-        } else if (jsonData.response == "receive_denied_request") {
-          mainStore.dispatch(removeChatRequest({"type": "requested", "email": jsonData.requested}));
+        if (jsonData.response == true || jsonData.response == "receive_denied_request") {
+          mainStore.dispatch(removeChatRequest({"type": jsonData.whose_req == "me" ? "requested" : "requests", "email": jsonData.requested}));
         }
       } else if (com == "send_message") {
         const myMessage = jsonData.message;
         mainStore.dispatch(removeSendingChatMessage({"chat": jsonData.chat, "message": jsonData.message.message}));
         mainStore.dispatch(addChatMessage({chat: jsonData.chat, message: myMessage.message, from: "me", id: myMessage.id, timestamp: myMessage.timestamp}));
+      } else if (com == "edit_message") {
+        if (jsonData.response == true || jsonData.response == "receive_edited_message") {
+          mainStore.dispatch(editChatMessage({chat: jsonData.chat, id: jsonData.id, message: jsonData.message, edited: jsonData.edited}));
+        }
       }
 
 
@@ -269,11 +304,11 @@ export function startSocket() {
       if (com == "get_threads") {
         if (jsonData.response == true) {
           const threadsList = jsonData.threads;
-          threadsList.map(item => {
+          threadsList.forEach(item => {
             get_thread_info(item);
           });
         } else if (jsonData.response == "no_threads") {
-          mainStore.dispatch(setgroupsLoaded(true));
+          mainStore.dispatch(setAppState({ groupsLoaded: true }));
         }
       } else if (com == "get_thread_info") { // Retrieves thread name, people, and other basic info
         if (jsonData.response == true && jsonData.requested.includes(myEmail)) {
@@ -289,7 +324,6 @@ export function startSocket() {
                 get_user_info(item);
               }
             });
-            console.log(people)
           }
         }
       } else if (com == "get_messages") {
@@ -318,14 +352,14 @@ export function startSocket() {
           let missingMessages = false;
           const threads = mainStore.getState().groups.threads;
           const threadKeys = Object.keys(threads);
-          threadKeys.map(item => {
+          threadKeys.forEach(item => {
             const myMessages = threads[item].messages;
             if (myMessages == null) {
               missingMessages = true;
             }
           });
           if (!missingMessages || jsonData.response == "no_messages") {
-            mainStore.dispatch(setgroupsLoaded(true));
+            mainStore.dispatch(setAppState({ groupsLoaded: true }));
           }
         }
 
@@ -348,12 +382,15 @@ export function startSocket() {
           get_thread_info(jsonData.thread);
         }
       } else if (com == "rename_thread") {
-        console.log(jsonData);
         mainStore.dispatch(setThreadName({"thread_id": jsonData.thread_id, "new_name": jsonData.new_name}));
       } else if (com == "send_message") {
         const myMessage = jsonData.message;
         mainStore.dispatch(removeSendingThreadMessage({"thread_id": jsonData.thread_id, "message": jsonData.message.message}));
         mainStore.dispatch(addThreadMessage({thread_id: jsonData.thread_id, message: myMessage.message, from: myMessage.email, id: myMessage.id, timestamp: myMessage.timestamp}));
+      } else if (com == "edit_message") {
+        if (jsonData.response == true || jsonData.response == "receive_edited_message") {
+          mainStore.dispatch(editThreadMessage({thread_id: jsonData.thread_id, id: jsonData.id, message: jsonData.message, edited: jsonData.edited}));
+        }
       } else if (com == "request_to_thread") {
         if (jsonData.response === "receive_request") {
           jsonData.thread_id.forEach((item, i) => {
@@ -395,23 +432,26 @@ export function startSocket() {
       /* Hybrid functions */
 
       else if (com == "in_thread") {
-        if (jsonData.response == true) {
-          // do nothing (Then why is it here??)
-        } else if (jsonData.response == "receive_in_thread") {
-          mainStore.dispatch(setInThread({"thread_id": jsonData.thread_id, "people": jsonData.in_thread, "data": jsonData.data}));
-          if (jsonData.data === false && jsonData.lastRead != null) {
-            let myLastReadDict = {};
-            myLastReadDict[jsonData.in_thread] = jsonData.lastRead;
-            mainStore.dispatch(setThreadLastRead({"thread_id": jsonData.thread_id, "last_read": myLastReadDict}));
-          }
-          if (jsonData.lastRead == null) {
-            const myMessages = mainStore.getState().groups.threads[jsonData.thread_id].messages;
-            if (myMessages != null && myMessages.length > 0) {
+        if (jsonData.response == "receive_in_thread") {
+          const threads = mainStore.getState().groups.threads;
+
+          if (Object.keys(threads).includes(jsonData.thread_id.toString())) {
+            mainStore.dispatch(setInThread({"thread_id": jsonData.thread_id, "people": jsonData.in_thread, "data": jsonData.data}));
+            if (jsonData.data === false && jsonData.lastRead != null) {
               let myLastReadDict = {};
-              myLastReadDict[jsonData.in_thread] = myMessages[myMessages.length - 1].id;
+              myLastReadDict[jsonData.in_thread] = jsonData.lastRead;
               mainStore.dispatch(setThreadLastRead({"thread_id": jsonData.thread_id, "last_read": myLastReadDict}));
             }
+            if (jsonData.lastRead == null) {
+              const myMessages = threads[jsonData.thread_id].messages;
+              if (myMessages != null && myMessages.length > 0) {
+                let myLastReadDict = {};
+                myLastReadDict[jsonData.in_thread] = myMessages[myMessages.length - 1].id;
+                mainStore.dispatch(setThreadLastRead({"thread_id": jsonData.thread_id, "last_read": myLastReadDict}));
+              }
+            }
           }
+
         } else if (jsonData.response == "get_in_thread") {
           if (jsonData.in_thread != null) {
             mainStore.dispatch(setInThread({"thread_id": jsonData.thread_id, "people": jsonData.in_thread, "data": jsonData.data}));
@@ -437,10 +477,11 @@ export function startSocket() {
       add_user(idToken);
       dms_add_user(idToken);
       groups_add_user(idToken);
+      setupPushNotifications();
     }).catch(function(error) {
       // Handle error
     });
-    mainStore.dispatch(setSocket(true));
+    mainStore.dispatch(setAppState({ socket: true }));
   }
 
   socket.onclose = function(event) {
@@ -449,7 +490,7 @@ export function startSocket() {
     } else {
       console.warn("WebSocket closed uncleanly, code=" + event.code);
     }
-    mainStore.dispatch(setSocket(false));
+    mainStore.dispatch(setAppState({ socket: false }));
   };
 
   socket.onerror = function(error) {
@@ -478,7 +519,7 @@ function get_thread_info(thread_id) {
 }
 
 function send_websocket_message(jsonData) {
-  var jsonString = JSON.stringify(jsonData);
+  const jsonString = JSON.stringify(jsonData);
   console.log("WebSocket message sending: " + jsonString);
   socket.send(jsonString);
 }
@@ -494,54 +535,74 @@ function send_websocket_message(jsonData) {
 // Get functions
 
 export function get_user_info(requested) {
-  var jsonObj = {"product": "app", "command": "get_user_info", "requested": requested}
+  let jsonObj = {"product": "app", "command": "get_user_info", "requested": requested}
   send_websocket_message(jsonObj);
 }
 
 export function get_announcements() {
-  var jsonObj = {"product": "app", "command": "get_announcements"}
+  let jsonObj = {"product": "app", "command": "get_announcements"}
   send_websocket_message(jsonObj);
 }
 
 export function get_online(requested) {
-  var jsonObj = {"product": "app", "command": "get_online", "requested": requested}
+  let jsonObj = {"product": "app", "command": "get_online", "requested": requested}
   send_websocket_message(jsonObj);
 }
 
 export function get_posts(requested, amount, already_have) {
-  var jsonObj = {"product": "app", "command": "get_posts", "requested": requested, "amount": amount, "already_have": already_have}
+  let jsonObj = {"product": "app", "command": "get_posts", "requested": requested, "amount": amount, "already_have": already_have}
   send_websocket_message(jsonObj);
 }
 
 // Set functions
 
 export function add_user(idToken) {
-  var jsonObj = {"product": "app", "command": "add_user", "idToken": idToken}
+  let jsonObj = {"product": "app", "command": "add_user", "idToken": idToken}
+  send_websocket_message(jsonObj);
+}
+
+export function add_device(fcm_token, timezone) {
+  let jsonObj = {"product": "app", "command": "add_device", "fcm_token": fcm_token, "timezone": timezone}
+  send_websocket_message(jsonObj);
+}
+
+export function set_setting(setting, value) {
+  let jsonObj = {"product": "app", "command": "set_setting", "setting": setting, "value": value}
   send_websocket_message(jsonObj);
 }
 
 export function set_status(status) {
-  var jsonObj = {"product": "app", "command": "set_status", "status": status}
+  let jsonObj = {"product": "app", "command": "set_status", "status": status}
   send_websocket_message(jsonObj);
 }
 
 export function add_post(message) {
-  var jsonObj = {"product": "app", "command": "add_post", "message": message}
+  let jsonObj = {"product": "app", "command": "add_post", "message": message}
   send_websocket_message(jsonObj);
 }
 
 export function like_post(post_id, data) {
-  var jsonObj = {"product": "app", "command": "like_post", "post_id": post_id, "data": data}
+  let jsonObj = {"product": "app", "command": "like_post", "post_id": post_id, "data": data}
+  send_websocket_message(jsonObj);
+}
+
+export function edit_post(post_id, message) {
+  let jsonObj = {"product": "app", "command": "edit_post", "post_id": post_id, "message": message}
+  send_websocket_message(jsonObj);
+}
+
+export function delete_post(post_id) {
+  let jsonObj = {"product": "app", "command": "delete_post", "post_id": post_id}
   send_websocket_message(jsonObj);
 }
 
 export function add_announcement(id, title, content) {
-  var jsonObj = {"product": "app", "command": "add_announcement", "id": id, "title": title, "content": content}
+  let jsonObj = {"product": "app", "command": "add_announcement", "id": id, "title": title, "content": content}
   send_websocket_message(jsonObj);
 }
 
 export function set_announcement_read(ids) {
-  var jsonObj = {"product": "app", "command": "set_announcement_read", "ids": ids}
+  let jsonObj = {"product": "app", "command": "set_announcement_read", "ids": ids}
   send_websocket_message(jsonObj);
 }
 
@@ -552,56 +613,66 @@ export function set_announcement_read(ids) {
 // Get functions
 
 export function dms_get_chats() {
-  var jsonObj = {"product": "dms", "command": "get_chats"}
+  let jsonObj = {"product": "dms", "command": "get_chats"}
+  send_websocket_message(jsonObj);
+}
+
+export function dms_get_requests(type) {
+  let jsonObj = {"product": "dms", "command": "get_requests", "type": type}
   send_websocket_message(jsonObj);
 }
 
 export function dms_get_messages(email, id, amount) {
-  var jsonObj = {"product": "dms", "command": "get_messages", "chat": email, "id": id, "amount": amount}
+  let jsonObj = {"product": "dms", "command": "get_messages", "chat": email, "id": id, "amount": amount}
   send_websocket_message(jsonObj);
 }
 
 export function dms_get_chat_created(email) {
-  var jsonObj = {"product": "dms", "command": "get_chat_created", "chat": email}
+  let jsonObj = {"product": "dms", "command": "get_chat_created", "chat": email}
   send_websocket_message(jsonObj);
 }
 
 // Set functions
 
 export function dms_add_user(idToken) {
-  var jsonObj = {"product": "dms", "command": "add_user", "idToken": idToken}
+  let jsonObj = {"product": "dms", "command": "add_user", "idToken": idToken}
   send_websocket_message(jsonObj);
 }
 
 export function dms_request_to_chat(email) {
-  var jsonObj = {"product": "dms", "command": "request_to_chat", "requested": email}
+  let jsonObj = {"product": "dms", "command": "request_to_chat", "requested": email}
   send_websocket_message(jsonObj);
 }
 
-export function dms_deny_request(email) {
-  var jsonObj = {"product": "dms", "command": "deny_request", "requested": email}
+export function dms_deny_request(email, whoseReq="them") {
+  let jsonObj = {"product": "dms", "command": "deny_request", "requested": email, "whose_req": whoseReq}
   send_websocket_message(jsonObj);
 }
 
 export function dms_send_message(chat, message) {
-  var jsonObj = {"product": "dms", "command": "send_message", "chat": chat, "message": message}
+  let jsonObj = {"product": "dms", "command": "send_message", "chat": chat, "message": message}
+  send_websocket_message(jsonObj);
+}
+
+export function dms_edit_message(chat, id, message) {
+  let jsonObj = {"product": "dms", "command": "edit_message", "chat": chat, "id": id, "message": message}
   send_websocket_message(jsonObj);
 }
 
 // Hybrid Functions
 
 export function dms_in_chat(chat, data) {
-  var jsonObj = {"product": "dms", "command": "in_chat", "chat": chat, "data": data}
+  let jsonObj = {"product": "dms", "command": "in_chat", "chat": chat, "data": data}
   send_websocket_message(jsonObj);
 }
 
 export function dms_typing(chat, data) {
-  var jsonObj = {"product": "dms", "command": "typing", "chat": chat, "data": data}
+  let jsonObj = {"product": "dms", "command": "typing", "chat": chat, "data": data}
   send_websocket_message(jsonObj);
 }
 
 export function dms_last_read(chat) {
-  var jsonObj = {"product": "dms", "command": "last_read", "chat": chat}
+  let jsonObj = {"product": "dms", "command": "last_read", "chat": chat}
   send_websocket_message(jsonObj);
 }
 
@@ -612,112 +683,95 @@ export function dms_last_read(chat) {
 // Get functions
 
 export function groups_get_threads() {
-  var jsonObj = {"product": "groups", "command": "get_threads"}
+  let jsonObj = {"product": "groups", "command": "get_threads"}
   send_websocket_message(jsonObj);
 }
 
 export function groups_get_thread_info(thread_id) {
-  var jsonObj = {"product": "groups", "command": "get_thread_info", "thread_id": thread_id}
+  let jsonObj = {"product": "groups", "command": "get_thread_info", "thread_id": thread_id}
   send_websocket_message(jsonObj);
 }
 
 export function groups_get_messages(thread_id, id, amount) {
-  var jsonObj = {"product": "groups", "command": "get_messages", "thread_id": thread_id, "id": id, "amount": amount}
+  let jsonObj = {"product": "groups", "command": "get_messages", "thread_id": thread_id, "id": id, "amount": amount}
   send_websocket_message(jsonObj);
 }
 
 export function dms_get_thread_created(thread_id) {
-  var jsonObj = {"product": "groups", "command": "get_thread_created", "thread_id": thread_id}
+  let jsonObj = {"product": "groups", "command": "get_thread_created", "thread_id": thread_id}
   send_websocket_message(jsonObj);
 }
-
-
-
-
-
 
 // Set functions
 
 export function groups_add_user(idToken) {
-  var jsonObj = {"product": "groups", "command": "add_user", "idToken": idToken}
+  let jsonObj = {"product": "groups", "command": "add_user", "idToken": idToken}
   send_websocket_message(jsonObj);
 }
 
 export function groups_create_thread(name, people) {
-  var jsonObj = {"product": "groups", "command": "create_thread", "name": name, "people": people}
+  let jsonObj = {"product": "groups", "command": "create_thread", "name": name, "people": people}
   send_websocket_message(jsonObj);
 }
 
 export function groups_rename_thread(thread_id, new_name) {
-  var jsonObj = {"product": "groups", "command": "rename_thread", "thread_id": thread_id, "new_name": new_name}
+  let jsonObj = {"product": "groups", "command": "rename_thread", "thread_id": thread_id, "new_name": new_name}
   send_websocket_message(jsonObj);
 }
 
 export function groups_request_to_thread(email, thread_id) {
-  var jsonObj = {"product": "groups", "command": "request_to_thread", "requested": email, "thread_id": thread_id}
+  let jsonObj = {"product": "groups", "command": "request_to_thread", "requested": email, "thread_id": thread_id}
   send_websocket_message(jsonObj);
 }
 
 export function groups_join_thread(thread_id) {
-  var jsonObj = {"product": "groups", "command": "join_thread", "thread_id": thread_id}
+  let jsonObj = {"product": "groups", "command": "join_thread", "thread_id": thread_id}
   send_websocket_message(jsonObj);
 }
 
 export function groups_get_requests() {
-  var jsonObj = {"product": "groups", "command": "get_requests"}
+  let jsonObj = {"product": "groups", "command": "get_requests"}
   send_websocket_message(jsonObj);
 }
 
 export function groups_leave_thread(thread_id) {
-  var jsonObj = {"product": "groups", "command": "leave_thread", "thread_id": thread_id}
+  let jsonObj = {"product": "groups", "command": "leave_thread", "thread_id": thread_id}
   send_websocket_message(jsonObj);
 }
 
 export function groups_deny_request(thread_id, unrequesting = null) {
-  // var jsonObj = {"product": "groups", "command": "deny_request", "thread_id": thread_id}
-  // if (unrequesting != null) {
-  //   jsonObj["unrequesting"] = unrequesting;
-  // }
-  var jsonObj = {"product": "groups", "command": "deny_request", "thread_id": thread_id, "unrequesting": unrequesting}
+  let jsonObj = {"product": "groups", "command": "deny_request", "thread_id": thread_id, "unrequesting": unrequesting}
   send_websocket_message(jsonObj);
 }
 
 export function groups_remove_person(thread_id, person) {
-  var jsonObj = {"product": "groups", "command": "remove_person", "thread_id": thread_id, "person": person}
+  let jsonObj = {"product": "groups", "command": "remove_person", "thread_id": thread_id, "person": person}
   send_websocket_message(jsonObj);
 }
 
 export function groups_send_message(thread_id, message) {
-  var jsonObj = {"product": "groups", "command": "send_message", "message": message, "thread_id": thread_id}
+  let jsonObj = {"product": "groups", "command": "send_message", "message": message, "thread_id": thread_id}
   send_websocket_message(jsonObj);
 }
 
-// export function groups_rename_thread(thread_id, name) {
-//   var jsonObj = {"product": "groups", "command": "rename_thread", "thread_id": thread_id, "name": name}
-//   send_websocket_message(jsonObj);
-// }
+export function groups_edit_message(thread_id, id, message) {
+  let jsonObj = {"product": "groups", "command": "edit_message", "thread_id": thread_id, "id": id, "message": message}
+  send_websocket_message(jsonObj);
+}
 
-// export function groups_get_user_info(email) {
-//   var jsonObj = {"product": "groups", "command": "get_user_info", "requested": email}
-//   send_websocket_message(jsonObj);
-// }
-
-// export function groups_get_known_people() {
-//   var jsonObj = {"product": "groups", "command": "get_known_people"}
-//   send_websocket_message(jsonObj);
-// }
+// Hybrid functions
 
 export function groups_in_thread(thread_id, data) {
-  var jsonObj = {"product": "groups", "command": "in_thread", "thread_id": thread_id, "data": data}
+  let jsonObj = {"product": "groups", "command": "in_thread", "thread_id": thread_id, "data": data}
   send_websocket_message(jsonObj);
 }
 
 export function groups_typing(thread_id, data) {
-  var jsonObj = {"product": "groups", "command": "typing", "thread_id": thread_id, "data": data}
+  let jsonObj = {"product": "groups", "command": "typing", "thread_id": thread_id, "data": data}
   send_websocket_message(jsonObj);
 }
 
 export function groups_last_read(thread_id) {
-  var jsonObj = {"product": "groups", "command": "last_read", "thread_id": thread_id}
+  let jsonObj = {"product": "groups", "command": "last_read", "thread_id": thread_id}
   send_websocket_message(jsonObj);
 }

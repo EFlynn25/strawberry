@@ -1,14 +1,18 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from "react-router-dom";
 
 import './GroupsThread.css';
+import { ReactComponent as Popout } from '../../../assets/icons/popout.svg';
 import {
   setOpenedThread,
   setThreadLastRead
 } from "../../../redux/groupsReducer"
+import withRouter from "../../../GlobalComponents/withRouter.js";
 import { getUser } from '../../../GlobalComponents/getUser.js';
-import { parseDate } from '../../../GlobalComponents/parseDate.js';
+import { ParseDateLive } from '../../../GlobalComponents/parseDate.js';
+import { isEmail, parseEmailToName } from '../../../GlobalComponents/smallFunctions.js';
+
+import ThreadImages from '../../../GlobalComponents/ThreadImages';
 
 class GroupsThread extends React.Component {
   constructor(props) {
@@ -26,10 +30,10 @@ class GroupsThread extends React.Component {
   }
 
   updateData() {
-    const myThread =  this.props.threads[this.props.threadID];
+    const myThread = this.props.thisThread;
     const myThreadMessages = myThread.messages;
 
-    if (this.props.threadID == this.props.openedThread && myThreadMessages != null && myThreadMessages.length > 0) {
+    if (this.props.opened && this.props.dmsOrGroups == "groups" && myThreadMessages != null && myThreadMessages.length > 0) {
       let myDict = {};
       myDict[this.props.email] = myThreadMessages[myThreadMessages.length - 1].id;
       this.props.setThreadLastRead({"thread_id": this.props.threadID, "last_read": myDict});
@@ -39,20 +43,20 @@ class GroupsThread extends React.Component {
   handleClick(e) {
     e.preventDefault();
     console.log("[from " + this.props.threadID + "] clicked");
-    this.props.setOpenedThread(this.props.threadID);
-    this.props.history.push("/groups/" + this.props.threadID);
+    if (e.target.parentElement.className.baseVal == "dmChatPopout" || e.target.className.baseVal == "dmChatPopout") {
+      this.props.changePopout(this.props.threadID);
+    } else {
+      this.props.setOpenedThread(this.props.threadID);
+      this.props.router.navigate("/groups/" + this.props.threadID);
 
-    this.props.hideLeftPanel();
+      this.props.hideLeftPanel();
+    }
   }
 
   render() {
-    const myThread =  this.props.threads[this.props.threadID];
+    const myThread = this.props.thisThread;
     const myThreadMessages = myThread.messages;
-
-    let opened = false;
-    if (this.props.threadID == this.props.openedThread) {
-      opened = true;
-    }
+    const opened = this.props.opened;
 
     let threadName = "";
     if (myThread.name != null && myThread.name != "") {
@@ -65,60 +69,13 @@ class GroupsThread extends React.Component {
       }
     }
 
-    let profilesDiv = null;
-    if (myThread.people != null && myThread.people.length > 0) { // This if statement is also used in HomeNotifications...
-      const person1 = getUser(myThread.people[0]);
-      const person2 = getUser(myThread.people[1]);
-      const person3 = getUser(myThread.people[2]);
-      const person4 = getUser(myThread.people[3]);
-
-      if (myThread.people.length == 1) {
-        profilesDiv = (
-          <div className="gtProfilesDiv">
-            <img src={person1.picture} className="gtpdPFP" alt={person1.name} />
-          </div>
-        );
-      } else if (myThread.people.length == 2) {
-        profilesDiv = (
-          <div className="gtProfilesDiv">
-            <img src={person1.picture} className="gtpdPFP gtpd2people1" alt={person1.name} />
-            <img src={person2.picture} className="gtpdPFP gtpd2people2" alt={person2.name} />
-          </div>
-        );
-      } else if (myThread.people.length == 3) {
-        profilesDiv = (
-          <div className="gtProfilesDiv">
-            <img src={person1.picture} className="gtpdPFP gtpd3people1" alt={person1.name} />
-            <img src={person2.picture} className="gtpdPFP gtpd3people2" alt={person2.name} />
-            <img src={person3.picture} className="gtpdPFP gtpd3people3" alt={person3.name} />
-          </div>
-        );
-      } else if (myThread.people.length == 4) {
-        profilesDiv = (
-          <div className="gtProfilesDiv">
-            <img src={person1.picture} className="gtpdPFP gtpd4people1" alt={person1.name} />
-            <img src={person2.picture} className="gtpdPFP gtpd4people2" alt={person2.name} />
-            <img src={person3.picture} className="gtpdPFP gtpd4people3" alt={person3.name} />
-            <img src={person4.picture} className="gtpdPFP gtpd4people4" alt={person4.name} />
-          </div>
-        );
-      } else if (myThread.people.length > 4) {
-        let numberOfExtra = myThread.people.length - 3;
-        profilesDiv = (
-          <div className="gtProfilesDiv">
-            <img src={person1.picture} className="gtpdPFP gtpd4people1" alt={person1.name} />
-            <img src={person2.picture} className="gtpdPFP gtpd4people2" alt={person2.name} />
-            <img src={person3.picture} className="gtpdPFP gtpd4people3" alt={person3.name} />
-            <div className="gtpdPFP gtpd4people4 gtpdExtraDiv">
-              <p className="gtpdExtraText">+{numberOfExtra}</p>
-            </div>
-          </div>
-        );
-      }
-    }
+    // let profilesDiv = null;
+    // if (myThread.people != null && myThread.people.length > 0) {
+    //   <ThreadImages people={myThread.people} />
+    // }
 
     let threadMessage = "";
-    let threadTime = "";
+    let timestamp;
     let systemMessage = false;
     if (Array.isArray(myThreadMessages) && myThreadMessages.length) { // If messages exist...
       const lastMessage = myThreadMessages[myThreadMessages.length - 1];
@@ -133,9 +90,10 @@ class GroupsThread extends React.Component {
 
       if (lastMessage.from == "system") {
         systemMessage = true; // Used for special system message styling
+        threadMessage = parseEmailToName(threadMessage);
       }
 
-      threadTime = parseDate(lastMessage.timestamp, "time");
+      timestamp = lastMessage.timestamp;
     }
 
     let read = true;
@@ -145,19 +103,19 @@ class GroupsThread extends React.Component {
       }
     } else {
       threadMessage = <i>No messages</i>;
-      threadTime = null;
     }
 
     return (
       <div className="GroupsThread" onClick={this.handleClick} style={{backgroundPositionX: opened ? "0" : ""}}>
-        { profilesDiv }
+        { myThread.people != null && myThread.people.length > 0 ? <ThreadImages people={myThread.people} /> : null }
         <div className="gtTitleTimeFlexbox">
           <h1 className={read ? "gtTitle" : "gtTitle gtTitleUnread"}>{threadName}</h1>
-          <h1 className={read ? "gtTime" : "gtTime gtUnread"}>{threadTime}</h1>
+          <h1 className={read ? "gtTime" : "gtTime gtUnread"}>{timestamp ? <ParseDateLive timestamp={timestamp} format="short"/> : null}</h1>
         </div>
         <p className={read ? "gtMessage" : "gtMessage gtUnread"} title={myThreadMessages != null && myThreadMessages.length > 0 ? threadMessage : null} style={systemMessage ? {fontStyle: "italic"} : null}>{threadMessage}</p>
         <div className="gtSelected" style={{transform: opened ? "none" : ""}} />
         {read ? null : <div className="gtUnreadNotify" />}
+        { window.innerWidth > 880 ? <Popout className="dmChatPopout" /> : null }
       </div>
     );
   }
@@ -165,9 +123,8 @@ class GroupsThread extends React.Component {
 
 const mapStateToProps = (state) => ({
   email: state.app.email,
-  openedThread: state.groups.openedThread,
-  threads: state.groups.threads,
-  getknownPeople: state.people.knownPeople,
+  dmsOrGroups: state.app.dmsOrGroups,
+  knownPeople: state.people.knownPeople
 });
 
 const mapDispatchToProps = {

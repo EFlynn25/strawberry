@@ -1,7 +1,6 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 
-import add from '../../../assets/icons/add.svg';
 import { ReactComponent as Add } from '../../../assets/icons/add.svg';
 import { ReactComponent as AddGroup } from '../../../assets/icons/add_group.svg';
 import './GroupsNewThread.css';
@@ -102,7 +101,7 @@ class GroupsNewThread extends React.Component {
       });
     } else {
       this.setState({dropdown: true});
-      var root = this;
+      let root = this;
       setTimeout(function() {
         root.inputRef.current.focus();
       }, 10);
@@ -116,7 +115,7 @@ class GroupsNewThread extends React.Component {
   }
 
   inputEnterPressed(event) {
-    var code = event.keyCode || event.which;
+    let code = event.keyCode || event.which;
     if (code === 13 && !event.shiftKey) {
       event.preventDefault();
       event.stopPropagation();
@@ -155,7 +154,6 @@ class GroupsNewThread extends React.Component {
 const mapStateToProps = (state) => ({
   threadsCreating: state.groups.threadsCreating,
   threadsCreated: state.groups.threadsCreated,
-  threads: state.groups.threads
 });
 
 const mapDispatchToProps = {

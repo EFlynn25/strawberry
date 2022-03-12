@@ -1,11 +1,10 @@
 import React from 'react';
-import { withRouter } from "react-router-dom";
 import { connect } from 'react-redux';
+import equal from 'fast-deep-equal/react';
 
 import './LPGroups.css';
-import {
-  setNotificationCount
-} from '../../redux/appReducer';
+import withRouter from "../../GlobalComponents/withRouter.js";
+import { setAppState } from '../../redux/appReducer';
 import {
   setOpenedThread
 } from "../../redux/groupsReducer"
@@ -20,39 +19,25 @@ class LPGroups extends React.Component {
       faviconHref: "/favicon_package/favicon.ico",
       children: []
     };
-
-    this.listOfEmails = [];
-
-    this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
   componentDidMount() {
-    if (this.props.openedGroups != null) {
-      this.props.history.push("/groups/" + this.props.openedGroups);
-    }
-
     this.reloadThreads();
-
-    // document.addEventListener("keydown", this.handleKeyDown);
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.threads != prevProps.threads) {
+    if (!equal(this.props.threads, prevProps.threads) || this.props.openedThread != prevProps.openedThread) {
       this.reloadThreads();
     }
-  }
-
-  componentWillUnmount() {
-    // document.removeEventListener("keydown", this.handleKeyDown);
   }
 
   reloadThreads() {
     let unreadThreads = 0;
 
     const noMessageThreads = [];
-    const threads = JSON.parse(JSON.stringify(this.props.threads));
+    const threads = this.props.threads;
     const myEmail = this.props.email;
-    var threadTimestampList = Object.keys(threads).filter(function(key) {
+    let threadTimestampList = Object.keys(threads).filter(function(key) {
       const thisThread = threads[key];
       const thisThreadMessages = thisThread.messages;
       if (thisThreadMessages == null || thisThreadMessages.length == 0) {
@@ -82,9 +67,15 @@ class LPGroups extends React.Component {
     let newChildren = null;
     if (Array.isArray(threadKeys) && threadKeys.length) {
       newChildren = [];
-      this.listOfEmails = threadKeys;
-      threadKeys.map(item => {
-        const threadElement = <GroupsThread key={"id" + item} threadID={item} hideLeftPanel={this.props.hideLeftPanel} />;
+      this.props.setList("groups", threadKeys);
+      threadKeys.forEach(item => {
+        const threadElement = <GroupsThread
+                                key={"id" + item}
+                                threadID={item}
+                                thisThread={this.props.threads[item]}
+                                hideLeftPanel={this.props.hideLeftPanel}
+                                changePopout={this.props.changePopout}
+                                opened={this.props.openedThread == item} />;
         newChildren.push(threadElement);
       });
     } else {
@@ -98,45 +89,7 @@ class LPGroups extends React.Component {
       children: newChildren
     });
 
-    this.props.setNotificationCount({type: "groups", count: unreadThreads});
-  }
-
-  handleKeyDown(e) { // This method sets up the Ctrl+UpArrow and Ctrl+DownArrow shortcuts
-    if (e.ctrlKey && e.which === 38) {
-      e.preventDefault();
-      e.stopPropagation();
-
-      if (!this.props.history.location.pathname.startsWith("/home")) {
-        const myIndex = this.listOfEmails.indexOf(this.props.openedGroups);
-
-        if (myIndex != 0) {
-          const newThread = this.listOfEmails[myIndex - 1];
-          this.props.setOpenedThread(newThread);
-          this.props.history.push("/groups/" + newThread);
-        } else {
-          this.props.history.push("/home");
-        }
-      }
-
-    } else if (e.ctrlKey && e.which === 40) {
-      e.preventDefault();
-      e.stopPropagation();
-
-      if (this.props.history.location.pathname.startsWith("/home")) {
-        const newThread = this.listOfEmails[0];
-        this.props.setOpenedThread(newThread);
-        this.props.history.push("/groups/" + newThread);
-      } else {
-        const myIndex = this.listOfEmails.indexOf(this.props.openedGroups);
-
-        if (myIndex != this.listOfEmails.length - 1) {
-          const newThread = this.listOfEmails[myIndex + 1];
-          this.props.setOpenedThread(newThread);
-          this.props.history.push("/groups/" + newThread);
-        }
-      }
-
-    }
+    this.props.setAppState({ "notificationCount.groups": unreadThreads });
   }
 
   render() {
@@ -152,14 +105,15 @@ class LPGroups extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
+  openedThread: state.groups.openedThread,
+  threads: state.groups.threads,
   email: state.app.email,
-  openedGroups: state.groups.openedGroups,
-  threads: state.groups.threads
+  notificationCount: state.app.notificationCount,
 });
 
 const mapDispatchToProps = {
-  setNotificationCount,
-  setOpenedThread
+  setOpenedThread,
+  setAppState
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(LPGroups));

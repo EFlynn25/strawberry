@@ -29,7 +29,7 @@
   width: 10px;
   height: 10px;
 
-  background: var(--darker-accent-color);
+  background: var(--darkest-accent-color);
   border-radius: 10px;
   z-index: 2;
 }
@@ -216,19 +216,19 @@
 /* ...selected */
 
 .htSelected {
-  border-bottom: 1px solid #D54D5E !important;
   border-bottom: 2px solid var(--accent-color) !important;
+  border-bottom: 2px solid var(--lighter-accent-color) !important;
 }
 
 .httSelected {
-  filter: unset  !important;
-  color: #D54D5E !important;
+  filter: unset !important;
   color: var(--accent-color) !important;
+  color: var(--lighter-accent-color) !important;
 }
 
 .htiSelected {
-  fill: #D54D5E  !important;
   fill: var(--accent-color)  !important;
+  fill: var(--lighter-accent-color) !important;
 }
 
 
@@ -247,6 +247,7 @@
 
   transition: transform .2s cubic-bezier(0.65, 0, 0.35, 1),
               opacity .2s cubic-bezier(0.65, 0, 0.35, 1);
+  /* transition: transform .2s, opacity .2s; */
   visibility: visible;
   opacity: 1;
 
@@ -257,6 +258,7 @@
   transition: transform .2s cubic-bezier(0.65, 0, 0.35, 1),
               opacity .2s cubic-bezier(0.65, 0, 0.35, 1),
               visibility 0s .2s;
+  /* transition: transform .2s, opacity .2s, visibility 0s .2s; */
   visibility: hidden;
   transform: translateX(-40px);
   opacity: 0;
@@ -266,6 +268,7 @@
   transition: transform .2s cubic-bezier(0.65, 0, 0.35, 1),
               opacity .2s cubic-bezier(0.65, 0, 0.35, 1),
               visibility 0s .2s;
+  /* transition: transform .2s, opacity .2s, visibility 0s .2s; */
   visibility: hidden;
   transform: translateX(40px);
   opacity: 0;

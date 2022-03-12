@@ -1,14 +1,16 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from "react-router-dom";
+import equal from 'fast-deep-equal/react';
 
 import './DMChat.css';
+import { ReactComponent as Popout } from '../../../assets/icons/popout.svg';
 import {
   setOpenedDM,
   setChatLastRead
 } from "../../../redux/dmsReducer"
 import { getUser } from '../../../GlobalComponents/getUser.js';
-import { parseDate } from '../../../GlobalComponents/parseDate.js';
+import withRouter from "../../../GlobalComponents/withRouter.js";
+import { ParseDateLive } from '../../../GlobalComponents/parseDate.js';
 
 class DMChat extends React.Component {
   constructor(props) {
@@ -21,26 +23,13 @@ class DMChat extends React.Component {
     this.updateData();
   }
 
-  shouldComponentUpdate(nextProps, nextState) { // I need to implement more of these throughout the app for performance.
-    const openedDMChanged = (this.props.chatEmail == nextProps.openedDM && this.props.chatEmail != this.props.openedDM) || (this.props.chatEmail != nextProps.openedDM && this.props.chatEmail == this.props.openedDM);
-
-    const thisChat = this.props.chats[this.props.chatEmail];
-    const nextChat = nextProps.chats[this.props.chatEmail];
-    let thisChatChanged = false;
-    if (thisChat.messages && nextChat.messages) {
-      thisChatChanged = thisChat.messages[thisChat.messages.length - 1].id != nextChat.messages[nextChat.messages.length - 1].id;
-    }
-    if (thisChat.lastRead.me != nextChat.lastRead.me) {
-      thisChatChanged = true;
-    }
-
-    const onlineChanged = this.props.chatEmail in this.props.knownPeople && nextProps.knownPeople[nextProps.chatEmail].online != this.props.knownPeople[this.props.chatEmail].online;
-
-    if (openedDMChanged || thisChatChanged || onlineChanged) {
-      return true;
-    }
-
-    return false;
+  shouldComponentUpdate(nextProps, nextState) {
+    // if (!equal(this.props, nextProps)) {
+    //   return true;
+    // }
+    //
+    // return false;
+    return !equal(this.props, nextProps);
   }
 
   componentDidUpdate() {
@@ -48,10 +37,10 @@ class DMChat extends React.Component {
   }
 
   updateData() {
-    const myChat =  this.props.chats[this.props.chatEmail];
-    const myChatMessages = myChat.messages;
+    const thisChat = this.props.thisChat;
+    const myChatMessages = thisChat.messages;
 
-    if (this.props.chatEmail == this.props.openedDM && myChatMessages != null && myChatMessages.length > 0) {
+    if (this.props.opened && this.props.dmsOrGroups == "dms" && myChatMessages != null && myChatMessages.length > 0) {
       this.props.setChatLastRead({"who": "me", "chat": this.props.chatEmail, "lastRead": myChatMessages[myChatMessages.length - 1].id});
     }
   }
@@ -59,20 +48,20 @@ class DMChat extends React.Component {
   handleClick(e) {
     e.preventDefault();
     console.log("[from " + this.props.chatEmail + "] clicked");
-    this.props.setOpenedDM(this.props.chatEmail);
-    this.props.history.push("/dms/" + this.props.chatEmail);
+    if (e.target.parentElement.className.baseVal == "dmChatPopout" || e.target.className.baseVal == "dmChatPopout") {
+      this.props.changePopout(this.props.chatEmail);
+    } else {
+      this.props.setOpenedDM(this.props.chatEmail);
+      this.props.router.navigate("/dms/" + this.props.chatEmail);
 
-    this.props.hideLeftPanel();
+      this.props.hideLeftPanel();
+    }
   }
 
   render() {
-    const myChat =  this.props.chats[this.props.chatEmail];
-    const myChatMessages = myChat.messages;
-
-    let opened = false;
-    if (this.props.chatEmail == this.props.openedDM) {
-      opened = true;
-    }
+    const thisChat = this.props.thisChat;
+    const myChatMessages = thisChat.messages;
+    const opened = this.props.opened;
 
     const myPerson = getUser(this.props.chatEmail);
     const chatName = myPerson.name;
@@ -80,7 +69,7 @@ class DMChat extends React.Component {
     const chatOnline = myPerson.online;
 
     let chatMessage = "";
-    let chatTime = "";
+    let timestamp;
     if (Array.isArray(myChatMessages) && myChatMessages.length) { // Checks if messages exist
       const lastMessage = myChatMessages[myChatMessages.length - 1];
       let you = "";
@@ -90,17 +79,16 @@ class DMChat extends React.Component {
       }
       chatMessage = you + lastMessage["message"];
 
-      chatTime = parseDate(lastMessage.timestamp, "time");
+      timestamp = lastMessage.timestamp;
     }
 
     let read = true;
     if (myChatMessages != null && myChatMessages.length > 0) {
-      if (myChat.lastRead.me < myChatMessages[myChatMessages.length - 1].id || myChat.lastRead.me == null) {
+      if (thisChat.lastRead.me < myChatMessages[myChatMessages.length - 1].id || thisChat.lastRead.me == null) {
         read = false;
       }
     } else {
       chatMessage = <i>No messages</i>;
-      chatTime = null;
     }
 
     return (
@@ -109,26 +97,24 @@ class DMChat extends React.Component {
         { chatOnline ? <div className="dmChatOnline"></div> : null }
         <div className="dmChatTitleTimeFlexbox">
           <h1 className={read ? "dmChatTitle" : "dmChatTitle dmChatTitleUnread"}>{chatName}</h1>
-          <h1 className={read ? "dmChatTime" : "dmChatTime dmChatUnread"}>{chatTime}</h1>
+          <h1 className={read ? "dmChatTime" : "dmChatTime dmChatUnread"}>{timestamp ? <ParseDateLive timestamp={timestamp} format="short" /> : null}</h1>
         </div>
         <p className={read ? "dmChatMessage" : "dmChatMessage dmChatUnread"} title={chatMessage}>{chatMessage}</p>
         <div className="dmChatSelected" style={{transform: opened ? "none" : ""}} />
-        {read ? null : <div className="dmChatUnreadNotify" />}
+        { read ? null : <div className="dmChatUnreadNotify" /> }
+        { window.innerWidth > 880 ? <Popout className="dmChatPopout" /> : null }
       </div>
     );
   }
 }
 
 const mapStateToProps = (state) => ({
-  openedDM: state.dms.openedDM,
-  chats: state.dms.chats,
-  knownPeople: state.people.knownPeople,
+  dmsOrGroups: state.app.dmsOrGroups,
 });
 
 const mapDispatchToProps = {
-    setOpenedDM,
-    setChatLastRead
+  setOpenedDM,
+  setChatLastRead
 }
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(DMChat));
