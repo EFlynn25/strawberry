@@ -31,7 +31,7 @@ class HomePeople extends React.Component {
     let code = e.keyCode || e.which;
     if (code === 13 && !e.shiftKey) {
       if (isEmail(this.state.searchInputVal)) {
-        this.props.opendialog("profile", this.state.searchInputVal);
+        this.props.opendialog("profile", this.state.searchInputVal.trim());
       }
     }
   }
@@ -80,7 +80,7 @@ class HomePeople extends React.Component {
       const text = isEmailVar ? "Go to profile: " + this.state.searchInputVal : "Finish email to search: " + this.state.searchInputVal;
       noPeopleElement = (
         <div style={{display: "flex", justifyContent: "center", width: "100%"}}>
-          <div className={isEmailVar ? "hpSearchButton" : "hpSearchButton hpSearchButtonDisabled"} onClick={isEmailVar ? () => this.props.opendialog("profile", this.state.searchInputVal) : null}>
+          <div className={isEmailVar ? "hpSearchButton" : "hpSearchButton hpSearchButtonDisabled"} onClick={isEmailVar ? () => this.props.opendialog("profile", this.state.searchInputVal.trim()) : null}>
             <h1>{ text }</h1>
           </div>
         </div>

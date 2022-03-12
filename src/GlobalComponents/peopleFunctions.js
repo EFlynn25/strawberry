@@ -20,12 +20,13 @@ export function alphabetizePeople(peopleList, noShowParam) {
   return [];
 }
 
-export function searchPeople(peopleList, searchTerm) {
+export function searchPeople(peopleList, searchTerm, shouldTrim=true) {
+  const newSearchTerm = shouldTrim ? searchTerm.trim() : searchTerm;
   const newPeople = peopleList.filter((item) => {
     const myUser = getUser(item);
     const email = item.toUpperCase();
     const name = myUser.name.toUpperCase();
-    const iv = searchTerm.toUpperCase();
+    const iv = newSearchTerm.toUpperCase();
     return email.indexOf(iv) > -1 || name.indexOf(iv) > -1;
   });
 

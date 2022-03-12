@@ -149,12 +149,12 @@ class DMNewChat extends React.Component {
             status: "You already have a chat with that person!"
           });
         } else {
+          const iv = this.state.inputValue.trim();
           this.setState({
             inputValue: "",
             status: "Sending request to " + this.state.inputValue + "...",
-            emailRequested: this.state.inputValue,
+            emailRequested: iv,
           });
-          const iv = this.state.inputValue;
           this.props.addChatRequest({type: "requesting", email: iv})
           dms_request_to_chat(iv);
         }
