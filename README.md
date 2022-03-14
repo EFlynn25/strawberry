@@ -2,7 +2,7 @@
 
 The in-development messaging app with a new UI experience.
 
-Link: [https://strawberry.neonblacknetwork.com](https://strawberry.neonblacknetwork.com)
+Link: [https://strawberry.neonerapowered.com](https://strawberry.neonerapowered.com)
 
 ## Features
 
