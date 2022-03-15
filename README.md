@@ -1,6 +1,6 @@
 # Strawberry
 
-The in-development messaging app with a new UI experience.
+ The social app for the people you already know
 
 Link: [https://strawberry.neonerapowered.com](https://strawberry.neonerapowered.com)
 
