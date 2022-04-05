@@ -47,6 +47,7 @@
 }
 
 .defaultMessageText > p {
+  min-height: 18px;
   display: inline;
   color: #ddd;
   font-style: normal;
