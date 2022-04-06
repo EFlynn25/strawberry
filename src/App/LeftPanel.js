@@ -46,6 +46,7 @@ class LeftPanel extends React.Component {
   }
 
   handleKeyDown(e) { // This method sets up the Alt+UpArrow and Alt+DownArrow shortcuts
+    return false; // I am disabling this shortcut until I can come up with a new one. This causes problems on Chromebook.
     const dmsOrGroups = this.props.dmsOrGroups;
     const dmsOrGroupsReady = dmsOrGroups == "dms" || dmsOrGroups == "groups";
     if (!e.altKey || e.repeat || !dmsOrGroupsReady) {

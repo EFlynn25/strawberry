@@ -437,7 +437,7 @@ class MPDMs extends React.Component {
 
   sendMessage() {
     this.inputRef.current.focus();
-    const iv = this.state.inputValue;
+    const iv = this.state.inputValue.trim();
     if (iv != null && iv != "") {
       const oc = this.props.openedDM;
       dms_send_message(oc, iv);
@@ -461,6 +461,7 @@ class MPDMs extends React.Component {
 
     // in_chat class calculations
     let inChatClasses = "mpInChat";
+    let typingClasses = "mpTyping";
     if (thisChat) {
       if (!thisChat.inChat) {
         const onLastMessage = thisChat.messages && thisChat.lastRead.them == thisChat.messages[thisChat.messages.length - 1].id;
@@ -473,10 +474,14 @@ class MPDMs extends React.Component {
         } else {
           inChatClasses += " mpInChatHide";
         }
+        typingClasses += " mpTypingHide";
+      } else if (!thisChat.typing) {
+        typingClasses += " mpTypingHide";
       }
       if (this.inChatOpenedDM != this.props.openedDM) {
         this.inChatOpenedDM = this.props.openedDM;
         inChatClasses += " noTransition";
+        typingClasses += " noTransition";
       }
     }
 
@@ -513,7 +518,7 @@ class MPDMs extends React.Component {
             {this.state.messages}
             <div style={{position: "relative"}}>
               <img src={thisUser.picture} className={inChatClasses} alt={thisUser.name} style={/*this.props.messages.length > 0 && this.props.messages[this.props.messages.length - 1].sending ? {bottom: "-15px"} : */null} />
-              <div className={this.props.thisChat.typing ? "mpTyping" : "mpTyping mpTypingHide"} style={/*this.props.messages.length > 0 && this.props.messages[this.props.messages.length - 1].sending ? {bottom: "-15px"} : */null}>
+              <div className={typingClasses} style={/*this.props.messages.length > 0 && this.props.messages[this.props.messages.length - 1].sending ? {bottom: "-15px"} : */null}>
                 <div className="mpTypingDot"></div>
                 <div className="mpTypingDot" style={{left: "15px", animationDelay: ".25s"}}></div>
                 <div className="mpTypingDot" style={{left: "24px", animationDelay: ".5s"}}></div>

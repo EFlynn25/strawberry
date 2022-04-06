@@ -6,7 +6,7 @@
 import firebase from 'firebase/compat/app';
 import {
   setAppState, pushAppArrayValue,
-  addUserPost, setUserLikedPost, setLikedPost, setUserLoadingPosts, editUserPost, deleteUserPost,
+  addUserPost, setUserLikedPost, setLikedPost, editUserPost, deleteUserPost,
 } from './redux/appReducer.js'
 import {
   addChat, addChatMessage, editChatMessage, addLoadedChatMessages, removeSendingChatMessage, setChatCreated, setChatLastRead, setChatTyping, setInChat, setLoadingMessages, addChatRequest, removeChatRequest
@@ -29,9 +29,12 @@ import { setupPushNotifications } from './setupMobileFunctions.js';
 import defaultTextTone from './assets/audio/text-tone/default.wav';
 
 // Socket start
-
 let socket = null;
 const textTone = new Audio(defaultTextTone);
+
+function playTextTone() { // This function will be useful when there are more text tone options.
+  textTone.play();
+}
 
 export function startSocket() {
   // PORTS: 2096 - Production, 2053 - Testing
@@ -52,7 +55,7 @@ export function startSocket() {
     if (product == "app") { // There are three products: app, dms, and groups. They separate methods from each other, like "send_message".
 
 
-      if (com == "multiple_tabs") { // Used when user has Strawberry open in another tab
+      if (com == "multiple_tabs") { // Used when the user has Strawberry open in another tab
         mainStore.dispatch(setAppState({ multipleTabs: jsonData["data"] }));
       }
 
@@ -92,7 +95,7 @@ export function startSocket() {
         if (jsonData.response == true) {
           if (jsonData.requested == myEmail) {
             mainStore.dispatch(addUserPost(jsonData.posts));
-            mainStore.dispatch(setUserLoadingPosts(false));
+            mainStore.dispatch(setAppState({loadingPosts: false}));
           } else {
             mainStore.dispatch(addpersonPost({email: jsonData.requested, post: jsonData.posts}));
             mainStore.dispatch(addLoadingPosts({email: jsonData.requested, data: false}));
@@ -208,7 +211,7 @@ export function startSocket() {
             const openedDM = mainStore.getState().dms.openedDM;
             const dmsOrGroups = mainStore.getState().app.dmsOrGroups;
             if (openedDM != jsonData.chat || dmsOrGroups != "dms" || !document.hasFocus()) {
-              textTone.play();
+              playTextTone();
             }
         } else if (jsonData.response == "no_messages") {
           dms_get_chat_created(jsonData.chat);
@@ -342,7 +345,7 @@ export function startSocket() {
             const openedThread = mainStore.getState().groups.openedThread;
             const dmsOrGroups = mainStore.getState().app.dmsOrGroups;
             if (openedThread != jsonData.thread_id || dmsOrGroups != "groups" || !document.hasFocus()) {
-              textTone.play();
+              playTextTone();
             }
         } else if (jsonData.response == "no_messages") {
           dms_get_thread_created(jsonData.thread_id);

@@ -11,7 +11,7 @@ import { ReactComponent as Close } from '../../../assets/icons/close.svg';
 import { ReactComponent as ThumbUp } from '../../../assets/icons/thumb_up.svg';
 import { ReactComponent as Delete } from '../../../assets/icons/delete.svg';
 import { set_status, get_posts, add_post, edit_post, delete_post } from '../../../socket.js';
-import { setUserLoadingPosts } from '../../../redux/appReducer.js';
+import { setAppState } from '../../../redux/appReducer.js';
 import { parseDate, ParseDateLive } from '../../../GlobalComponents/parseDate.js';
 
 class HomeProfile extends React.Component {
@@ -61,14 +61,16 @@ class HomeProfile extends React.Component {
         }
         this.setState({editingStatus: false});
       } else if (event.target.getAttribute("class") == "hpPostInput") {
-        if (this.state.newPostVal != "") { // Make sure users don't send blank posts
-          add_post(this.state.newPostVal)
-          this.setState({newPostVal: ''})
+        const trimmed = this.state.newPostVal.trim();
+        if (trimmed != "") { // Make sure users don't send blank posts
+          add_post(trimmed);
+          this.setState({newPostVal: ''});
         }
       } else if (event.target.getAttribute("class") == "hpEditPostInput") {
-        if (this.state.editingPostVal != "") { // Make sure users don't edit their posts to make them blank...
-          edit_post(this.state.editingPost, this.state.editingPostVal)
-          this.setState({editingPost: '', editingPostVal: ''})
+        const trimmed = this.state.editingPostVal.trim();
+        if (trimmed != "") { // Make sure users don't edit their posts to make them blank...
+          edit_post(this.state.editingPost, trimmed);
+          this.setState({editingPost: '', editingPostVal: ''});
         }
       }
     } else if (code === 27) {
@@ -86,11 +88,10 @@ class HomeProfile extends React.Component {
 
   loadMorePosts() {
     if (!this.props.loadingPosts) {
-
       const containsFirstPost = this.props.posts.some(item => item.post_id == this.props.firstPost);
       if (!containsFirstPost) {
-        this.props.setUserLoadingPosts({email: this.props.email, data: true})
-        get_posts(this.props.email, 5, this.props.posts.length)
+        this.props.setAppState({loadingPosts: true});
+        get_posts(this.props.email, 5, this.props.posts.length);
       }
 
     }
@@ -227,7 +228,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
-  setUserLoadingPosts
+  setAppState
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomeProfile);

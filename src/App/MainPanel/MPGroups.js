@@ -451,7 +451,7 @@ class MPGroups extends React.Component {
 
   sendMessage() {
     this.inputRef.current.focus();
-    const iv = this.state.inputValue;
+    const iv = this.state.inputValue.trim();
     if (iv != null && iv != "") {
       const ot = this.props.openedThread;
       groups_send_message(ot, iv);
