@@ -139,7 +139,7 @@ export const appSlice = createSlice({
 
 export const {
   setAppState, pushAppArrayValue,
-  addUserPost, setUserLikedPost, setLikedPost, setUserLoadingPosts, editUserPost, deleteUserPost,
+  addUserPost, setUserLikedPost, setLikedPost, editUserPost, deleteUserPost,
 } = appSlice.actions;
 
 // The function below is called a selector and allows us to select a value from

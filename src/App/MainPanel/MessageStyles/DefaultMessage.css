@@ -33,6 +33,7 @@
 
 .defaultMessageText {
   position: relative;
+  min-height: 18px;
   left: -5px;
   margin-bottom: 3px;
   padding: 0 5px;
