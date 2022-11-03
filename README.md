@@ -1,3 +1,5 @@
+## THIS REPOSITORY IS NO LONGER MAINTAINED. The link to the Strawberry web app redirects to my new app Beam.
+
 # Strawberry
 
  The social app for the people you already know
